@@ -3,6 +3,8 @@
  * Type definitions for Foreman orchestration engine
  */
 
+import { BuilderType } from './builder'
+
 export interface ForemanTask {
   id: string
   type: ForemanTaskType
@@ -43,6 +45,36 @@ export interface GovernanceCondition {
 export interface GovernanceAction {
   type: string
   params: Record<string, any>
+}
+
+/**
+ * Foreman Action Types
+ * Actions that Foreman can propose and execute
+ */
+export type ForemanActionType =
+  | 'CREATE_ISSUE'
+  | 'CREATE_PR'
+  | 'ADD_COMMENT'
+  | 'TRIGGER_BUILDER_TASK'
+  | 'RUN_QA'
+  | 'APPLY_GOVERNANCE'
+
+export interface ForemanAction {
+  type: ForemanActionType
+  params: Record<string, any>
+  requiresApproval: boolean
+  organisationId: string
+}
+
+export interface TriggerBuilderTaskAction extends ForemanAction {
+  type: 'TRIGGER_BUILDER_TASK'
+  params: {
+    module: string
+    builder: BuilderType
+    task_description: string
+    context?: Record<string, any>
+  }
+  requiresApproval: true
 }
 
 export interface ForemanConfig {

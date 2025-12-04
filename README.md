@@ -18,12 +18,21 @@ The Foreman App is designed to:
 - **API Routes** (`/app/api/`)
   - `github/webhook/route.ts` - Webhook endpoint for GitHub events
   - `foreman/run/route.ts` - Manual task execution endpoint
+  - `admin/approve/route.ts` - Admin approval for builder tasks
+  - `builder/*` - Builder agent endpoints (UI, API, Schema, Integration, QA)
 
 - **Foreman Logic** (`/lib/foreman/`)
+  - `orchestrator.ts` - Core orchestration engine
+  - `dispatch.ts` - Builder task dispatch and governance
+  - `behaviours.ts` - Behaviour compilation
+  - `executor.ts` - Task executor
   - `interpret-governance.ts` - Loads and interprets governance rules
   - `run-build-wave.ts` - Orchestrates build wave execution
   - `run-self-test.ts` - System diagnostics and health checks
   - `apply-file-changes.ts` - File operations via GitHub API
+
+- **Builder Logic** (`/lib/builder/`)
+  - `capabilities.ts` - Builder capability manifest and registry
 
 - **Integrations** (`/lib/`)
   - `github.ts` - GitHub App authentication and API client
@@ -35,7 +44,8 @@ The Foreman App is designed to:
 
 - **Type Definitions** (`/types/`)
   - `github.ts` - GitHub API types
-  - `foreman.ts` - Foreman system types
+  - `foreman.ts` - Foreman system and action types
+  - `builder.ts` - Builder agent types
   - `build.ts` - Build wave types
 
 ## How Webhooks Work
@@ -264,6 +274,207 @@ Manually trigger Foreman tasks.
 - `run-self-test` - Run system diagnostics
 - `apply-file-changes` - Apply file changes via GitHub API
 
+## Builder Agents
+
+The Foreman App orchestrates five specialized Builder Agents that handle different aspects of code generation and quality assurance. All builder tasks require explicit admin approval before execution.
+
+### Available Builders
+
+#### 1. UI Builder (`/api/builder/ui`)
+Generates and modifies user interface components and pages.
+
+**POST Request:**
+```json
+{
+  "module": "dashboard",
+  "taskDescription": "Create a new dashboard component with charts",
+  "organisationId": "org_123",
+  "context": {
+    "features": ["charts", "filters", "export"]
+  }
+}
+```
+
+**Supported Task Types:**
+- `create_component` - Generate new UI components
+- `update_component` - Modify existing components
+- `create_page` - Create new pages
+- `update_page` - Update existing pages
+- `create_layout` - Generate layout components
+- `update_styles` - Modify styles and themes
+
+#### 2. API Builder (`/api/builder/api`)
+Creates and maintains API endpoints and backend services.
+
+**POST Request:**
+```json
+{
+  "module": "users",
+  "taskDescription": "Create REST API endpoints for user management",
+  "organisationId": "org_123",
+  "context": {
+    "endpoints": ["GET /api/users", "POST /api/users", "GET /api/users/:id"]
+  }
+}
+```
+
+**Supported Task Types:**
+- `create_endpoint` - Generate new API endpoints
+- `update_endpoint` - Modify existing endpoints
+- `create_service` - Create backend services
+- `update_service` - Update service logic
+- `create_middleware` - Generate middleware
+- `update_middleware` - Modify middleware
+
+#### 3. Schema Builder (`/api/builder/schema`)
+Manages database schemas, type definitions, and data models.
+
+**POST Request:**
+```json
+{
+  "module": "users",
+  "taskDescription": "Create TypeScript types for user entity",
+  "organisationId": "org_123",
+  "context": {
+    "fields": ["id", "name", "email", "role", "createdAt"]
+  }
+}
+```
+
+**Supported Task Types:**
+- `create_type` - Generate TypeScript types
+- `update_type` - Modify type definitions
+- `create_schema` - Create database schemas
+- `update_schema` - Update schema definitions
+- `create_migration` - Generate migrations
+- `validate_schema` - Validate schema integrity
+
+#### 4. Integration Builder (`/api/builder/integration`)
+Builds integrations with external services and APIs.
+
+**POST Request:**
+```json
+{
+  "module": "stripe",
+  "taskDescription": "Create Stripe payment integration",
+  "organisationId": "org_123",
+  "context": {
+    "service": "stripe",
+    "features": ["payments", "subscriptions", "webhooks"]
+  }
+}
+```
+
+**Supported Task Types:**
+- `create_integration` - Build new integrations
+- `update_integration` - Modify integrations
+- `create_client` - Generate API clients
+- `update_client` - Update client code
+- `create_webhook` - Create webhook handlers
+- `update_webhook` - Modify webhook logic
+
+#### 5. QA Builder (`/api/builder/qa`)
+Creates tests and validates builder outputs.
+
+**POST Request:**
+```json
+{
+  "module": "users",
+  "taskDescription": "Create unit tests for user service",
+  "organisationId": "org_123",
+  "context": {
+    "testTypes": ["unit", "integration"],
+    "coverage": 80
+  }
+}
+```
+
+**Supported Task Types:**
+- `create_test` - Generate test files
+- `update_test` - Modify existing tests
+- `run_tests` - Execute test suites
+- `validate_output` - Validate builder artifacts
+- `qa_review` - Perform quality review
+- `qa_of_qa_review` - Meta-review of QA results
+
+### Admin Approval System
+
+All builder tasks require explicit admin approval before execution.
+
+#### POST /api/admin/approve
+
+Approve or reject builder tasks.
+
+**Request:**
+```json
+{
+  "taskId": "task_123456",
+  "action": "approve",
+  "adminId": "admin_user_id",
+  "executeImmediately": true
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "taskId": "task_123456",
+  "status": "completed",
+  "message": "Task approved and executed by admin_user_id"
+}
+```
+
+#### GET /api/admin/approve
+
+List pending approval tasks.
+
+**Query Parameters:**
+- `taskId` - Get specific task details
+- `status` - Filter by task status
+- `pending=true` - Show only pending approval tasks
+
+**Response:**
+```json
+{
+  "success": true,
+  "count": 3,
+  "tasks": [
+    {
+      "id": "task_123",
+      "builder": "ui",
+      "module": "dashboard",
+      "taskDescription": "Create dashboard component",
+      "status": "pending_approval",
+      "approved": false,
+      "createdAt": "2024-01-01T00:00:00Z"
+    }
+  ]
+}
+```
+
+### Governance Requirements
+
+The Foreman App enforces strict governance rules:
+
+1. **No Code Without Approval** - Foreman NEVER writes code directly; only builders write code after admin approval
+2. **Organisation ID Required** - All actions must include `organisationId`
+3. **Admin Approval Mandatory** - No builder executes without explicit admin approval
+4. **QA Enforcement** - All builder outputs must pass QA validation
+5. **Action Logging** - All actions logged in Vercel runtime logs
+6. **Permission Validation** - GitHub App permissions validated before execution
+
+### Builder Workflow
+
+1. **Propose Task**: Foreman proposes a builder task based on governance rules
+2. **Create Task**: Builder endpoint receives request and creates task in `pending_approval` state
+3. **Admin Review**: Admin reviews task via `/api/admin/approve?pending=true`
+4. **Approve/Reject**: Admin approves or rejects task via `POST /api/admin/approve`
+5. **Execute**: If approved, task executes and generates artifacts
+6. **QA Review**: QA Builder validates output
+7. **QA-of-QA**: Meta-review ensures quality standards met
+8. **Complete**: Task marked as completed with results
+
 ## Development
 
 ### Build
@@ -292,12 +503,26 @@ maturion-foreman-app/
 │   ├── page.tsx             # Dashboard page
 │   ├── layout.tsx           # Root layout
 │   └── api/                 # API routes
+│       ├── admin/           # Admin endpoints
+│       │   └── approve/     # Builder task approval
+│       ├── builder/         # Builder agent endpoints
+│       │   ├── ui/          # UI Builder endpoint
+│       │   ├── api/         # API Builder endpoint
+│       │   ├── schema/      # Schema Builder endpoint
+│       │   ├── integration/ # Integration Builder endpoint
+│       │   └── qa/          # QA Builder endpoint
 │       ├── github/webhook/  # GitHub webhook handler
 │       └── foreman/run/     # Foreman task executor
 ├── lib/                     # Core libraries
 │   ├── github.ts           # GitHub API client
 │   ├── openai.ts           # OpenAI integration
+│   ├── builder/            # Builder agent logic
+│   │   └── capabilities.ts # Builder capability manifest
 │   └── foreman/            # Foreman orchestration logic
+│       ├── behaviours.ts   # Behaviour compilation
+│       ├── dispatch.ts     # Builder task dispatch
+│       ├── executor.ts     # Task executor
+│       ├── orchestrator.ts # Core orchestrator
 │       ├── interpret-governance.ts
 │       ├── run-build-wave.ts
 │       ├── run-self-test.ts
@@ -306,9 +531,10 @@ maturion-foreman-app/
 │   ├── ForemanStatus.tsx   # Status display
 │   └── LayoutShell.tsx     # Layout wrapper
 ├── types/                   # TypeScript type definitions
-│   ├── github.ts
-│   ├── foreman.ts
-│   └── build.ts
+│   ├── github.ts           # GitHub types
+│   ├── foreman.ts          # Foreman types
+│   ├── builder.ts          # Builder types
+│   └── build.ts            # Build types
 ├── scripts/                 # Utility scripts
 │   ├── local-test-webhook.ts
 │   └── run-foreman-task.ts
