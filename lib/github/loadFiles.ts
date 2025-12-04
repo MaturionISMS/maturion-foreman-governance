@@ -1,84 +1,37 @@
-/**
- * GitHub File Loader
- * Utilities for loading and managing files from GitHub repositories
- */
+import { github } from "./client";
 
-export interface FileContent {
-  path: string
-  content: string
-  encoding: string
-  sha: string
-}
+export type ForemanBehaviourFile = {
+  path: string;
+  content: string;
+};
 
-export interface LoadFilesOptions {
-  owner: string
-  repo: string
-  ref?: string
-  paths?: string[]
-}
+export async function loadForemanBehaviourFiles(): Promise<ForemanBehaviourFile[]> {
+  const owner = process.env.FOREMAN_BEHAVIOUR_REPO_OWNER!;
+  const repo = process.env.FOREMAN_BEHAVIOUR_REPO_NAME!;
+  const basePath = process.env.FOREMAN_BEHAVIOUR_DIR!;
 
-/**
- * Load multiple files from a GitHub repository
- * @param options - Configuration for loading files
- * @returns Array of file contents
- */
-export async function loadFiles(options: LoadFilesOptions): Promise<FileContent[]> {
-  // TODO: Implement file loading from GitHub API
-  const { owner, repo, ref = 'main', paths = [] } = options
-  console.log(`Loading files from ${owner}/${repo}@${ref}`)
-  console.log('Paths:', paths)
-  
-  return []
-}
+  const { data } = await github.rest.repos.getContent({
+    owner,
+    repo,
+    path: basePath,
+  });
 
-/**
- * Load a single file from a GitHub repository
- * @param owner - Repository owner
- * @param repo - Repository name
- * @param path - File path
- * @param ref - Git reference (branch, tag, or commit)
- * @returns File content
- */
-export async function loadFile(
-  owner: string,
-  repo: string,
-  path: string,
-  ref?: string
-): Promise<FileContent | null> {
-  // TODO: Implement single file loading
-  console.log(`Loading file ${path} from ${owner}/${repo}`)
-  return null
-}
-
-/**
- * Load directory contents from a GitHub repository
- * @param owner - Repository owner
- * @param repo - Repository name
- * @param path - Directory path
- * @param ref - Git reference (branch, tag, or commit)
- * @returns Array of files in the directory
- */
-export async function loadDirectory(
-  owner: string,
-  repo: string,
-  path: string,
-  ref?: string
-): Promise<FileContent[]> {
-  // TODO: Implement directory loading
-  console.log(`Loading directory ${path} from ${owner}/${repo}`)
-  return []
-}
-
-/**
- * Decode base64 content from GitHub API
- * @param content - Base64 encoded content
- * @returns Decoded string
- */
-export function decodeContent(content: string): string {
-  try {
-    return Buffer.from(content, 'base64').toString('utf-8')
-  } catch (error) {
-    console.error('Failed to decode base64 content:', error)
-    throw new Error('Invalid base64 content')
+  if (!Array.isArray(data)) {
+    throw new Error(`Expected directory at ${basePath}.`);
   }
+
+  const files: ForemanBehaviourFile[] = [];
+
+  for (const item of data) {
+    if (item.type === "file" && item.download_url) {
+      const res = await fetch(item.download_url);
+      files.push({
+        path: item.path,
+        content: await res.text(),
+      });
+    }
+  }
+
+  return files;
 }
+
