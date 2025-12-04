@@ -86,12 +86,28 @@ cp .env.example .env.local
 
 4. Configure environment variables in `.env.local`:
 ```env
+# GitHub App Credentials (required for full functionality)
 GITHUB_APP_ID=your_app_id
 GITHUB_APP_PRIVATE_KEY=your_private_key
 GITHUB_APP_INSTALLATION_ID=your_installation_id
 GITHUB_WEBHOOK_SECRET=your_webhook_secret
+
+# OpenAI API Key (required for AI-powered orchestration)
 OPENAI_API_KEY=your_openai_key
+
+# GitHub Token (required for loading behavior files)
+GITHUB_TOKEN=your_personal_access_token
+
+# Foreman Behavior Configuration (required for full functionality)
+FOREMAN_BEHAVIOUR_REPO_OWNER=your_org_or_username
+FOREMAN_BEHAVIOUR_REPO_NAME=your_behavior_repo
+FOREMAN_BEHAVIOUR_DIR=path/to/behavior/files
+
+# Organization ID (optional)
+MATURION_ORG_ID=your_org_id
 ```
+
+**Note:** For basic webhook endpoint testing, you can start with an empty `.env.local` file. The application will return clear error messages about missing configuration when needed.
 
 5. Start the development server:
 ```bash
@@ -102,7 +118,30 @@ The app will be available at `http://localhost:3000`
 
 ### Testing Locally
 
-#### Test Webhook Endpoint
+#### Comprehensive Webhook Testing
+
+The repository includes a comprehensive test suite for the webhook endpoint. To run it:
+
+1. Start the development server:
+```bash
+npm run dev
+```
+
+2. In a separate terminal, run the test suite:
+```bash
+npx tsx scripts/test-webhook.ts
+```
+
+This will test:
+- GET endpoint (health check)
+- Issue events
+- Issue comment events (including @foreman mentions)
+- Pull request events
+- Event filtering (e.g., push events are ignored)
+
+The test suite will show which tests pass or fail, along with detailed error messages.
+
+#### Test Individual Webhook Events
 
 Use the provided script to send test webhooks:
 
@@ -130,6 +169,8 @@ npx tsx scripts/run-foreman-task.ts interpret-governance '{"owner":"test","repo"
 # Test build wave
 npx tsx scripts/run-foreman-task.ts run-build-wave '{}'
 ```
+
+**Note:** Most Foreman tasks require proper environment variables to be set. See `.env.example` for the complete list of required configuration.
 
 ## GitHub App Setup
 
