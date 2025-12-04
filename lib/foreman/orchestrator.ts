@@ -39,6 +39,9 @@ export async function runForeman(input: any) {
     },
   });
 
-  const json = res.choices[0].message.content;
-  return JSON.parse(json!);
+  const json = res.choices[0]?.message?.content;
+  if (!json) {
+    throw new Error("No response content from OpenAI");
+  }
+  return JSON.parse(json);
 }
