@@ -105,13 +105,16 @@ GITHUB_WEBHOOK_SECRET=your_webhook_secret
 # OpenAI API Key (required for AI-powered orchestration)
 OPENAI_API_KEY=your_openai_key
 
-# GitHub Token (required for loading behavior files)
+# GitHub Token (required for loading behavior files from external repo)
 GITHUB_TOKEN=your_personal_access_token
 
-# Foreman Behavior Configuration (required for full functionality)
+# Foreman Behavior Configuration
+# Option 1: Load from external GitHub repository
 FOREMAN_BEHAVIOUR_REPO_OWNER=your_org_or_username
 FOREMAN_BEHAVIOUR_REPO_NAME=your_behavior_repo
 FOREMAN_BEHAVIOUR_DIR=path/to/behavior/files
+# Option 2: Use local behavior files (included in this repo at foreman/)
+# Leave the above three variables blank to use local files
 
 # Organization ID (optional)
 MATURION_ORG_ID=your_org_id
@@ -678,6 +681,20 @@ maturion-foreman-app/
 │       │   └── qa/          # QA Builder endpoint
 │       ├── github/webhook/  # GitHub webhook handler
 │       └── foreman/run/     # Foreman task executor
+├── foreman/                 # Foreman behavior files
+│   ├── autonomy-rules.md   # Autonomous operation philosophy
+│   ├── behaviours/         # Orchestration behaviors
+│   │   └── orchestration.md
+│   ├── identity/           # Foreman identity and authority
+│   │   └── foreman-identity.md
+│   ├── builder-specs/      # Builder capability specifications
+│   │   └── builder-capabilities.md
+│   ├── governance/         # Governance and compliance rules
+│   │   ├── approval-rules.md
+│   │   ├── secrets-management.md
+│   │   └── error-recovery.md
+│   └── qa/                 # QA enforcement rules
+│       └── qa-enforcement.md
 ├── lib/                     # Core libraries
 │   ├── github.ts           # GitHub API client
 │   ├── openai.ts           # OpenAI integration
@@ -705,6 +722,75 @@ maturion-foreman-app/
 │   └── run-foreman-task.ts
 └── .env.example            # Environment variables template
 ```
+
+## Foreman Behavior Files
+
+The `foreman/` directory contains behavior files that define how Foreman operates:
+
+### Autonomy Rules (`autonomy-rules.md`)
+
+Defines Foreman's autonomous operation philosophy:
+- QA-governed autonomy principles
+- Hard governance constraints
+- QA enforcement guarantee
+- Secret cycling rules
+- Error recovery protocols
+- No human code review paradigm
+
+### Identity (`identity/foreman-identity.md`)
+
+Defines Foreman's operational authority and responsibilities:
+- Operational authority and constraints
+- Responsibility hierarchy
+- Permission model
+- Context persistence
+- Communication protocols
+
+### Orchestration (`behaviours/orchestration.md`)
+
+Defines how Foreman coordinates builders:
+- Builder communication rules
+- Task dispatch and routing
+- PR assembly rules
+- Error recovery in orchestration
+- Autonomous vs. manual approval workflows
+
+### Builder Specifications (`builder-specs/builder-capabilities.md`)
+
+Documents all builder capabilities:
+- UI, API, Schema, Integration, and QA builders
+- Supported task types for each builder
+- Input/output formats
+- Permissions and scopes
+
+### Governance Rules (`governance/`)
+
+#### Approval Rules (`approval-rules.md`)
+- Autonomous vs. manual approval modes
+- Approval workflow and authority
+- Governance checkpoints
+- Approval best practices
+
+#### Secrets Management (`secrets-management.md`)
+- Zero-trust secrets model
+- Environment-based secrets
+- Secret detection patterns
+- Rotation schedules
+
+#### Error Recovery (`error-recovery.md`)
+- Error categories and handling strategies
+- Retry logic and circuit breakers
+- Escalation rules
+- Rollback strategies
+
+### QA Enforcement (`qa/qa-enforcement.md`)
+
+Defines quality assurance as the ultimate code reviewer:
+- QA-first philosophy
+- QA validation pipeline
+- Quality checks catalog
+- Compliance enforcement
+
 
 ## License
 
