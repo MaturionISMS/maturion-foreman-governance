@@ -21,10 +21,11 @@ export async function loadForemanBehaviourFiles(): Promise<ForemanBehaviourFile[
     );
   }
 
+  // At this point we know all values are defined
   const { data } = await github.rest.repos.getContent({
-    owner: owner as string,
-    repo: repo as string,
-    path: basePath as string,
+    owner: owner!,
+    repo: repo!,
+    path: basePath!,
   });
 
   if (!Array.isArray(data)) {
