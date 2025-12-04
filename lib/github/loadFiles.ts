@@ -10,16 +10,21 @@ export async function loadForemanBehaviourFiles(): Promise<ForemanBehaviourFile[
   const repo = process.env.FOREMAN_BEHAVIOUR_REPO_NAME;
   const basePath = process.env.FOREMAN_BEHAVIOUR_DIR;
 
-  if (!owner || !repo || !basePath) {
+  const missing: string[] = [];
+  if (!owner) missing.push('FOREMAN_BEHAVIOUR_REPO_OWNER');
+  if (!repo) missing.push('FOREMAN_BEHAVIOUR_REPO_NAME');
+  if (!basePath) missing.push('FOREMAN_BEHAVIOUR_DIR');
+
+  if (missing.length > 0) {
     throw new Error(
-      'Missing required environment variables: FOREMAN_BEHAVIOUR_REPO_OWNER, FOREMAN_BEHAVIOUR_REPO_NAME, FOREMAN_BEHAVIOUR_DIR'
+      `Missing required environment variables: ${missing.join(', ')}`
     );
   }
 
   const { data } = await github.rest.repos.getContent({
-    owner,
-    repo,
-    path: basePath,
+    owner: owner as string,
+    repo: repo as string,
+    path: basePath as string,
   });
 
   if (!Array.isArray(data)) {

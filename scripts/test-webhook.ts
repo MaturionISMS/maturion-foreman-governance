@@ -165,11 +165,6 @@ const tests = [
       repository: baseRepository,
       sender: baseSender
     }
-  },
-  {
-    name: 'GET request to webhook endpoint',
-    eventType: 'GET',
-    payload: {} as TestWebhookPayload
   }
 ]
 
@@ -203,8 +198,6 @@ async function runTests() {
   
   // Test POST endpoints
   for (const test of tests) {
-    if (test.eventType === 'GET') continue
-    
     const result = await sendTestWebhook(
       test.eventType, 
       test.payload, 
@@ -216,9 +209,6 @@ async function runTests() {
     } else {
       failed++
     }
-    
-    // Add a small delay between tests
-    await new Promise(resolve => setTimeout(resolve, 100))
   }
   
   console.log('\n' + '='.repeat(60))
