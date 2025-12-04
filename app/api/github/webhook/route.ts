@@ -16,15 +16,11 @@ export async function POST(request: NextRequest) {
     // TODO: Process different event types
     // TODO: Trigger Foreman tasks based on events
     
-    return NextResponse.json({ 
-      success: true, 
-      message: 'Webhook received',
-      event 
-    })
+    return NextResponse.json({ received: true })
   } catch (error) {
     console.error('Webhook error:', error)
     return NextResponse.json(
-      { success: false, error: 'Failed to process webhook' },
+      { received: false, error: 'Failed to process webhook' },
       { status: 500 }
     )
   }

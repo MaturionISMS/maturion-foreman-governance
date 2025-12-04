@@ -18,7 +18,22 @@ export class OpenAIClient {
   }
 
   /**
+   * Run Foreman model with a prompt
+   * Will use OpenAI GPT-4.1 / GPT-4o / GitHub Models
+   * @param prompt - The prompt to send to the model
+   * @returns AI-generated response
+   */
+  async runForemanModel(prompt: string): Promise<string> {
+    // TODO: Implement OpenAI API call
+    // This will use GPT-4.1, GPT-4o, or GitHub Models
+    console.log('Running Foreman model with prompt:', prompt)
+    return 'Foreman model response placeholder - not yet implemented'
+  }
+
+  /**
    * Generate completion
+   * @param prompt - The prompt for completion
+   * @returns Generated completion text
    */
   async generateCompletion(prompt: string): Promise<string> {
     // TODO: Implement OpenAI API call
@@ -28,6 +43,8 @@ export class OpenAIClient {
 
   /**
    * Analyze code
+   * @param code - Code to analyze
+   * @returns Code analysis results
    */
   async analyzeCode(code: string): Promise<any> {
     // TODO: Implement code analysis
@@ -37,6 +54,8 @@ export class OpenAIClient {
 
   /**
    * Generate response for issue
+   * @param issueContent - Issue content to respond to
+   * @returns Generated response
    */
   async generateIssueResponse(issueContent: string): Promise<string> {
     // TODO: Implement issue response generation
@@ -46,3 +65,12 @@ export class OpenAIClient {
 }
 
 export const openaiClient = new OpenAIClient()
+
+/**
+ * Standalone function to run Foreman model
+ * @param prompt - The prompt to send to the model
+ * @returns AI-generated response
+ */
+export async function runForemanModel(prompt: string): Promise<string> {
+  return openaiClient.runForemanModel(prompt)
+}
