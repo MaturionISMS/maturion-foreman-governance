@@ -75,6 +75,5 @@ export async function loadDirectory(
  * @returns Decoded string
  */
 export function decodeContent(content: string): string {
-  // TODO: Implement base64 decoding
   return Buffer.from(content, 'base64').toString('utf-8')
 }
