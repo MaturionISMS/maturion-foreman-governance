@@ -23,34 +23,203 @@ export interface SelfTestCheck {
 export async function runSelfTest(): Promise<SelfTestResult> {
   console.log('Running Foreman self-test...')
   
-  const checks: SelfTestCheck[] = [
-    {
-      name: 'GitHub API Connection',
-      status: 'passed',
-      message: 'Static check - not yet implemented'
-    },
-    {
-      name: 'OpenAI API Connection',
-      status: 'passed',
-      message: 'Static check - not yet implemented'
-    },
-    {
-      name: 'Database Connection',
-      status: 'passed',
-      message: 'Static check - not yet implemented'
-    },
-    {
-      name: 'Environment Variables',
-      status: 'passed',
-      message: 'Static check - not yet implemented'
-    }
-  ]
+  const checks: SelfTestCheck[] = []
+  
+  // Check 1: Environment Variables
+  checks.push(await checkEnvironmentVariables())
+  
+  // Check 2: GitHub API Connection
+  checks.push(await checkGitHubAPI())
+  
+  // Check 3: OpenAI API Connection
+  checks.push(await checkOpenAIAPI())
+  
+  // Check 4: System Configuration
+  checks.push(await checkSystemConfiguration())
+  
+  // Determine overall success
+  const allPassed = checks.every(check => check.status === 'passed')
+  const anyFailed = checks.some(check => check.status === 'failed')
+  const hasWarnings = checks.some(check => check.status === 'warning')
+  
+  let message = ''
+  if (allPassed) {
+    message = 'Self-test OK - all checks passed ✅'
+  } else if (anyFailed) {
+    message = 'Self-test FAILED - one or more checks failed ❌'
+  } else if (hasWarnings) {
+    message = 'Self-test OK with warnings ⚠️'
+  }
   
   return {
-    success: true,
-    message: 'Self-test OK - all checks passed (placeholder)',
+    success: allPassed || !anyFailed,
+    message,
     checks,
     timestamp: new Date()
+  }
+}
+
+/**
+ * Check environment variables
+ */
+async function checkEnvironmentVariables(): Promise<SelfTestCheck> {
+  const requiredVars = [
+    'GITHUB_APP_ID',
+    'GITHUB_APP_PRIVATE_KEY',
+    'GITHUB_APP_INSTALLATION_ID',
+    'OPENAI_API_KEY'
+  ]
+  
+  const optionalVars = [
+    'GITHUB_WEBHOOK_SECRET',
+    'MATURION_ORG_ID',
+    'MATURION_AUTONOMOUS_MODE'
+  ]
+  
+  const missing: string[] = []
+  const optional_missing: string[] = []
+  
+  for (const varName of requiredVars) {
+    if (!process.env[varName]) {
+      missing.push(varName)
+    }
+  }
+  
+  for (const varName of optionalVars) {
+    if (!process.env[varName]) {
+      optional_missing.push(varName)
+    }
+  }
+  
+  if (missing.length > 0) {
+    return {
+      name: 'Environment Variables',
+      status: 'failed',
+      message: `Missing required environment variables: ${missing.join(', ')}`
+    }
+  } else if (optional_missing.length > 0) {
+    return {
+      name: 'Environment Variables',
+      status: 'warning',
+      message: `Optional environment variables not set: ${optional_missing.join(', ')}`
+    }
+  } else {
+    return {
+      name: 'Environment Variables',
+      status: 'passed',
+      message: 'All required environment variables are set'
+    }
+  }
+}
+
+/**
+ * Check GitHub API connection
+ */
+async function checkGitHubAPI(): Promise<SelfTestCheck> {
+  try {
+    // Check if GitHub credentials are available
+    const hasAppCreds = process.env.GITHUB_APP_ID && process.env.GITHUB_APP_PRIVATE_KEY
+    const hasToken = process.env.GITHUB_TOKEN
+    
+    if (!hasAppCreds && !hasToken) {
+      return {
+        name: 'GitHub API Connection',
+        status: 'failed',
+        message: 'GitHub credentials not configured (need GITHUB_APP_ID+GITHUB_APP_PRIVATE_KEY or GITHUB_TOKEN)'
+      }
+    }
+    
+    // Try to import and use the GitHub client
+    const { github } = await import('../github/client')
+    
+    // Simple API call to verify connection
+    const { data: user } = await github.rest.users.getAuthenticated()
+    
+    return {
+      name: 'GitHub API Connection',
+      status: 'passed',
+      message: `Connected to GitHub as: ${user.login}`
+    }
+  } catch (error) {
+    return {
+      name: 'GitHub API Connection',
+      status: 'failed',
+      message: `GitHub API connection failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+    }
+  }
+}
+
+/**
+ * Check OpenAI API connection
+ */
+async function checkOpenAIAPI(): Promise<SelfTestCheck> {
+  try {
+    // Check if OpenAI API key is available
+    if (!process.env.OPENAI_API_KEY) {
+      return {
+        name: 'OpenAI API Connection',
+        status: 'failed',
+        message: 'OpenAI API key not configured'
+      }
+    }
+    
+    // Try to create and use the OpenAI client
+    const OpenAI = (await import('openai')).default
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    })
+    
+    // Simple API call to verify connection (list models)
+    const models = await openai.models.list()
+    
+    return {
+      name: 'OpenAI API Connection',
+      status: 'passed',
+      message: `Connected to OpenAI API (${models.data.length} models available)`
+    }
+  } catch (error) {
+    return {
+      name: 'OpenAI API Connection',
+      status: 'failed',
+      message: `OpenAI API connection failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+    }
+  }
+}
+
+/**
+ * Check system configuration
+ */
+async function checkSystemConfiguration(): Promise<SelfTestCheck> {
+  const warnings: string[] = []
+  
+  // Check autonomous mode setting
+  const autonomousMode = process.env.MATURION_AUTONOMOUS_MODE === 'true'
+  if (!autonomousMode) {
+    warnings.push('Autonomous mode is disabled')
+  }
+  
+  // Check organization ID
+  if (!process.env.MATURION_ORG_ID) {
+    warnings.push('Organization ID not set')
+  }
+  
+  // Check webhook secret
+  if (!process.env.GITHUB_WEBHOOK_SECRET) {
+    warnings.push('GitHub webhook secret not configured')
+  }
+  
+  if (warnings.length > 0) {
+    return {
+      name: 'System Configuration',
+      status: 'warning',
+      message: warnings.join(', ')
+    }
+  }
+  
+  return {
+    name: 'System Configuration',
+    status: 'passed',
+    message: `System configured correctly (Autonomous mode: ${autonomousMode ? 'ON' : 'OFF'})`
   }
 }
 
