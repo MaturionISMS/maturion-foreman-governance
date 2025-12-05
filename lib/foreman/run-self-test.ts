@@ -3,6 +3,8 @@
  * Performs self-diagnostics on the Foreman system
  */
 
+import OpenAI from 'openai'
+
 export interface SelfTestResult {
   success: boolean
   message: string
@@ -64,13 +66,14 @@ export async function runSelfTest(): Promise<SelfTestResult> {
  */
 async function checkEnvironmentVariables(): Promise<SelfTestCheck> {
   const requiredVars = [
-    'GITHUB_APP_ID',
-    'GITHUB_APP_PRIVATE_KEY',
-    'GITHUB_APP_INSTALLATION_ID',
     'OPENAI_API_KEY'
   ]
   
   const optionalVars = [
+    'GITHUB_APP_ID',
+    'GITHUB_APP_PRIVATE_KEY',
+    'GITHUB_APP_INSTALLATION_ID',
+    'GITHUB_TOKEN',
     'GITHUB_WEBHOOK_SECRET',
     'MATURION_ORG_ID',
     'MATURION_AUTONOMOUS_MODE'
@@ -79,10 +82,18 @@ async function checkEnvironmentVariables(): Promise<SelfTestCheck> {
   const missing: string[] = []
   const optional_missing: string[] = []
   
+  // Check for at least one GitHub credential
+  const hasGitHubCreds = process.env.GITHUB_TOKEN || 
+    (process.env.GITHUB_APP_ID && process.env.GITHUB_APP_PRIVATE_KEY)
+  
   for (const varName of requiredVars) {
     if (!process.env[varName]) {
       missing.push(varName)
     }
+  }
+  
+  if (!hasGitHubCreds) {
+    missing.push('GITHUB_TOKEN or (GITHUB_APP_ID + GITHUB_APP_PRIVATE_KEY)')
   }
   
   for (const varName of optionalVars) {
@@ -95,7 +106,7 @@ async function checkEnvironmentVariables(): Promise<SelfTestCheck> {
     return {
       name: 'Environment Variables',
       status: 'failed',
-      message: `Missing required environment variables: ${missing.join(', ')}`
+      message: `Missing required configuration: ${missing.join(', ')}`
     }
   } else if (optional_missing.length > 0) {
     return {
@@ -163,8 +174,7 @@ async function checkOpenAIAPI(): Promise<SelfTestCheck> {
       }
     }
     
-    // Try to create and use the OpenAI client
-    const OpenAI = (await import('openai')).default
+    // Create OpenAI client
     const openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
     })
