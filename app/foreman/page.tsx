@@ -1,94 +1,18 @@
 'use client';
 
 /**
- * Foreman Chat UI
- * Interactive chat interface for communicating with Foreman
+ * Johan's Foreman Office
+ * Modern, themed interface for ISMS build orchestration
  */
 
 import { useState, useEffect, useRef } from 'react';
-import type { ChatMessage, ChatMessageMetadata, ChatExecutionStatus } from '@/types/foreman';
-
-// Status bubble component
-function StatusBubble({ status }: { status: ChatExecutionStatus }) {
-  const getStatusIcon = () => {
-    switch (status.status) {
-      case 'planning': return '📋';
-      case 'selecting_builder': return '🔍';
-      case 'running': return '⚙️';
-      case 'qa_phase': return '✅';
-      case 'opening_pr': return '📤';
-      case 'complete': return '🎉';
-      case 'error': return '❌';
-      default: return '⏳';
-    }
-  };
-
-  const getStatusColor = () => {
-    switch (status.status) {
-      case 'complete': return 'bg-green-100 border-green-300 text-green-800';
-      case 'error': return 'bg-red-100 border-red-300 text-red-800';
-      case 'qa_phase': return 'bg-blue-100 border-blue-300 text-blue-800';
-      default: return 'bg-yellow-100 border-yellow-300 text-yellow-800';
-    }
-  };
-
-  return (
-    <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg border ${getStatusColor()} text-sm mb-2`}>
-      <span className="text-lg">{getStatusIcon()}</span>
-      <span className="font-medium">{status.message}</span>
-    </div>
-  );
-}
-
-// Result card component
-function ResultCard({ status }: { status: ChatExecutionStatus }) {
-  if (status.status !== 'complete' || !status.prLink) return null;
-
-  return (
-    <div className="mt-4 p-4 bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg">
-      <h4 className="font-semibold text-green-800 mb-2">✅ Build Complete</h4>
-      <div className="space-y-2 text-sm">
-        {status.filesChanged && status.filesChanged.length > 0 && (
-          <div>
-            <span className="font-medium text-gray-700">Files changed:</span>
-            <span className="ml-2 text-gray-600">{status.filesChanged.length}</span>
-          </div>
-        )}
-        {status.builderUsed && (
-          <div>
-            <span className="font-medium text-gray-700">Builder used:</span>
-            <span className="ml-2 text-gray-600">{status.builderUsed}</span>
-          </div>
-        )}
-        {status.prLink && (
-          <div>
-            <span className="font-medium text-gray-700">PR link:</span>
-            <a 
-              href={status.prLink} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="ml-2 text-blue-600 hover:underline"
-            >
-              {status.prLink}
-            </a>
-          </div>
-        )}
-        {status.qaSummary && (
-          <div>
-            <span className="font-medium text-gray-700">QA summary:</span>
-            <span className="ml-2 text-gray-600">{status.qaSummary}</span>
-          </div>
-        )}
-        {status.complianceSummary && (
-          <div>
-            <span className="font-medium text-gray-700">Compliance summary:</span>
-            <span className="ml-2 text-gray-600">{status.complianceSummary}</span>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
+import type { ChatMessage, ChatExecutionStatus } from '@/types/foreman';
+import Header from '@/components/foreman/Header';
+import ChatBubble from '@/components/foreman/ChatBubble';
+import StatusEvent from '@/components/foreman/StatusEvent';
+import BuildTimeline from '@/components/foreman/BuildTimeline';
+import UploadDropzone from '@/components/foreman/UploadDropzone';
+import Sidebar from '@/components/foreman/Sidebar';
 
 export default function ForemanChatPage() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -96,6 +20,7 @@ export default function ForemanChatPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [executionStatus, setExecutionStatus] = useState<ChatExecutionStatus | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom when messages change
@@ -284,195 +209,174 @@ export default function ForemanChatPage() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Foreman Chat</h1>
-            <p className="text-sm text-gray-600 mt-1">
-              Ask Foreman about architecture, builds, QA, and compliance
-            </p>
-            {conversationId && (
-              <p className="text-xs text-gray-400 mt-1">
-                Conversation ID: {conversationId}
-              </p>
-            )}
-          </div>
-          <button
-            onClick={async () => {
-              setIsLoading(true);
-              await triggerPilotBuild();
-              setIsLoading(false);
-            }}
-            disabled={isLoading}
-            className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:bg-gray-300 disabled:cursor-not-allowed font-medium transition-colors text-sm"
-          >
-            🚀 Run Pilot Build
-          </button>
-        </div>
-      </div>
+    <div className="flex h-screen bg-foremanOffice-background overflow-hidden">
+      {/* Sidebar */}
+      {sidebarOpen && <Sidebar />}
 
-      {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
-        {messages.length === 0 && (
-          <div className="text-center text-gray-500 mt-8">
-            <p className="text-lg font-medium">Start a conversation with Foreman</p>
-            <p className="text-sm mt-2">Try asking about:</p>
-            <ul className="text-sm mt-2 space-y-1">
-              <li>• Architecture gaps and improvements</li>
-              <li>• Running self-tests or integration tests</li>
-              <li>• Build waves and deployment strategies</li>
-              <li>• QA and compliance requirements</li>
-            </ul>
-          </div>
-        )}
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Header */}
+        <Header
+          status={isLoading ? 'executing' : executionStatus ? 'idle' : 'online'}
+          conversationId={conversationId}
+          onRunPilotBuild={async () => {
+            setIsLoading(true);
+            await triggerPilotBuild();
+            setIsLoading(false);
+          }}
+          isLoading={isLoading}
+        />
 
-        {messages.map((message) => (
-          <div
-            key={message.id}
-            className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-          >
-            <div
-              className={`max-w-3xl px-4 py-3 rounded-lg ${
-                message.role === 'user'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-white border border-gray-200 text-gray-900'
-              }`}
-            >
-              {/* Message Header */}
-              <div className="flex items-center gap-2 mb-2">
-                <span className="font-semibold text-sm">
-                  {message.role === 'user' ? 'You' : 'Foreman'}
-                </span>
-                <span className={`text-xs ${message.role === 'user' ? 'text-blue-200' : 'text-gray-500'}`}>
-                  {message.timestamp.toLocaleTimeString()}
-                </span>
-              </div>
-
-              {/* Message Content */}
-              <div className="whitespace-pre-wrap break-words">
-                {message.content}
-              </div>
-
-              {/* Metadata Tags */}
-              {message.metadata && (
-                <div className="flex flex-wrap gap-1 mt-3">
-                  {message.metadata.wave && (
-                    <span className="px-2 py-1 text-xs rounded bg-purple-100 text-purple-800">
-                      Wave: {message.metadata.wave}
-                    </span>
-                  )}
-                  {message.metadata.module && (
-                    <span className="px-2 py-1 text-xs rounded bg-green-100 text-green-800">
-                      Module: {message.metadata.module}
-                    </span>
-                  )}
-                  {message.metadata.actionType && (
-                    <span className="px-2 py-1 text-xs rounded bg-yellow-100 text-yellow-800">
-                      Action: {message.metadata.actionType}
-                    </span>
-                  )}
-                  {message.metadata.builderType && (
-                    <span className="px-2 py-1 text-xs rounded bg-blue-100 text-blue-800">
-                      Builder: {message.metadata.builderType}
-                    </span>
-                  )}
-                  {message.metadata.tags?.map((tag) => (
-                    <span
-                      key={tag}
-                      className="px-2 py-1 text-xs rounded bg-gray-100 text-gray-700"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+        {/* Two-Panel Layout */}
+        <div className="flex-1 flex overflow-hidden">
+          {/* Left Panel - Chat */}
+          <div className="flex-1 flex flex-col overflow-hidden border-r border-foremanOffice-border">
+            {/* Chat Messages */}
+            <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+              {messages.length === 0 && (
+                <div className="text-center text-gray-400 mt-12">
+                  <div className="mb-6">
+                    <span className="text-6xl">👷</span>
+                  </div>
+                  <p className="text-xl font-semibold text-foremanOffice-text mb-3">
+                    Welcome to Johan&apos;s Foreman Office
+                  </p>
+                  <p className="text-sm mb-4">Ask Foreman about:</p>
+                  <ul className="text-sm space-y-2 max-w-md mx-auto">
+                    <li className="flex items-center gap-2">
+                      <span className="text-foremanOffice-accent">▸</span>
+                      <span>Architecture gaps and improvements</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="text-foremanOffice-accent">▸</span>
+                      <span>Running self-tests or integration tests</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="text-foremanOffice-accent">▸</span>
+                      <span>Build waves and deployment strategies</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="text-foremanOffice-accent">▸</span>
+                      <span>QA and compliance requirements</span>
+                    </li>
+                  </ul>
                 </div>
               )}
 
-              {/* Proposed Actions */}
-              {message.proposedActions && message.proposedActions.length > 0 && (
-                <div className="mt-3 pt-3 border-t border-gray-200">
-                  <p className="text-sm font-semibold mb-2">Proposed Actions:</p>
-                  <div className="space-y-2">
-                    {message.proposedActions.map((action, idx) => (
-                      <div
-                        key={idx}
-                        className="text-sm bg-gray-50 px-3 py-2 rounded border border-gray-200"
-                      >
-                        <div className="font-medium">{action.type}</div>
-                        {action.params?.description && (
-                          <div className="text-gray-600 mt-1">{action.params.description}</div>
-                        )}
-                        {action.params?.builder && (
-                          <div className="text-xs text-gray-500 mt-1">
-                            Builder: {action.params.builder}
-                          </div>
-                        )}
+              {messages.map((message) => (
+                <ChatBubble key={message.id} message={message} />
+              ))}
+
+              {/* Execution Status */}
+              {executionStatus && (
+                <div className="flex justify-start">
+                  <StatusEvent status={executionStatus} />
+                </div>
+              )}
+
+              {isLoading && !executionStatus && (
+                <div className="flex justify-start">
+                  <div className="bg-foremanOffice-panel border border-foremanOffice-border px-4 py-3 rounded-lg shadow-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="flex space-x-1">
+                        <div className="h-2 w-2 bg-foremanOffice-primary rounded-full animate-bounce"></div>
+                        <div className="h-2 w-2 bg-foremanOffice-primary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                        <div className="h-2 w-2 bg-foremanOffice-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                       </div>
-                    ))}
+                      <span className="text-sm text-gray-400">Foreman is thinking...</span>
+                    </div>
                   </div>
                 </div>
               )}
-            </div>
-          </div>
-        ))}
 
-        {/* Execution Status */}
-        {executionStatus && (
-          <div className="flex justify-start">
-            <div className="max-w-3xl px-4 py-3 rounded-lg bg-white border border-gray-200">
-              <div className="space-y-2">
-                <StatusBubble status={executionStatus} />
-                {executionStatus.status === 'complete' && (
-                  <ResultCard status={executionStatus} />
-                )}
+              <div ref={messagesEndRef} />
+            </div>
+
+            {/* Input Area - Sticky */}
+            <div className="bg-foremanOffice-panel border-t border-foremanOffice-border px-6 py-4">
+              <div className="flex gap-3">
+                <input
+                  type="text"
+                  value={inputMessage}
+                  onChange={(e) => setInputMessage(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Ask Foreman anything..."
+                  disabled={isLoading}
+                  className="flex-1 px-4 py-3 bg-foremanOffice-background border border-foremanOffice-border rounded-lg text-foremanOffice-text placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-foremanOffice-primary focus:border-transparent disabled:opacity-50"
+                />
+                <button
+                  onClick={sendMessage}
+                  disabled={isLoading || !inputMessage.trim()}
+                  className="px-6 py-3 bg-foremanOffice-primary text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-700 disabled:cursor-not-allowed font-medium transition-colors"
+                >
+                  {isLoading ? 'Sending...' : 'Send'}
+                </button>
               </div>
+              <p className="text-xs text-gray-600 mt-2">
+                Foreman uses GPT-4 with organization-specific governance rules
+              </p>
             </div>
           </div>
-        )}
 
-        {isLoading && (
-          <div className="flex justify-start">
-            <div className="max-w-3xl px-4 py-3 rounded-lg bg-white border border-gray-200">
-              <div className="flex items-center gap-2">
-                <div className="animate-pulse flex space-x-1">
-                  <div className="h-2 w-2 bg-gray-400 rounded-full"></div>
-                  <div className="h-2 w-2 bg-gray-400 rounded-full"></div>
-                  <div className="h-2 w-2 bg-gray-400 rounded-full"></div>
+          {/* Right Panel - Telemetry & Actions */}
+          <div className="w-96 bg-foremanOffice-background overflow-y-auto p-6 space-y-6 hidden lg:block">
+            <div>
+              <h2 className="text-lg font-semibold text-foremanOffice-text mb-4">
+                Build Telemetry
+              </h2>
+
+              {/* Build Timeline */}
+              {executionStatus && (
+                <BuildTimeline status={executionStatus} />
+              )}
+
+              {/* Placeholder when no build is running */}
+              {!executionStatus && (
+                <div className="bg-foremanOffice-panel border border-foremanOffice-border rounded-lg p-6 text-center">
+                  <span className="text-4xl opacity-30">📊</span>
+                  <p className="text-sm text-gray-500 mt-3">
+                    Build telemetry will appear here during execution
+                  </p>
                 </div>
-                <span className="text-sm text-gray-500">Foreman is thinking...</span>
+              )}
+            </div>
+
+            {/* Document Upload Placeholder */}
+            <div>
+              <h2 className="text-lg font-semibold text-foremanOffice-text mb-4">
+                Documents
+              </h2>
+              <UploadDropzone />
+            </div>
+
+            {/* Quick Actions */}
+            <div>
+              <h2 className="text-lg font-semibold text-foremanOffice-text mb-4">
+                Quick Actions
+              </h2>
+              <div className="space-y-2">
+                <button className="w-full px-4 py-2 bg-foremanOffice-panel border border-foremanOffice-border text-foremanOffice-text rounded-lg hover:bg-foremanOffice-panel/50 transition-colors text-sm text-left">
+                  📋 View Build History
+                </button>
+                <button className="w-full px-4 py-2 bg-foremanOffice-panel border border-foremanOffice-border text-foremanOffice-text rounded-lg hover:bg-foremanOffice-panel/50 transition-colors text-sm text-left">
+                  ✓ Check Task Queue
+                </button>
+                <button className="w-full px-4 py-2 bg-foremanOffice-panel border border-foremanOffice-border text-foremanOffice-text rounded-lg hover:bg-foremanOffice-panel/50 transition-colors text-sm text-left">
+                  📊 Generate Report
+                </button>
               </div>
             </div>
           </div>
-        )}
-
-        <div ref={messagesEndRef} />
-      </div>
-
-      {/* Input Area */}
-      <div className="bg-white border-t border-gray-200 px-6 py-4">
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={inputMessage}
-            onChange={(e) => setInputMessage(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="Ask Foreman anything..."
-            disabled={isLoading}
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:text-gray-500"
-          />
-          <button
-            onClick={sendMessage}
-            disabled={isLoading || !inputMessage.trim()}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed font-medium transition-colors"
-          >
-            {isLoading ? 'Sending...' : 'Send'}
-          </button>
         </div>
-        <p className="text-xs text-gray-500 mt-2">
-          Foreman uses GPT-4 with organization-specific governance rules
-        </p>
       </div>
+
+      {/* Mobile Sidebar Toggle */}
+      <button
+        onClick={() => setSidebarOpen(!sidebarOpen)}
+        className="fixed bottom-6 left-6 lg:hidden w-12 h-12 bg-foremanOffice-primary text-white rounded-full shadow-lg flex items-center justify-center hover:bg-blue-600 transition-colors z-50"
+      >
+        {sidebarOpen ? '✕' : '☰'}
+      </button>
     </div>
   );
 }

@@ -252,7 +252,55 @@ The Maturion system embraces a philosophy of **QA-governed autonomy**:
 
 This approach allows teams to move at machine speed while maintaining higher quality standards than traditional manual review processes.
 
-## Foreman Chat UI
+## Johan's Foreman Office UI
+
+**Wave 5.1** transforms the Foreman Chat UI into a polished, themed "Foreman Office" environment - the main cockpit where Johan runs ISMS builds.
+
+### UI Screenshots
+
+**Desktop View - Empty State:**
+
+![Foreman Office Desktop](https://github.com/user-attachments/assets/562fb248-8bd7-47f8-99b0-2458264694eb)
+
+**Desktop View - With Message:**
+
+![Foreman Office With Message](https://github.com/user-attachments/assets/b024a694-a6f2-49fd-827f-e98a299dcdf8)
+
+**Mobile View:**
+
+![Foreman Office Mobile](https://github.com/user-attachments/assets/1fc551ee-4326-4e57-afad-1038a93249f1)
+
+### UI Features
+
+Johan's Foreman Office includes:
+
+- **Two-Panel Layout**: Chat on the left, build telemetry and actions on the right
+- **Themed Design**: Dark industrial UI with electric blue accents and construction yellow highlights
+- **Sidebar Navigation**: Quick access to Chat, Build History, Tasks, Logs, Settings, and Pilot Wave Report
+- **Rich Chat Bubbles**: Markdown support, code formatting, metadata tags, and proposed actions display
+- **Build Timeline**: Animated progress tracking with real-time status updates
+- **Status Events**: Visual indicators for planning, builder selection, execution, QA, and PR creation
+- **Header with Status**: Foreman avatar, online/idle/executing indicator, and quick pilot build button
+- **Document Upload Placeholder**: UI foundation for future document upload feature
+- **Quick Actions Panel**: Fast access to build history, task queue, and report generation
+- **Mobile Responsive**: Fully functional on mobile devices with collapsible sidebar
+
+### Theme Colors
+
+The Foreman Office theme uses:
+
+```typescript
+foremanOffice: {
+  primary: '#0074ff',      // Electric blue for primary actions
+  accent: '#ffd500',       // Construction yellow for highlights
+  background: '#111418',   // Deep slate background
+  panel: '#1c1f24',        // Slightly lighter panels
+  border: '#2a2d33',       // Subtle borders
+  text: '#e3e3e3',         // Light text for readability
+}
+```
+
+### Foreman Chat UI
 
 The Foreman Chat UI provides a direct conversational interface for interacting with the Foreman orchestration engine. This is the primary interface where admins can communicate with Foreman about architecture, builds, QA, and compliance without going through GitHub issues or webhooks.
 
@@ -474,11 +522,32 @@ Planned improvements:
 - Builder preference selection
 - Custom command aliases
 
+### How to Use the Foreman Office UI
+
+1. **Navigate to the Interface**: Access at `/foreman` (e.g., `http://localhost:3000/foreman`)
+
+2. **Sidebar Navigation**: Use the left sidebar to switch between:
+   - **Chat**: Main conversation interface
+   - **Build History**: View past builds (coming soon)
+   - **Tasks**: Check task queue (coming soon)
+   - **Logs**: View execution logs (coming soon)
+   - **Settings**: Configure preferences (coming soon)
+   - **Pilot Wave Report**: Access build reports
+
+3. **Start a Conversation**: Type your question or command in the input box at the bottom of the chat panel
+
+4. **Monitor Build Progress**: Watch the right panel for:
+   - **Build Timeline**: Real-time progress through planning, builder selection, execution, QA, and PR creation
+   - **Status Events**: Animated indicators showing current activity
+   - **Build Telemetry**: Files changed, builder used, and PR links when builds complete
+
+5. **Quick Actions**: Use the buttons in the right panel for common tasks
+
+6. **Mobile**: On mobile devices, tap the floating menu button (☰) to show/hide the sidebar
+
 ### Overview
 
 Access the chat interface at `/foreman` in your deployed application (e.g., `http://localhost:3000/foreman` in development).
-
-![Foreman Chat Interface](https://github.com/user-attachments/assets/3d2fcc74-4bb7-4aed-b526-7396e7837100)
 
 ### Key Features
 
@@ -490,6 +559,9 @@ Access the chat interface at `/foreman` in your deployed application (e.g., `htt
 - **Metadata Tags**: Messages are tagged with wave, module, action type, and builder information
 - **Action Proposals**: See proposed builder tasks with risks, QA requirements, and complexity estimates
 - **Logging**: All interactions are logged with secret redaction for audit trails
+- **Rich Chat Bubbles**: Markdown rendering, code blocks, and syntax highlighting
+- **Streaming Animations**: Visual feedback during build execution
+- **Build Timeline Visualization**: Track progress through each phase of the build
 
 ### What You Can Ask Foreman
 
