@@ -6,19 +6,102 @@
  */
 
 import { useState, useEffect, useRef } from 'react';
-import type { ChatMessage, ChatMessageMetadata } from '@/types/foreman';
+import type { ChatMessage, ChatMessageMetadata, ChatExecutionStatus } from '@/types/foreman';
+
+// Status bubble component
+function StatusBubble({ status }: { status: ChatExecutionStatus }) {
+  const getStatusIcon = () => {
+    switch (status.status) {
+      case 'planning': return '📋';
+      case 'selecting_builder': return '🔍';
+      case 'running': return '⚙️';
+      case 'qa_phase': return '✅';
+      case 'opening_pr': return '📤';
+      case 'complete': return '🎉';
+      case 'error': return '❌';
+      default: return '⏳';
+    }
+  };
+
+  const getStatusColor = () => {
+    switch (status.status) {
+      case 'complete': return 'bg-green-100 border-green-300 text-green-800';
+      case 'error': return 'bg-red-100 border-red-300 text-red-800';
+      case 'qa_phase': return 'bg-blue-100 border-blue-300 text-blue-800';
+      default: return 'bg-yellow-100 border-yellow-300 text-yellow-800';
+    }
+  };
+
+  return (
+    <div className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg border ${getStatusColor()} text-sm mb-2`}>
+      <span className="text-lg">{getStatusIcon()}</span>
+      <span className="font-medium">{status.message}</span>
+    </div>
+  );
+}
+
+// Result card component
+function ResultCard({ status }: { status: ChatExecutionStatus }) {
+  if (status.status !== 'complete' || !status.prLink) return null;
+
+  return (
+    <div className="mt-4 p-4 bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg">
+      <h4 className="font-semibold text-green-800 mb-2">✅ Build Complete</h4>
+      <div className="space-y-2 text-sm">
+        {status.filesChanged && status.filesChanged.length > 0 && (
+          <div>
+            <span className="font-medium text-gray-700">Files changed:</span>
+            <span className="ml-2 text-gray-600">{status.filesChanged.length}</span>
+          </div>
+        )}
+        {status.builderUsed && (
+          <div>
+            <span className="font-medium text-gray-700">Builder used:</span>
+            <span className="ml-2 text-gray-600">{status.builderUsed}</span>
+          </div>
+        )}
+        {status.prLink && (
+          <div>
+            <span className="font-medium text-gray-700">PR link:</span>
+            <a 
+              href={status.prLink} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="ml-2 text-blue-600 hover:underline"
+            >
+              {status.prLink}
+            </a>
+          </div>
+        )}
+        {status.qaSummary && (
+          <div>
+            <span className="font-medium text-gray-700">QA summary:</span>
+            <span className="ml-2 text-gray-600">{status.qaSummary}</span>
+          </div>
+        )}
+        {status.complianceSummary && (
+          <div>
+            <span className="font-medium text-gray-700">Compliance summary:</span>
+            <span className="ml-2 text-gray-600">{status.complianceSummary}</span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 export default function ForemanChatPage() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [conversationId, setConversationId] = useState<string | null>(null);
+  const [executionStatus, setExecutionStatus] = useState<ChatExecutionStatus | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  }, [messages, executionStatus]);
 
   // Detect pilot build command
   const detectPilotBuildCommand = (message: string): boolean => {
@@ -145,6 +228,11 @@ export default function ForemanChatPage() {
         // Set conversation ID if this is the first message
         if (!conversationId && data.conversationId) {
           setConversationId(data.conversationId);
+        }
+
+        // Handle execution status if present
+        if (data.response.executionStatus) {
+          setExecutionStatus(data.response.executionStatus);
         }
 
         // Add Foreman's response to chat
@@ -328,6 +416,20 @@ export default function ForemanChatPage() {
             </div>
           </div>
         ))}
+
+        {/* Execution Status */}
+        {executionStatus && (
+          <div className="flex justify-start">
+            <div className="max-w-3xl px-4 py-3 rounded-lg bg-white border border-gray-200">
+              <div className="space-y-2">
+                <StatusBubble status={executionStatus} />
+                {executionStatus.status === 'complete' && (
+                  <ResultCard status={executionStatus} />
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
         {isLoading && (
           <div className="flex justify-start">

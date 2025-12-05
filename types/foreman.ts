@@ -58,6 +58,15 @@ export type ForemanActionType =
   | 'TRIGGER_BUILDER_TASK'
   | 'RUN_QA'
   | 'APPLY_GOVERNANCE'
+  | 'RUN_BUILD_WAVE'
+  | 'GENERATE_ARCHITECTURE'
+  | 'REFACTOR'
+  | 'CREATE_FEATURE'
+  | 'MODIFY_FILE'
+  | 'QA_RUN'
+  | 'SELF_TEST'
+  | 'INTEGRATION_TEST'
+  | 'BUILDER_TASK'
 
 export interface ForemanAction {
   type: ForemanActionType
@@ -75,6 +84,79 @@ export interface TriggerBuilderTaskAction extends ForemanAction {
     context?: Record<string, any>
   }
   requiresApproval: true
+}
+
+export interface RunBuildWaveAction extends ForemanAction {
+  type: 'RUN_BUILD_WAVE'
+  params: {
+    wave: string
+    module?: string
+  }
+  requiresApproval: boolean
+}
+
+export interface GenerateArchitectureAction extends ForemanAction {
+  type: 'GENERATE_ARCHITECTURE'
+  params: {
+    module: string
+  }
+  requiresApproval: boolean
+}
+
+export interface RefactorAction extends ForemanAction {
+  type: 'REFACTOR'
+  params: {
+    scope: string
+    description: string
+  }
+  requiresApproval: boolean
+}
+
+export interface CreateFeatureAction extends ForemanAction {
+  type: 'CREATE_FEATURE'
+  params: {
+    module: string
+    feature: string
+  }
+  requiresApproval: boolean
+}
+
+export interface ModifyFileAction extends ForemanAction {
+  type: 'MODIFY_FILE'
+  params: {
+    path: string
+    intent: string
+  }
+  requiresApproval: boolean
+}
+
+export interface QARunAction extends ForemanAction {
+  type: 'QA_RUN'
+  params: {
+    target: string
+  }
+  requiresApproval: boolean
+}
+
+export interface SelfTestAction extends ForemanAction {
+  type: 'SELF_TEST'
+  params: Record<string, any>
+  requiresApproval: false
+}
+
+export interface IntegrationTestAction extends ForemanAction {
+  type: 'INTEGRATION_TEST'
+  params: Record<string, any>
+  requiresApproval: boolean
+}
+
+export interface BuilderTaskAction extends ForemanAction {
+  type: 'BUILDER_TASK'
+  params: {
+    builder: string
+    instruction: string
+  }
+  requiresApproval: boolean
 }
 
 export interface ForemanConfig {
@@ -133,4 +215,17 @@ export interface ChatResponse {
     contextFlags?: string[]
   }
   metadata?: ChatMessageMetadata
+  autonomyIntent?: 'execute' | 'proposal_only'
+  executionStatus?: ChatExecutionStatus
+}
+
+export interface ChatExecutionStatus {
+  status: 'planning' | 'selecting_builder' | 'running' | 'qa_phase' | 'opening_pr' | 'complete' | 'error'
+  message?: string
+  builderUsed?: string
+  filesChanged?: string[]
+  prLink?: string
+  qaSummary?: string
+  complianceSummary?: string
+  error?: string
 }

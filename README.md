@@ -256,6 +256,224 @@ This approach allows teams to move at machine speed while maintaining higher qua
 
 The Foreman Chat UI provides a direct conversational interface for interacting with the Foreman orchestration engine. This is the primary interface where admins can communicate with Foreman about architecture, builds, QA, and compliance without going through GitHub issues or webhooks.
 
+### Live Build Execution via Chat
+
+**Wave 4** introduces the Chat Live Build Execution Layer, turning the Foreman Chat UI into the command bridge of the Maturion ISMS platform. Foreman can now execute real builds directly from chat using autonomous reasoning, architecture analysis, and QA-governed decision-making.
+
+#### How It Works
+
+1. **User sends command** via chat (e.g., "Foreman, run Wave 3")
+2. **Foreman interprets** the message using GPT-4 and behavior rules
+3. **Actions are proposed** with structured ForemanAction[] types
+4. **Autonomy check**: If autonomy=ON and actions are executable → execute; else → propose only
+5. **Execution pipeline**:
+   - Convert actions to build tasks
+   - Select builder (Copilot or Local Builder)
+   - Run build cycle with QA and compliance gates
+   - Generate PRs
+   - Stream updates back to chat UI
+6. **Results displayed** in chat with status bubbles and result cards
+
+#### Supported Commands
+
+**Build Wave Execution**:
+```
+Foreman, run Wave 3
+Execute Wave 4
+Continue the build
+```
+
+**Feature Creation**:
+```
+Implement the warranty PDF builder
+Create a user dashboard component
+Build the authentication system
+```
+
+**Architecture Analysis**:
+```
+Generate architecture for Runtime Maturion
+Analyze the authentication module architecture
+Show me architecture gaps in the dashboard
+```
+
+**Bug Fixes**:
+```
+Fix the schema mismatch
+Resolve the type error in users module
+```
+
+**QA and Testing**:
+```
+Run QA on the authentication module
+Run self-test
+Test the new API endpoints
+```
+
+**Direct Builder Tasks**:
+```
+Ask the UI builder to create a dashboard
+Schema builder, define user types
+QA builder, validate the authentication flow
+```
+
+See [foreman/behaviours/chat-commands.md](foreman/behaviours/chat-commands.md) for complete command patterns.
+
+#### Streaming Status Updates
+
+The chat UI displays real-time status updates during build execution:
+
+- 📋 **Planning build...** - Analyzing requirements and planning
+- 🔍 **Selecting builder...** - Choosing optimal builder
+- ⚙️ **Local Builder is active** - Builder executing
+- ✅ **Running QA phase...** - Quality validation in progress
+- 📤 **Opening PR...** - Creating pull request
+- 🎉 **Build complete** - Execution finished
+
+#### Result Cards
+
+When builds complete, the chat displays rich result cards showing:
+- **Files changed**: Number of files modified
+- **Builder used**: Which builder executed the task
+- **PR link**: Direct link to created pull request
+- **QA summary**: Quality validation results
+- **Compliance summary**: Compliance check results
+
+#### Autonomy Modes
+
+**Autonomous Mode (ON)**:
+- Actions with `autonomyIntent = "execute"` run automatically
+- QA, compliance, and test gates still enforced
+- PRs created automatically on success
+- No human approval required for safe operations
+
+**Manual Mode (OFF)**:
+- All actions show "Waiting for admin approval"
+- Tasks created in `pending_approval` state
+- Admin must approve via `/api/admin/approve`
+- Full human oversight for every action
+
+Configure via environment variable:
+```env
+MATURION_AUTONOMOUS_MODE=true  # Enable autonomous execution
+```
+
+#### Error Handling
+
+If execution fails:
+- ❌ Error status bubble displayed
+- Clear error message shown
+- Logs written to console and Vercel
+- Execution stops at failure point
+- User can retry or modify command
+
+#### Telemetry & Logging
+
+All chat executions are logged with:
+- **Chat command**: Original user message
+- **Parsed actions**: ForemanAction[] generated
+- **Builder selection**: Which builder chosen and why
+- **Execution phases**: Each step of the pipeline
+- **QA results**: Quality validation outcomes
+- **PR outcomes**: Success or failure with URLs
+- **Errors**: Any failures with stack traces
+- **Degraded mode events**: System health issues
+
+Logs available in:
+- Console output (development)
+- Vercel runtime logs (production)
+- Future: Centralized logging service
+
+See [lib/logging/foremanLogger.ts](lib/logging/foremanLogger.ts) for logging API.
+
+#### Example Conversation
+
+**User**: "Foreman, run Wave 3"
+
+**Foreman**:
+```
+I'll execute Wave 3 build sequence now.
+
+📋 Planning build...
+🔍 Selecting builders...
+⚙️ Local Builder is active
+✅ Running QA phase...
+📤 Opening PR...
+🎉 Build complete
+
+✅ Execution Complete
+
+PR created: https://github.com/MaturionISMS/repo/pull/42
+Sequence ID: seq_1234567890_abc
+Tasks executed: 3
+```
+
+**Result Card**:
+- **Files changed**: 12
+- **Builder used**: Local Builder
+- **PR link**: https://github.com/MaturionISMS/repo/pull/42
+- **QA summary**: All checks passed
+- **Compliance summary**: No secrets detected
+
+#### Safety & Governance
+
+Live build execution maintains strict governance:
+
+1. **QA Gates**: All code changes validated
+2. **Compliance Gates**: Secrets detection, audit logging
+3. **Test Gates**: Code changes include tests
+4. **Autonomy Rules**: Only safe operations auto-execute
+5. **Approval Gates**: Risky operations require review
+6. **Audit Trail**: All actions logged immutably
+
+**No human code review ≠ no quality control**. QA validation is more consistent and comprehensive than manual review.
+
+#### Architecture
+
+The live build execution pipeline consists of:
+
+1. **Chat Route** (`app/api/foreman/chat/route.ts`):
+   - Receives user messages
+   - Calls GPT-4 with chat profile and behavior rules
+   - Parses JSON responses to extract actions
+   - Checks autonomy mode and intent
+   - Delegates to chat executor
+
+2. **Chat Executor** (`lib/foreman/chat-executor.ts`):
+   - Receives ForemanAction[]
+   - Converts actions to build tasks
+   - Routes via dispatch layer
+   - Monitors task status
+   - Produces streaming status updates
+
+3. **Dispatch Layer** (`lib/foreman/dispatch.ts`):
+   - Routes tasks to builders
+   - Enforces governance rules
+   - Handles autonomy/approval modes
+   - Executes approved tasks
+
+4. **Build Sequence Engine** (`lib/foreman/build-sequence.ts`):
+   - Orchestrates full build sequences
+   - Architecture → Builder → QA → PR pipeline
+   - Supports chat-triggered builds
+
+5. **Chat UI** (`app/foreman/page.tsx`):
+   - Displays streaming status bubbles
+   - Shows result cards
+   - Renders proposed actions
+   - Handles execution state
+
+#### Future Enhancements
+
+Planned improvements:
+- Real-time streaming (WebSocket/SSE)
+- Multi-step conversation memory
+- Interactive approval buttons
+- Build progress visualization
+- Rollback commands
+- Builder preference selection
+- Custom command aliases
+
 ### Overview
 
 Access the chat interface at `/foreman` in your deployed application (e.g., `http://localhost:3000/foreman` in development).

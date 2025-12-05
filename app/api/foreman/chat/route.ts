@@ -7,6 +7,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { compileForemanChatContext, extractChatMetadata } from '@/lib/foreman/chat-profile';
 import type { ChatRequest, ChatResponse, ForemanAction } from '@/types/foreman';
+import { executeChatActions } from '@/lib/foreman/chat-executor';
+import { isAutonomousModeEnabled } from '@/lib/foreman/dispatch';
+import { foremanLogger, LogLevel } from '@/lib/logging/foremanLogger';
 
 // Validate API key is present
 if (!process.env.OPENAI_API_KEY) {
@@ -92,7 +95,8 @@ export async function POST(request: NextRequest) {
         telemetry: parsed.telemetry || {
           subSystemsInvolved: ['chat', 'orchestrator']
         },
-        metadata: extractChatMetadata(rawResponse)
+        metadata: extractChatMetadata(rawResponse),
+        autonomyIntent: parsed.autonomyIntent || 'proposal_only'
       };
     } catch {
       // Not JSON, treat as plain text response
@@ -102,8 +106,85 @@ export async function POST(request: NextRequest) {
         telemetry: {
           subSystemsInvolved: ['chat', 'orchestrator']
         },
-        metadata: extractChatMetadata(rawResponse)
+        metadata: extractChatMetadata(rawResponse),
+        autonomyIntent: 'proposal_only'
       };
+    }
+
+    // Check if we should execute actions
+    const autonomousMode = isAutonomousModeEnabled()
+    const shouldExecute = autonomousMode && 
+                         chatResponse.autonomyIntent === 'execute' && 
+                         chatResponse.proposedActions && 
+                         chatResponse.proposedActions.length > 0
+
+    if (shouldExecute) {
+      // Execute actions via chat executor
+      foremanLogger.log(LogLevel.INFO, 'ChatExecution', 'Executing chat actions', {
+        organisationId: orgId,
+        conversationId: convId,
+        actionsCount: chatResponse.proposedActions!.length,
+      })
+
+      try {
+        const executionResult = await executeChatActions(
+          chatResponse.proposedActions!,
+          orgId,
+          convId
+        )
+
+        // Add execution status to response
+        if (executionResult.statusUpdates.length > 0) {
+          const lastUpdate = executionResult.statusUpdates[executionResult.statusUpdates.length - 1]
+          chatResponse.executionStatus = {
+            status: lastUpdate.status,
+            message: lastUpdate.message,
+            builderUsed: lastUpdate.metadata?.builder,
+            filesChanged: lastUpdate.metadata?.filesChanged,
+            prLink: executionResult.prUrl,
+            qaSummary: lastUpdate.metadata?.qaSummary,
+            complianceSummary: lastUpdate.metadata?.complianceSummary,
+            error: executionResult.error,
+          }
+        }
+
+        // Update reply text with execution results
+        if (executionResult.success) {
+          chatResponse.replyText += `\n\n✅ **Execution Complete**\n\n`
+          if (executionResult.prUrl) {
+            chatResponse.replyText += `PR created: ${executionResult.prUrl}\n`
+          }
+          if (executionResult.sequenceId) {
+            chatResponse.replyText += `Sequence ID: ${executionResult.sequenceId}\n`
+          }
+          if (executionResult.taskIds && executionResult.taskIds.length > 0) {
+            chatResponse.replyText += `Tasks executed: ${executionResult.taskIds.length}\n`
+          }
+        } else {
+          chatResponse.replyText += `\n\n⚠️ **Execution Issue**\n\n${executionResult.error || 'Unknown error'}\n`
+        }
+      } catch (error) {
+        foremanLogger.logError({
+          timestamp: new Date(),
+          errorType: 'ChatExecutionError',
+          message: error instanceof Error ? error.message : 'Unknown error',
+          stack: error instanceof Error ? error.stack : undefined,
+          context: { organisationId: orgId, conversationId: convId },
+        })
+
+        chatResponse.executionStatus = {
+          status: 'error',
+          message: error instanceof Error ? error.message : 'Execution failed',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        }
+      }
+    } else if (chatResponse.proposedActions && chatResponse.proposedActions.length > 0) {
+      // Actions proposed but not executed
+      if (!autonomousMode) {
+        chatResponse.replyText += `\n\n⏸️ **Waiting for Admin Approval**\n\nAutonomy mode is disabled. These actions require manual approval.`
+      } else {
+        chatResponse.replyText += `\n\n💡 **Proposed Actions**\n\nThese actions are proposed but not executed. Confirm to proceed.`
+      }
     }
 
     // Log the interaction (redact any potential secrets)
