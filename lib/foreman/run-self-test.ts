@@ -4,6 +4,7 @@
  */
 
 import OpenAI from 'openai'
+import { github } from '../github/client'
 
 export interface SelfTestResult {
   success: boolean
@@ -139,9 +140,6 @@ async function checkGitHubAPI(): Promise<SelfTestCheck> {
         message: 'GITHUB_TOKEN not configured'
       }
     }
-    
-    // Try to import and use the GitHub client
-    const { github } = await import('../github/client')
     
     // Simple API call to verify connection
     const { data: user } = await github.rest.users.getAuthenticated()
