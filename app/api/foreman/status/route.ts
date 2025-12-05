@@ -5,6 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { isAutonomousModeEnabled, getAutonomousSafeguards } from '@/lib/foreman/dispatch'
+import { checkInitializationStatus, getInitializationSummary, InitializationStatus } from '@/lib/foreman/initialization'
 import { exec } from 'child_process'
 import { promisify } from 'util'
 
@@ -23,6 +24,8 @@ interface ForemanStatusResponse {
   environment: string
   uptime: number
   timestamp: string
+  initialization: InitializationStatus
+  initializationSummary: string
 }
 
 /**
@@ -58,6 +61,10 @@ export async function GET(request: NextRequest) {
     const complianceGateRequired = safeguards.includes('compliance')
     const testGateRequired = safeguards.includes('tests')
     
+    // Check initialization status
+    const initialization = await checkInitializationStatus()
+    const initializationSummary = getInitializationSummary(initialization)
+    
     const status: ForemanStatusResponse = {
       autonomousMode,
       qaGateRequired,
@@ -70,14 +77,17 @@ export async function GET(request: NextRequest) {
       version: '0.1.0', // TODO: Import from package.json
       environment: process.env.NODE_ENV || 'development',
       uptime: process.uptime(),
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      initialization,
+      initializationSummary
     }
     
     console.log('[Status] Foreman status requested:', {
       autonomousMode,
       safeguards,
       gitSha,
-      currentWave
+      currentWave,
+      initializationSummary
     })
     
     return NextResponse.json(status)
