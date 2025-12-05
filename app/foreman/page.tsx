@@ -68,12 +68,8 @@ export default function ForemanChatPage() {
           metadata: data.response.metadata,
           organisationId: '', // Set by server
           conversationId: data.conversationId,
+          proposedActions: data.response.proposedActions,
         };
-
-        // Add proposed actions as a separate property if needed for display
-        if (data.response.proposedActions) {
-          (foremanMessage as any).proposedActions = data.response.proposedActions;
-        }
 
         setMessages((prev) => [...prev, foremanMessage]);
       } else {
@@ -203,22 +199,22 @@ export default function ForemanChatPage() {
               )}
 
               {/* Proposed Actions */}
-              {(message as any).proposedActions && (message as any).proposedActions.length > 0 && (
+              {message.proposedActions && message.proposedActions.length > 0 && (
                 <div className="mt-3 pt-3 border-t border-gray-200">
                   <p className="text-sm font-semibold mb-2">Proposed Actions:</p>
                   <div className="space-y-2">
-                    {(message as any).proposedActions.map((action: any, idx: number) => (
+                    {message.proposedActions.map((action, idx) => (
                       <div
                         key={idx}
                         className="text-sm bg-gray-50 px-3 py-2 rounded border border-gray-200"
                       >
                         <div className="font-medium">{action.type}</div>
-                        {action.description && (
-                          <div className="text-gray-600 mt-1">{action.description}</div>
+                        {action.params?.description && (
+                          <div className="text-gray-600 mt-1">{action.params.description}</div>
                         )}
-                        {action.builder && (
+                        {action.params?.builder && (
                           <div className="text-xs text-gray-500 mt-1">
-                            Builder: {action.builder}
+                            Builder: {action.params.builder}
                           </div>
                         )}
                       </div>

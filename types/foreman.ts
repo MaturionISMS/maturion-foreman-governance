@@ -105,6 +105,7 @@ export interface ChatMessage {
   organisationId: string
   conversationId: string
   metadata?: ChatMessageMetadata
+  proposedActions?: ForemanAction[] // Support for displaying proposed actions in chat
 }
 
 export interface ChatMessageMetadata {
