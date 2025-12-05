@@ -676,10 +676,13 @@ The chat interface uses the same configuration as other Foreman endpoints:
 OPENAI_API_KEY=your_openai_key
 MATURION_ORG_ID=your_org_id
 
-# Optional: Load behavior files from external repo
-FOREMAN_BEHAVIOUR_REPO_OWNER=your_org
-FOREMAN_BEHAVIOUR_REPO_NAME=behavior_repo
-FOREMAN_BEHAVIOUR_DIR=foreman/
+# Foreman Governance Repository (REQUIRED)
+# Foreman governance lives at: maturion-ai-foreman/foreman/
+# The Foreman App is only the supervisor, not the governance source
+# These defaults point to the governance repository:
+FOREMAN_BEHAVIOUR_REPO_OWNER=MaturionISMS
+FOREMAN_BEHAVIOUR_REPO_NAME=maturion-ai-foreman
+FOREMAN_BEHAVIOUR_DIR=foreman
 ```
 
 ### Limitations
@@ -804,13 +807,14 @@ OPENAI_API_KEY=your_openai_key
 # GitHub Token (required for loading behavior files from external repo)
 GITHUB_TOKEN=your_personal_access_token
 
-# Foreman Behavior Configuration
-# Option 1: Load from external GitHub repository
-FOREMAN_BEHAVIOUR_REPO_OWNER=your_org_or_username
-FOREMAN_BEHAVIOUR_REPO_NAME=your_behavior_repo
-FOREMAN_BEHAVIOUR_DIR=path/to/behavior/files
-# Option 2: Use local behavior files (included in this repo at foreman/)
-# Leave the above three variables blank to use local files
+# Foreman Governance Repository (REQUIRED for production)
+# Foreman governance lives at: maturion-ai-foreman/foreman/
+# The Foreman App is only the supervisor, not the governance source
+# Default values (can be overridden for testing):
+FOREMAN_BEHAVIOUR_REPO_OWNER=MaturionISMS
+FOREMAN_BEHAVIOUR_REPO_NAME=maturion-ai-foreman
+FOREMAN_BEHAVIOUR_DIR=foreman
+# Note: Local foreman/ directory is used as fallback for development/testing only
 
 # Organization ID (optional)
 MATURION_ORG_ID=your_org_id
@@ -1669,7 +1673,29 @@ maturion-foreman-app/
 
 ## Foreman Behavior Files
 
-The `foreman/` directory contains behavior files that define how Foreman operates:
+### Governance Repository Architecture
+
+**IMPORTANT**: Foreman governance files are stored in the `maturion-ai-foreman` repository, NOT in the Foreman App repository.
+
+**Correct architecture:**
+- **Governance Repository**: `maturion-ai-foreman/foreman/`
+- **Foreman App**: Supervisor that loads governance from external repository
+- **Local `foreman/` directory**: Development/testing fallback only
+
+**Required governance files** (from `maturion-ai-foreman/foreman/`):
+- `identity.md` - Foreman's identity and role definition
+- `roles-and-duties.md` - Operational responsibilities and authority
+- `privacy-guardrails.md` - Privacy and security constraints
+- `memory-model.md` - Context and state management
+- `command-grammar.md` - Command interpretation rules
+- `runtime-maturion-profile.md` - Runtime configuration and profiles
+- `runtime-memory-ingestion.md` - Memory loading and processing
+
+The Foreman App automatically loads these files from the governance repository using the GitHub API. Configuration is set via environment variables with sensible defaults pointing to `MaturionISMS/maturion-ai-foreman/foreman`.
+
+### Behavior Files Overview
+
+The behavior files loaded from the governance repository define how Foreman operates:
 
 ### Autonomy Rules (`autonomy-rules.md`)
 

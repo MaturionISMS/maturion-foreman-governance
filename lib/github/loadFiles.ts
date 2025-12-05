@@ -8,24 +8,39 @@ export type ForemanBehaviourFile = {
 };
 
 /**
- * Load Foreman behavior files from either:
- * 1. External GitHub repository (if FOREMAN_BEHAVIOUR_REPO_* vars are set)
- * 2. Local foreman/ directory (fallback)
+ * Load Foreman behavior files from the governance repository.
+ * 
+ * Correct architecture:
+ * - Foreman governance lives at: maturion-ai-foreman/foreman/
+ * - Foreman App is only the supervisor, not the governance source
+ * - Governance files include:
+ *   - identity.md
+ *   - roles-and-duties.md
+ *   - privacy-guardrails.md
+ *   - memory-model.md
+ *   - command-grammar.md
+ *   - runtime-maturion-profile.md
+ *   - runtime-memory-ingestion.md
+ * 
+ * Loading priority:
+ * 1. External GitHub repository (configured via env vars or defaults)
+ * 2. Local foreman/ directory (development/testing fallback only)
  */
 export async function loadForemanBehaviourFiles(): Promise<ForemanBehaviourFile[]> {
-  const owner = process.env.FOREMAN_BEHAVIOUR_REPO_OWNER;
-  const repo = process.env.FOREMAN_BEHAVIOUR_REPO_NAME;
-  const basePath = process.env.FOREMAN_BEHAVIOUR_DIR;
+  // Use environment variables or default to governance repository
+  const owner = process.env.FOREMAN_BEHAVIOUR_REPO_OWNER || 'MaturionISMS';
+  const repo = process.env.FOREMAN_BEHAVIOUR_REPO_NAME || 'maturion-ai-foreman';
+  const basePath = process.env.FOREMAN_BEHAVIOUR_DIR || 'foreman';
 
-  // If external repo configured, load from GitHub
-  if (owner && repo && basePath) {
-    console.log('[Behavior] Loading behavior files from external GitHub repository');
-    return loadFromGitHub(owner, repo, basePath);
+  // Load from GitHub governance repository (default behavior)
+  console.log(`[Behavior] Loading behavior files from GitHub repository: ${owner}/${repo}/${basePath}`);
+  try {
+    return await loadFromGitHub(owner, repo, basePath);
+  } catch (error) {
+    console.warn('[Behavior] Failed to load from GitHub repository:', error);
+    console.warn('[Behavior] Falling back to local foreman/ directory (development mode)');
+    return loadFromLocalDirectory();
   }
-
-  // Otherwise, load from local foreman/ directory
-  console.log('[Behavior] Loading behavior files from local foreman/ directory');
-  return loadFromLocalDirectory();
 }
 
 /**
