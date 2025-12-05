@@ -40,7 +40,7 @@ MATURION_AUTONOMOUS_MODE=true
 Configure safeguards (always enforced, even in autonomous mode):
 
 ```env
-MATURION_AUTONOMOUS_SAFE_GUARDS=qa,compliance,tests
+MATURION_AUTONOMOUS_GUARDS=qa,compliance,tests
 ```
 
 Available safeguards:
@@ -437,7 +437,10 @@ MATURION_AUTONOMOUS_MODE=false
 
 # Autonomous Mode Safeguards (comma-separated: qa,compliance,tests)
 # These gates are ALWAYS enforced, even in autonomous mode
-MATURION_AUTONOMOUS_SAFE_GUARDS=qa,compliance,tests
+MATURION_AUTONOMOUS_GUARDS=qa,compliance,tests
+
+# Legacy variable name (deprecated, use MATURION_AUTONOMOUS_GUARDS instead)
+# MATURION_AUTONOMOUS_SAFE_GUARDS=qa,compliance,tests
 
 # Legacy (deprecated, use MATURION_AUTONOMOUS_MODE instead)
 MATURION_ALLOW_AUTONOMOUS_BUILDS=false

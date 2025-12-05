@@ -183,38 +183,46 @@ When builder communication fails:
 
 ## Autonomous vs. Manual Approval Mode
 
-### Autonomous Mode (`MATURION_ALLOW_AUTONOMOUS_BUILDS=true`)
+### Autonomous Mode (`MATURION_AUTONOMOUS_MODE=true`)
 
 In autonomous mode:
 - Tasks automatically approved by system (`system_auto_approval`)
 - Build sequences run end-to-end without pausing
-- QA enforcement remains active
+- QA enforcement remains active and mandatory
 - Faster throughput for trusted workflows
+- **No human code review** - QA and architecture are the reviewers
 
 **Workflow**:
 ```
 Trigger → Analyze → Generate → Dispatch → Auto-Approve → Execute → QA → PR
 ```
 
-### Manual Approval Mode (`MATURION_ALLOW_AUTONOMOUS_BUILDS=false`)
+**Philosophy**: Johan does NOT review code. The system operates autonomously under QA governance. Human review is replaced by systematic QA validation, which is more consistent and comprehensive.
+
+### Manual Approval Mode (`MATURION_AUTONOMOUS_MODE=false`)
 
 In manual approval mode:
 - Tasks pause at `pending_approval` state
 - Admin must review via `/api/admin/approve?pending=true`
 - Admin can approve or reject each task
-- Provides human oversight for sensitive changes
+- Provides human oversight for initial learning phase or highly regulated environments
+- **Note**: Manual approval is for admin oversight, NOT code review. QA still validates all code.
 
 **Workflow**:
 ```
 Trigger → Analyze → Generate → Dispatch → [PAUSE] → Admin Review → Execute → QA → PR
 ```
 
+**When to Use**: Only during initial rollout, learning phase, or in highly regulated environments. The goal is to transition to autonomous mode once confidence is established.
+
 ### Switching Modes
 
 Mode can be changed via:
-1. Environment variable: `MATURION_ALLOW_AUTONOMOUS_BUILDS`
+1. Environment variable: `MATURION_AUTONOMOUS_MODE=true|false`
 2. Per-sequence config: `autonomousBuildEnabled` parameter
-3. Default: Manual approval mode (safer default)
+3. Default: Manual approval mode (safer for initial rollout)
+
+**Recommendation**: Start in manual mode to observe system behavior, then switch to autonomous mode once confidence is established. Autonomous mode is the intended operational state for mature deployments.
 
 ## Builder Coordination Patterns
 
