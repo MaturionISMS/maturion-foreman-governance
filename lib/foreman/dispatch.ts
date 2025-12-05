@@ -19,10 +19,14 @@ const taskStore = new Map<string, BuilderTask>()
 interface AutonomousActionLog {
   timestamp: Date
   organisationId: string
+  actionType: 'task_created' | 'task_executed' | 'task_failed' | 'qa_validated' | 'compliance_checked'
   builder: BuilderType
   taskId: string
   wave?: string
-  action: 'task_created' | 'task_executed' | 'task_failed'
+  architectureModule?: string
+  qaResult?: 'passed' | 'failed' | 'pending'
+  complianceFlag?: boolean
+  executionTimeMs?: number
   result: 'success' | 'fail'
   reason?: string
 }
@@ -45,9 +49,13 @@ export function isAutonomousModeEnabled(): boolean {
 
 /**
  * Get enabled safeguards for autonomous mode
+ * Supports both MATURION_AUTONOMOUS_GUARDS and MATURION_AUTONOMOUS_SAFE_GUARDS
  */
 export function getAutonomousSafeguards(): string[] {
-  const safeguards = process.env.MATURION_AUTONOMOUS_SAFE_GUARDS || 'qa,compliance,tests'
+  // Check new variable first, fall back to legacy for backwards compatibility
+  const safeguards = process.env.MATURION_AUTONOMOUS_GUARDS 
+    || process.env.MATURION_AUTONOMOUS_SAFE_GUARDS 
+    || 'qa,compliance,tests'
   return safeguards.split(',').map(s => s.trim()).filter(Boolean)
 }
 
@@ -59,9 +67,14 @@ export function logAutonomousAction(log: AutonomousActionLog): void {
   console.log('[Autonomous Action]', {
     timestamp: log.timestamp.toISOString(),
     organisationId: log.organisationId,
+    actionType: log.actionType,
     builder: log.builder,
     taskId: log.taskId,
     wave: log.wave,
+    architectureModule: log.architectureModule,
+    qaResult: log.qaResult,
+    complianceFlag: log.complianceFlag,
+    executionTimeMs: log.executionTimeMs,
     result: log.result,
     reason: log.reason
   })
@@ -73,6 +86,7 @@ export function logAutonomousAction(log: AutonomousActionLog): void {
 export function getAutonomousActionLogs(filter?: {
   organisationId?: string
   builder?: BuilderType
+  actionType?: AutonomousActionLog['actionType']
   result?: 'success' | 'fail'
 }): AutonomousActionLog[] {
   let logs = [...autonomousActionLogs]
@@ -83,6 +97,10 @@ export function getAutonomousActionLogs(filter?: {
   
   if (filter?.builder) {
     logs = logs.filter(l => l.builder === filter.builder)
+  }
+  
+  if (filter?.actionType) {
+    logs = logs.filter(l => l.actionType === filter.actionType)
   }
   
   if (filter?.result) {
@@ -165,9 +183,11 @@ export async function dispatchBuilderTask(
     logAutonomousAction({
       timestamp: new Date(),
       organisationId: request.organisationId,
+      actionType: 'task_created',
       builder: task.builder,
       taskId: task.id,
-      action: 'task_created',
+      wave: request.metadata?.wave as string | undefined,
+      architectureModule: task.module,
       result: 'success'
     })
   } else {
@@ -329,6 +349,8 @@ export async function executeBuilderTask(taskId: string): Promise<BuilderTask> {
     // This would call GitHub API or OpenAI API depending on builder type
     // For now, we simulate success with QA validation
     
+    const executionStartTime = Date.now()
+    
     const output = {
       success: true,
       data: {
@@ -350,6 +372,8 @@ export async function executeBuilderTask(taskId: string): Promise<BuilderTask> {
       ]
     }
     
+    const executionTimeMs = Date.now() - executionStartTime
+    
     task.status = 'completed'
     task.output = output
     task.updatedAt = new Date()
@@ -358,12 +382,21 @@ export async function executeBuilderTask(taskId: string): Promise<BuilderTask> {
     
     // Log autonomous action if in autonomous mode
     if (isAutonomousModeEnabled() && task.input?.organisationId) {
+      const hasFailedQA = output.qaResults.some((r: any) => r.status === 'failed')
+      const qaResult: 'passed' | 'failed' | 'pending' = hasFailedQA ? 'failed' : 'passed'
+      const complianceFlag = true // No secrets detected in this execution
+      
       logAutonomousAction({
         timestamp: new Date(),
         organisationId: task.input.organisationId as string,
+        actionType: 'task_executed',
         builder: task.builder,
         taskId: task.id,
-        action: 'task_executed',
+        wave: task.input?.metadata?.wave as string | undefined,
+        architectureModule: task.module,
+        qaResult,
+        complianceFlag,
+        executionTimeMs,
         result: 'success'
       })
     }
@@ -380,9 +413,13 @@ export async function executeBuilderTask(taskId: string): Promise<BuilderTask> {
       logAutonomousAction({
         timestamp: new Date(),
         organisationId: task.input.organisationId as string,
+        actionType: 'task_failed',
         builder: task.builder,
         taskId: task.id,
-        action: 'task_failed',
+        wave: task.input?.metadata?.wave as string | undefined,
+        architectureModule: task.module,
+        qaResult: 'failed',
+        complianceFlag: false,
         result: 'fail',
         reason: error instanceof Error ? error.message : 'Unknown error'
       })

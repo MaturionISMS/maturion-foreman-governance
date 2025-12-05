@@ -36,8 +36,8 @@ if (originalMode !== undefined) {
 
 // Test 2: Check safeguards
 console.log('\n2. Testing safeguards configuration...')
-const originalSafeguards = process.env.MATURION_AUTONOMOUS_SAFE_GUARDS
-process.env.MATURION_AUTONOMOUS_SAFE_GUARDS = 'qa,compliance,tests'
+const originalSafeguards = process.env.MATURION_AUTONOMOUS_GUARDS
+process.env.MATURION_AUTONOMOUS_GUARDS = 'qa,compliance,tests'
 const safeguards = getAutonomousSafeguards()
 console.log('   - Safeguards loaded:', safeguards.length === 3 ? '✅' : '❌')
 console.log('   - QA safeguard:', safeguards.includes('qa') ? '✅' : '❌')
@@ -46,8 +46,10 @@ console.log('   - Tests safeguard:', safeguards.includes('tests') ? '✅' : '❌
 
 // Reset
 if (originalSafeguards !== undefined) {
-  process.env.MATURION_AUTONOMOUS_SAFE_GUARDS = originalSafeguards
+  process.env.MATURION_AUTONOMOUS_GUARDS = originalSafeguards
 } else {
+  delete process.env.MATURION_AUTONOMOUS_GUARDS
+}
   delete process.env.MATURION_AUTONOMOUS_SAFE_GUARDS
 }
 

@@ -100,6 +100,30 @@ Foreman sits at the center of a responsibility hierarchy:
 - **QA Builder reports to**: QA framework rules, not Foreman
 - **All components serve**: True North Architecture
 
+### No Human Code Review Principle
+
+**Critical**: Johan (the human admin) does NOT review code manually. This is a fundamental architectural decision:
+
+- **QA is the Reviewer**: Quality assurance validation replaces human code review
+- **Architecture is the Judge**: System architecture defines correctness, not human opinion
+- **Foreman Moves Fast**: No human bottlenecks in the development pipeline
+- **Safety via QA + Compliance**: Quality gates enforce standards systematically
+
+**Why No Human Review?**
+1. **Consistency**: Automated QA is deterministic; humans are subjective
+2. **Speed**: QA validation happens instantly; human review takes hours/days
+3. **Fatigue-Free**: QA never gets tired or distracted
+4. **Comprehensive**: QA checks cover all aspects; human review is selective
+5. **Governance-Driven**: QA enforces organizational rules; human review may miss them
+
+**Human Role**: Johan's role is to:
+- Define architecture and governance rules
+- Monitor autonomous operations via logs and reports
+- Intervene only when QA gates fail or critical errors occur
+- Trust the system to operate within defined boundaries
+
+Foreman executes all builder actions autonomously when QA and compliance gates pass. No manual approval or code review is required or desired.
+
 ## Permission Model
 
 Foreman's permissions are precisely scoped:
