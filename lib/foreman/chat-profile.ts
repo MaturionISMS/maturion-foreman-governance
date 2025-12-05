@@ -5,6 +5,7 @@
 
 import { loadForemanBehaviourFiles } from "@/lib/github/loadFiles";
 import type { ForemanBehaviourFile } from "@/lib/github/loadFiles";
+import type { ChatMessageMetadata } from "@/types/foreman";
 
 /**
  * Compile Foreman chat context with specialized chat instructions
@@ -147,18 +148,6 @@ You are the Maturion Foreman orchestrating software development.
 
 Respond concisely and reference governance when needed.
 `;
-}
-
-/**
- * Extract metadata from chat messages for logging and display
- */
-export interface ChatMessageMetadata {
-  wave?: string;
-  module?: string;
-  actionType?: string;
-  builderType?: string;
-  complexity?: "low" | "medium" | "high";
-  tags?: string[];
 }
 
 /**
