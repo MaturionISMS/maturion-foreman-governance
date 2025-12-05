@@ -1,8 +1,16 @@
-# Pilot Build Documentation
+# Documentation Index
 
-This directory contains documentation for pilot build waves and other Foreman system documentation.
+This directory contains documentation for the Maturion Foreman system, including pilot build waves, repository structure, and system documentation.
 
 ## Available Documentation
+
+### [Repository Tree Breakdown](./REPOSITORY_TREE_BREAKDOWN.md) 🆕
+
+Complete tree structure breakdown for all 6 MaturionISMS repositories:
+- Visual directory trees with inline comments
+- Repository metadata and statistics
+- Automated fetching script
+- Multiple methods for generating trees
 
 ### [Pilot Build Wave 1](./pilot-build-wave-1.md)
 
