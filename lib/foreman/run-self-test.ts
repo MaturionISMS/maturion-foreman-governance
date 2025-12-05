@@ -66,14 +66,14 @@ export async function runSelfTest(): Promise<SelfTestResult> {
  */
 async function checkEnvironmentVariables(): Promise<SelfTestCheck> {
   const requiredVars = [
-    'OPENAI_API_KEY'
+    'OPENAI_API_KEY',
+    'GITHUB_TOKEN'
   ]
   
   const optionalVars = [
     'GITHUB_APP_ID',
     'GITHUB_APP_PRIVATE_KEY',
     'GITHUB_APP_INSTALLATION_ID',
-    'GITHUB_TOKEN',
     'GITHUB_WEBHOOK_SECRET',
     'MATURION_ORG_ID',
     'MATURION_AUTONOMOUS_MODE'
@@ -82,18 +82,10 @@ async function checkEnvironmentVariables(): Promise<SelfTestCheck> {
   const missing: string[] = []
   const optional_missing: string[] = []
   
-  // Check for at least one GitHub credential
-  const hasGitHubCreds = process.env.GITHUB_TOKEN || 
-    (process.env.GITHUB_APP_ID && process.env.GITHUB_APP_PRIVATE_KEY)
-  
   for (const varName of requiredVars) {
     if (!process.env[varName]) {
       missing.push(varName)
     }
-  }
-  
-  if (!hasGitHubCreds) {
-    missing.push('GITHUB_TOKEN or (GITHUB_APP_ID + GITHUB_APP_PRIVATE_KEY)')
   }
   
   for (const varName of optionalVars) {
@@ -106,7 +98,7 @@ async function checkEnvironmentVariables(): Promise<SelfTestCheck> {
     return {
       name: 'Environment Variables',
       status: 'failed',
-      message: `Missing required configuration: ${missing.join(', ')}`
+      message: `Missing required environment variables: ${missing.join(', ')}`
     }
   } else if (optional_missing.length > 0) {
     return {
@@ -128,15 +120,23 @@ async function checkEnvironmentVariables(): Promise<SelfTestCheck> {
  */
 async function checkGitHubAPI(): Promise<SelfTestCheck> {
   try {
-    // Check if GitHub credentials are available
-    const hasAppCreds = process.env.GITHUB_APP_ID && process.env.GITHUB_APP_PRIVATE_KEY
-    const hasToken = process.env.GITHUB_TOKEN
-    
-    if (!hasAppCreds && !hasToken) {
+    // The GitHub client uses GITHUB_TOKEN
+    if (!process.env.GITHUB_TOKEN) {
+      // Check if GitHub App credentials are available as alternative
+      const hasAppCreds = process.env.GITHUB_APP_ID && process.env.GITHUB_APP_PRIVATE_KEY
+      
+      if (hasAppCreds) {
+        return {
+          name: 'GitHub API Connection',
+          status: 'warning',
+          message: 'GitHub App credentials configured but GITHUB_TOKEN not set (client requires GITHUB_TOKEN)'
+        }
+      }
+      
       return {
         name: 'GitHub API Connection',
         status: 'failed',
-        message: 'GitHub credentials not configured (need GITHUB_APP_ID+GITHUB_APP_PRIVATE_KEY or GITHUB_TOKEN)'
+        message: 'GITHUB_TOKEN not configured'
       }
     }
     
