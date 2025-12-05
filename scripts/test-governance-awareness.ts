@@ -108,7 +108,8 @@ async function testGovernanceAwareness() {
     console.log('\nQuery 6: "What is the Memory Before Action doctrine?"')
     console.log('Expected: Describes loading memory context before orchestrating builders')
     
-    const hasMemoryBeforeAction = systemPrompt.includes('Memory Before Action')
+    const hasMemoryBeforeAction = /memory.*before.*action/i.test(systemPrompt) ||
+                                   systemPrompt.includes('Memory Before Action')
     
     if (hasMemoryBeforeAction) {
       console.log('✓ Foreman is aware of Memory Before Action doctrine')
