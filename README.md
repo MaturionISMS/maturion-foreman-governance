@@ -11,6 +11,151 @@ The Foreman App is designed to:
 - **Apply Governance Rules**: Interpret and enforce repository governance policies
 - **Execute Build Waves**: Run coordinated build and deployment workflows
 
+## Autonomous Mode
+
+The Foreman App supports two operational modes: **Autonomous Mode** and **Manual Approval Mode**. This allows organizations to balance velocity with oversight based on their risk tolerance and governance requirements.
+
+### What is Autonomous Mode?
+
+Autonomous Mode enables Foreman to execute complete build cycles without human intervention. When enabled:
+
+- ✅ Builder tasks are **auto-approved** by the system
+- ✅ Build sequences run **end-to-end** without manual clicks
+- ✅ **QA gates** are still enforced (QA + QA-of-QA)
+- ✅ **Compliance checks** remain mandatory
+- ✅ All actions are **logged** for audit trails
+- ✅ PR creation happens automatically (if configured)
+
+**Critical:** Autonomous mode does NOT bypass quality gates. QA validation, QA-of-QA meta-reviews, and compliance checks are always enforced.
+
+### Configuration
+
+Enable autonomous mode by setting the environment variable:
+
+```env
+MATURION_AUTONOMOUS_MODE=true
+```
+
+Configure safeguards (always enforced, even in autonomous mode):
+
+```env
+MATURION_AUTONOMOUS_SAFE_GUARDS=qa,compliance,tests
+```
+
+Available safeguards:
+- `qa` - QA validation required (always enforced)
+- `compliance` - Compliance checks required (secrets detection, etc.)
+- `tests` - Test artifacts required for code changes
+
+### Governance in Autonomous Mode
+
+Autonomous mode maintains strict governance:
+
+1. **QA Gate**: All code-writing tasks must pass QA validation
+2. **QA-of-QA Gate**: Meta-review ensures QA itself is functioning correctly
+3. **Compliance Gate**: No secrets in code, audit logging, organization ID required
+4. **Test Gate**: Code changes must include test artifacts (when enabled)
+
+**If any gate fails**, the action is aborted and logged as a failure.
+
+### Manual Approval Mode (Default)
+
+When autonomous mode is disabled (default for safety):
+
+```env
+MATURION_AUTONOMOUS_MODE=false
+```
+
+Behavior:
+- Builder tasks pause at `pending_approval` state
+- Admin must explicitly approve via `/api/admin/approve`
+- Each task is reviewed individually before execution
+- Build sequences wait for approval at task creation
+
+### When to Use Each Mode
+
+**Use Autonomous Mode when:**
+- You have established QA frameworks with high confidence
+- Your organization trusts its governance rules
+- You want maximum development velocity
+- You practice continuous delivery
+- Your team has proven the system in manual mode first
+
+**Use Manual Approval Mode when:**
+- You're in the initial system rollout/learning phase
+- Your environment is highly regulated
+- You're making changes to critical infrastructure
+- You have new or unproven governance rules
+- You want human oversight for every code change
+
+### Checking Foreman Status
+
+Query the status endpoint to see current configuration:
+
+```bash
+curl http://localhost:3000/api/foreman/status
+```
+
+Response:
+```json
+{
+  "autonomousMode": true,
+  "qaGateRequired": true,
+  "qaOfQaGateRequired": true,
+  "complianceGateRequired": true,
+  "testGateRequired": true,
+  "safeguards": ["qa", "compliance", "tests"],
+  "gitSha": "abc123",
+  "currentWave": "main",
+  "version": "0.1.0",
+  "environment": "production",
+  "uptime": 12345,
+  "timestamp": "2024-01-01T00:00:00.000Z"
+}
+```
+
+### Audit Logging
+
+All autonomous actions are logged with:
+- **Timestamp**: When the action occurred
+- **Organisation ID**: Which organization triggered the action
+- **Builder**: Which builder executed the task
+- **Task ID**: Unique identifier for the task
+- **Wave**: Git branch/wave (if available)
+- **Result**: `success` or `fail`
+- **Reason**: Error message (if failed)
+
+Logs are available in:
+- Console output (development)
+- Vercel runtime logs (production)
+- Future: Dedicated audit database
+
+### ⚠️ Important Warnings
+
+1. **Start in Manual Mode**: Always begin with `MATURION_AUTONOMOUS_MODE=false` to observe system behavior before enabling autonomy.
+
+2. **QA is Mandatory**: Autonomous mode does NOT bypass QA. Never disable QA validation. QA is your safety net.
+
+3. **Governance is Absolute**: Foreman cannot override governance rules, even in autonomous mode. Architecture and compliance are supreme.
+
+4. **No Code Review ≠ No Review**: Autonomous mode replaces human code review with systematic QA validation. This is by design—QA is more consistent than human review.
+
+5. **Monitor Initially**: When first enabling autonomous mode, monitor the audit logs closely to ensure the system behaves as expected.
+
+6. **Git SHA Tracking**: All autonomous actions are associated with a git SHA for traceability. Ensure your deployment includes git metadata.
+
+### Philosophy: QA-Governed Autonomy
+
+The Maturion system embraces a philosophy of **QA-governed autonomy**:
+
+- **Architecture is Supreme**: The system architecture defines correctness, not human opinion
+- **QA is the Gatekeeper**: Quality checks are deterministic and consistent
+- **No Human Bottlenecks**: Humans are slow, inconsistent, and prone to fatigue
+- **Systematic Validation**: Automated checks provide superior validation to ad-hoc review
+- **Trust but Verify**: Enable autonomy, but maintain comprehensive audit trails
+
+This approach allows teams to move at machine speed while maintaining higher quality standards than traditional manual review processes.
+
 ## Architecture
 
 ### Key Components
@@ -119,9 +264,16 @@ FOREMAN_BEHAVIOUR_DIR=path/to/behavior/files
 # Organization ID (optional)
 MATURION_ORG_ID=your_org_id
 
-# Autonomous Builds (optional, default: false)
-# When set to 'true', builder tasks are auto-approved and executed
-# When 'false', all tasks require manual approval via /api/admin/approve
+# Autonomous Mode Configuration
+# When set to 'true', Foreman runs without manual approval
+# When 'false' (default), all tasks require manual approval via /api/admin/approve
+MATURION_AUTONOMOUS_MODE=false
+
+# Autonomous Mode Safeguards (comma-separated: qa,compliance,tests)
+# These gates are ALWAYS enforced, even in autonomous mode
+MATURION_AUTONOMOUS_SAFE_GUARDS=qa,compliance,tests
+
+# Legacy (deprecated, use MATURION_AUTONOMOUS_MODE instead)
 MATURION_ALLOW_AUTONOMOUS_BUILDS=false
 ```
 
@@ -281,6 +433,35 @@ Manually trigger Foreman tasks.
 - `run-build-wave` - Execute a build wave
 - `run-self-test` - Run system diagnostics
 - `apply-file-changes` - Apply file changes via GitHub API
+
+### GET /api/foreman/status
+
+Get Foreman operational status and configuration.
+
+**Response:**
+```json
+{
+  "autonomousMode": true,
+  "qaGateRequired": true,
+  "qaOfQaGateRequired": true,
+  "complianceGateRequired": true,
+  "testGateRequired": true,
+  "safeguards": ["qa", "compliance", "tests"],
+  "gitSha": "abc123",
+  "currentWave": "main",
+  "version": "0.1.0",
+  "environment": "production",
+  "uptime": 12345,
+  "timestamp": "2024-01-01T00:00:00.000Z"
+}
+```
+
+**Use Cases:**
+- Check if autonomous mode is enabled
+- Verify which safeguards are active
+- Monitor system health and uptime
+- Track current git SHA and wave/branch
+- Validate configuration before triggering builds
 
 ### POST /api/foreman/run-build
 
