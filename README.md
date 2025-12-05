@@ -521,6 +521,54 @@ When `false` (default):
 - Admin must approve via `/api/admin/approve`
 - Provides human oversight for all code generation
 
+### Pilot Build Waves
+
+Pilot builds are controlled, small-scale build waves designed to validate the Foreman system and establish patterns for larger builds.
+
+**Trigger via GitHub Issue:**
+```
+@foreman execute Pilot Build Wave 1
+```
+
+**Trigger via API:**
+```json
+{
+  "organisationId": "maturion_isms",
+  "pilotWave": true,
+  "waveNumber": 1,
+  "feature": "foreman-status-dashboard",
+  "autonomousBuildEnabled": true,
+  "createPR": true,
+  "generateReport": true,
+  "owner": "MaturionISMS",
+  "repo": "maturion-foreman-app",
+  "branch": "foreman/pilot-wave-1",
+  "baseBranch": "main"
+}
+```
+
+**Pilot Build Constraints:**
+- Single module or component scope
+- No breaking changes allowed
+- Full QA coverage required
+- Must generate build report
+- Deterministic and re-runnable
+
+**Build Reports:**
+Reports are automatically generated in `reports/` directory:
+- `FOREMAN_PILOT_BUILD_REPORT.md` for pilot builds
+- `FOREMAN_BUILD_REPORT_{sequence_id}.md` for regular builds
+
+Reports include:
+- Tasks executed with status
+- Builders used and artifacts
+- QA validation results
+- Compliance verification
+- Execution timeline
+- Pass/fail status
+
+See [docs/pilot-build-wave-1.md](docs/pilot-build-wave-1.md) for detailed pilot build documentation.
+
 ## Builder Agents
 
 The Foreman App orchestrates five specialized Builder Agents that handle different aspects of code generation and quality assurance. All builder tasks require explicit admin approval before execution.
