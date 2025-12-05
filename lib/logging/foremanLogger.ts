@@ -78,6 +78,7 @@ export interface DegradedModeLog {
 
 class ForemanLogger {
   private logs: LogEntry[] = []
+  private readonly MAX_LOGS = 10000 // Limit to prevent memory leaks
 
   /**
    * Log a general message
@@ -92,6 +93,11 @@ class ForemanLogger {
     }
 
     this.logs.push(entry)
+
+    // Implement basic log rotation to prevent memory leaks
+    if (this.logs.length > this.MAX_LOGS) {
+      this.logs = this.logs.slice(-this.MAX_LOGS)
+    }
 
     // Console output with color coding
     const prefix = `[Foreman][${category}]`

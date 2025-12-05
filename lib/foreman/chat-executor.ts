@@ -9,6 +9,7 @@ import { BuildSequenceConfig } from '@/types/build-sequence'
 import { dispatchBuilderTask, executeBuilderTask, isAutonomousModeEnabled } from './dispatch'
 import { runBuildSequence } from './build-sequence'
 import { foremanLogger, LogLevel } from '@/lib/logging/foremanLogger'
+import { runSelfTest } from './run-self-test'
 
 export interface ChatExecutionResult {
   success: boolean
@@ -242,8 +243,6 @@ async function executeSelfTest(
     message: 'Running self-test...',
   })
 
-  // Import self-test module
-  const { runSelfTest } = await import('./run-self-test')
   const result = await runSelfTest()
 
   foremanLogger.log(
