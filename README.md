@@ -10,6 +10,7 @@ The Foreman App is designed to:
 - **Orchestrate Builder Agents**: Coordinate AI-powered agents to handle code changes and automation
 - **Apply Governance Rules**: Interpret and enforce repository governance policies
 - **Execute Build Waves**: Run coordinated build and deployment workflows
+- **Foreman Chat Interface**: Direct conversational interface with Foreman for architecture, QA, and build planning
 
 ## Autonomous Mode
 
@@ -156,6 +157,165 @@ The Maturion system embraces a philosophy of **QA-governed autonomy**:
 
 This approach allows teams to move at machine speed while maintaining higher quality standards than traditional manual review processes.
 
+## Foreman Chat UI
+
+The Foreman Chat UI provides a direct conversational interface for interacting with the Foreman orchestration engine. This is the primary interface where admins can communicate with Foreman about architecture, builds, QA, and compliance without going through GitHub issues or webhooks.
+
+### Overview
+
+Access the chat interface at `/foreman` in your deployed application (e.g., `http://localhost:3000/foreman` in development).
+
+![Foreman Chat Interface](https://github.com/user-attachments/assets/3d2fcc74-4bb7-4aed-b526-7396e7837100)
+
+### Key Features
+
+- **Conversational Interface**: Chat naturally with Foreman about your development workflow
+- **Architecture Consultation**: Ask about architecture gaps, improvements, and design decisions
+- **Build Planning**: Get help planning multi-builder sequences and deployment strategies
+- **QA Guidance**: Discuss testing strategies, compliance requirements, and quality gates
+- **Proposed Actions**: Foreman responds with actionable builder tasks, not just discussion
+- **Metadata Tags**: Messages are tagged with wave, module, action type, and builder information
+- **Action Proposals**: See proposed builder tasks with risks, QA requirements, and complexity estimates
+- **Logging**: All interactions are logged with secret redaction for audit trails
+
+### What You Can Ask Foreman
+
+The chat interface supports questions about:
+
+- **Architecture Analysis**: "What architecture gaps do we have in the dashboard module?"
+- **Build Waves**: "Plan a build wave for implementing user authentication"
+- **Self-Tests**: "Run a self-test and show me the results"
+- **Integration Tests**: "What integration tests should we run before deploying?"
+- **Governance**: "Explain the QA enforcement rules"
+- **Builder Coordination**: "How do builders work together in a sequence?"
+- **Risk Assessment**: "What are the risks of this proposed change?"
+
+### Chat Response Format
+
+Foreman responds in a structured format with:
+
+1. **Reply Text**: Conversational response to your question
+2. **Proposed Actions**: List of actionable builder tasks (if applicable)
+3. **Telemetry**: Subsystems involved and behavior rules referenced
+4. **Metadata**: Tags for wave, module, action type, builder, complexity
+
+Example response structure:
+
+```json
+{
+  "replyText": "I can help you build a dashboard component...",
+  "proposedActions": [
+    {
+      "type": "TRIGGER_BUILDER_TASK",
+      "builder": "ui",
+      "module": "dashboard",
+      "description": "Create dashboard component with charts",
+      "risks": ["May require schema updates"],
+      "qaRequirements": ["Component tests", "Integration tests"],
+      "estimatedComplexity": "medium"
+    }
+  ],
+  "telemetry": {
+    "subSystemsInvolved": ["orchestrator", "behaviour-loader"],
+    "behaviourRulesReferenced": ["qa-enforcement"]
+  }
+}
+```
+
+### Chat API Endpoint
+
+The chat interface is powered by `/api/foreman/chat`:
+
+**POST /api/foreman/chat**
+
+Request:
+```json
+{
+  "message": "What are the QA requirements for a new API endpoint?",
+  "organisationId": "org_123",
+  "conversationId": "conv_abc123",
+  "contextFlags": ["qa", "api"]
+}
+```
+
+Response:
+```json
+{
+  "success": true,
+  "conversationId": "conv_abc123",
+  "response": {
+    "replyText": "For new API endpoints...",
+    "proposedActions": [...],
+    "telemetry": {...},
+    "metadata": {...}
+  },
+  "timestamp": "2024-01-01T00:00:00.000Z"
+}
+```
+
+### Foreman's Chat Identity
+
+When chatting, Foreman operates under specific principles:
+
+1. **Orchestrator, Not Builder**: Foreman coordinates builders but never writes code directly
+2. **QA-First**: All proposals include QA validation requirements
+3. **Governance-Bound**: Responses reference and respect governance rules
+4. **Action-Oriented**: Provides concrete action plans, not just advice
+5. **Risk-Aware**: Highlights risks, dependencies, and trade-offs
+6. **No Code Review**: Johan doesn't review code; Architecture + QA are the judges
+
+### Security & Logging
+
+All chat interactions are logged with:
+
+- **Timestamp**: When the interaction occurred
+- **Organisation ID**: Which organization is using the chat
+- **Conversation ID**: Session grouping for multi-turn conversations
+- **User Message**: The question or command (with secrets redacted)
+- **Foreman Response**: The reply (with secrets redacted)
+- **Proposed Actions**: Any builder tasks suggested
+- **Metadata**: Tags and context information
+
+**Secret Redaction**: The chat API automatically redacts potential secrets from logs:
+- API keys and tokens
+- Passwords and credentials
+- JWT tokens
+- Private keys
+
+### Configuration
+
+The chat interface uses the same configuration as other Foreman endpoints:
+
+```env
+# Required for chat functionality
+OPENAI_API_KEY=your_openai_key
+MATURION_ORG_ID=your_org_id
+
+# Optional: Load behavior files from external repo
+FOREMAN_BEHAVIOUR_REPO_OWNER=your_org
+FOREMAN_BEHAVIOUR_REPO_NAME=behavior_repo
+FOREMAN_BEHAVIOUR_DIR=foreman/
+```
+
+### Limitations
+
+- **No Automatic Execution**: Chat proposes actions but doesn't execute builders automatically (use manual approval or autonomous mode for execution)
+- **No Chat History**: Currently stateless; conversation history is not persisted between sessions (future enhancement)
+- **Single-Turn Context**: Each message is independent; Foreman doesn't remember previous turns in the conversation yet
+
+### Future Enhancements
+
+Planned improvements for the chat interface:
+
+- **Conversation History**: Persist and retrieve chat history from database
+- **Multi-Turn Context**: Maintain conversation context across multiple messages
+- **Streaming Responses**: Real-time streaming for longer responses
+- **Rich Media**: Support for charts, diagrams, and visualizations
+- **Direct Execution**: Execute approved actions directly from chat interface
+- **Conversation Templates**: Pre-built conversation flows for common tasks
+
+
+
 ## Architecture
 
 ### Key Components
@@ -163,6 +323,7 @@ This approach allows teams to move at machine speed while maintaining higher qua
 - **API Routes** (`/app/api/`)
   - `github/webhook/route.ts` - Webhook endpoint for GitHub events
   - `foreman/run/route.ts` - Manual task execution endpoint
+  - `foreman/chat/route.ts` - Chat interface endpoint
   - `admin/approve/route.ts` - Admin approval for builder tasks
   - `builder/*` - Builder agent endpoints (UI, API, Schema, Integration, QA)
 
@@ -170,6 +331,7 @@ This approach allows teams to move at machine speed while maintaining higher qua
   - `orchestrator.ts` - Core orchestration engine
   - `dispatch.ts` - Builder task dispatch and governance
   - `behaviours.ts` - Behaviour compilation
+  - `chat-profile.ts` - Chat-specific system prompt and context
   - `executor.ts` - Task executor
   - `interpret-governance.ts` - Loads and interprets governance rules
   - `run-build-wave.ts` - Orchestrates build wave execution
@@ -183,13 +345,17 @@ This approach allows teams to move at machine speed while maintaining higher qua
   - `github.ts` - GitHub App authentication and API client
   - `openai.ts` - OpenAI/GPT-4 integration for AI features
 
+- **Pages** (`/app/`)
+  - `page.tsx` - Main dashboard page
+  - `foreman/page.tsx` - Foreman chat interface
+
 - **Components** (`/components/`)
   - `ForemanStatus.tsx` - Dashboard status display
   - `LayoutShell.tsx` - Main application layout
 
 - **Type Definitions** (`/types/`)
   - `github.ts` - GitHub API types
-  - `foreman.ts` - Foreman system and action types
+  - `foreman.ts` - Foreman system and action types (includes chat types)
   - `builder.ts` - Builder agent types
   - `build.ts` - Build wave types
 
@@ -433,6 +599,53 @@ Manually trigger Foreman tasks.
 - `run-build-wave` - Execute a build wave
 - `run-self-test` - Run system diagnostics
 - `apply-file-changes` - Apply file changes via GitHub API
+
+### POST /api/foreman/chat
+
+Chat with Foreman about architecture, builds, QA, and compliance.
+
+**Request:**
+```json
+{
+  "message": "What are the QA requirements for a new API endpoint?",
+  "organisationId": "org_123",
+  "conversationId": "conv_abc123",
+  "contextFlags": ["qa", "api"]
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "conversationId": "conv_abc123",
+  "response": {
+    "replyText": "For new API endpoints, you need...",
+    "proposedActions": [
+      {
+        "type": "TRIGGER_BUILDER_TASK",
+        "builder": "qa",
+        "description": "Create API endpoint tests"
+      }
+    ],
+    "telemetry": {
+      "subSystemsInvolved": ["chat", "orchestrator"],
+      "behaviourRulesReferenced": ["qa-enforcement"]
+    },
+    "metadata": {
+      "tags": ["qa", "api"]
+    }
+  },
+  "timestamp": "2024-01-01T00:00:00.000Z"
+}
+```
+
+**Use Cases:**
+- Ask about architecture gaps and improvements
+- Plan build waves and deployment strategies
+- Get help with QA and compliance requirements
+- Propose and discuss builder tasks
+- Run diagnostics and self-tests via chat
 
 ### GET /api/foreman/status
 

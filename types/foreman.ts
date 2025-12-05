@@ -91,3 +91,45 @@ export interface ForemanStatus {
   completedTasks: number
   failedTasks: number
 }
+
+/**
+ * Chat Types
+ * Types for Foreman chat interface
+ */
+
+export interface ChatMessage {
+  id: string
+  role: 'user' | 'assistant'
+  content: string
+  timestamp: Date
+  organisationId: string
+  conversationId: string
+  metadata?: ChatMessageMetadata
+}
+
+export interface ChatMessageMetadata {
+  wave?: string
+  module?: string
+  actionType?: string
+  builderType?: string
+  complexity?: 'low' | 'medium' | 'high'
+  tags?: string[]
+}
+
+export interface ChatRequest {
+  message: string
+  organisationId?: string
+  conversationId?: string
+  contextFlags?: string[]
+}
+
+export interface ChatResponse {
+  replyText: string
+  proposedActions?: ForemanAction[]
+  telemetry?: {
+    subSystemsInvolved: string[]
+    behaviourRulesReferenced?: string[]
+    contextFlags?: string[]
+  }
+  metadata?: ChatMessageMetadata
+}
