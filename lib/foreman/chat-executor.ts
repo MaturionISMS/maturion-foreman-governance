@@ -80,9 +80,10 @@ export async function executeChatActions(
     // Process each action
     for (const action of actions) {
       if (action.type === 'RUN_BUILD_WAVE') {
-        // Check if this is a pilot wave
+        // Check if this is a pilot wave by looking up wave configuration
         const waveName = action.params.wave as string
-        const isPilotWave = waveName && waveName.toLowerCase().includes('pilot')
+        const pilotWave = waveName ? getPilotWave(waveName) : null
+        const isPilotWave = pilotWave?.isPilot === true
         
         if (isPilotWave) {
           // Execute pilot build

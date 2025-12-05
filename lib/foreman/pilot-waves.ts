@@ -17,6 +17,7 @@ export interface PilotWave {
   description: string;
   repoTarget: RepoTarget;
   actions: PilotWaveAction[];
+  isPilot: boolean; // Explicit flag for pilot wave identification
 }
 
 export const PILOT_WAVES: PilotWave[] = [
@@ -24,6 +25,7 @@ export const PILOT_WAVES: PilotWave[] = [
     id: "pilot_foreman_sandbox",
     description: "Simple sandbox build to validate chat → builder → PR pipeline.",
     repoTarget: "foreman_app_sandbox",
+    isPilot: true,
     actions: [
       {
         type: "modify_file",

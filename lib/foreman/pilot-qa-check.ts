@@ -98,8 +98,14 @@ export async function updatePilotBuildNotes(
   const timestamp = new Date().toISOString();
   
   // Update the Last Build section
+  const lastBuildPattern = /## Last Build\n\n[\s\S]*?(?=\n---)/;
+  
+  if (!lastBuildPattern.test(content)) {
+    throw new Error('PILOT_BUILD_NOTES.md does not have the expected "## Last Build" section format');
+  }
+  
   const updatedContent = content.replace(
-    /## Last Build\n\n[\s\S]*?(?=\n---)/,
+    lastBuildPattern,
     `## Last Build
 
 **Status**: ${status}  

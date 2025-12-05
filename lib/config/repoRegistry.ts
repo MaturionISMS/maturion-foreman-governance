@@ -37,8 +37,8 @@ export const REPO_REGISTRY: RepoConfig[] = [
   {
     id: "isms_sandbox",
     name: "ISMS Sandbox",
-    description: "Reserved for future ISMS module builds.",
-    gitUrl: "https://github.com/MaturionISMS/...",
+    description: "Reserved for future ISMS module builds (placeholder).",
+    gitUrl: "https://github.com/MaturionISMS/isms.git",
     defaultBranch: "main",
     localPathEnvVar: "LOCAL_ISMS_PATH"
   }
