@@ -8,6 +8,14 @@ export type ForemanBehaviourFile = {
 };
 
 /**
+ * Default governance repository configuration
+ * Foreman governance lives at: maturion-ai-foreman/foreman/
+ */
+const DEFAULT_GOVERNANCE_REPO_OWNER = 'MaturionISMS';
+const DEFAULT_GOVERNANCE_REPO_NAME = 'maturion-ai-foreman';
+const DEFAULT_GOVERNANCE_DIR = 'foreman';
+
+/**
  * Load Foreman behavior files from the governance repository.
  * 
  * Correct architecture:
@@ -28,9 +36,9 @@ export type ForemanBehaviourFile = {
  */
 export async function loadForemanBehaviourFiles(): Promise<ForemanBehaviourFile[]> {
   // Use environment variables or default to governance repository
-  const owner = process.env.FOREMAN_BEHAVIOUR_REPO_OWNER || 'MaturionISMS';
-  const repo = process.env.FOREMAN_BEHAVIOUR_REPO_NAME || 'maturion-ai-foreman';
-  const basePath = process.env.FOREMAN_BEHAVIOUR_DIR || 'foreman';
+  const owner = process.env.FOREMAN_BEHAVIOUR_REPO_OWNER || DEFAULT_GOVERNANCE_REPO_OWNER;
+  const repo = process.env.FOREMAN_BEHAVIOUR_REPO_NAME || DEFAULT_GOVERNANCE_REPO_NAME;
+  const basePath = process.env.FOREMAN_BEHAVIOUR_DIR || DEFAULT_GOVERNANCE_DIR;
 
   // Load from GitHub governance repository (default behavior)
   console.log(`[Behavior] Loading behavior files from GitHub repository: ${owner}/${repo}/${basePath}`);
