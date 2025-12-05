@@ -204,9 +204,101 @@ Response:
   "version": "0.1.0",
   "environment": "production",
   "uptime": 12345,
-  "timestamp": "2024-01-01T00:00:00.000Z"
+  "timestamp": "2024-01-01T00:00:00.000Z",
+  "initialization": {
+    "initialized": true,
+    "readyForOperation": true,
+    "checks": [
+      {
+        "name": "GitHub App Configuration",
+        "status": "ready",
+        "message": "GitHub App credentials configured",
+        "required": true
+      },
+      {
+        "name": "OpenAI API Configuration",
+        "status": "ready",
+        "message": "OpenAI API key configured",
+        "required": false
+      },
+      {
+        "name": "GitHub Token Configuration",
+        "status": "ready",
+        "message": "Using local behavior files (token not required)",
+        "required": false
+      },
+      {
+        "name": "Behavior Files",
+        "status": "ready",
+        "message": "13 behavior files loaded from local directory",
+        "required": true
+      },
+      {
+        "name": "Autonomous Mode",
+        "status": "ready",
+        "message": "Autonomous mode ENABLED with safeguards: qa, compliance, tests",
+        "required": false
+      },
+      {
+        "name": "Organization ID",
+        "status": "ready",
+        "message": "Organization ID configured: org_123",
+        "required": false
+      }
+    ],
+    "timestamp": "2024-01-01T00:00:00.000Z",
+    "summary": {
+      "total": 6,
+      "ready": 6,
+      "warnings": 0,
+      "errors": 0,
+      "notConfigured": 0
+    }
+  },
+  "initializationSummary": "✅ Foreman is fully initialized and ready for operation (6/6 checks passed)"
 }
 ```
+
+#### Initialization Status
+
+The status endpoint includes detailed initialization checks to verify Foreman's readiness:
+
+**Status Values:**
+- `ready` ✅ - Component is properly configured and operational
+- `warning` ⚠️ - Component is configured but may have issues (non-critical)
+- `error` ❌ - Critical component is not working (blocks operation)
+- `not_configured` 🔧 - Required component is not configured
+
+**Initialization Checks:**
+
+1. **GitHub App Configuration** (required)
+   - Validates: `GITHUB_APP_ID`, `GITHUB_APP_PRIVATE_KEY`, `GITHUB_APP_INSTALLATION_ID`, `GITHUB_WEBHOOK_SECRET`
+   - Required for webhook handling and GitHub API operations
+
+2. **OpenAI API Configuration** (optional)
+   - Validates: `OPENAI_API_KEY`
+   - Required for AI-powered features (chat, orchestration)
+
+3. **GitHub Token Configuration** (conditional)
+   - Validates: `GITHUB_TOKEN` when using external behavior repository
+   - Not required when using local behavior files
+
+4. **Behavior Files** (required)
+   - Validates presence of behavior files in `foreman/` directory
+   - Checks for critical files: `autonomy-rules.md`, `identity/foreman-identity.md`, `behaviours/orchestration.md`
+
+5. **Autonomous Mode** (optional)
+   - Reports current configuration of `MATURION_AUTONOMOUS_MODE` and safeguards
+   - Shows enabled/disabled state and active safeguards
+
+6. **Organization ID** (optional)
+   - Validates: `MATURION_ORG_ID`
+   - Some features may require organization context
+
+**Overall Status:**
+- `initialized: true` - All required checks pass (may have warnings)
+- `readyForOperation: true` - All required checks are in `ready` state (fully operational)
+- `initializationSummary` - Human-readable status summary
 
 ### Audit Logging
 
@@ -1038,7 +1130,7 @@ Chat with Foreman about architecture, builds, QA, and compliance.
 
 ### GET /api/foreman/status
 
-Get Foreman operational status and configuration.
+Get Foreman operational status, configuration, and initialization details.
 
 **Response:**
 ```json
@@ -1054,7 +1146,21 @@ Get Foreman operational status and configuration.
   "version": "0.1.0",
   "environment": "production",
   "uptime": 12345,
-  "timestamp": "2024-01-01T00:00:00.000Z"
+  "timestamp": "2024-01-01T00:00:00.000Z",
+  "initialization": {
+    "initialized": true,
+    "readyForOperation": true,
+    "checks": [...],
+    "timestamp": "2024-01-01T00:00:00.000Z",
+    "summary": {
+      "total": 6,
+      "ready": 6,
+      "warnings": 0,
+      "errors": 0,
+      "notConfigured": 0
+    }
+  },
+  "initializationSummary": "✅ Foreman is fully initialized and ready for operation (6/6 checks passed)"
 }
 ```
 
@@ -1064,6 +1170,9 @@ Get Foreman operational status and configuration.
 - Monitor system health and uptime
 - Track current git SHA and wave/branch
 - Validate configuration before triggering builds
+- **Verify initialization status and system readiness**
+- **Diagnose configuration issues and missing environment variables**
+- **Check which components are properly configured**
 
 ### POST /api/foreman/run-build
 
