@@ -76,6 +76,17 @@ export interface DegradedModeLog {
   recoveryAction?: string
 }
 
+export interface PilotBuildLog {
+  timestamp: Date
+  waveId: string
+  repoTarget: string
+  status: 'started' | 'builder_selected' | 'qa_result' | 'pr_created' | 'completed' | 'failed'
+  builder?: 'local' | 'copilot'
+  qaResult?: 'passed' | 'failed'
+  prUrl?: string
+  error?: string
+}
+
 class ForemanLogger {
   private logs: LogEntry[] = []
   private readonly MAX_LOGS = 10000 // Limit to prevent memory leaks
@@ -208,6 +219,30 @@ class ForemanLogger {
     this.log(LogLevel.WARN, 'DegradedMode', `System degraded: ${log.reason}`, {
       affectedSystems: log.affectedSystems,
       recoveryAction: log.recoveryAction,
+    })
+  }
+
+  /**
+   * Log pilot build event
+   */
+  logPilotBuild(log: PilotBuildLog) {
+    const level = log.status === 'failed' ? LogLevel.ERROR : LogLevel.INFO
+    const statusMap = {
+      started: 'Pilot build started',
+      builder_selected: `Builder selected: ${log.builder}`,
+      qa_result: `QA ${log.qaResult}`,
+      pr_created: `PR created: ${log.prUrl}`,
+      completed: 'Pilot build completed',
+      failed: 'Pilot build failed',
+    }
+    
+    this.log(level, 'PilotBuild', statusMap[log.status], {
+      waveId: log.waveId,
+      repoTarget: log.repoTarget,
+      builder: log.builder,
+      qaResult: log.qaResult,
+      prUrl: log.prUrl,
+      error: log.error,
     })
   }
 

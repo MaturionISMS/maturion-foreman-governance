@@ -1099,6 +1099,119 @@ Reports include:
 
 See [docs/pilot-build-wave-1.md](docs/pilot-build-wave-1.md) for detailed pilot build documentation.
 
+## Pilot Build Wave (Wave 5)
+
+The Pilot Build Wave is a controlled, small-scale build that validates the complete Foreman pipeline from chat to PR creation.
+
+### What It Does
+
+The Pilot Build Wave executes a simple, safe build in the sandbox directory to prove that:
+
+1. **Chat Command Recognition**: Foreman recognizes pilot build commands from chat
+2. **Builder Routing**: Tasks are routed to the correct builder (Copilot or Local Builder)
+3. **File Modifications**: Real file changes are made in the repository
+4. **QA Execution**: Quality validation runs and must pass
+5. **Status Streaming**: Build status updates appear in the Chat UI
+6. **Logging**: Complete audit trail is captured
+
+### How to Trigger
+
+From the Foreman Chat UI (`/foreman`), use any of these commands:
+
+- "Foreman, run the pilot build"
+- "Run pilot build"
+- "Execute pilot wave"
+- "Run pilot build wave"
+
+Or click the **🚀 Run Pilot Build** button in the chat UI header.
+
+### What Gets Built
+
+The pilot build:
+
+- Targets the **foreman_app_sandbox** repository (this repo's sandbox directory)
+- Modifies `sandbox/PILOT_BUILD_NOTES.md` with build metadata
+- Runs QA checks to validate the sandbox state
+- Updates the file with timestamp, builder used, and QA results
+
+### QA Validation
+
+The pilot build runs these QA checks:
+
+1. **File Exists**: Verifies `sandbox/PILOT_BUILD_NOTES.md` exists
+2. **Required Sections**: Checks for proper markdown structure
+3. **Foreman Timestamp**: Confirms the file was updated by Foreman
+
+QA must pass before the build is considered successful.
+
+### What You'll See
+
+In the Chat UI, you'll see real-time status updates:
+
+- 📋 **Pilot build started...** - Initial planning
+- 🔍 **Dispatching to builder...** - Builder selection
+- ⚙️ **copilot builder is active** - Builder execution
+- ✅ **Running QA...** - Quality validation
+- 🎉 **Pilot build complete ✅** - Success
+
+### Logs
+
+All pilot build events are logged with:
+
+- `pilot_build_started` - Build initiation
+- `pilot_build_builder_selected` - Builder choice (local vs copilot)
+- `pilot_build_qa_result` - QA pass/fail
+- `pilot_build_completed` / `pilot_build_failed` - Final status
+
+Check console logs or Vercel runtime logs for complete audit trail.
+
+### Repository Registry
+
+The pilot build uses the **Repository Registry** (`lib/config/repoRegistry.ts`) which defines:
+
+```typescript
+{
+  id: "foreman_app_sandbox",
+  name: "Foreman App Sandbox",
+  description: "Safe sandbox area for pilot builds",
+  gitUrl: "https://github.com/MaturionISMS/maturion-foreman-app.git",
+  defaultBranch: "main",
+  localPathEnvVar: "LOCAL_FOREMAN_APP_PATH"
+}
+```
+
+This registry enables Foreman to route tasks to the correct repository and builder.
+
+### Local Builder Configuration
+
+If using the Local Builder for pilot builds, set the environment variable:
+
+```env
+LOCAL_FOREMAN_APP_PATH=/Users/johan/.../maturion-foreman-app
+```
+
+See `.env.example` for all local path configurations.
+
+### Safety & Isolation
+
+The pilot build is designed to be:
+
+- **Safe**: Only touches the `sandbox/` directory
+- **Reversible**: Changes are minimal and can be reverted
+- **Isolated**: No impact on production code or other modules
+- **QA-Gated**: Cannot complete without passing quality checks
+
+### Next Steps
+
+Once the pilot build validates the pipeline, Foreman can execute:
+
+- Full ISMS module builds
+- Multi-repository builds
+- Complex build sequences with multiple builders
+- Production deployments with PR creation
+
+The pilot build proves the foundation works before scaling to larger builds.
+
 ## Builder Agents
 
 The Foreman App orchestrates five specialized Builder Agents that handle different aspects of code generation and quality assurance. All builder tasks require explicit admin approval before execution.

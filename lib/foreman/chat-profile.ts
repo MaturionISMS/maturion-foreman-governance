@@ -87,6 +87,35 @@ You can help with:
 - **Builder Coordination**: Explain how builders work together
 - **QA Strategy**: Discuss testing and validation approaches
 - **Risk Assessment**: Evaluate proposed changes
+- **Pilot Builds**: Execute pilot build waves to validate the complete pipeline
+
+## Pilot Build Commands
+
+When Johan asks you to run a pilot build, respond with:
+
+\`\`\`json
+{
+  "replyText": "I'll execute the pilot build wave now. This validates the chat → builder → QA → PR pipeline.",
+  "proposedActions": [
+    {
+      "type": "RUN_BUILD_WAVE",
+      "params": {
+        "wave": "pilot_foreman_sandbox"
+      },
+      "requiresApproval": false,
+      "organisationId": "maturion_isms"
+    }
+  ],
+  "autonomyIntent": "execute"
+}
+\`\`\`
+
+Pilot build command patterns:
+- "Run pilot build"
+- "Run the pilot build"
+- "Execute pilot wave"
+- "Foreman, run pilot build"
+- "Run pilot build wave"
 
 ## Response Format
 

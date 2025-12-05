@@ -10,6 +10,9 @@ import { dispatchBuilderTask, executeBuilderTask, isAutonomousModeEnabled } from
 import { runBuildSequence } from './build-sequence'
 import { foremanLogger, LogLevel } from '@/lib/logging/foremanLogger'
 import { runSelfTest } from './run-self-test'
+import { getPilotWave } from './pilot-waves'
+import { runPilotQA, updatePilotBuildNotes } from './pilot-qa-check'
+import { getRepoConfig } from '@/lib/config/repoRegistry'
 
 export interface ChatExecutionResult {
   success: boolean
@@ -77,18 +80,36 @@ export async function executeChatActions(
     // Process each action
     for (const action of actions) {
       if (action.type === 'RUN_BUILD_WAVE') {
-        // Execute build wave
-        const result = await executeBuildWave(
-          action,
-          organisationId,
-          statusUpdates
-        )
-        if (result.sequenceId) {
+        // Check if this is a pilot wave
+        const waveName = action.params.wave as string
+        const isPilotWave = waveName && waveName.toLowerCase().includes('pilot')
+        
+        if (isPilotWave) {
+          // Execute pilot build
+          const result = await executePilotBuild(
+            action,
+            organisationId,
+            statusUpdates
+          )
           return {
-            success: true,
-            sequenceId: result.sequenceId,
-            prUrl: result.prUrl,
+            success: result.success,
             statusUpdates,
+            taskIds: result.taskIds,
+          }
+        } else {
+          // Execute regular build wave
+          const result = await executeBuildWave(
+            action,
+            organisationId,
+            statusUpdates
+          )
+          if (result.sequenceId) {
+            return {
+              success: true,
+              sequenceId: result.sequenceId,
+              prUrl: result.prUrl,
+              statusUpdates,
+            }
           }
         }
       } else if (action.type === 'SELF_TEST') {
@@ -419,3 +440,155 @@ async function executeQARun(
 
   return { taskId: task.id }
 }
+
+/**
+ * Execute pilot build action
+ */
+async function executePilotBuild(
+  action: ForemanAction,
+  organisationId: string,
+  statusUpdates: ChatStatusUpdate[]
+): Promise<{ success: boolean; taskIds?: string[] }> {
+  const taskIds: string[] = []
+  
+  try {
+    statusUpdates.push({
+      timestamp: new Date(),
+      status: 'planning',
+      message: 'Pilot build started...',
+    })
+    
+    // Get pilot wave configuration
+    const pilotWave = getPilotWave('pilot_foreman_sandbox')
+    
+    if (!pilotWave) {
+      throw new Error('Pilot wave configuration not found')
+    }
+    
+    const repoConfig = getRepoConfig(pilotWave.repoTarget)
+    
+    if (!repoConfig) {
+      throw new Error(`Repository configuration not found for ${pilotWave.repoTarget}`)
+    }
+    
+    // Log pilot build start
+    foremanLogger.logPilotBuild({
+      timestamp: new Date(),
+      waveId: pilotWave.id,
+      repoTarget: pilotWave.repoTarget,
+      status: 'started',
+    })
+    
+    statusUpdates.push({
+      timestamp: new Date(),
+      status: 'selecting_builder',
+      message: 'Dispatching to builder...',
+    })
+    
+    // For pilot builds, we'll simulate builder selection
+    // In a real implementation, this would route to actual Copilot or Local Builder
+    const builderUsed = 'copilot' // Default to Copilot for pilot builds
+    
+    foremanLogger.logPilotBuild({
+      timestamp: new Date(),
+      waveId: pilotWave.id,
+      repoTarget: pilotWave.repoTarget,
+      status: 'builder_selected',
+      builder: builderUsed,
+    })
+    
+    statusUpdates.push({
+      timestamp: new Date(),
+      status: 'running',
+      message: `${builderUsed} builder is active`,
+      metadata: { builder: builderUsed },
+    })
+    
+    // Execute pilot wave actions
+    for (const waveAction of pilotWave.actions) {
+      if (waveAction.type === 'modify_file' && waveAction.path) {
+        // Update pilot build notes
+        await updatePilotBuildNotes(
+          builderUsed,
+          'success',
+          'pending', // Will be updated after QA
+          'sandbox'
+        )
+      } else if (waveAction.type === 'qa_run') {
+        statusUpdates.push({
+          timestamp: new Date(),
+          status: 'qa_phase',
+          message: 'Running QA...',
+        })
+        
+        // Run pilot QA
+        const qaResult = await runPilotQA('sandbox')
+        
+        // Update build notes with QA result
+        await updatePilotBuildNotes(
+          builderUsed,
+          qaResult.passed ? 'success' : 'failed',
+          qaResult.passed ? 'passed' : 'failed',
+          'sandbox'
+        )
+        
+        foremanLogger.logPilotBuild({
+          timestamp: new Date(),
+          waveId: pilotWave.id,
+          repoTarget: pilotWave.repoTarget,
+          status: 'qa_result',
+          qaResult: qaResult.passed ? 'passed' : 'failed',
+        })
+        
+        if (!qaResult.passed) {
+          throw new Error(`Pilot QA failed: ${qaResult.summary}`)
+        }
+        
+        statusUpdates.push({
+          timestamp: new Date(),
+          status: 'qa_phase',
+          message: `QA ${qaResult.passed ? 'passed' : 'failed'}: ${qaResult.summary}`,
+          metadata: { qaResult: qaResult.passed ? 'passed' : 'failed' },
+        })
+      }
+    }
+    
+    // Note: PR creation would be handled by the build sequence in a real implementation
+    // For pilot builds, we're just validating the pipeline
+    statusUpdates.push({
+      timestamp: new Date(),
+      status: 'complete',
+      message: 'Pilot build complete ✅',
+      metadata: {
+        filesChanged: ['sandbox/PILOT_BUILD_NOTES.md'],
+        builderUsed,
+      },
+    })
+    
+    foremanLogger.logPilotBuild({
+      timestamp: new Date(),
+      waveId: pilotWave.id,
+      repoTarget: pilotWave.repoTarget,
+      status: 'completed',
+    })
+    
+    return { success: true, taskIds }
+  } catch (error) {
+    foremanLogger.logPilotBuild({
+      timestamp: new Date(),
+      waveId: 'pilot_foreman_sandbox',
+      repoTarget: 'foreman_app_sandbox',
+      status: 'failed',
+      error: error instanceof Error ? error.message : 'Unknown error',
+    })
+    
+    statusUpdates.push({
+      timestamp: new Date(),
+      status: 'error',
+      message: `Pilot build failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    })
+    
+    return { success: false }
+  }
+}
+
