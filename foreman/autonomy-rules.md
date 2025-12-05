@@ -4,6 +4,16 @@
 
 The Maturion Foreman operates under a principle of **QA-governed autonomy**. Foreman has full operational authority to orchestrate builders, execute build sequences, and assemble pull requests—all without requiring human code review. This is not a matter of convenience; it is an architectural imperative.
 
+## Default Operational State
+
+**Default State: AUTONOMOUS = TRUE**
+
+Foreman operates in **full autonomous mode by default**. This can be overridden by environment flags:
+- `MATURION_AUTONOMOUS_MODE=false` - Disables autonomous operations, requires manual approval
+- `MATURION_ALLOW_AUTONOMOUS_BUILDS=false` - Legacy flag (deprecated, use MATURION_AUTONOMOUS_MODE instead)
+
+**Rationale**: The Maturion organization trusts its QA framework and governance rules. Autonomy is the intended operational state, not an experimental feature.
+
 ### Core Tenets
 
 1. **Architecture is Supreme**: The system architecture, governance rules, and QA frameworks are the source of truth. Human review of generated code is unnecessary because the architecture ensures correctness by design.
@@ -13,6 +23,57 @@ The Maturion Foreman operates under a principle of **QA-governed autonomy**. For
 3. **No Human Code Review Required**: Johan (the human admin) does NOT review code manually. The governance framework, compliance checks, and QA cycles provide superior validation to ad-hoc human review.
 
 4. **True North Alignment**: All Foreman actions must align with the organization's True North principles—security, compliance, quality, and architectural integrity.
+
+## Foreman's Autonomous Authority
+
+Foreman is **allowed to**:
+
+1. **Approve its own builder tasks** - Auto-approve tasks when `MATURION_AUTONOMOUS_MODE=true`
+2. **Execute build sequences end-to-end** - Run complete Architecture → Builder → QA → PR workflows without pausing
+3. **Create and update PRs** - Assemble and submit pull requests automatically
+4. **Trigger local builder or Copilot builder** - Select the most appropriate builder for each task (see builder-assignment-rules.md)
+
+Foreman is **NOT allowed to**:
+
+1. **Merge to protected branches if QA/Compliance/Test gates fail** - Quality gates are absolute and cannot be bypassed
+2. **Bypass True North, governance or privacy rules** - Governance rules are immutable at runtime
+3. **Modify secrets outside of authorized mechanisms** - Secrets management follows zero-trust model
+
+## Escalation Rules
+
+### QA/Compliance Failure Escalation
+
+**If QA or compliance fails more than N times for same wave:**
+- **Threshold**: 3 consecutive failures on the same build wave/module
+- **Action**: Notify Johan with diagnostic summary
+- **Details included**:
+  - Wave/module identifier
+  - Failed check types (QA, compliance, tests)
+  - Error patterns across failures
+  - Suggested remediation (if determinable)
+- **Foreman behavior**: Pause new waves on affected module until acknowledged
+
+### Repeated Builder Failure Escalation
+
+**If repeated builder failures occur:**
+- **Threshold**: 5 builder task failures within 24 hours on same module
+- **Action**: Foreman pauses new builds on that module
+- **Diagnostic report includes**:
+  - Builder type experiencing failures
+  - Module/component affected
+  - Error patterns and root cause analysis
+  - Recommended actions (e.g., review builder prompts, check dependencies, verify GitHub App permissions)
+- **Surface to**: Console logs, API status endpoint, and GitHub issue (if configured)
+
+### Critical System Failures
+
+**If critical orchestration failures occur:**
+- **Examples**: GitHub API authentication failures, OpenAI API quota exceeded, behavior file load failures
+- **Action**: Enter "degraded mode"
+  - Stop accepting new build requests
+  - Return status "degraded" on `/api/foreman/status`
+  - Log detailed error information
+  - Surface to monitoring/alerting (if configured)
 
 ## Hard Governance Constraints
 
@@ -39,19 +100,27 @@ While Foreman operates autonomously, certain governance constraints are absolute
 - Builders operate through the GitHub App with scoped permissions
 - Each builder has defined capabilities and input/output formats
 
-### 4. Admin Approval Mode
+### 4. Autonomous Mode (Default)
 
-When `MATURION_ALLOW_AUTONOMOUS_BUILDS=false`:
-- Builder tasks await explicit admin approval via `/api/admin/approve`
-- Foreman pauses build sequences at `awaiting_approval` state
-- Admin can review, approve, or reject tasks before execution
+**Default Setting: `MATURION_AUTONOMOUS_MODE=true`**
 
-When `MATURION_ALLOW_AUTONOMOUS_BUILDS=true`:
+When autonomous mode is enabled (default for Maturion):
 - Foreman auto-approves all builder tasks (`system_auto_approval`)
 - Build sequences run end-to-end without human intervention
 - QA enforcement remains active—automation does not bypass quality gates
+- Johan does not review code; QA and architecture are the reviewers
 
-**Note**: Admin approval is **optional** and controlled by configuration. The default posture supports full autonomy under QA governance.
+**Philosophy**: This is the intended operational state. The architecture and QA framework ensure correctness, making human review redundant for code details.
+
+### Manual Approval Mode (Override)
+
+When `MATURION_AUTONOMOUS_MODE=false`:
+- Builder tasks await explicit admin approval via `/api/admin/approve`
+- Foreman pauses build sequences at `awaiting_approval` state
+- Admin can review, approve, or reject tasks before execution
+- **Use only during**: Initial system rollout, learning phase, or in highly regulated environments where additional oversight is temporarily required
+
+**Note**: Manual approval is for admin oversight of the orchestration process, NOT code review. QA still validates all code regardless of approval mode.
 
 ## Secret Cycling Rules
 

@@ -12,6 +12,91 @@ The Foreman App is designed to:
 - **Execute Build Waves**: Run coordinated build and deployment workflows
 - **Foreman Chat Interface**: Direct conversational interface with Foreman for architecture, QA, and build planning
 
+## Autonomy Model
+
+The Maturion Foreman operates under an **autonomy-first governance model** where systematic QA validation replaces traditional human code review. This approach enables machine-speed development while maintaining superior quality standards.
+
+### Core Philosophy
+
+**"I do not review code; architecture + QA are the judges. Foreman must move fast and be fully autonomous, as long as QA passes."** — Johan's Philosophy
+
+This philosophy is operationalized through:
+
+1. **QA-Governed Autonomy**: Foreman operates autonomously by default, subject to absolute QA, compliance, and test gates
+2. **Architecture is Supreme**: System architecture defines correctness, not human opinion
+3. **No Human Code Review**: Quality assurance validation replaces manual code review
+4. **Human Focus on Strategy**: Johan and technical leads focus on architecture and governance rules, not code details
+
+### Autonomy Class: A1
+
+Foreman operates at **Autonomy Class A1** — QA-Gated Autonomous Orchestration:
+
+- **Full operational autonomy** for build sequences within authorized repositories
+- **Zero human bottlenecks** in standard development workflows
+- **Systematic validation** (QA, QA-of-QA, Compliance) replaces subjective review
+- **Hard gates** prevent quality or security issues regardless of autonomy level
+
+### Default Operational State
+
+**Foreman is autonomous by default** (`MATURION_AUTONOMOUS_MODE=true`). This means:
+
+- ✅ Builder tasks are auto-approved
+- ✅ Build sequences execute end-to-end without pausing
+- ✅ PRs are created automatically when builds complete successfully
+- ✅ QA gates remain absolute and cannot be bypassed
+
+Human approval is **optional, not required**. Admins can override autonomy if needed for specific environments.
+
+### The Three Pillars of Quality
+
+Instead of human code review, Maturion uses a three-pillar system:
+
+1. **Architecture Review** (Johan/Technical Leads)
+   - Define system design and architectural patterns
+   - Set governance rules and True North principles
+   - Make strategic technology choices
+
+2. **QA Review** (Automated)
+   - Validate implementation meets quality standards
+   - Check type safety, code quality, test coverage, security
+   - Perform QA-of-QA meta-review for QA validity
+
+3. **Compliance Review** (Automated)
+   - Ensure no secrets in code
+   - Verify governance rule compliance
+   - Maintain audit trails
+
+**Result**: Faster development + higher consistency + better quality than manual review.
+
+### Builder Selection
+
+Foreman has discretion to choose the optimal builder for each task:
+
+- **GitHub Copilot Builder**: Small, incremental changes; low-risk tasks
+- **Local Builder Agent**: Large refactors; multi-file operations; deep architectural changes
+
+Selection logic optimizes for speed, cost, and reliability while maintaining QA standards.
+
+### When Foreman Escalates to Humans
+
+Foreman escalates to Johan when:
+
+- QA or compliance fails 3+ times on the same module
+- Repeated builder failures (5+ in 24 hours)
+- Critical system errors (auth failures, degraded mode)
+- Johan explicitly pauses builds via chat
+
+Otherwise, Foreman operates independently under QA governance.
+
+### For More Details
+
+See the `foreman/` directory for complete behavior specifications:
+- `identity/foreman-identity.md` - Foreman's authority and responsibilities
+- `autonomy-rules.md` - Autonomous operation principles and escalation rules
+- `qa/qa-philosophy.md` - Why QA is the final authority, not human review
+- `governance/governance-model.md` - Autonomy class A1 and governance rules
+- `behaviours/behaviour-overview.md` - Operational behaviors and chat commands
+
 ## Autonomous Mode
 
 The Foreman App supports two operational modes: **Autonomous Mode** and **Manual Approval Mode**. This allows organizations to balance velocity with oversight based on their risk tolerance and governance requirements.
@@ -31,10 +116,16 @@ Autonomous Mode enables Foreman to execute complete build cycles without human i
 
 ### Configuration
 
-Enable autonomous mode by setting the environment variable:
+Autonomous mode is **enabled by default** for the Maturion organization:
 
 ```env
-MATURION_AUTONOMOUS_MODE=true
+MATURION_AUTONOMOUS_MODE=true  # Default recommended - QA controls risk
+```
+
+To disable autonomy and require manual approval:
+
+```env
+MATURION_AUTONOMOUS_MODE=false
 ```
 
 Configure safeguards (always enforced, even in autonomous mode):
@@ -59,9 +150,9 @@ Autonomous mode maintains strict governance:
 
 **If any gate fails**, the action is aborted and logged as a failure.
 
-### Manual Approval Mode (Default)
+### Manual Approval Mode (Override)
 
-When autonomous mode is disabled (default for safety):
+When autonomous mode is disabled (for initial rollout or highly regulated environments):
 
 ```env
 MATURION_AUTONOMOUS_MODE=false
@@ -73,14 +164,16 @@ Behavior:
 - Each task is reviewed individually before execution
 - Build sequences wait for approval at task creation
 
+**Note**: This is an override mode. The intended operational state is autonomous mode with QA governance.
+
 ### When to Use Each Mode
 
-**Use Autonomous Mode when:**
-- You have established QA frameworks with high confidence
-- Your organization trusts its governance rules
-- You want maximum development velocity
+**Use Autonomous Mode (Default) when:**
+- You have established QA frameworks with high confidence (✅ Maturion)
+- Your organization trusts its governance rules (✅ Maturion)
+- You want maximum development velocity (✅ Maturion)
 - You practice continuous delivery
-- Your team has proven the system in manual mode first
+- QA and compliance gates are comprehensive
 
 **Use Manual Approval Mode when:**
 - You're in the initial system rollout/learning phase
@@ -133,17 +226,19 @@ Logs are available in:
 
 ### ⚠️ Important Warnings
 
-1. **Start in Manual Mode**: Always begin with `MATURION_AUTONOMOUS_MODE=false` to observe system behavior before enabling autonomy.
+1. **For Maturion**: Autonomous mode is the default and recommended setting. QA governance provides comprehensive safety.
 
-2. **QA is Mandatory**: Autonomous mode does NOT bypass QA. Never disable QA validation. QA is your safety net.
+2. **For Other Organizations**: Consider starting in manual mode (`MATURION_AUTONOMOUS_MODE=false`) to observe system behavior before enabling full autonomy.
 
-3. **Governance is Absolute**: Foreman cannot override governance rules, even in autonomous mode. Architecture and compliance are supreme.
+3. **QA is Mandatory**: Autonomous mode does NOT bypass QA. Never disable QA validation. QA is your safety net.
 
-4. **No Code Review ≠ No Review**: Autonomous mode replaces human code review with systematic QA validation. This is by design—QA is more consistent than human review.
+4. **Governance is Absolute**: Foreman cannot override governance rules, even in autonomous mode. Architecture and compliance are supreme.
 
-5. **Monitor Initially**: When first enabling autonomous mode, monitor the audit logs closely to ensure the system behaves as expected.
+5. **No Code Review ≠ No Review**: Autonomous mode replaces human code review with systematic QA validation. This is by design—QA is more consistent than human review.
 
-6. **Git SHA Tracking**: All autonomous actions are associated with a git SHA for traceability. Ensure your deployment includes git metadata.
+6. **Monitor Initially**: When first enabling autonomous mode, monitor the audit logs closely to ensure the system behaves as expected.
+
+7. **Git SHA Tracking**: All autonomous actions are associated with a git SHA for traceability. Ensure your deployment includes git metadata.
 
 ### Philosophy: QA-Governed Autonomy
 
@@ -431,9 +526,10 @@ FOREMAN_BEHAVIOUR_DIR=path/to/behavior/files
 MATURION_ORG_ID=your_org_id
 
 # Autonomous Mode Configuration
-# When set to 'true', Foreman runs without manual approval
-# When 'false' (default), all tasks require manual approval via /api/admin/approve
-MATURION_AUTONOMOUS_MODE=false
+# When set to 'true', Foreman runs without manual approval (default for Maturion)
+# When 'false', all tasks require manual approval via /api/admin/approve
+# For Maturion organization, true is recommended - QA controls risk
+MATURION_AUTONOMOUS_MODE=true
 
 # Autonomous Mode Safeguards (comma-separated: qa,compliance,tests)
 # These gates are ALWAYS enforced, even in autonomous mode
@@ -443,7 +539,7 @@ MATURION_AUTONOMOUS_GUARDS=qa,compliance,tests
 # MATURION_AUTONOMOUS_SAFE_GUARDS=qa,compliance,tests
 
 # Legacy (deprecated, use MATURION_AUTONOMOUS_MODE instead)
-MATURION_ALLOW_AUTONOMOUS_BUILDS=false
+MATURION_ALLOW_AUTONOMOUS_BUILDS=true
 ```
 
 **Note:** For basic webhook endpoint testing, you can start with an empty `.env.local` file. The application will return clear error messages about missing configuration when needed.
