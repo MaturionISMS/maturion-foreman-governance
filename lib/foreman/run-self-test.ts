@@ -52,7 +52,7 @@ export async function runSelfTest(): Promise<SelfTestResult> {
   }
   
   return {
-    success: allPassed || !anyFailed,
+    success: !anyFailed,
     message,
     checks,
     timestamp: new Date()
