@@ -6,7 +6,7 @@ This document provides a comprehensive tree breakdown of all repositories in the
 
 | Repository | Language | Description | Status |
 |-----------|----------|-------------|--------|
-| maturion-ai-foreman | Python | Foreman Reo. that will be responsible for managing all builder agents | Internal Template |
+| maturion-ai-foreman | Python | This is the foreman repo that will be responsible for managing all builder agents | Internal Template |
 | PartPulse | TypeScript | Part distribution app | Internal |
 | maturion-foreman-app | TypeScript | Foreman app hosted by Vercel | Internal |
 | maturion-local-builder | JavaScript | Maturion Local Desktop App | Private |
@@ -19,7 +19,7 @@ This document provides a comprehensive tree breakdown of all repositories in the
 
 **Repository**: [MaturionISMS/maturion-ai-foreman](https://github.com/MaturionISMS/maturion-ai-foreman)  
 **Language**: Python  
-**Description**: This the foreman Reo. that will be responsible for managing all builder agents  
+**Description**: This is the foreman repo that will be responsible for managing all builder agents  
 **Status**: Internal Template  
 
 ### Tree Structure
