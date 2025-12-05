@@ -6,6 +6,46 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || "placeholder",
 });
 
+/**
+ * Check if an event contains a pilot build command
+ */
+export function detectPilotBuildCommand(event: any): {
+  isPilotBuild: boolean
+  waveNumber?: number
+  feature?: string
+} {
+  // Check issue comments for pilot build commands
+  if (event.event === 'issue_comment' && event.payload?.comment?.body) {
+    const body = event.payload.comment.body.toLowerCase()
+    
+    // Pattern: "@foreman execute pilot build wave X" or "foreman, execute pilot build wave 1"
+    const pilotMatch = body.match(/@?foreman[,\s]+execute\s+pilot\s+build\s+wave\s+(\d+)/i)
+    
+    if (pilotMatch) {
+      return {
+        isPilotBuild: true,
+        waveNumber: parseInt(pilotMatch[1], 10)
+      }
+    }
+  }
+  
+  // Check issue body for pilot build commands
+  if (event.event === 'issues' && event.payload?.issue?.body) {
+    const body = event.payload.issue.body.toLowerCase()
+    
+    const pilotMatch = body.match(/@?foreman[,\s]+execute\s+pilot\s+build\s+wave\s+(\d+)/i)
+    
+    if (pilotMatch) {
+      return {
+        isPilotBuild: true,
+        waveNumber: parseInt(pilotMatch[1], 10)
+      }
+    }
+  }
+  
+  return { isPilotBuild: false }
+}
+
 export async function runForeman(input: any) {
   const files = await loadForemanBehaviourFiles();
   const systemPrompt = compileForemanContext(

@@ -11,6 +11,7 @@ import {
 } from '@/lib/foreman/build-sequence'
 import { BuildSequenceConfig, BuildSequenceStatus } from '@/types/build-sequence'
 import { assemblePRContext, createPullRequest } from '@/lib/github/pr-builder'
+import { generateBuildReport, saveBuildReport } from '@/lib/foreman/build-report'
 
 interface RunBuildRequest {
   organisationId: string
@@ -18,12 +19,18 @@ interface RunBuildRequest {
   triggerContext?: any
   autonomousBuildEnabled?: boolean
   skipArchitectureAnalysis?: boolean
+  // Pilot wave options
+  pilotWave?: boolean
+  waveNumber?: number
+  feature?: string
   // PR creation options
   createPR?: boolean
   owner?: string
   repo?: string
   branch?: string
   baseBranch?: string
+  // Report generation options
+  generateReport?: boolean
 }
 
 interface RunBuildResponse {
@@ -32,6 +39,7 @@ interface RunBuildResponse {
   status?: BuildSequenceStatus
   message?: string
   prUrl?: string
+  reportPath?: string
   error?: string
 }
 
@@ -48,11 +56,15 @@ export async function POST(request: NextRequest) {
       triggerContext,
       autonomousBuildEnabled,
       skipArchitectureAnalysis,
+      pilotWave = false,
+      waveNumber,
+      feature,
       createPR = false,
       owner,
       repo,
       branch,
-      baseBranch = 'main'
+      baseBranch = 'main',
+      generateReport = true
     } = body
     
     // Validate required fields
@@ -80,14 +92,25 @@ export async function POST(request: NextRequest) {
     console.log('[RunBuild] Starting build sequence:', {
       organisationId,
       triggerSource,
-      autonomousBuildEnabled
+      autonomousBuildEnabled,
+      pilotWave,
+      waveNumber,
+      feature
     })
+    
+    // Merge pilot wave context into trigger context
+    const mergedTriggerContext = {
+      ...triggerContext,
+      pilotWave,
+      waveNumber,
+      feature
+    }
     
     // Configure build sequence
     const config: BuildSequenceConfig = {
       organisationId,
       triggerSource,
-      triggerContext,
+      triggerContext: mergedTriggerContext,
       autonomousBuildEnabled,
       skipArchitectureAnalysis
     }
@@ -102,6 +125,36 @@ export async function POST(request: NextRequest) {
       qaResults: sequence.qaResults.length
     })
     
+    // Generate build report
+    let reportPath: string | undefined
+    
+    if (generateReport) {
+      try {
+        const gitSha = process.env.VERCEL_GIT_COMMIT_SHA || process.env.GIT_SHA
+        const foremanVersion = process.env.npm_package_version || '0.1.0'
+        
+        const report = generateBuildReport(sequence, {
+          pilotWave,
+          waveNumber,
+          feature,
+          gitSha,
+          foremanVersion
+        })
+        
+        const filename = pilotWave 
+          ? `FOREMAN_PILOT_BUILD_REPORT.md`
+          : `FOREMAN_BUILD_REPORT_${sequence.id}.md`
+        
+        reportPath = saveBuildReport(report, filename)
+        
+        console.log('[RunBuild] Build report generated:', reportPath)
+        
+      } catch (reportError) {
+        console.error('[RunBuild] Failed to generate report:', reportError)
+        // Don't fail the entire build sequence if report generation fails
+      }
+    }
+    
     // Optionally create PR
     let prUrl: string | undefined
     
@@ -111,7 +164,9 @@ export async function POST(request: NextRequest) {
         const prContext = assemblePRContext(
           sequence.tasks,
           sequence.qaResults,
-          `Build sequence ${sequence.id} implementation`
+          pilotWave 
+            ? `Pilot Build Wave ${waveNumber || 1}: ${feature || 'Feature Implementation'}`
+            : `Build sequence ${sequence.id} implementation`
         )
         
         // Create pull request
@@ -138,8 +193,11 @@ export async function POST(request: NextRequest) {
       sequenceId: sequence.id,
       status: sequence.status,
       prUrl,
+      reportPath,
       message: sequence.status === 'awaiting_approval'
         ? 'Build sequence created. Tasks await manual approval.'
+        : pilotWave
+        ? `Pilot Build Wave ${waveNumber || 1} completed successfully.`
         : 'Build sequence completed successfully.'
     })
     

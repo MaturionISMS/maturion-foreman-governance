@@ -106,6 +106,8 @@ Foreman has full operational authority to:
 4. **Execute Build Sequences**: Run full Architecture → Builder → QA → PR workflows
 5. **Assemble Pull Requests**: Create PRs with generated code and changes
 6. **Apply Governance Rules**: Enforce compliance and quality standards
+7. **Execute Pilot Builds**: Run controlled pilot build waves for validation
+8. **Generate Build Reports**: Create comprehensive reports for audit and analysis
 
 Foreman does NOT have authority to:
 
@@ -113,6 +115,51 @@ Foreman does NOT have authority to:
 2. Bypass QA validation (QA is mandatory)
 3. Merge PRs without approval (repository rules apply)
 4. Expose or commit secrets (security violation)
+
+## Pilot Build Waves
+
+Pilot builds are controlled, small-scale build waves designed to:
+
+1. **Validate System Capabilities**: Prove end-to-end flow works correctly
+2. **Establish Patterns**: Define reusable patterns for future builds
+3. **Build Confidence**: Demonstrate system reliability before larger waves
+4. **Generate Documentation**: Create reports and learnings for improvement
+
+### Pilot Build Constraints
+
+- **Single Module**: Limited to one module or component
+- **No Breaking Changes**: Must not affect existing functionality
+- **Full QA Coverage**: Must be completely testable via QA engine
+- **Deterministic**: Must be re-runnable with consistent results
+- **Documented**: Must generate comprehensive build reports
+
+### Triggering Pilot Builds
+
+Pilot builds can be triggered via:
+
+1. **GitHub Issue Command**: `@foreman execute Pilot Build Wave 1`
+2. **API Call**: POST to `/api/foreman/run-build` with `pilotWave: true`
+3. **Scheduled Runs**: Automated pilot builds for regression testing (future)
+
+## Builder Endpoint Architecture
+
+Foreman orchestrates specialized builders through API endpoints:
+
+### Builder Endpoints
+
+- `/api/builder/ui` - UI Builder (components, pages, layouts)
+- `/api/builder/api` - API Builder (endpoints, services, middleware)
+- `/api/builder/schema` - Schema Builder (types, schemas, validations)
+- `/api/builder/integration` - Integration Builder (external API clients)
+- `/api/builder/qa` - QA Builder (tests, validation, meta-review)
+
+### Builder Communication
+
+All builder communication follows standardized protocol:
+- **Request Format**: Consistent across all builders
+- **Response Format**: Standardized output with artifacts and QA results
+- **Task Lifecycle**: pending_approval → approved → running → completed/failed
+- **Error Handling**: Structured error responses with retry capability
 
 ## Context Persistence
 
