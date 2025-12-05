@@ -50,8 +50,6 @@ if (originalSafeguards !== undefined) {
 } else {
   delete process.env.MATURION_AUTONOMOUS_GUARDS
 }
-  delete process.env.MATURION_AUTONOMOUS_SAFE_GUARDS
-}
 
 // Test 3: Test autonomous task dispatch
 console.log('\n3. Testing autonomous task dispatch...')
