@@ -23,11 +23,14 @@ export default function ForemanChatPage() {
   // Detect pilot build command
   const detectPilotBuildCommand = (message: string): boolean => {
     const lowerMessage = message.toLowerCase();
-    return (
-      lowerMessage.includes('/foreman run pilot') ||
-      lowerMessage.includes('foreman, run pilot') ||
-      lowerMessage.includes('run pilot build wave')
-    );
+    // Use regex patterns similar to orchestrator for precision
+    const patterns = [
+      /\/foreman\s+run\s+pilot/i,
+      /@?foreman[,\s]+run\s+pilot/i,
+      /run\s+pilot\s+build\s+wave/i
+    ];
+    
+    return patterns.some(pattern => pattern.test(lowerMessage));
   };
 
   // Trigger pilot build

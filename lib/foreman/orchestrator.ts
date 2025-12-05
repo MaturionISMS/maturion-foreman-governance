@@ -39,12 +39,13 @@ export function detectPilotBuildCommand(event: any): {
     }
     
     // Pattern 3: "run pilot build wave"
-    pilotMatch = body.match(/run\s+pilot\s+build\s+wave\s+(\d+)?/i)
+    pilotMatch = body.match(/run\s+pilot\s+build\s+wave\s*(\d+)?/i)
     
     if (pilotMatch) {
+      const waveNum = pilotMatch[1] !== undefined ? parseInt(pilotMatch[1], 10) : 1
       return {
         isPilotBuild: true,
-        waveNumber: pilotMatch[1] ? parseInt(pilotMatch[1], 10) : 1
+        waveNumber: waveNum
       }
     }
   }

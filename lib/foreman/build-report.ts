@@ -259,7 +259,11 @@ export function generateMarkdownReport(report: BuildReport): string {
   lines.push('|---------|----------------|-----------|-------------------|--------------|')
   
   for (const builder of report.buildersUsed) {
-    const successRate = '100%' // Simplified - could be calculated from task statuses
+    const builderTasks = report.tasksExecuted.filter(t => t.builder === builder.builder)
+    const successfulTasks = builderTasks.filter(t => t.status === 'completed')
+    const successRate = builderTasks.length > 0
+      ? `${Math.round((successfulTasks.length / builderTasks.length) * 100)}%`
+      : 'N/A'
     lines.push(`| ${builder.builder.toUpperCase()} | ${builder.tasksCompleted} | ${builder.artifactsGenerated} | ${builder.averageExecutionTimeMs}ms | ${successRate} |`)
   }
   lines.push('')
