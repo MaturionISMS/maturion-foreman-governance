@@ -3,7 +3,7 @@
  * Handles routing of tasks to appropriate builders with governance enforcement
  */
 
-import { BuilderType, BuilderRequest, BuilderTask, BuilderTaskStatus } from '@/types/builder'
+import { BuilderType, BuilderRequest, BuilderTask, BuilderTaskStatus, QAResult } from '@/types/builder'
 import { getBuilderCapability, isTaskTypeSupported } from '@/lib/builder/capabilities'
 
 /**
@@ -19,7 +19,7 @@ const taskStore = new Map<string, BuilderTask>()
 interface AutonomousActionLog {
   timestamp: Date
   organisationId: string
-  actionType: 'task_created' | 'task_executed' | 'task_failed' | 'qa_validated' | 'compliance_checked'
+  actionType: 'task_created' | 'task_executed' | 'task_failed'
   builder: BuilderType
   taskId: string
   wave?: string
@@ -382,9 +382,21 @@ export async function executeBuilderTask(taskId: string): Promise<BuilderTask> {
     
     // Log autonomous action if in autonomous mode
     if (isAutonomousModeEnabled() && task.input?.organisationId) {
-      const hasFailedQA = output.qaResults.some((r: any) => r.status === 'failed')
+      const hasFailedQA = output.qaResults.some((r: QAResult) => r.status === 'failed')
       const qaResult: 'passed' | 'failed' | 'pending' = hasFailedQA ? 'failed' : 'passed'
-      const complianceFlag = true // No secrets detected in this execution
+      
+      // Check for compliance violations (secrets in output)
+      let complianceFlag = true
+      if (output) {
+        const outputStr = JSON.stringify(output)
+        const quotedSecretPattern = /(?:password|secret|key|token|api[_-]?key|private[_-]?key|auth|credential)[\s]*[:=][\s]*['"][^'"]{8,}['"]/i
+        const jwtPattern = /eyJ[A-Za-z0-9-_]+\.eyJ[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+/
+        const apiKeyPattern = /(?:password|secret|key|token)[\s]*[:=][\s]*[A-Za-z0-9]{20,}/i
+        
+        if (quotedSecretPattern.test(outputStr) || jwtPattern.test(outputStr) || apiKeyPattern.test(outputStr)) {
+          complianceFlag = false
+        }
+      }
       
       logAutonomousAction({
         timestamp: new Date(),
