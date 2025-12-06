@@ -365,7 +365,7 @@ export function addCustomMilestone(
   weight: number = 10,
   dependencies?: string[]
 ): Milestone {
-  const customId = `custom_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+  const customId = `custom_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`
   
   const milestone: Milestone = {
     id: customId,

@@ -25,7 +25,9 @@ export {
 // Lifecycle
 export * from './lifecycle'
 
-// Milestones (excluding addCustomMilestone to avoid conflict)
+// Milestones
+// Note: addCustomMilestone is exported through registry.addCustomMilestone() for consistency
+// Direct access to addCustomMilestone from milestones.ts is available if needed for advanced use cases
 export {
   getDefaultMilestones,
   calculateProgress,
@@ -35,7 +37,8 @@ export {
   getMilestonesByPhase,
   getCompletedMilestones,
   getIncompleteMilestones,
-  validateMilestone
+  validateMilestone,
+  addCustomMilestone
 } from './milestones'
 
 // Storage

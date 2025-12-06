@@ -113,25 +113,27 @@ class JSONFileStorage implements StorageBackend {
 // Supabase Storage Implementation (Placeholder)
 // ============================================================================
 
+const SUPABASE_NOT_IMPLEMENTED_ERROR = 'Supabase storage not yet implemented'
+
 class SupabaseStorage implements StorageBackend {
   async saveProject(project: Project): Promise<void> {
-    throw new Error('Supabase storage not yet implemented')
+    throw new Error(SUPABASE_NOT_IMPLEMENTED_ERROR)
   }
 
   async loadProject(projectId: string): Promise<Project | null> {
-    throw new Error('Supabase storage not yet implemented')
+    throw new Error(SUPABASE_NOT_IMPLEMENTED_ERROR)
   }
 
   async loadAllProjects(): Promise<Project[]> {
-    throw new Error('Supabase storage not yet implemented')
+    throw new Error(SUPABASE_NOT_IMPLEMENTED_ERROR)
   }
 
   async deleteProject(projectId: string): Promise<void> {
-    throw new Error('Supabase storage not yet implemented')
+    throw new Error(SUPABASE_NOT_IMPLEMENTED_ERROR)
   }
 
   async projectExists(projectId: string): Promise<boolean> {
-    throw new Error('Supabase storage not yet implemented')
+    throw new Error(SUPABASE_NOT_IMPLEMENTED_ERROR)
   }
 }
 
