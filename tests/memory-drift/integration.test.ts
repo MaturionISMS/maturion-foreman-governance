@@ -69,7 +69,7 @@ describe('Memory Drift Monitoring Integration', () => {
       {
         type: 'config',
         data: {
-          apiKey: 'secret-key-value'
+          apiKey: 'test-fake-api-key-12345-NOT-REAL' // Clearly fake test value
         }
       },
       {
@@ -122,7 +122,7 @@ describe('Memory Drift Monitoring Integration', () => {
       {
         type: 'config',
         data: {
-          password: 'super-secret-password'
+          password: 'test-fake-password-NOT-REAL-12345'
         }
       },
       {
@@ -156,7 +156,7 @@ describe('Memory Drift Monitoring Integration', () => {
       {
         type: 'test',
         data: {
-          apiKey: 'test-key'
+          apiKey: 'test-fake-key-NOT-REAL-67890'
         }
       },
       {

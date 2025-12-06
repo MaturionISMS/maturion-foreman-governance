@@ -60,7 +60,7 @@ describe('Governance Drift Detection', () => {
           type: 'deployment',
           description: 'Deployment config',
           data: {
-            apiKey: 'sk-1234567890abcdef', // Should never be in memory!
+            apiKey: 'test-fake-apikey-NOT-REAL-12345', // Test value - clearly fake
             environment: 'production'
           }
         },
@@ -92,7 +92,7 @@ describe('Governance Drift Detection', () => {
           type: 'config',
           description: 'Database config',
           data: {
-            password: 'MySecretPassword123', // Forbidden
+            password: 'test-fake-password-NOT-REAL-98765', // Test value - clearly fake
             host: 'localhost'
           }
         },
@@ -184,7 +184,7 @@ describe('Governance Drift Detection', () => {
         value: {
           type: 'config',
           data: {
-            secret: 'secret-value'
+            secret: 'test-fake-secret-NOT-REAL-54321'
           }
         },
         metadata: {

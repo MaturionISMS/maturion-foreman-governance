@@ -70,12 +70,24 @@ const DEFAULT_CONFIG: DriftMonitorConfig = {
 const MEMORY_VERSION = '1.0.0'
 
 /**
- * JSON schema validator - create new instance per detection to avoid conflicts
+ * JSON schema validator cache
  */
-function createValidator(): Ajv {
-  const validator = new Ajv({ allErrors: true })
-  addFormats(validator)
-  return validator
+const schemaValidatorCache = new Map<string, any>()
+
+/**
+ * Get or create a validator for a schema
+ */
+function getSchemaValidator(schemaName: string, schema: any): any {
+  const cacheKey = schemaName
+  
+  if (!schemaValidatorCache.has(cacheKey)) {
+    const ajv = new Ajv({ allErrors: true })
+    addFormats(ajv)
+    const validator = ajv.compile(schema)
+    schemaValidatorCache.set(cacheKey, validator)
+  }
+  
+  return schemaValidatorCache.get(cacheKey)
 }
 
 /**
@@ -125,8 +137,7 @@ export async function detectSchemaDrift(
   
   for (const entry of issueEntries) {
     if (schemas['historical-issues']) {
-      const ajv = createValidator()
-      const validate = ajv.compile(schemas['historical-issues'])
+      const validate = getSchemaValidator('historical-issues', schemas['historical-issues'])
       const issueData = extractHistoricalIssue(entry)
       
       if (!validate(issueData)) {
@@ -152,8 +163,7 @@ export async function detectSchemaDrift(
   
   for (const entry of lessonEntries) {
     if (schemas['knowledge-base']) {
-      const ajv = createValidator()
-      const validate = ajv.compile(schemas['knowledge-base'])
+      const validate = getSchemaValidator('knowledge-base', schemas['knowledge-base'])
       const lessonData = extractArchitectureLesson(entry)
       
       if (!validate(lessonData)) {
@@ -179,8 +189,7 @@ export async function detectSchemaDrift(
   
   for (const entry of patternEntries) {
     if (schemas['reasoning-patterns']) {
-      const ajv = createValidator()
-      const validate = ajv.compile(schemas['reasoning-patterns'])
+      const validate = getSchemaValidator('reasoning-patterns', schemas['reasoning-patterns'])
       const patternData = extractReasoningPattern(entry)
       
       if (!validate(patternData)) {
@@ -740,21 +749,55 @@ function detectContradiction(
   entry1: MemoryEntry,
   entry2: MemoryEntry
 ): ContradictionContext | null {
-  // Simple contradiction detection based on patterns
   const pattern1 = entry1.value.data?.pattern
   const pattern2 = entry2.value.data?.pattern
   
-  // Check for direct contradictions in architecture decisions
-  if (pattern1 && pattern2) {
-    // Example: "use module X" vs "remove module X"
-    if (pattern1.includes('remove') && pattern2.includes('require') ||
-        pattern1.includes('require') && pattern2.includes('remove')) {
-      return {
-        entry1,
-        entry2,
-        contradictionType: 'direct',
-        confidence: 'high',
-        explanation: `Pattern conflict: one requires while other removes component`
+  if (!pattern1 || !pattern2 || typeof pattern1 !== 'string' || typeof pattern2 !== 'string') {
+    return null
+  }
+  
+  // Contradiction patterns - detect opposing actions
+  const contradictionPatterns = [
+    { add: /\b(require|add|include)\s+(\w+)/i, remove: /\b(remove|delete|exclude)\s+(\w+)/i },
+  ]
+  
+  // Check for direct contradictions
+  for (const { add, remove } of contradictionPatterns) {
+    const pattern1AddMatch = pattern1.match(add)
+    const pattern1RemoveMatch = pattern1.match(remove)
+    const pattern2AddMatch = pattern2.match(add)
+    const pattern2RemoveMatch = pattern2.match(remove)
+    
+    // One says add, other says remove
+    if (pattern1AddMatch && pattern1AddMatch[2] && pattern2RemoveMatch && pattern2RemoveMatch[2]) {
+      const component1 = pattern1AddMatch[2].toLowerCase()
+      const component2 = pattern2RemoveMatch[2].toLowerCase()
+      
+      // Must reference the same component
+      if (component1 === component2 || component1.includes(component2) || component2.includes(component1)) {
+        return {
+          entry1,
+          entry2,
+          contradictionType: 'direct',
+          confidence: 'high',
+          explanation: `One decision adds/requires '${component1}' while another removes/excludes '${component2}'`
+        }
+      }
+    }
+    
+    if (pattern1RemoveMatch && pattern1RemoveMatch[2] && pattern2AddMatch && pattern2AddMatch[2]) {
+      const component1 = pattern1RemoveMatch[2].toLowerCase()
+      const component2 = pattern2AddMatch[2].toLowerCase()
+      
+      // Must reference the same component
+      if (component1 === component2 || component1.includes(component2) || component2.includes(component1)) {
+        return {
+          entry1,
+          entry2,
+          contradictionType: 'direct',
+          confidence: 'high',
+          explanation: `One decision removes/excludes '${component1}' while another adds/requires '${component2}'`
+        }
       }
     }
   }
@@ -807,8 +850,59 @@ function contradictsGovernance(
     return true
   }
   
-  // No secrets in memory check
-  if (entry.value.data?.apiKey || entry.value.data?.secret || entry.value.data?.password) {
+  // Comprehensive secret detection
+  // Check for common secret patterns in field names
+  const secretFieldPatterns = [
+    'apiKey', 'api_key', 'API_KEY',
+    'secret', 'SECRET',
+    'password', 'PASSWORD', 'pwd',
+    'token', 'TOKEN',
+    'privateKey', 'private_key',
+    'accessToken', 'access_token',
+    'refreshToken', 'refresh_token',
+    'clientSecret', 'client_secret',
+    'authToken', 'auth_token'
+  ]
+  
+  // Check for secret patterns in values (API keys, tokens, etc.)
+  const secretValuePatterns = [
+    /sk-[a-zA-Z0-9]{20,}/,  // OpenAI-style secret keys
+    /pk-[a-zA-Z0-9]{20,}/,  // Public keys
+    /ghp_[a-zA-Z0-9]{36}/,  // GitHub personal access tokens
+    /gho_[a-zA-Z0-9]{36}/,  // GitHub OAuth tokens
+    /-----BEGIN (RSA |EC )?PRIVATE KEY-----/, // Private keys
+    /eyJ[a-zA-Z0-9_-]+\.eyJ[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+/ // JWT tokens
+  ]
+  
+  // Recursively check object for secrets
+  function hasSecret(obj: any, depth = 0): boolean {
+    if (depth > 5) return false // Prevent infinite recursion
+    
+    if (typeof obj === 'string') {
+      // Check if value matches secret pattern
+      return secretValuePatterns.some(pattern => pattern.test(obj))
+    }
+    
+    if (obj && typeof obj === 'object') {
+      for (const [key, value] of Object.entries(obj)) {
+        // Check if field name indicates a secret
+        if (secretFieldPatterns.some(pattern => 
+          key.toLowerCase().includes(pattern.toLowerCase())
+        )) {
+          return true
+        }
+        
+        // Recursively check nested objects
+        if (hasSecret(value, depth + 1)) {
+          return true
+        }
+      }
+    }
+    
+    return false
+  }
+  
+  if (hasSecret(entry.value)) {
     return true
   }
   
