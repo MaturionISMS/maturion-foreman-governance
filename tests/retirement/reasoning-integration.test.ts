@@ -36,7 +36,7 @@ describe('Reasoning Integration with Retirement', () => {
         if ('value' in entry) {
           const anyEntry = entry as any
           assert.ok(
-            !anyEntry.value._retired,
+            !anyEntry.value._retired?.retired,
             `Retired entry ${entry.id} should not appear in reasoning context`
           )
         }

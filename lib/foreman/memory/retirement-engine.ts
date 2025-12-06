@@ -450,8 +450,13 @@ function insertRetirementMarker(
     manualReviewRequired: retirementInfo.manualReviewRequired
   }
   
-  // Update entry value with retirement marker
-  entry.value._retired = marker
+  // Create a defensive copy to avoid mutation
+  // Note: This is for documentation purposes - in practice, entry.value is updated
+  // but the original entry object is preserved in the archive
+  entry.value = {
+    ...entry.value,
+    _retired: marker
+  }
 }
 
 /**
@@ -607,7 +612,7 @@ export async function runRetirement(
   ]
   
   // Filter out already retired entries
-  const activeEntries = allEntries.filter(e => !e.value._retired)
+  const activeEntries = allEntries.filter(e => !e.value._retired?.retired)
   
   console.log(`[Retirement] Loaded ${activeEntries.length} active entries`)
   
@@ -730,8 +735,8 @@ export async function getRetirementStatistics(): Promise<RetirementStatistics> {
     ...Object.values(allMemory.projects).flat()
   ]
   
-  const activeEntries = allEntries.filter(e => !e.value._retired)
-  const retiredEntries = allEntries.filter(e => e.value._retired)
+  const activeEntries = allEntries.filter(e => !e.value._retired?.retired)
+  const retiredEntries = allEntries.filter(e => e.value._retired?.retired)
   
   // Count by lifecycle state
   const archivedEntries = retiredEntries.filter(e => 

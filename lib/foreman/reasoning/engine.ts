@@ -146,7 +146,7 @@ export async function loadMemorySnapshot(
   // Step 3.1: Filter out retired memory (retirement integration)
   console.log('[MARE] Step 3.1: Filtering out retired memory...')
   const beforeFilter = allMemoryEntries.length
-  allMemoryEntries = allMemoryEntries.filter(e => !e.value._retired)
+  allMemoryEntries = allMemoryEntries.filter(e => !e.value._retired?.retired)
   const afterFilter = allMemoryEntries.length
   if (beforeFilter !== afterFilter) {
     console.log(`[MARE] Excluded ${beforeFilter - afterFilter} retired entries from reasoning`)

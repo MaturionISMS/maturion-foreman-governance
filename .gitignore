@@ -48,3 +48,8 @@ next-env.d.ts
 # This allows the memory system to work locally while keeping the repo clean
 /memory/*/*.json
 !/memory/projects/foreman_app_sandbox.json
+
+# memory archive (retirement system)
+# Ignore archived memory entries and governance events from tests
+/memory/archive/
+/memory/governance-events.json

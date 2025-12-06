@@ -8,8 +8,8 @@
         "description": "Test entry"
       },
       "metadata": {
-        "createdAt": "2025-12-06T18:26:40.864Z",
-        "updatedAt": "2025-12-06T18:26:40.864Z",
+        "createdAt": "2025-12-06T18:30:58.542Z",
+        "updatedAt": "2025-12-06T18:30:58.543Z",
         "createdBy": "test",
         "version": 1
       },
@@ -24,7 +24,7 @@
       "explanation": "Test retirement",
       "manualReviewRequired": false
     },
-    "archivedAt": "2025-12-06T18:26:40.866Z",
+    "archivedAt": "2025-12-06T18:30:58.544Z",
     "archiveVersion": 1
   },
   {
@@ -60,7 +60,7 @@
       "explanation": "Test",
       "manualReviewRequired": false
     },
-    "archivedAt": "2025-12-06T18:26:40.869Z",
+    "archivedAt": "2025-12-06T18:30:58.547Z",
     "archiveVersion": 1
   },
   {
@@ -72,8 +72,8 @@
         "description": "Versioned entry"
       },
       "metadata": {
-        "createdAt": "2025-12-06T18:26:40.870Z",
-        "updatedAt": "2025-12-06T18:26:40.870Z",
+        "createdAt": "2025-12-06T18:30:58.548Z",
+        "updatedAt": "2025-12-06T18:30:58.548Z",
         "createdBy": "test",
         "version": 3
       },
@@ -88,7 +88,7 @@
       "explanation": "Test",
       "manualReviewRequired": false
     },
-    "archivedAt": "2025-12-06T18:26:40.870Z",
+    "archivedAt": "2025-12-06T18:30:58.548Z",
     "archiveVersion": 1
   },
   {
@@ -103,8 +103,8 @@
         }
       },
       "metadata": {
-        "createdAt": "2025-12-06T18:26:40.871Z",
-        "updatedAt": "2025-12-06T18:26:40.871Z",
+        "createdAt": "2025-12-06T18:30:58.549Z",
+        "updatedAt": "2025-12-06T18:30:58.549Z",
         "createdBy": "test",
         "version": 1
       },
@@ -119,7 +119,7 @@
       "explanation": "Test recovery",
       "manualReviewRequired": false
     },
-    "archivedAt": "2025-12-06T18:26:40.871Z",
+    "archivedAt": "2025-12-06T18:30:58.549Z",
     "archiveVersion": 1
   }
 ]
