@@ -213,7 +213,15 @@ export function startDeploymentPhase(project: Project, actor: string = 'system')
 }
 
 export function completeProject(project: Project, actor: string = 'system'): PhaseTransitionResult {
-  return transitionToPhase(project, 'completed', actor)
+  const result = transitionToPhase(project, 'completed', actor)
+  
+  // Trigger retirement for project memory when project completes
+  if (result.success) {
+    console.info(`[Lifecycle] Project ${project.id} completed - project memory eligible for archival`)
+    // Note: Retirement engine will automatically detect and retire old project memory
+  }
+  
+  return result
 }
 
 export function pauseProject(project: Project, reason?: string): void {

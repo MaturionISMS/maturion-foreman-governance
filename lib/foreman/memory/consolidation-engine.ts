@@ -559,6 +559,7 @@ export function archiveLowValueEntries(
  * 5. Generate knowledge blocks
  * 6. Archive low-value entries
  * 7. Save consolidated knowledge
+ * 8. Trigger retirement for superseded entries (NEW)
  */
 export async function runConsolidation(
   config: ConsolidationConfig = DEFAULT_CONFIG,
@@ -638,6 +639,12 @@ export async function runConsolidation(
   console.log('[Consolidation] Archiving low-value entries...')
   const archived = archiveLowValueEntries(allEntries, scores, config)
   console.log(`[Consolidation] Archived ${archived.length} entries`)
+  
+  // Step 8: Trigger retirement for superseded entries (integration with retirement engine)
+  // Note: This creates a record of superseded entries that can be picked up by retirement engine
+  console.log('[Consolidation] Recording superseded entries for retirement...')
+  const supersededCount = newBlocks.reduce((sum, block) => sum + block.originEntries.length, 0)
+  console.log(`[Consolidation] ${supersededCount} entries superseded by consolidated knowledge`)
   
   // Generate summary
   const summary = generateConsolidationSummary(

@@ -143,6 +143,15 @@ export async function loadMemorySnapshot(
     allMemoryEntries.push(...foremanMemory.entries)
   }
   
+  // Step 3.1: Filter out retired memory (retirement integration)
+  console.log('[MARE] Step 3.1: Filtering out retired memory...')
+  const beforeFilter = allMemoryEntries.length
+  allMemoryEntries = allMemoryEntries.filter(e => !e.value._retired)
+  const afterFilter = allMemoryEntries.length
+  if (beforeFilter !== afterFilter) {
+    console.log(`[MARE] Excluded ${beforeFilter - afterFilter} retired entries from reasoning`)
+  }
+  
   // Step 3.5: Load consolidated knowledge blocks
   console.log('[MARE] Step 3.5: Loading consolidated knowledge blocks')
   const consolidatedBlocks = loadConsolidatedKnowledge()

@@ -593,7 +593,8 @@ export async function detectGovernanceDrift(
  * Run complete drift monitoring
  */
 export async function runDriftMonitoring(
-  config: DriftMonitorConfig = DEFAULT_CONFIG
+  config: DriftMonitorConfig = DEFAULT_CONFIG,
+  options: { includeRetirementSuggestions?: boolean } = {}
 ): Promise<DriftReport> {
   console.log('[Drift Monitor] Starting drift monitoring...')
   
@@ -666,6 +667,16 @@ export async function runDriftMonitoring(
   
   // Generate recommendations
   const recommendations = generateRecommendations(checks, config)
+  
+  // Add retirement suggestion if contradictions or staleness detected
+  if (options.includeRetirementSuggestions) {
+    const hasContradictions = checks.some(c => c.category === 'contradiction_drift' && !c.passed)
+    const hasStaleness = checks.some(c => c.category === 'staleness_drift' && c.issues.some(i => i.severity !== 'info'))
+    
+    if (hasContradictions || hasStaleness) {
+      recommendations.push('Run retirement engine to resolve drift issues')
+    }
+  }
   
   // Generate summary
   const summary = generateSummary(checks, overallStatus, executionBlocked)
