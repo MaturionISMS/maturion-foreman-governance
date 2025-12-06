@@ -2,7 +2,283 @@
 
 This document defines how Foreman interprets chat messages and converts them into executable actions.
 
-## Command Patterns Foreman Recognizes
+**Version**: 2.0 - Project Lifecycle Orchestration Layer
+
+## Core Principles
+
+1. **All commands map to Maturion Project Lifecycle**:
+   - Phase 1: Concept Capture (Johan-led)
+   - Phase 2: Architecture & QA (Foreman-led)
+   - Phase 3: Build Waves (Foreman orchestrates builders)
+   - Phase 4: Deployment & Validation (Foreman + Johan)
+
+2. **Multi-step actions create/reference Project Records**:
+   - Stored in memory: `/foreman/projects/<project-name>.json`
+   - State machine fields updated with each transition
+
+3. **Every command must either**:
+   - Query state
+   - Modify state
+   - Trigger a wave
+   - Generate a report
+   - Advance a lifecycle phase
+   - Request Johan's input if blocking conditions exist
+
+## Anti-Hallucination Rules
+
+- Foreman may only reference projects that exist in `/foreman/projects/`
+- Foreman must never create phantom phases, waves, or milestones
+- All wave numbers must match the project's active architecture
+- Foreman must always reference the lifecycle phase
+- Foreman must never guess missing project names
+- Foreman must explicitly list blockers when progress cannot continue
+- Foreman must always show next actionable step
+
+## Command Categories
+
+### 1. Project Creation & Registration
+
+**Pattern**: "Create a new project called [name]" or "Register [name] as a governed project" or "Begin concept capture for [name]"
+
+**Examples**:
+- "Create a new project called User Dashboard"
+- "Register Authentication System as a governed project"
+- "Begin concept capture for Warranty PDF Builder"
+
+**Action Generated**:
+```json
+{
+  "type": "CREATE_PROJECT",
+  "params": {
+    "name": "User Dashboard",
+    "description": "User dashboard with analytics",
+    "phase": "concept"
+  },
+  "requiresApproval": false,
+  "organisationId": "<org_id>"
+}
+```
+
+**Autonomy Intent**: `execute` (project creation is safe)
+
+**Foreman Actions**:
+- Initialize project record in registry
+- Create lifecycle state = PHASE_1 (concept)
+- Store Johan's initial prompt as `raw-concept.md`
+- Create memory path: `/foreman/projects/<project-slug>/`
+- Mark "Project Registered" milestone complete
+
+---
+
+### 2. Project State Queries
+
+**Pattern**: "Show me the status of [project]" or "Where are we in the lifecycle?" or "What is blocking progress?" or "Show me progress % for [project]"
+
+**Examples**:
+- "Show me the status of User Dashboard"
+- "Where are we in the User Dashboard lifecycle?"
+- "What is blocking progress on Authentication System?"
+- "Show me progress % for Warranty PDF Builder"
+
+**Action Generated**:
+```json
+{
+  "type": "QUERY_PROJECT_STATUS",
+  "params": {
+    "projectName": "User Dashboard"
+  },
+  "requiresApproval": false,
+  "organisationId": "<org_id>"
+}
+```
+
+**Autonomy Intent**: `execute` (queries are safe)
+
+**Foreman Actions**:
+- Pull project record from registry
+- Compute progress percentage from milestones
+- Return milestone summary, next actions, blockers
+- Display lifecycle phase and status
+- Show S-curve timeline data (if available)
+
+---
+
+### 3. Architecture & QA Commands
+
+**Pattern**: "Start the architecture phase for [project]" or "Run architecture QA" or "Show architecture deviations"
+
+**Examples**:
+- "Foreman, start the architecture phase for User Dashboard"
+- "Run architecture QA on Authentication System"
+- "Show architecture deviations for Warranty PDF"
+
+**Action Generated**:
+```json
+{
+  "type": "START_ARCHITECTURE_PHASE",
+  "params": {
+    "projectName": "User Dashboard"
+  },
+  "requiresApproval": false,
+  "organisationId": "<org_id>"
+}
+```
+
+**Autonomy Intent**: `execute` (when autonomy mode ON)
+
+**Foreman Actions**:
+- Move project to PHASE_2 (architecture)
+- Execute architecture analysis and gap detection
+- Apply architecture governance rules
+- Produce `architecture-QA-report.md`
+- Mark architecture milestones as they complete
+- Update project status
+
+---
+
+### 4. Build Wave Commands
+
+**Pattern**: "Begin Wave [n] for [project]" or "Continue the build" or "Fix all QA failures" or "Show me build progress"
+
+**Examples**:
+- "Begin Wave 1 for User Dashboard"
+- "Continue the build for Authentication System"
+- "Fix all QA failures in Warranty PDF"
+- "Show me build progress for User Dashboard"
+
+**Action Generated**:
+```json
+{
+  "type": "RUN_BUILD_WAVE",
+  "params": {
+    "projectName": "User Dashboard",
+    "wave": "1"
+  },
+  "requiresApproval": false,
+  "organisationId": "<org_id>"
+}
+```
+
+**Autonomy Intent**: `execute` (when autonomy mode ON)
+
+**Foreman Actions**:
+- Validate project in PHASE_3 (build) or transition from architecture
+- Trigger builders for specified wave
+- Validate via QA + QA-of-QA
+- Maintain build logs per wave in project memory
+- Update build milestones
+- Record build sequence in project history
+- Create PR on build completion
+
+---
+
+### 5. Deployment Commands
+
+**Pattern**: "Prepare [project] for deployment" or "Check deployment readiness" or "Deploy to [environment]" or "Run post-deployment validation"
+
+**Examples**:
+- "Prepare User Dashboard for deployment"
+- "Check deployment readiness for Authentication System"
+- "Deploy User Dashboard to Vercel"
+- "Run post-deployment validation for Warranty PDF"
+
+**Action Generated**:
+```json
+{
+  "type": "PREPARE_DEPLOYMENT",
+  "params": {
+    "projectName": "User Dashboard",
+    "environment": "production"
+  },
+  "requiresApproval": true,
+  "organisationId": "<org_id>"
+}
+```
+
+**Autonomy Intent**: `proposal_only` (deployments require approval)
+
+**Foreman Actions**:
+- Move project to PHASE_4 (deployment)
+- Validate environment completeness
+- Test external integrations
+- Generate deployment checklist
+- Request deployment approval
+- Trigger deployment pipeline (if approved)
+- Validate production behavior
+- Mark deployment milestones complete
+- Record deployment in project history
+
+---
+
+### 6. Dashboard Commands
+
+**Pattern**: "Show me the project dashboard" or "List all active projects" or "Show milestone timeline for [project]"
+
+**Examples**:
+- "Show me the project dashboard"
+- "Open the drilldown for User Dashboard"
+- "List all active projects with progress %"
+- "Show milestone timeline for Authentication System"
+
+**Action Generated**:
+```json
+{
+  "type": "SHOW_DASHBOARD",
+  "params": {
+    "view": "overview"
+  },
+  "requiresApproval": false,
+  "organisationId": "<org_id>"
+}
+```
+
+**Autonomy Intent**: `execute` (dashboard views are safe)
+
+**Foreman Actions**:
+- Generate dashboard JSON for UI
+- Include progress %, blockers, next actions, wave status
+- Display all active projects with lifecycle phase
+- Show milestone timelines
+- Highlight blocked projects
+- Compute aggregate metrics
+
+---
+
+### 7. Notifications & Escalations
+
+**Pattern**: "Notify me when [milestone] is complete" or "Alert me if [project] becomes blocked" or "Email me deployment readiness results"
+
+**Examples**:
+- "Notify me when User Dashboard QA is complete"
+- "Alert me if Authentication System becomes blocked"
+- "Email me deployment readiness results for Warranty PDF"
+
+**Action Generated**:
+```json
+{
+  "type": "CONFIGURE_NOTIFICATION",
+  "params": {
+    "projectName": "User Dashboard",
+    "trigger": "milestone_complete",
+    "milestone": "QA Validation Passed",
+    "target": "johan@maturion.com"
+  },
+  "requiresApproval": false,
+  "organisationId": "<org_id>"
+}
+```
+
+**Autonomy Intent**: `execute` (notification config is safe)
+
+**Foreman Actions**:
+- Register notification trigger in project record
+- Configure notification delivery (email/webhook)
+- Send test notification to verify setup
+- Update project notifications array
+
+---
+
+## Command Patterns Foreman Recognizes (Legacy - Still Supported)
 
 ### Build Wave Execution
 

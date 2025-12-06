@@ -38,3 +38,7 @@ next-env.d.ts
 # build reports (test artifacts)
 /reports/*.md
 !/reports/.gitkeep
+
+# project data (local storage)
+/data/projects/*.json
+!/data/projects/.gitkeep
