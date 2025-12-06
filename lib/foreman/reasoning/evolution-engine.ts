@@ -131,10 +131,13 @@ export async function analyzePatternPerformance(
   ]
   
   // Find memory entries that reference this pattern
-  const patternUsages = allMemory.filter(entry => 
-    entry.metadata?.patternsApplied?.includes(pattern.id) ||
-    entry.metadata?.reasoning?.includes(pattern.id)
-  )
+  const patternUsages = allMemory.filter(entry => {
+    const metadata = entry.metadata as any
+    return (
+      metadata?.patternsApplied?.includes(pattern.id) ||
+      metadata?.reasoning?.includes(pattern.id)
+    )
+  })
 
   const usageCount = patternUsages.length || pattern.usageCount || 0
 
@@ -146,28 +149,30 @@ export async function analyzePatternPerformance(
   let driftIssues = 0
 
   for (const entry of patternUsages) {
+    const metadata = entry.metadata as any
+    
     // Success rate: entries without errors or failures
-    if (!entry.metadata?.error && !entry.metadata?.failed) {
+    if (!metadata?.error && !metadata?.failed) {
       successfulOutcomes++
     }
 
     // QA failures
-    if (entry.tags?.includes('qa_failure') || entry.metadata?.qaFailed) {
+    if (entry.tags?.includes('qa_failure') || metadata?.qaFailed) {
       qaFailures++
     }
 
     // Architecture conflicts
-    if (entry.tags?.includes('architecture_conflict') || entry.metadata?.architectureConflict) {
+    if (entry.tags?.includes('architecture_conflict') || metadata?.architectureConflict) {
       architectureConflicts++
     }
 
     // Builder consistency
-    if (entry.metadata?.builderConsistent !== false) {
+    if (metadata?.builderConsistent !== false) {
       consistentExecutions++
     }
 
     // Drift stability
-    if (!entry.metadata?.causedDrift && !entry.tags?.includes('drift')) {
+    if (!metadata?.causedDrift && !entry.tags?.includes('drift')) {
       // No drift issues
     } else {
       driftIssues++

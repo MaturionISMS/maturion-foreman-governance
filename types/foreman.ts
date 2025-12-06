@@ -74,6 +74,10 @@ export type ForemanActionType =
   | 'RECORD_BLOCKER'
   | 'GET_PROJECT_STATUS'
   | 'GET_PROJECT_DASHBOARD'
+  // Evolution Actions
+  | 'EVOLVE_REASONING_PATTERNS'
+  | 'GET_EVOLUTION_STATS'
+  | 'SHOW_EVOLVED_PATTERNS'
 
 export interface ForemanAction {
   type: ForemanActionType
