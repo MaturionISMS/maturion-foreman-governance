@@ -81,8 +81,21 @@ export async function executeChatActions(
     // Check autonomy mode
     const autonomousMode = isAutonomousModeEnabled()
     
-    if (!autonomousMode) {
-      // In manual mode, create tasks but don't execute
+    // Define safe actions that can execute even without autonomy mode
+    const safeActions = [
+      'CREATE_PROJECT',
+      'GET_PROJECT_STATUS',
+      'GET_PROJECT_DASHBOARD',
+      'UPDATE_MILESTONES',
+      'RECORD_BLOCKER',
+      'SELF_TEST',
+      'QA_RUN',
+    ]
+    
+    const allActionsSafe = actions.every(action => safeActions.includes(action.type))
+    
+    if (!autonomousMode && !allActionsSafe) {
+      // In manual mode, only safe actions can execute
       statusUpdates.push({
         timestamp: new Date(),
         status: 'error',

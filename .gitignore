@@ -42,3 +42,6 @@ next-env.d.ts
 # project data (local storage)
 /data/projects/*.json
 !/data/projects/.gitkeep
+
+# memory data (unified memory fabric)
+/memory
