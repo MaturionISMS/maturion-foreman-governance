@@ -13,6 +13,7 @@ import { runSelfTest } from './run-self-test'
 import { getPilotWave } from './pilot-waves'
 import { runPilotQA, updatePilotBuildNotes } from './pilot-qa-check'
 import { getRepoConfig } from '@/lib/config/repoRegistry'
+import { loadMemoryBeforeAction } from './memory'
 
 export interface ChatExecutionResult {
   success: boolean
@@ -42,6 +43,12 @@ export async function executeChatActions(
   const taskIds: string[] = []
 
   try {
+    // Load memory before action (Memory Before Action doctrine)
+    await loadMemoryBeforeAction('foreman', {
+      tags: ['wave_completion', 'qa_failure', 'error_escalation'],
+      organisationId,
+    })
+
     // Log chat command
     foremanLogger.logChatCommand({
       timestamp: new Date(),

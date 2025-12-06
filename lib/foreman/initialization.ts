@@ -134,11 +134,12 @@ function checkBehaviorFiles(): InitializationCheckResult {
       }
     }
 
-    // Check for key behavior files
+    // Check for key behavior files including memory-rules.md
     const requiredFiles = [
       'autonomy-rules.md',
       'identity/foreman-identity.md',
-      'behaviours/orchestration.md'
+      'behaviours/orchestration.md',
+      'governance/memory-rules.md'
     ]
 
     const missingFiles = requiredFiles.filter(file => {
@@ -251,6 +252,68 @@ function checkOrganizationId(): InitializationCheckResult {
 }
 
 /**
+ * Check if Unified Memory Fabric is properly initialized
+ */
+function checkMemorySystem(): InitializationCheckResult {
+  const memoryPath = join(process.cwd(), 'memory')
+
+  try {
+    // Check if memory directory exists
+    if (!existsSync(memoryPath)) {
+      return {
+        name: 'Unified Memory Fabric',
+        status: 'error',
+        message: 'Memory directory not found - Unified Memory Fabric not initialized',
+        required: true
+      }
+    }
+
+    // Check for required memory scope directories
+    const requiredDirs = ['global', 'foreman', 'projects']
+    const missingDirs = requiredDirs.filter(dir => {
+      const dirPath = join(memoryPath, dir)
+      return !existsSync(dirPath)
+    })
+
+    if (missingDirs.length > 0) {
+      return {
+        name: 'Unified Memory Fabric',
+        status: 'warning',
+        message: `Memory directories missing: ${missingDirs.join(', ')}`,
+        required: true
+      }
+    }
+
+    // Check for memory files in global and foreman scopes
+    const globalMemory = join(memoryPath, 'global', 'memory.json')
+    const foremanMemory = join(memoryPath, 'foreman', 'memory.json')
+
+    if (!existsSync(globalMemory) || !existsSync(foremanMemory)) {
+      return {
+        name: 'Unified Memory Fabric',
+        status: 'warning',
+        message: 'Memory storage files not initialized',
+        required: true
+      }
+    }
+
+    return {
+      name: 'Unified Memory Fabric',
+      status: 'ready',
+      message: 'Memory system initialized with global, foreman, and project scopes',
+      required: true
+    }
+  } catch (error) {
+    return {
+      name: 'Unified Memory Fabric',
+      status: 'error',
+      message: `Error checking memory system: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      required: true
+    }
+  }
+}
+
+/**
  * Perform comprehensive initialization check
  */
 export function checkInitializationStatus(): InitializationStatus {
@@ -259,6 +322,7 @@ export function checkInitializationStatus(): InitializationStatus {
     checkOpenAIConfiguration(),
     checkGitHubTokenConfiguration(),
     checkBehaviorFiles(),
+    checkMemorySystem(),
     checkAutonomousMode(),
     checkOrganizationId()
   ]
