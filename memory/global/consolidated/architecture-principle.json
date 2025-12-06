@@ -1,0 +1,55 @@
+[
+  {
+    "id": "kb_20251206_002",
+    "category": "architecture_principle",
+    "summary": "Test architecture decision 1 (observed 3 times)",
+    "lesson": "Architecture pattern 'architecture_decision' should be consistently applied across projects to maintain system coherence.",
+    "appliesTo": [
+      "GlobalUI",
+      "Builder",
+      "PartPulse"
+    ],
+    "originEntries": [
+      "global_architecture_decision_1765039520211_s4gmlbe_1765039520212_9akc7gp",
+      "global_architecture_decision_1765039520212_vxmvxon_1765039520212_q5hftaz",
+      "global_architecture_decision_1765039520212_epqw6oj_1765039520212_phmwm2q"
+    ],
+    "governanceLinks": [],
+    "confidence": 0.3,
+    "importance": "low",
+    "timestamp": "2025-12-06T16:45:20.216Z",
+    "metadata": {
+      "consolidatedFrom": 3,
+      "firstSeen": "2025-12-06T16:45:20.212Z",
+      "validationCount": 0
+    }
+  },
+  {
+    "id": "kb_20251206_003",
+    "category": "architecture_principle",
+    "summary": "Test architecture decision 1 (observed 6 times)",
+    "lesson": "Architecture pattern 'event' should be consistently applied across projects to maintain system coherence.",
+    "appliesTo": [
+      "GlobalUI",
+      "Builder",
+      "PartPulse"
+    ],
+    "originEntries": [
+      "global_architecture_decision_1765039530733_j4yqg0d_1765039530733_nl6xqwz",
+      "global_architecture_decision_1765039530733_h2pxtln_1765039530734_zg5dlzt",
+      "global_architecture_decision_1765039530734_c11oyko_1765039530734_xqs3qfs",
+      "foreman_qa_failure_1765039530734_6b0xrnh_1765039530734_nz0g673",
+      "foreman_qa_failure_1765039530735_8v3rsf9_1765039530735_1g65zg4",
+      "foreman_qa_failure_1765039530735_6fynvw6_1765039530735_9gt58zs"
+    ],
+    "governanceLinks": [],
+    "confidence": 0.6,
+    "importance": "medium",
+    "timestamp": "2025-12-06T16:45:30.737Z",
+    "metadata": {
+      "consolidatedFrom": 6,
+      "firstSeen": "2025-12-06T16:45:30.733Z",
+      "validationCount": 0
+    }
+  }
+]

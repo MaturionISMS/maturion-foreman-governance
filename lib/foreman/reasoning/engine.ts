@@ -31,8 +31,12 @@ import {
 import { MemoryEntry, MemoryScope } from '@/types/memory'
 import {
   loadMemoryBeforeAction,
-  runDriftMonitoring
+  runDriftMonitoring,
+  runConsolidation,
+  shouldTriggerConsolidation
 } from '@/lib/foreman/memory'
+import { getAllMemory } from '@/lib/foreman/memory/storage'
+import { KnowledgeBlock } from '@/types/consolidation'
 import {
   routeMemory,
   getRecommendedScopes,
@@ -45,11 +49,18 @@ import {
   applyPattern
 } from './patterns'
 import { DriftReport } from '@/types/drift'
+import fs from 'fs'
+import path from 'path'
 
 /**
  * Current memory version
  */
 const MEMORY_VERSION = '1.0.0'
+
+/**
+ * Consolidation threshold for automatic triggering
+ */
+const CONSOLIDATION_THRESHOLD = 30
 
 /**
  * Load memory snapshot for reasoning
@@ -67,7 +78,7 @@ const MEMORY_VERSION = '1.0.0'
  */
 export async function loadMemorySnapshot(
   context: ReasoningContext,
-  options: { skipDriftCheck?: boolean } = {}
+  options: { skipDriftCheck?: boolean, skipConsolidationCheck?: boolean } = {}
 ): Promise<MemorySnapshot> {
   console.log('[MARE] Loading memory snapshot...')
   
@@ -132,6 +143,43 @@ export async function loadMemorySnapshot(
     allMemoryEntries.push(...foremanMemory.entries)
   }
   
+  // Step 3.5: Load consolidated knowledge blocks
+  console.log('[MARE] Step 3.5: Loading consolidated knowledge blocks')
+  const consolidatedBlocks = loadConsolidatedKnowledge()
+  console.log(`[MARE] Loaded ${consolidatedBlocks.length} consolidated knowledge blocks`)
+  
+  // Inject high-confidence blocks into reasoning context
+  const highConfidenceBlocks = consolidatedBlocks.filter(b => b.confidence >= 0.8)
+  console.log(`[MARE] Injecting ${highConfidenceBlocks.length} high-confidence knowledge blocks`)
+  
+  // Convert knowledge blocks to memory entries for processing
+  for (const block of highConfidenceBlocks) {
+    const syntheticEntry: MemoryEntry = {
+      id: block.id,
+      scope: 'global',
+      key: `knowledge_${block.id}`,
+      value: {
+        type: 'consolidated_knowledge',
+        description: block.summary,
+        data: {
+          lesson: block.lesson,
+          category: block.category,
+          importance: block.importance,
+          appliesTo: block.appliesTo,
+          governanceLinks: block.governanceLinks
+        }
+      },
+      metadata: {
+        createdAt: block.timestamp,
+        updatedAt: block.lastValidated || block.timestamp,
+        createdBy: 'consolidation-engine',
+        version: 1
+      },
+      tags: ['consolidated_knowledge', block.category, block.importance]
+    }
+    allMemoryEntries.push(syntheticEntry)
+  }
+  
   // Step 4: Select relevant memories using router
   console.log('[MARE] Step 4: Filtering memory with router')
   const routedMemory = routeMemory(allMemoryEntries, {
@@ -184,6 +232,13 @@ export async function loadMemorySnapshot(
   console.log(`[MARE] - Reasoning patterns: ${reasoningPatterns.length}`)
   console.log(`[MARE] - Architecture lessons: ${architectureLessons.length}`)
   console.log(`[MARE] - Historical issues: ${issues.length}`)
+  console.log(`[MARE] - Consolidated knowledge: ${highConfidenceBlocks.length}`)
+  
+  // Step 6: Check consolidation triggers
+  if (!options.skipConsolidationCheck) {
+    const allMemory = await getAllMemory()
+    await checkConsolidationTrigger(context, allMemory)
+  }
   
   return snapshot
 }
@@ -605,12 +660,12 @@ function buildReasoningSummary(
  * Convenience function: Load memory and execute reasoning in one call
  * 
  * @param context - Reasoning context
- * @param options - Options for reasoning (skipDriftCheck)
+ * @param options - Options for reasoning (skipDriftCheck, skipConsolidationCheck)
  * @returns Reasoning result
  */
 export async function reason(
   context: ReasoningContext,
-  options: { skipDriftCheck?: boolean } = {}
+  options: { skipDriftCheck?: boolean, skipConsolidationCheck?: boolean } = {}
 ): Promise<ReasoningResult> {
   const snapshot = await loadMemorySnapshot(context, options)
   return await executeReasoning(snapshot, context)
@@ -620,3 +675,66 @@ export async function reason(
  * Export drift monitoring for direct use
  */
 export { runDriftMonitoring, createMemorySnapshot } from '@/lib/foreman/memory'
+
+/**
+ * Load consolidated knowledge blocks
+ */
+function loadConsolidatedKnowledge(): KnowledgeBlock[] {
+  const basePath = path.join(process.cwd(), 'memory', 'global', 'consolidated')
+  
+  if (!fs.existsSync(basePath)) {
+    return []
+  }
+  
+  const blocks: KnowledgeBlock[] = []
+  const files = fs.readdirSync(basePath)
+  
+  for (const file of files) {
+    if (!file.endsWith('.json')) continue
+    
+    try {
+      const filePath = path.join(basePath, file)
+      const content = fs.readFileSync(filePath, 'utf-8')
+      if (!content.trim()) continue
+      
+      const categoryBlocks = JSON.parse(content)
+      if (Array.isArray(categoryBlocks)) {
+        blocks.push(...categoryBlocks)
+      }
+    } catch (error) {
+      console.error(`[MARE] Error loading consolidated knowledge from ${file}:`, error)
+    }
+  }
+  
+  return blocks
+}
+
+/**
+ * Check if consolidation should be triggered
+ */
+async function checkConsolidationTrigger(
+  context: ReasoningContext,
+  allMemory: {
+    global: MemoryEntry[]
+    foreman: MemoryEntry[]
+    projects: Record<string, MemoryEntry[]>
+  }
+): Promise<void> {
+  // Check entry count trigger
+  const totalEntries = 
+    allMemory.global.length +
+    allMemory.foreman.length +
+    Object.values(allMemory.projects).flat().length
+  
+  if (totalEntries >= CONSOLIDATION_THRESHOLD) {
+    console.log(`[MARE] Consolidation threshold reached (${totalEntries} entries, threshold: ${CONSOLIDATION_THRESHOLD})`)
+    
+    // Trigger consolidation
+    try {
+      const result = await runConsolidation()
+      console.log(`[MARE] Consolidation complete: ${result.blocksGenerated} blocks generated`)
+    } catch (error) {
+      console.error('[MARE] Consolidation failed:', error)
+    }
+  }
+}

@@ -321,3 +321,18 @@ export {
   detectGovernanceDrift,
   createMemorySnapshot
 } from './drift-monitor'
+
+/**
+ * Re-export consolidation functions
+ */
+export {
+  runConsolidation,
+  generateKnowledgeBlocks,
+  detectPatterns,
+  collapseDuplicates,
+  scoreEntrySignificance,
+  archiveLowValueEntries,
+  linkKnowledgeToGovernance,
+  linkKnowledgeToProjects,
+  shouldTriggerConsolidation
+} from './consolidation-engine'
