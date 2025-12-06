@@ -1,0 +1,585 @@
+/**
+ * Memory-Aware Reasoning Engine (MARE)
+ * 
+ * The intelligence layer that transforms memory into operational cognition,
+ * guiding Foreman's planning, architecture evaluation, builder selection,
+ * QA predictions, and corrective actions.
+ * 
+ * Operates at Autonomy Class A1:
+ * - Uses memory inputs correctly
+ * - Avoids hallucination or ungrounded assumptions
+ * - Behaves consistently across all Foreman agents
+ * - Produces interpretable outputs
+ */
+
+import {
+  MemorySnapshot,
+  ReasoningContext,
+  ReasoningResult,
+  ReasoningDecision,
+  ProjectMemory,
+  GlobalMemory,
+  ReasoningPattern,
+  ArchitectureLesson,
+  HistoricalIssue,
+  MilestoneMemory,
+  DeploymentMemory,
+  BlockerMemory,
+  DecisionMemory,
+  GovernanceMemory
+} from '@/types/reasoning'
+import { MemoryEntry, MemoryScope } from '@/types/memory'
+import {
+  loadMemoryBeforeAction
+} from '@/lib/foreman/memory'
+import {
+  routeMemory,
+  getRecommendedScopes,
+  getRecommendedTags,
+  isMemoryContextSufficient
+} from './router'
+import {
+  loadReasoningPatterns,
+  findApplicablePatterns,
+  applyPattern
+} from './patterns'
+
+/**
+ * Current memory version
+ */
+const MEMORY_VERSION = '1.0.0'
+
+/**
+ * Load memory snapshot for reasoning
+ * 
+ * Implements deterministic 5-step sequence:
+ * 1. Load project memory
+ * 2. Load global memory
+ * 3. Load governance memory
+ * 4. Select relevant memories using memory router
+ * 5. Produce MemorySnapshot
+ * 
+ * @param context - Reasoning context
+ * @returns Memory snapshot
+ */
+export async function loadMemorySnapshot(
+  context: ReasoningContext
+): Promise<MemorySnapshot> {
+  console.log('[MARE] Loading memory snapshot...')
+  
+  const scopesToLoad: MemoryScope[] = getRecommendedScopes(context.intent)
+  const recommendedTags = getRecommendedTags({
+    intent: context.intent,
+    phase: context.phase,
+    subsystem: context.subsystem
+  })
+  
+  let allMemoryEntries: MemoryEntry[] = []
+  
+  // Step 1: Load project memory
+  if (context.projectId && scopesToLoad.includes('project')) {
+    console.log(`[MARE] Step 1: Loading project memory for ${context.projectId}`)
+    const projectMemory = await loadMemoryBeforeAction('project', {
+      projectId: context.projectId,
+      tags: recommendedTags.length > 0 ? recommendedTags : undefined
+    })
+    allMemoryEntries.push(...projectMemory.entries)
+  }
+  
+  // Step 2: Load global memory
+  if (scopesToLoad.includes('global')) {
+    console.log('[MARE] Step 2: Loading global memory')
+    const globalMemory = await loadMemoryBeforeAction('global', {
+      tags: recommendedTags.length > 0 ? recommendedTags : undefined
+    })
+    allMemoryEntries.push(...globalMemory.entries)
+  }
+  
+  // Step 3: Load governance memory (foreman scope)
+  if (scopesToLoad.includes('foreman')) {
+    console.log('[MARE] Step 3: Loading governance/foreman memory')
+    const foremanMemory = await loadMemoryBeforeAction('foreman', {
+      tags: recommendedTags.length > 0 ? recommendedTags : undefined
+    })
+    allMemoryEntries.push(...foremanMemory.entries)
+  }
+  
+  // Step 4: Select relevant memories using router
+  console.log('[MARE] Step 4: Filtering memory with router')
+  const routedMemory = routeMemory(allMemoryEntries, {
+    scope: scopesToLoad,
+    intent: context.intent,
+    phase: context.phase,
+    subsystem: context.subsystem,
+    riskLevel: context.riskLevel,
+    tags: context.tags
+  })
+  
+  console.log(`[MARE] Router selected ${routedMemory.total} relevant entries: ${routedMemory.filteringReason}`)
+  
+  // Check if memory context is sufficient
+  const sufficiencyCheck = isMemoryContextSufficient(
+    routedMemory.total,
+    context.riskLevel || 'medium'
+  )
+  
+  if (!sufficiencyCheck.sufficient) {
+    console.warn(`[MARE] Warning: ${sufficiencyCheck.reason}`)
+  }
+  
+  // Step 5: Parse and structure memory into snapshot
+  console.log('[MARE] Step 5: Producing memory snapshot')
+  
+  const projectMemory = context.projectId
+    ? parseProjectMemory(routedMemory.entries, context.projectId)
+    : null
+  
+  const globalMemory = parseGlobalMemory(routedMemory.entries)
+  const reasoningPatterns = loadReasoningPatterns(routedMemory.entries)
+  const architectureLessons = parseArchitectureLessons(routedMemory.entries)
+  const issues = parseHistoricalIssues(routedMemory.entries)
+  
+  const snapshot: MemorySnapshot = {
+    project: projectMemory,
+    global: globalMemory,
+    reasoningPatterns,
+    architectureLessons,
+    issues,
+    meta: {
+      loadedAt: new Date().toISOString(),
+      memoryVersion: MEMORY_VERSION,
+      scope: scopesToLoad
+    }
+  }
+  
+  console.log('[MARE] Memory snapshot loaded successfully')
+  console.log(`[MARE] - Reasoning patterns: ${reasoningPatterns.length}`)
+  console.log(`[MARE] - Architecture lessons: ${architectureLessons.length}`)
+  console.log(`[MARE] - Historical issues: ${issues.length}`)
+  
+  return snapshot
+}
+
+/**
+ * Execute reasoning based on memory snapshot
+ * 
+ * @param snapshot - Memory snapshot
+ * @param context - Reasoning context
+ * @returns Reasoning result
+ */
+export async function executeReasoning(
+  snapshot: MemorySnapshot,
+  context: ReasoningContext
+): Promise<ReasoningResult> {
+  console.log('[MARE] Executing reasoning...')
+  
+  const patternsApplied: string[] = []
+  const decisions: ReasoningDecision[] = []
+  const risks: string[] = []
+  const recommendedActions: string[] = []
+  const memoryReferences: string[] = []
+  
+  // Find and apply applicable reasoning patterns
+  const applicablePatterns = findApplicablePatterns(snapshot.reasoningPatterns, {
+    tags: context.tags,
+    phase: context.phase,
+    subsystem: context.subsystem,
+    riskLevel: context.riskLevel
+  })
+  
+  console.log(`[MARE] Found ${applicablePatterns.length} applicable reasoning patterns`)
+  
+  // Apply each pattern and collect guidance
+  let overallConfidence = 0
+  applicablePatterns.forEach(pattern => {
+    const result = applyPattern(pattern, context)
+    patternsApplied.push(pattern.id)
+    
+    // Track confidence
+    const confidenceValue = result.confidence === 'high' ? 0.9 : 
+                           result.confidence === 'medium' ? 0.6 : 0.3
+    overallConfidence += confidenceValue
+    
+    console.log(`[MARE] Applied pattern: ${pattern.name} (confidence: ${result.confidence})`)
+  })
+  
+  // Calculate average confidence
+  const confidenceScore = applicablePatterns.length > 0
+    ? overallConfidence / applicablePatterns.length
+    : 0.5
+  
+  // Analyze risks from memory
+  analyzeRisksFromMemory(snapshot, risks, memoryReferences)
+  
+  // Generate decisions based on patterns and memory
+  generateDecisions(snapshot, context, applicablePatterns, decisions, memoryReferences)
+  
+  // Generate recommended actions
+  generateRecommendedActions(snapshot, context, decisions, recommendedActions)
+  
+  // Build reasoning summary
+  const reasoningSummary = buildReasoningSummary(
+    snapshot,
+    context,
+    applicablePatterns,
+    decisions,
+    risks
+  )
+  
+  const result: ReasoningResult = {
+    reasoningSummary,
+    memoryReferences,
+    decisions,
+    risks,
+    recommendedActions,
+    meta: {
+      executedAt: new Date().toISOString(),
+      patternsApplied,
+      confidenceScore
+    }
+  }
+  
+  console.log('[MARE] Reasoning complete')
+  console.log(`[MARE] - Confidence: ${(confidenceScore * 100).toFixed(0)}%`)
+  console.log(`[MARE] - Decisions: ${decisions.length}`)
+  console.log(`[MARE] - Risks identified: ${risks.length}`)
+  console.log(`[MARE] - Actions recommended: ${recommendedActions.length}`)
+  
+  return result
+}
+
+/**
+ * Parse project memory from entries
+ */
+function parseProjectMemory(entries: MemoryEntry[], projectId: string): ProjectMemory {
+  const projectEntries = entries.filter(e => e.scope === 'project')
+  
+  const milestones: MilestoneMemory[] = []
+  const deployments: DeploymentMemory[] = []
+  const blockers: BlockerMemory[] = []
+  const decisions: DecisionMemory[] = []
+  let phase: ProjectMemory['phase'] = 'concept'
+  
+  projectEntries.forEach(entry => {
+    if (entry.tags?.includes('milestone_completion') || entry.tags?.includes('milestone')) {
+      if (entry.value.data?.milestone) {
+        milestones.push({
+          id: entry.id,
+          name: entry.value.data.milestone,
+          status: 'completed',
+          completedAt: entry.value.data.completedAt || entry.metadata.createdAt
+        })
+      }
+    }
+    
+    if (entry.tags?.includes('deployment')) {
+      if (entry.value.data?.environment) {
+        deployments.push({
+          environment: entry.value.data.environment,
+          timestamp: entry.metadata.createdAt,
+          version: entry.value.data.version,
+          success: !entry.tags?.includes('deployment_failure'),
+          issues: entry.value.data.issues
+        })
+      }
+    }
+    
+    if (entry.tags?.includes('blocker')) {
+      blockers.push({
+        id: entry.id,
+        description: entry.value.description || '',
+        severity: entry.value.data?.severity || 'medium',
+        status: entry.value.data?.status || 'open',
+        category: entry.value.data?.category
+      })
+    }
+    
+    if (entry.tags?.includes('architecture_decision') || entry.tags?.includes('decision')) {
+      decisions.push({
+        id: entry.id,
+        description: entry.value.description || '',
+        rationale: entry.value.data?.rationale || '',
+        timestamp: entry.metadata.createdAt,
+        createdBy: entry.metadata.createdBy
+      })
+    }
+    
+    if (entry.tags?.includes('project_state_transition') && entry.value.data?.phase) {
+      phase = entry.value.data.phase
+    }
+  })
+  
+  return {
+    projectId,
+    phase,
+    milestones,
+    deployments,
+    blockers,
+    decisions
+  }
+}
+
+/**
+ * Parse global memory from entries
+ */
+function parseGlobalMemory(entries: MemoryEntry[]): GlobalMemory {
+  const globalEntries = entries.filter(e => e.scope === 'global')
+  
+  const architectureDecisions: ArchitectureLesson[] = []
+  const governanceRules: GovernanceMemory[] = []
+  const systemPatterns: string[] = []
+  
+  globalEntries.forEach(entry => {
+    if (entry.tags?.includes('architecture_decision')) {
+      architectureDecisions.push({
+        id: entry.id,
+        pattern: entry.value.data?.pattern || '',
+        description: entry.value.description || '',
+        rationale: entry.value.data?.rationale || '',
+        benefits: entry.value.data?.benefits || [],
+        tradeoffs: entry.value.data?.tradeoffs || [],
+        applicability: entry.value.data?.applicability || [],
+        timestamp: entry.metadata.createdAt,
+        source: entry.metadata.createdBy
+      })
+    }
+    
+    if (entry.tags?.includes('governance') || entry.tags?.includes('governance_change')) {
+      governanceRules.push({
+        id: entry.id,
+        rule: entry.value.data?.rule || entry.key,
+        description: entry.value.description || '',
+        enforcement: entry.value.data?.enforcement || 'advisory'
+      })
+    }
+    
+    if (entry.tags?.includes('pattern') && entry.value.data?.pattern) {
+      systemPatterns.push(entry.value.data.pattern)
+    }
+  })
+  
+  return {
+    architectureDecisions,
+    governanceRules,
+    systemPatterns
+  }
+}
+
+/**
+ * Parse architecture lessons from entries
+ */
+function parseArchitectureLessons(entries: MemoryEntry[]): ArchitectureLesson[] {
+  const lessons: ArchitectureLesson[] = []
+  
+  entries.forEach(entry => {
+    if (entry.tags?.includes('architecture_decision') || entry.tags?.includes('architecture')) {
+      lessons.push({
+        id: entry.id,
+        pattern: entry.value.data?.pattern || '',
+        description: entry.value.description || '',
+        rationale: entry.value.data?.rationale || '',
+        benefits: entry.value.data?.benefits || [],
+        tradeoffs: entry.value.data?.tradeoffs || [],
+        applicability: entry.value.data?.applicability || [],
+        timestamp: entry.metadata.createdAt,
+        source: entry.metadata.createdBy
+      })
+    }
+  })
+  
+  return lessons
+}
+
+/**
+ * Parse historical issues from entries
+ */
+function parseHistoricalIssues(entries: MemoryEntry[]): HistoricalIssue[] {
+  const issues: HistoricalIssue[] = []
+  
+  entries.forEach(entry => {
+    if (entry.tags?.includes('qa_failure') || 
+        entry.tags?.includes('deployment_failure') || 
+        entry.tags?.includes('error_escalation')) {
+      issues.push({
+        id: entry.id,
+        type: entry.value.type || 'unknown',
+        description: entry.value.description || '',
+        resolution: entry.value.data?.resolution || 'unknown',
+        timestamp: entry.metadata.createdAt,
+        scope: entry.scope,
+        tags: entry.tags || []
+      })
+    }
+  })
+  
+  return issues
+}
+
+/**
+ * Analyze risks from memory
+ */
+function analyzeRisksFromMemory(
+  snapshot: MemorySnapshot,
+  risks: string[],
+  memoryReferences: string[]
+): void {
+  // Check for recent failures
+  const recentFailures = snapshot.issues.filter(issue => {
+    const issueTime = new Date(issue.timestamp).getTime()
+    const dayAgo = Date.now() - (24 * 60 * 60 * 1000)
+    return issueTime > dayAgo
+  })
+  
+  if (recentFailures.length > 0) {
+    risks.push(`Recent failures detected: ${recentFailures.length} issues in last 24 hours`)
+    recentFailures.forEach(f => memoryReferences.push(f.id))
+  }
+  
+  // Check for active blockers
+  if (snapshot.project?.blockers) {
+    const activeBlockers = snapshot.project.blockers.filter(b => b.status === 'open')
+    if (activeBlockers.length > 0) {
+      risks.push(`Active blockers: ${activeBlockers.length} open blockers`)
+    }
+  }
+  
+  // Check for governance violations
+  const governanceIssues = snapshot.global.governanceRules.filter(
+    rule => rule.enforcement === 'strict'
+  )
+  if (governanceIssues.length > 0) {
+    risks.push(`Strict governance rules active: ${governanceIssues.length} rules require compliance`)
+  }
+}
+
+/**
+ * Generate decisions based on patterns and memory
+ */
+function generateDecisions(
+  snapshot: MemorySnapshot,
+  context: ReasoningContext,
+  patterns: ReasoningPattern[],
+  decisions: ReasoningDecision[],
+  memoryReferences: string[]
+): void {
+  // Apply Memory Before Action pattern
+  const memoryBeforeAction = patterns.find(p => p.id === 'pattern_memory_before_action')
+  if (memoryBeforeAction) {
+    decisions.push({
+      action: 'Load memory context before proceeding',
+      rationale: memoryBeforeAction.approach,
+      confidence: 'high',
+      memorySupport: [memoryBeforeAction.id],
+      governanceAlignment: true
+    })
+  }
+  
+  // Check governance alignment
+  const governancePattern = patterns.find(p => p.id === 'pattern_governance_alignment')
+  if (governancePattern && snapshot.global.governanceRules.length > 0) {
+    decisions.push({
+      action: 'Validate against governance rules',
+      rationale: 'Strict governance rules are active',
+      confidence: 'high',
+      memorySupport: snapshot.global.governanceRules.map(r => r.id),
+      governanceAlignment: true
+    })
+    snapshot.global.governanceRules.forEach(r => memoryReferences.push(r.id))
+  }
+  
+  // Check for past similar situations
+  if (snapshot.issues.length > 0) {
+    const relevantIssues = snapshot.issues.filter(issue => 
+      context.tags?.some(tag => issue.tags.includes(tag))
+    )
+    
+    if (relevantIssues.length > 0) {
+      decisions.push({
+        action: 'Review past similar issues before proceeding',
+        rationale: `${relevantIssues.length} similar issues found in memory`,
+        confidence: 'medium',
+        memorySupport: relevantIssues.map(i => i.id),
+        governanceAlignment: true
+      })
+      relevantIssues.forEach(i => memoryReferences.push(i.id))
+    }
+  }
+}
+
+/**
+ * Generate recommended actions
+ */
+function generateRecommendedActions(
+  snapshot: MemorySnapshot,
+  context: ReasoningContext,
+  decisions: ReasoningDecision[],
+  actions: string[]
+): void {
+  // Base recommendations on decisions
+  decisions.forEach(decision => {
+    actions.push(decision.action)
+  })
+  
+  // Add context-specific recommendations
+  if (context.phase === 'build' && snapshot.issues.length > 0) {
+    actions.push('Run QA validation before deployment')
+  }
+  
+  if (context.riskLevel === 'critical' || context.riskLevel === 'high') {
+    actions.push('Request human review before proceeding')
+  }
+  
+  if (snapshot.project?.blockers?.some(b => b.severity === 'critical')) {
+    actions.push('Resolve critical blockers before continuing')
+  }
+}
+
+/**
+ * Build reasoning summary
+ */
+function buildReasoningSummary(
+  snapshot: MemorySnapshot,
+  context: ReasoningContext,
+  patterns: ReasoningPattern[],
+  decisions: ReasoningDecision[],
+  risks: string[]
+): string {
+  const parts: string[] = []
+  
+  parts.push(`Memory-Aware Reasoning Analysis`)
+  parts.push(`Context: ${context.subsystem || 'general'} / ${context.phase || 'planning'}`)
+  parts.push(``)
+  parts.push(`Memory Loaded:`)
+  parts.push(`- Reasoning Patterns: ${snapshot.reasoningPatterns.length}`)
+  parts.push(`- Architecture Lessons: ${snapshot.architectureLessons.length}`)
+  parts.push(`- Historical Issues: ${snapshot.issues.length}`)
+  
+  if (snapshot.project) {
+    parts.push(`- Project Phase: ${snapshot.project.phase}`)
+    parts.push(`- Active Blockers: ${snapshot.project.blockers.filter(b => b.status === 'open').length}`)
+  }
+  
+  parts.push(``)
+  parts.push(`Patterns Applied: ${patterns.map(p => p.name).join(', ')}`)
+  parts.push(``)
+  parts.push(`Decisions Made: ${decisions.length}`)
+  
+  if (risks.length > 0) {
+    parts.push(``)
+    parts.push(`Risks Identified: ${risks.length}`)
+    risks.forEach(risk => parts.push(`- ${risk}`))
+  }
+  
+  return parts.join('\n')
+}
+
+/**
+ * Convenience function: Load memory and execute reasoning in one call
+ * 
+ * @param context - Reasoning context
+ * @returns Reasoning result
+ */
+export async function reason(context: ReasoningContext): Promise<ReasoningResult> {
+  const snapshot = await loadMemorySnapshot(context)
+  return await executeReasoning(snapshot, context)
+}
