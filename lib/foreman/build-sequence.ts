@@ -15,6 +15,7 @@ import {
   BuildSequenceStatus,
   AIGeneratedTaskRequest
 } from '@/types/build-sequence'
+import { recordWaveCompletion, recordArchitectureDecision } from './memory'
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || 'placeholder',
@@ -100,6 +101,23 @@ Return a JSON array of architecture gaps with the following structure:
     
     const result = JSON.parse(content)
     const gaps = result.gaps || []
+    
+    // Write memory for significant architecture gaps
+    if (gaps.length > 0) {
+      try {
+        const highPriorityGaps = gaps.filter((g: ArchitectureGap) => g.priority === 'high')
+        if (highPriorityGaps.length > 0) {
+          await recordArchitectureDecision(
+            `Identified ${highPriorityGaps.length} high-priority architecture gaps`,
+            { gaps: highPriorityGaps, context },
+            { organisationId }
+          )
+        }
+      } catch (memoryError) {
+        console.error('[BuildSequence] Failed to write architecture memory:', memoryError)
+        // Don't fail the analysis if memory write fails
+      }
+    }
     
     console.log(`[BuildSequence] Detected ${gaps.length} architecture gaps`)
     return gaps
@@ -231,6 +249,21 @@ export async function runQACycle(
       status: 'failed',
       message: error instanceof Error ? error.message : 'QA execution failed'
     })
+    
+    // Record QA failure in memory for learning
+    try {
+      const { recordQAFailure } = await import('./memory')
+      await recordQAFailure(
+        'QA cycle execution failure',
+        { 
+          error: error instanceof Error ? error.message : 'Unknown error',
+          organisationId 
+        },
+        { organisationId }
+      )
+    } catch (memoryError) {
+      console.error('[BuildSequence] Failed to write QA failure memory:', memoryError)
+    }
   }
   
   // QA-of-QA (meta-review)
@@ -352,6 +385,23 @@ export async function runBuildSequence(
     sequence.completedAt = new Date()
     sequence.updatedAt = new Date()
     sequenceStore.set(sequence.id, sequence)
+    
+    // Write memory after successful completion
+    try {
+      await recordWaveCompletion(
+        sequence.id,
+        {
+          sequenceId: sequence.id,
+          tasksCompleted: sequence.tasks.length,
+          qaResults: sequence.qaResults,
+          duration: sequence.completedAt.getTime() - (sequence.startedAt?.getTime() || 0),
+        },
+        { organisationId: config.organisationId }
+      )
+    } catch (memoryError) {
+      console.error('[BuildSequence] Failed to write memory:', memoryError)
+      // Don't fail the build if memory write fails
+    }
     
     console.log('[BuildSequence] Build sequence completed:', sequence.id)
     return sequence
