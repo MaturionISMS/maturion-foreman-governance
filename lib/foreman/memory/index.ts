@@ -336,3 +336,17 @@ export {
   linkKnowledgeToProjects,
   shouldTriggerConsolidation
 } from './consolidation-engine'
+
+/**
+ * Re-export retirement engine functions
+ */
+export {
+  runRetirement,
+  detectStalenessRetirement,
+  detectSupersessionRetirement,
+  detectObsolescenceRetirement,
+  detectContradictionRetirement,
+  executeRetirement,
+  restoreEntry,
+  getRetirementStatistics
+} from './retirement-engine'
