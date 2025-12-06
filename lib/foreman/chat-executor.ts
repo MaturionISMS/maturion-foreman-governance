@@ -13,7 +13,19 @@ import { runSelfTest } from './run-self-test'
 import { getPilotWave } from './pilot-waves'
 import { runPilotQA, updatePilotBuildNotes } from './pilot-qa-check'
 import { getRepoConfig } from '@/lib/config/repoRegistry'
-import { loadMemoryBeforeAction } from './memory'
+import { loadMemoryBeforeAction, writeMemoryAfterAction, recordMilestoneCompletion } from './memory'
+import { 
+  createProject, 
+  updateProject, 
+  getProject, 
+  findProjectByName,
+  completeMilestone,
+  getDashboardData,
+  getProjectDetail
+} from './projects/registry'
+import { transitionToPhase, blockProject } from './projects/lifecycle'
+import { Project, ProjectPhase } from '@/types/project'
+import { MemoryEvent } from '@/types/memory'
 
 export interface ChatExecutionResult {
   success: boolean
@@ -86,7 +98,49 @@ export async function executeChatActions(
 
     // Process each action
     for (const action of actions) {
-      if (action.type === 'RUN_BUILD_WAVE') {
+      // ========== Project Lifecycle Actions ==========
+      if (action.type === 'CREATE_PROJECT') {
+        const result = await executeCreateProject(action, organisationId, statusUpdates)
+        if (result.projectId) {
+          return {
+            success: true,
+            statusUpdates,
+            taskIds: [result.projectId],
+          }
+        }
+      } else if (action.type === 'UPDATE_PHASE') {
+        const result = await executeUpdatePhase(action, organisationId, statusUpdates)
+        return {
+          success: result.success,
+          statusUpdates,
+        }
+      } else if (action.type === 'UPDATE_MILESTONES') {
+        const result = await executeUpdateMilestones(action, organisationId, statusUpdates)
+        return {
+          success: result.success,
+          statusUpdates,
+        }
+      } else if (action.type === 'RECORD_BLOCKER') {
+        const result = await executeRecordBlocker(action, organisationId, statusUpdates)
+        return {
+          success: result.success,
+          statusUpdates,
+        }
+      } else if (action.type === 'GET_PROJECT_STATUS') {
+        const result = await executeGetProjectStatus(action, organisationId, statusUpdates)
+        return {
+          success: result.success,
+          statusUpdates,
+        }
+      } else if (action.type === 'GET_PROJECT_DASHBOARD') {
+        const result = await executeGetProjectDashboard(action, organisationId, statusUpdates)
+        return {
+          success: result.success,
+          statusUpdates,
+        }
+      }
+      // ========== Build and QA Actions ==========
+      else if (action.type === 'RUN_BUILD_WAVE') {
         // Check if this is a pilot wave by looking up wave configuration
         const waveName = action.params.wave as string
         const pilotWave = waveName ? getPilotWave(waveName) : null
@@ -600,3 +654,545 @@ async function executePilotBuild(
   }
 }
 
+// ============================================================================
+// Project Lifecycle Action Handlers
+// ============================================================================
+
+/**
+ * Execute CREATE_PROJECT action
+ */
+async function executeCreateProject(
+  action: ForemanAction,
+  organisationId: string,
+  statusUpdates: ChatStatusUpdate[]
+): Promise<{ success: boolean; projectId?: string }> {
+  try {
+    statusUpdates.push({
+      timestamp: new Date(),
+      status: 'planning',
+      message: `Creating project: ${action.params.name}`,
+    })
+
+    // Create project in registry
+    const result = await createProject({
+      name: action.params.name,
+      description: action.params.description,
+      owner: action.params.owner,
+      organisationId,
+      conceptData: action.params.conceptData,
+      tags: action.params.tags,
+      priority: action.params.priority,
+      estimatedCompletion: action.params.estimatedCompletion,
+    })
+
+    if (!result.success || !result.data) {
+      statusUpdates.push({
+        timestamp: new Date(),
+        status: 'error',
+        message: `Failed to create project: ${result.error}`,
+      })
+      return { success: false }
+    }
+
+    const project = result.data
+
+    // Write memory entry for project creation
+    const memoryEvent: MemoryEvent = {
+      type: 'project_state_transition',
+      scope: 'project',
+      description: `Project created: ${project.name}`,
+      data: {
+        projectId: project.id,
+        projectName: project.name,
+        phase: project.phase,
+        owner: project.owner,
+      },
+      timestamp: new Date().toISOString(),
+      createdBy: 'foreman',
+    }
+
+    await writeMemoryAfterAction(memoryEvent, {
+      projectId: project.id,
+      organisationId,
+    })
+
+    statusUpdates.push({
+      timestamp: new Date(),
+      status: 'complete',
+      message: `Project created successfully: ${project.name} (${project.id})`,
+      metadata: { projectId: project.id, projectName: project.name },
+    })
+
+    foremanLogger.log(
+      LogLevel.INFO,
+      'ProjectLifecycle',
+      `Project created: ${project.name} (${project.id})`,
+      { organisationId, projectId: project.id }
+    )
+
+    return { success: true, projectId: project.id }
+  } catch (error) {
+    statusUpdates.push({
+      timestamp: new Date(),
+      status: 'error',
+      message: error instanceof Error ? error.message : 'Failed to create project',
+    })
+    return { success: false }
+  }
+}
+
+/**
+ * Execute UPDATE_PHASE action
+ */
+async function executeUpdatePhase(
+  action: ForemanAction,
+  organisationId: string,
+  statusUpdates: ChatStatusUpdate[]
+): Promise<{ success: boolean }> {
+  try {
+    statusUpdates.push({
+      timestamp: new Date(),
+      status: 'planning',
+      message: `Updating project phase to: ${action.params.phase}`,
+    })
+
+    // Get project by ID or name
+    let project: Project | null = null
+    if (action.params.projectId) {
+      project = await getProject(action.params.projectId)
+    } else if (action.params.projectName) {
+      project = await findProjectByName(action.params.projectName)
+    }
+
+    if (!project) {
+      statusUpdates.push({
+        timestamp: new Date(),
+        status: 'error',
+        message: 'Project not found',
+      })
+      return { success: false }
+    }
+
+    // Transition to new phase
+    const transitionResult = transitionToPhase(project, action.params.phase as ProjectPhase, 'foreman')
+
+    if (!transitionResult.success) {
+      statusUpdates.push({
+        timestamp: new Date(),
+        status: 'error',
+        message: `Phase transition failed: ${transitionResult.error}`,
+        metadata: { prerequisites: transitionResult.prerequisites },
+      })
+      return { success: false }
+    }
+
+    // Save updated project
+    await updateProject(project.id, { phase: action.params.phase as ProjectPhase })
+
+    // Write memory entry for phase transition
+    const memoryEvent: MemoryEvent = {
+      type: 'project_state_transition',
+      scope: 'project',
+      description: `Phase transition: ${transitionResult.previousPhase} → ${transitionResult.newPhase}`,
+      data: {
+        projectId: project.id,
+        projectName: project.name,
+        previousPhase: transitionResult.previousPhase,
+        newPhase: transitionResult.newPhase,
+        milestonesUpdated: transitionResult.milestonesUpdated,
+      },
+      timestamp: new Date().toISOString(),
+      createdBy: 'foreman',
+    }
+
+    await writeMemoryAfterAction(memoryEvent, {
+      projectId: project.id,
+      organisationId,
+    })
+
+    statusUpdates.push({
+      timestamp: new Date(),
+      status: 'complete',
+      message: `Phase updated: ${transitionResult.previousPhase} → ${transitionResult.newPhase}`,
+      metadata: { projectId: project.id },
+    })
+
+    foremanLogger.log(
+      LogLevel.INFO,
+      'ProjectLifecycle',
+      `Phase transition: ${project.name} (${transitionResult.previousPhase} → ${transitionResult.newPhase})`,
+      { organisationId, projectId: project.id }
+    )
+
+    return { success: true }
+  } catch (error) {
+    statusUpdates.push({
+      timestamp: new Date(),
+      status: 'error',
+      message: error instanceof Error ? error.message : 'Failed to update phase',
+    })
+    return { success: false }
+  }
+}
+
+/**
+ * Execute UPDATE_MILESTONES action
+ */
+async function executeUpdateMilestones(
+  action: ForemanAction,
+  organisationId: string,
+  statusUpdates: ChatStatusUpdate[]
+): Promise<{ success: boolean }> {
+  try {
+    statusUpdates.push({
+      timestamp: new Date(),
+      status: 'planning',
+      message: `Completing milestone: ${action.params.milestoneName || action.params.milestoneId}`,
+    })
+
+    // Get project by ID or name
+    let project: Project | null = null
+    if (action.params.projectId) {
+      project = await getProject(action.params.projectId)
+    } else if (action.params.projectName) {
+      project = await findProjectByName(action.params.projectName)
+    }
+
+    if (!project) {
+      statusUpdates.push({
+        timestamp: new Date(),
+        status: 'error',
+        message: 'Project not found',
+      })
+      return { success: false }
+    }
+
+    // Find milestone by ID or name
+    let milestoneId = action.params.milestoneId
+    if (!milestoneId && action.params.milestoneName) {
+      const milestone = project.milestones.find(
+        m => m.name.toLowerCase() === action.params.milestoneName.toLowerCase()
+      )
+      if (milestone) {
+        milestoneId = milestone.id
+      }
+    }
+
+    if (!milestoneId) {
+      statusUpdates.push({
+        timestamp: new Date(),
+        status: 'error',
+        message: 'Milestone not found',
+      })
+      return { success: false }
+    }
+
+    // Complete milestone
+    const result = await completeMilestone({
+      projectId: project.id,
+      milestoneId,
+      completedBy: action.params.completedBy,
+    })
+
+    if (!result.success) {
+      statusUpdates.push({
+        timestamp: new Date(),
+        status: 'error',
+        message: `Failed to complete milestone: ${result.error}`,
+      })
+      return { success: false }
+    }
+
+    const milestone = project.milestones.find(m => m.id === milestoneId)
+
+    // Write memory entry for milestone completion
+    if (milestone) {
+      await recordMilestoneCompletion(
+        milestone.name,
+        {
+          projectId: project.id,
+          projectName: project.name,
+          milestoneId: milestone.id,
+          phase: milestone.phase,
+          completedBy: action.params.completedBy,
+        },
+        {
+          projectId: project.id,
+          organisationId,
+        }
+      )
+    }
+
+    statusUpdates.push({
+      timestamp: new Date(),
+      status: 'complete',
+      message: `Milestone completed: ${milestone?.name || milestoneId}`,
+      metadata: { projectId: project.id, milestoneId },
+    })
+
+    foremanLogger.log(
+      LogLevel.INFO,
+      'ProjectLifecycle',
+      `Milestone completed: ${project.name} - ${milestone?.name}`,
+      { organisationId, projectId: project.id, milestoneId }
+    )
+
+    return { success: true }
+  } catch (error) {
+    statusUpdates.push({
+      timestamp: new Date(),
+      status: 'error',
+      message: error instanceof Error ? error.message : 'Failed to update milestone',
+    })
+    return { success: false }
+  }
+}
+
+/**
+ * Execute RECORD_BLOCKER action
+ */
+async function executeRecordBlocker(
+  action: ForemanAction,
+  organisationId: string,
+  statusUpdates: ChatStatusUpdate[]
+): Promise<{ success: boolean }> {
+  try {
+    statusUpdates.push({
+      timestamp: new Date(),
+      status: 'planning',
+      message: `Recording blocker: ${action.params.description}`,
+    })
+
+    // Get project by ID or name
+    let project: Project | null = null
+    if (action.params.projectId) {
+      project = await getProject(action.params.projectId)
+    } else if (action.params.projectName) {
+      project = await findProjectByName(action.params.projectName)
+    }
+
+    if (!project) {
+      statusUpdates.push({
+        timestamp: new Date(),
+        status: 'error',
+        message: 'Project not found',
+      })
+      return { success: false }
+    }
+
+    // Add blocker to project
+    blockProject(project, action.params.description)
+
+    // Update blocker with category and severity if provided
+    if (project.blockers && project.blockers.length > 0) {
+      const latestBlocker = project.blockers[project.blockers.length - 1]
+      if (action.params.category) {
+        latestBlocker.category = action.params.category
+      }
+      if (action.params.severity) {
+        latestBlocker.severity = action.params.severity
+      }
+    }
+
+    // Save updated project
+    await updateProject(project.id, { status: 'blocked' })
+
+    // Write memory entry for blocker
+    const memoryEvent: MemoryEvent = {
+      type: 'error_escalation',
+      scope: 'project',
+      description: `Blocker added: ${action.params.description}`,
+      data: {
+        projectId: project.id,
+        projectName: project.name,
+        blockerDescription: action.params.description,
+        category: action.params.category || 'technical',
+        severity: action.params.severity || 'medium',
+      },
+      timestamp: new Date().toISOString(),
+      createdBy: 'foreman',
+    }
+
+    await writeMemoryAfterAction(memoryEvent, {
+      projectId: project.id,
+      organisationId,
+    })
+
+    statusUpdates.push({
+      timestamp: new Date(),
+      status: 'complete',
+      message: `Blocker recorded: ${action.params.description}`,
+      metadata: { projectId: project.id },
+    })
+
+    foremanLogger.log(
+      LogLevel.WARN,
+      'ProjectLifecycle',
+      `Blocker recorded: ${project.name} - ${action.params.description}`,
+      { organisationId, projectId: project.id }
+    )
+
+    return { success: true }
+  } catch (error) {
+    statusUpdates.push({
+      timestamp: new Date(),
+      status: 'error',
+      message: error instanceof Error ? error.message : 'Failed to record blocker',
+    })
+    return { success: false }
+  }
+}
+
+/**
+ * Execute GET_PROJECT_STATUS action
+ */
+async function executeGetProjectStatus(
+  action: ForemanAction,
+  organisationId: string,
+  statusUpdates: ChatStatusUpdate[]
+): Promise<{ success: boolean }> {
+  try {
+    statusUpdates.push({
+      timestamp: new Date(),
+      status: 'planning',
+      message: 'Retrieving project status...',
+    })
+
+    // Get project by ID or name
+    let project: Project | null = null
+    if (action.params.projectId) {
+      project = await getProject(action.params.projectId)
+    } else if (action.params.projectName) {
+      project = await findProjectByName(action.params.projectName)
+    }
+
+    if (!project) {
+      statusUpdates.push({
+        timestamp: new Date(),
+        status: 'error',
+        message: 'Project not found',
+      })
+      return { success: false }
+    }
+
+    // Get project detail view
+    const detail = await getProjectDetail(project.id)
+
+    if (!detail) {
+      statusUpdates.push({
+        timestamp: new Date(),
+        status: 'error',
+        message: 'Failed to retrieve project details',
+      })
+      return { success: false }
+    }
+
+    statusUpdates.push({
+      timestamp: new Date(),
+      status: 'complete',
+      message: `Project Status: ${project.name}`,
+      metadata: {
+        projectId: project.id,
+        phase: project.phase,
+        status: project.status,
+        progress: project.progressPercentage,
+        nextMilestone: detail.nextMilestone?.name,
+        blockers: detail.currentBlockers.length,
+      },
+    })
+
+    foremanLogger.log(
+      LogLevel.INFO,
+      'ProjectLifecycle',
+      `Project status retrieved: ${project.name}`,
+      { organisationId, projectId: project.id }
+    )
+
+    return { success: true }
+  } catch (error) {
+    statusUpdates.push({
+      timestamp: new Date(),
+      status: 'error',
+      message: error instanceof Error ? error.message : 'Failed to get project status',
+    })
+    return { success: false }
+  }
+}
+
+/**
+ * Execute GET_PROJECT_DASHBOARD action
+ */
+async function executeGetProjectDashboard(
+  action: ForemanAction,
+  organisationId: string,
+  statusUpdates: ChatStatusUpdate[]
+): Promise<{ success: boolean }> {
+  try {
+    statusUpdates.push({
+      timestamp: new Date(),
+      status: 'planning',
+      message: 'Generating project dashboard...',
+    })
+
+    if (action.params.projectId || action.params.projectName) {
+      // Get specific project detail
+      let project: Project | null = null
+      if (action.params.projectId) {
+        project = await getProject(action.params.projectId)
+      } else if (action.params.projectName) {
+        project = await findProjectByName(action.params.projectName)
+      }
+
+      if (!project) {
+        statusUpdates.push({
+          timestamp: new Date(),
+          status: 'error',
+          message: 'Project not found',
+        })
+        return { success: false }
+      }
+
+      const detail = await getProjectDetail(project.id)
+
+      statusUpdates.push({
+        timestamp: new Date(),
+        status: 'complete',
+        message: `Dashboard for: ${project.name}`,
+        metadata: {
+          projectId: project.id,
+          view: 'detail',
+          detail,
+        },
+      })
+    } else {
+      // Get overview dashboard
+      const dashboard = await getDashboardData()
+
+      statusUpdates.push({
+        timestamp: new Date(),
+        status: 'complete',
+        message: 'Project Dashboard Overview',
+        metadata: {
+          view: 'overview',
+          dashboard,
+        },
+      })
+    }
+
+    foremanLogger.log(
+      LogLevel.INFO,
+      'ProjectLifecycle',
+      'Project dashboard generated',
+      { organisationId }
+    )
+
+    return { success: true }
+  } catch (error) {
+    statusUpdates.push({
+      timestamp: new Date(),
+      status: 'error',
+      message: error instanceof Error ? error.message : 'Failed to get project dashboard',
+    })
+    return { success: false }
+  }
+}

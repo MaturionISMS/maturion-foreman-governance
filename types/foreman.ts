@@ -67,6 +67,13 @@ export type ForemanActionType =
   | 'SELF_TEST'
   | 'INTEGRATION_TEST'
   | 'BUILDER_TASK'
+  // Project Lifecycle Actions
+  | 'CREATE_PROJECT'
+  | 'UPDATE_PHASE'
+  | 'UPDATE_MILESTONES'
+  | 'RECORD_BLOCKER'
+  | 'GET_PROJECT_STATUS'
+  | 'GET_PROJECT_DASHBOARD'
 
 export interface ForemanAction {
   type: ForemanActionType
@@ -157,6 +164,79 @@ export interface BuilderTaskAction extends ForemanAction {
     instruction: string
   }
   requiresApproval: boolean
+}
+
+// ============================================================================
+// Project Lifecycle Action Interfaces
+// ============================================================================
+
+export interface CreateProjectAction extends ForemanAction {
+  type: 'CREATE_PROJECT'
+  params: {
+    name: string
+    description: string
+    owner: string
+    conceptData?: {
+      rawConcept: string
+    }
+    tags?: string[]
+    priority?: 'low' | 'medium' | 'high' | 'critical'
+    estimatedCompletion?: string
+  }
+  requiresApproval: false
+}
+
+export interface UpdatePhaseAction extends ForemanAction {
+  type: 'UPDATE_PHASE'
+  params: {
+    projectId?: string
+    projectName?: string
+    phase: 'concept' | 'architecture' | 'build' | 'deployment' | 'completed' | 'archived'
+  }
+  requiresApproval: boolean
+}
+
+export interface UpdateMilestonesAction extends ForemanAction {
+  type: 'UPDATE_MILESTONES'
+  params: {
+    projectId?: string
+    projectName?: string
+    milestoneId?: string
+    milestoneName?: string
+    completedBy: string
+  }
+  requiresApproval: false
+}
+
+export interface RecordBlockerAction extends ForemanAction {
+  type: 'RECORD_BLOCKER'
+  params: {
+    projectId?: string
+    projectName?: string
+    description: string
+    category?: 'technical' | 'approval' | 'external' | 'resource'
+    severity?: 'low' | 'medium' | 'high' | 'critical'
+  }
+  requiresApproval: false
+}
+
+export interface GetProjectStatusAction extends ForemanAction {
+  type: 'GET_PROJECT_STATUS'
+  params: {
+    projectId?: string
+    projectName?: string
+  }
+  requiresApproval: false
+}
+
+export interface GetProjectDashboardAction extends ForemanAction {
+  type: 'GET_PROJECT_DASHBOARD'
+  params: {
+    projectId?: string
+    projectName?: string
+    view?: 'overview' | 'detail'
+  }
+  requiresApproval: false
 }
 
 export interface ForemanConfig {
