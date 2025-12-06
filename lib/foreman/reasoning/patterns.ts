@@ -6,6 +6,8 @@
  * decision-making across different contexts.
  */
 
+import fs from 'fs'
+import path from 'path'
 import { ReasoningPattern } from '@/types/reasoning'
 import { MemoryEntry } from '@/types/memory'
 
@@ -108,12 +110,44 @@ const BUILT_IN_PATTERNS: ReasoningPattern[] = [
 
 /**
  * Load reasoning patterns from memory and built-ins
+ * Now also loads evolved patterns from consolidation
  * 
  * @param memoryEntries - Memory entries that may contain patterns
  * @returns Combined list of patterns
  */
 export function loadReasoningPatterns(memoryEntries: MemoryEntry[]): ReasoningPattern[] {
   const patterns: ReasoningPattern[] = [...BUILT_IN_PATTERNS]
+  
+  // Load evolved patterns from consolidated directory
+  const consolidatedPath = path.join(
+    process.cwd(),
+    'memory',
+    'global',
+    'consolidated',
+    'reasoning',
+    'consolidated_reasoning_patterns.json'
+  )
+
+  if (fs.existsSync(consolidatedPath)) {
+    try {
+      const data = JSON.parse(fs.readFileSync(consolidatedPath, 'utf-8'))
+      
+      // Add stable patterns first (highest priority)
+      if (data.patterns?.stable) {
+        patterns.push(...data.patterns.stable)
+        console.log(`[Reasoning Patterns] Loaded ${data.patterns.stable.length} stable evolved patterns`)
+      }
+      
+      // Add monitored patterns
+      if (data.patterns?.monitored) {
+        patterns.push(...data.patterns.monitored)
+        console.log(`[Reasoning Patterns] Loaded ${data.patterns.monitored.length} monitored evolved patterns`)
+      }
+      
+    } catch (error) {
+      console.warn('[Reasoning Patterns] Failed to load evolved patterns:', error)
+    }
+  }
   
   // Extract patterns from memory entries
   memoryEntries.forEach(entry => {

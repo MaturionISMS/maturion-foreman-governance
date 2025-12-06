@@ -16,6 +16,7 @@ export type KnowledgeCategory =
   | 'build_pattern'
   | 'error_resolution'
   | 'performance_insight'
+  | 'consolidated_reasoning_patterns' // New: evolved reasoning patterns
 
 /**
  * Knowledge block importance level

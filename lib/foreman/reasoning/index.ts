@@ -26,3 +26,14 @@ export {
   getBuiltInPatterns,
   validatePattern
 } from './patterns'
+
+// Evolution Engine
+export {
+  runEvolutionCycle,
+  getEvolutionStats,
+  shouldTriggerEvolution,
+  calculatePatternScore,
+  analyzePatternPerformance,
+  generateEvolutionProposal,
+  classifyPattern
+} from './evolution-engine'

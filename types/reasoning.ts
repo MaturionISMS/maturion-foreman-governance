@@ -78,6 +78,54 @@ export interface ReasoningPattern {
   tags: string[]
   successRate?: number
   usageCount?: number
+  performanceScore?: number // 0-1.0 performance score for evolution
+  lastEvolved?: string // ISO 8601 timestamp
+}
+
+/**
+ * Pattern Performance Metrics - tracking for evolution
+ */
+export interface PatternPerformanceMetrics {
+  patternId: string
+  successRate: number // 0-1.0
+  relevance: number // Usage frequency
+  qaFailureEscapeRate: number // 0-1.0
+  architectureConflicts: number
+  builderExecutionConsistency: number // 0-1.0
+  driftStability: number // 0-1.0
+  usageCount: number
+  lastUsed?: string // ISO 8601
+}
+
+/**
+ * Pattern Evolution Proposal - proposed changes to a pattern
+ */
+export interface PatternEvolutionProposal {
+  patternId: string
+  oldScore: number
+  newScore: number
+  proposedChanges: {
+    field: string
+    oldValue: any
+    newValue: any
+  }[]
+  sourceEvidence: string[] // Memory entry IDs or knowledge block IDs
+  reason: string
+  confidence: number // 0-1.0
+}
+
+/**
+ * Evolution Event - audit log entry for pattern evolution
+ */
+export interface EvolutionEvent {
+  type: 'reasoning_pattern_updated' | 'reasoning_pattern_created' | 'reasoning_pattern_retired'
+  patternId: string
+  oldScore?: number
+  newScore?: number
+  sourceEvidence: string[]
+  timestamp: string // ISO 8601
+  changes?: string[]
+  reason?: string
 }
 
 /**

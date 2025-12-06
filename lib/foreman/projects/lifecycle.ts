@@ -184,6 +184,19 @@ export function transitionToPhase(
   
   console.info(`[Lifecycle] Project ${project.id} transitioned: ${previousPhase} → ${targetPhase} (by ${actor})`)
   
+  // Trigger evolution cycle on major phase transitions
+  // Run asynchronously to avoid blocking the transition
+  if (targetPhase === 'deployment' || targetPhase === 'completed') {
+    console.log(`[Lifecycle] Phase transition to ${targetPhase} - triggering evolution cycle`)
+    import('@/lib/foreman/reasoning').then(({ runEvolutionCycle }) => {
+      runEvolutionCycle('deployment').catch(error => {
+        console.error('[Lifecycle] Evolution cycle failed:', error)
+      })
+    }).catch(error => {
+      console.error('[Lifecycle] Failed to import evolution engine:', error)
+    })
+  }
+  
   return {
     success: true,
     previousPhase,
