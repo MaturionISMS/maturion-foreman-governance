@@ -225,6 +225,8 @@ function convertMilestonesToDashboard(project: Project): MilestoneStatus[] {
     }
 
     // Find related blockers
+    // Note: This uses simple string matching as a heuristic
+    // Future enhancement: Implement explicit blocker-milestone relationships
     if (project.blockers) {
       project.blockers.forEach(blocker => {
         if (!blocker.resolvedAt && blocker.description.toLowerCase().includes(milestone.name.toLowerCase())) {
@@ -233,10 +235,12 @@ function convertMilestonesToDashboard(project: Project): MilestoneStatus[] {
       })
     }
 
-    // Find evidence (PR URL for certain milestones)
+    // Find evidence (PR URL for PR-related milestones)
     let evidence: string | undefined
-    if (milestone.id === 'm12' || milestone.id === 'm13') {
-      // PR related milestones
+    const isPRMilestone = milestone.name.toLowerCase().includes('pr') || 
+                          milestone.completionCriteria.toLowerCase().includes('pull request')
+    
+    if (isPRMilestone && project.builds.length > 0) {
       const lastBuild = project.builds[project.builds.length - 1]
       if (lastBuild?.prUrl) {
         evidence = lastBuild.prUrl
