@@ -129,7 +129,7 @@ export interface MemorySnapshot {
  */
 export interface ReasoningContext {
   intent?: string // User intent or command
-  phase?: 'concept' | 'architecture' | 'build' | 'deployment' | 'qa' | 'planning'
+  phase?: 'concept' | 'architecture' | 'build' | 'deployment' | 'completed' | 'archived' | 'qa' | 'planning'
   subsystem?: 'architecture' | 'build' | 'qa' | 'deployment' | 'orchestration'
   riskLevel?: 'low' | 'medium' | 'high' | 'critical'
   tags?: string[]

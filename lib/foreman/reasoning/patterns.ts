@@ -275,8 +275,9 @@ export function validatePattern(pattern: ReasoningPattern): {
   if (!pattern.description) errors.push('Pattern must have a description')
   if (!pattern.context) errors.push('Pattern must have a context')
   if (!pattern.approach) errors.push('Pattern must have an approach')
+  // Tags are optional but encouraged for better pattern matching
   if (!pattern.tags || pattern.tags.length === 0) {
-    errors.push('Pattern must have at least one tag')
+    console.warn(`[Reasoning Patterns] Pattern ${pattern.id} has no tags - this may limit its applicability`)
   }
   
   return {

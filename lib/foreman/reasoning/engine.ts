@@ -30,8 +30,7 @@ import {
 } from '@/types/reasoning'
 import { MemoryEntry, MemoryScope } from '@/types/memory'
 import {
-  loadMemoryBeforeAction,
-  queryMemoryByTags
+  loadMemoryBeforeAction
 } from '@/lib/foreman/memory'
 import {
   routeMemory,
@@ -530,7 +529,7 @@ function generateRecommendedActions(
     actions.push('Request human review before proceeding')
   }
   
-  if (snapshot.project?.blockers.some(b => b.severity === 'critical')) {
+  if (snapshot.project?.blockers?.some(b => b.severity === 'critical')) {
     actions.push('Resolve critical blockers before continuing')
   }
 }
