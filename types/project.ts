@@ -335,3 +335,92 @@ export interface ProgressCalculation {
   completedMilestones: number
   totalMilestones: number
 }
+
+// ============================================================================
+// Dashboard API Types
+// ============================================================================
+
+export type DashboardStatus = 
+  | 'on_track'      // Milestones >= planned, no critical blockers
+  | 'at_risk'       // 1+ medium/high blockers, drift < 20%
+  | 'blocked'       // Any critical blocker or drift >= 20%
+  | 'critical'      // Phase duration exceeded by > 40%, multiple milestone failures, or failed QA
+
+export interface DashboardResponse {
+  projectId: string
+  projectName: string
+  overallProgress: number                    // 0-100%
+  phaseProgress: Record<ProjectPhase, number> // Progress per phase
+  status: DashboardStatus
+  statusNote?: string                        // Additional context about status
+  milestones: MilestoneStatus[]
+  blockers: DashboardBlocker[]
+  phaseTimeline: PhaseTimeline[]
+  sCurveData: SCurvePoint[]
+  deploymentReadiness: DeploymentReadiness
+  memorySnapshots: MemorySnapshot[]
+  lastUpdated: string                        // ISO 8601 timestamp
+}
+
+export interface MilestoneStatus {
+  id: string
+  name: string
+  phase: ProjectPhase
+  weight: number
+  status: 'completed' | 'in_progress' | 'pending' | 'blocked'
+  completedAt?: string                       // ISO 8601 timestamp
+  blockers: string[]                         // Blocker IDs
+  evidence?: string                          // Evidence of completion (e.g., PR URL)
+}
+
+export interface DashboardBlocker {
+  id: string
+  description: string
+  severity: BlockerSeverity
+  owner?: string
+  requiredAction: string
+  createdAt: string                          // ISO 8601 timestamp
+  resolvedAt?: string                        // ISO 8601 timestamp
+}
+
+export interface PhaseTimeline {
+  phase: ProjectPhase
+  plannedStart?: string                      // ISO 8601 date
+  actualStart?: string                       // ISO 8601 date
+  plannedEnd?: string                        // ISO 8601 date
+  actualEnd?: string                         // ISO 8601 date
+  driftPercentage?: number                   // % drift from plan
+  status: 'not_started' | 'in_progress' | 'completed' | 'delayed'
+}
+
+export interface SCurvePoint {
+  date: string                               // ISO 8601 date
+  plannedProgress: number                    // 0-100%
+  actualProgress: number                     // 0-100%
+}
+
+export interface DeploymentReadiness {
+  overall: 'ready' | 'not_ready' | 'warning' | 'unknown'
+  qaStatus: DeploymentCheckStatus
+  securityStatus: DeploymentCheckStatus
+  environmentStatus: DeploymentCheckStatus
+  lastDeployment?: {
+    environment: DeploymentEnvironment
+    deployedAt: string                       // ISO 8601 timestamp
+    status: DeploymentStatus
+  }
+  note?: string
+}
+
+export interface DeploymentCheckStatus {
+  status: 'passed' | 'failed' | 'warning' | 'pending' | 'not_applicable'
+  details?: string
+}
+
+export interface MemorySnapshot {
+  timestamp: string                          // ISO 8601 timestamp
+  scope: 'global' | 'foreman' | 'project'
+  key: string
+  summary: string
+  relevance: 'high' | 'medium' | 'low'
+}

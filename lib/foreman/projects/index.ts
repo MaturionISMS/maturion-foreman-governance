@@ -43,3 +43,12 @@ export {
 
 // Storage
 export * from './storage'
+
+// Dashboard
+export {
+  generateDashboardResponse,
+  getDashboardSCurve,
+  getDashboardBlockers,
+  calculateProjectStatus,
+  getProjectMemorySnapshot
+} from './dashboard'
