@@ -260,7 +260,9 @@ async function runAllTests() {
       return
     }
 
-    // Test 2: Update phase (should fail due to unmet prerequisites)
+    // Test 2: Update phase (expected to fail due to unmet prerequisites)
+    // This validates that governance rules are enforced
+    console.log('\nNote: This test should fail - validating governance enforcement')
     await testUpdatePhase(projectId)
 
     // Test 3: Complete milestone

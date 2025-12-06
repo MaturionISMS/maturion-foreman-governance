@@ -82,7 +82,7 @@ export async function executeChatActions(
     const autonomousMode = isAutonomousModeEnabled()
     
     // Define safe actions that can execute even without autonomy mode
-    const safeActions = [
+    const safeActionsSet = new Set([
       'CREATE_PROJECT',
       'GET_PROJECT_STATUS',
       'GET_PROJECT_DASHBOARD',
@@ -90,9 +90,9 @@ export async function executeChatActions(
       'RECORD_BLOCKER',
       'SELF_TEST',
       'QA_RUN',
-    ]
+    ])
     
-    const allActionsSafe = actions.every(action => safeActions.includes(action.type))
+    const allActionsSafe = actions.every(action => safeActionsSet.has(action.type))
     
     if (!autonomousMode && !allActionsSafe) {
       // In manual mode, only safe actions can execute
@@ -680,22 +680,24 @@ async function executeCreateProject(
   statusUpdates: ChatStatusUpdate[]
 ): Promise<{ success: boolean; projectId?: string }> {
   try {
+    const { name, description, owner, conceptData, tags, priority, estimatedCompletion } = action.params
+
     statusUpdates.push({
       timestamp: new Date(),
       status: 'planning',
-      message: `Creating project: ${action.params.name}`,
+      message: `Creating project: ${name}`,
     })
 
     // Create project in registry
     const result = await createProject({
-      name: action.params.name,
-      description: action.params.description,
-      owner: action.params.owner,
+      name,
+      description,
+      owner,
       organisationId,
-      conceptData: action.params.conceptData,
-      tags: action.params.tags,
-      priority: action.params.priority,
-      estimatedCompletion: action.params.estimatedCompletion,
+      conceptData,
+      tags,
+      priority,
+      estimatedCompletion,
     })
 
     if (!result.success || !result.data) {
