@@ -33,16 +33,20 @@ describe('End-to-End Build Flow', () => {
   })
 
   test('should execute full build flow with memory context', async () => {
+    // Enable autonomous mode for test
+    process.env.MATURION_AUTONOMOUS_MODE = 'true'
+    
     // Step 1: Set up memory (simulate past learnings)
-    await recordArchitectureDecision({
-      pattern: 'Component-Based Architecture',
-      description: 'Use reusable components',
-      rationale: 'Better maintainability',
-      benefits: ['Reusability', 'Testability'],
-      tradeoffs: ['Initial complexity'],
-      applicability: ['ui', 'components'],
-      createdBy: 'test'
-    })
+    await recordArchitectureDecision(
+      'Use reusable components',
+      {
+        pattern: 'Component-Based Architecture',
+        rationale: 'Better maintainability',
+        benefits: ['Reusability', 'Testability'],
+        tradeoffs: ['Initial complexity'],
+        applicability: ['ui', 'components']
+      }
+    )
 
     await writeMemoryEntry(
       'global',
@@ -90,8 +94,6 @@ describe('End-to-End Build Flow', () => {
     console.log('✓ Step 1-3: Task created with memory context')
 
     // Step 4: Execute task (simulates builder execution)
-    // Enable autonomous mode for test
-    process.env.MATURION_AUTONOMOUS_MODE = 'true'
     const executedTask = await executeBuilderTask(task.id)
 
     assert.strictEqual(executedTask.status, 'completed', 'Task should complete')
@@ -142,15 +144,16 @@ describe('End-to-End Build Flow', () => {
   })
 
   test('should format memory for builder consumption', async () => {
-    await recordArchitectureDecision({
-      pattern: 'Error Handling Pattern',
-      description: 'Use try-catch for async operations',
-      rationale: 'Prevent unhandled promise rejections',
-      benefits: ['Better error handling'],
-      tradeoffs: ['More code'],
-      applicability: ['api', 'backend'],
-      createdBy: 'test'
-    })
+    await recordArchitectureDecision(
+      'Use try-catch for async operations',
+      {
+        pattern: 'Error Handling Pattern',
+        rationale: 'Prevent unhandled promise rejections',
+        benefits: ['Better error handling'],
+        tradeoffs: ['More code'],
+        applicability: ['api', 'backend']
+      }
+    )
 
     const request: BuilderRequest = {
       module: 'error-handling',
@@ -170,15 +173,16 @@ describe('End-to-End Build Flow', () => {
 
   test('should track memory references in PR', async () => {
     // Create multiple memory entries
-    await recordArchitectureDecision({
-      pattern: 'API Versioning',
-      description: 'Use v1, v2 URL prefixes',
-      rationale: 'Backward compatibility',
-      benefits: ['No breaking changes'],
-      tradeoffs: ['More endpoints'],
-      applicability: ['api'],
-      createdBy: 'test'
-    })
+    await recordArchitectureDecision(
+      'Use v1, v2 URL prefixes',
+      {
+        pattern: 'API Versioning',
+        rationale: 'Backward compatibility',
+        benefits: ['No breaking changes'],
+        tradeoffs: ['More endpoints'],
+        applicability: ['api']
+      }
+    )
 
     const request: BuilderRequest = {
       module: 'api-versioning',

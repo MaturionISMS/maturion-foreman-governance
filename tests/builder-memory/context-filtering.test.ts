@@ -27,25 +27,27 @@ describe('Context Filtering', () => {
 
   test('should filter memory by builder type', async () => {
     // Create test data
-    await recordArchitectureDecision({
-      pattern: 'UI Component Architecture',
-      description: 'Use functional components with hooks',
-      rationale: 'Better performance and simpler code',
-      benefits: ['Better performance', 'Easier testing'],
-      tradeoffs: ['Learning curve'],
-      applicability: ['ui', 'frontend', 'components'],
-      createdBy: 'test'
-    })
+    await recordArchitectureDecision(
+      'Use functional components with hooks',
+      {
+        pattern: 'UI Component Architecture',
+        rationale: 'Better performance and simpler code',
+        benefits: ['Better performance', 'Easier testing'],
+        tradeoffs: ['Learning curve'],
+        applicability: ['ui', 'frontend', 'components']
+      }
+    )
 
-    await recordArchitectureDecision({
-      pattern: 'API Design',
-      description: 'REST API with versioning',
-      rationale: 'Industry standard',
-      benefits: ['Well understood'],
-      tradeoffs: ['Verbosity'],
-      applicability: ['api', 'backend'],
-      createdBy: 'test'
-    })
+    await recordArchitectureDecision(
+      'REST API with versioning',
+      {
+        pattern: 'API Design',
+        rationale: 'Industry standard',
+        benefits: ['Well understood'],
+        tradeoffs: ['Verbosity'],
+        applicability: ['api', 'backend']
+      }
+    )
 
     const request: BuilderRequest = {
       module: 'user-interface',

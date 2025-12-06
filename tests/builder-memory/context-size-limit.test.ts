@@ -45,15 +45,16 @@ describe('Context Size Limit', () => {
   test('should trim context when exceeding size limit', async () => {
     // Create many large architecture decisions to exceed limit
     for (let i = 0; i < 100; i++) {
-      await recordArchitectureDecision({
-        pattern: `Large Architecture Pattern ${i}`,
-        description: 'A'.repeat(1000), // Large description
-        rationale: 'B'.repeat(1000),
-        benefits: Array(10).fill('Benefit '.repeat(50)),
-        tradeoffs: Array(10).fill('Tradeoff '.repeat(50)),
-        applicability: ['api', 'backend', 'core'],
-        createdBy: 'test'
-      })
+      await recordArchitectureDecision(
+        'A'.repeat(1000), // Large description
+        {
+          pattern: `Large Architecture Pattern ${i}`,
+          rationale: 'B'.repeat(1000),
+          benefits: Array(10).fill('Benefit '.repeat(50)),
+          tradeoffs: Array(10).fill('Tradeoff '.repeat(50)),
+          applicability: ['api', 'backend', 'core']
+        }
+      )
     }
 
     const request: BuilderRequest = {
@@ -107,15 +108,16 @@ describe('Context Size Limit', () => {
   test('should prioritize governance rules when trimming', async () => {
     // Create lots of data to force trimming
     for (let i = 0; i < 50; i++) {
-      await recordArchitectureDecision({
-        pattern: `Pattern ${i}`,
-        description: 'X'.repeat(500),
-        rationale: 'Y'.repeat(500),
-        benefits: ['Benefit'],
-        tradeoffs: ['Tradeoff'],
-        applicability: ['api'],
-        createdBy: 'test'
-      })
+      await recordArchitectureDecision(
+        'X'.repeat(500),
+        {
+          pattern: `Pattern ${i}`,
+          rationale: 'Y'.repeat(500),
+          benefits: ['Benefit'],
+          tradeoffs: ['Tradeoff'],
+          applicability: ['api']
+        }
+      )
     }
 
     // Create governance rules

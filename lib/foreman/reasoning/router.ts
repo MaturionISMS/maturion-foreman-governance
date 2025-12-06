@@ -49,12 +49,12 @@ const INTENT_ROUTING_RULES: Record<string, { scopes: MemoryScope[]; tags: string
  * Maps lifecycle phases to relevant memory types
  */
 const PHASE_ROUTING_RULES: Record<string, string[]> = {
-  'concept': ['architecture_decision', 'governance', 'project_state_transition'],
-  'architecture': ['architecture_decision', 'design_pattern', 'governance'],
-  'build': ['wave_completion', 'builder_task_completion', 'qa_failure'],
-  'deployment': ['deployment', 'deployment_failure', 'rollback'],
-  'qa': ['qa_failure', 'testing', 'validation', 'quality_gate'],
-  'planning': ['milestone', 'wave_completion', 'project_state_transition']
+  'concept': ['architecture_decision', 'governance', 'governance_change', 'project_state_transition'],
+  'architecture': ['architecture_decision', 'design_pattern', 'governance', 'governance_change'],
+  'build': ['wave_completion', 'builder_task_completion', 'qa_failure', 'governance', 'governance_change', 'architecture_decision'],
+  'deployment': ['deployment', 'deployment_failure', 'rollback', 'governance', 'governance_change'],
+  'qa': ['qa_failure', 'testing', 'validation', 'quality_gate', 'governance', 'governance_change'],
+  'planning': ['milestone', 'wave_completion', 'project_state_transition', 'governance', 'governance_change']
 }
 
 /**
@@ -62,11 +62,11 @@ const PHASE_ROUTING_RULES: Record<string, string[]> = {
  * Maps subsystems to relevant memory types
  */
 const SUBSYSTEM_ROUTING_RULES: Record<string, string[]> = {
-  'architecture': ['architecture_decision', 'design_pattern', 'governance'],
-  'build': ['wave_completion', 'builder_task_completion', 'build'],
-  'qa': ['qa_failure', 'testing', 'validation'],
-  'deployment': ['deployment', 'deployment_failure', 'environment'],
-  'orchestration': ['wave_completion', 'orchestration', 'task_execution']
+  'architecture': ['architecture_decision', 'design_pattern', 'governance', 'governance_change'],
+  'build': ['wave_completion', 'builder_task_completion', 'build', 'governance', 'governance_change', 'architecture_decision'],
+  'qa': ['qa_failure', 'testing', 'validation', 'governance', 'governance_change'],
+  'deployment': ['deployment', 'deployment_failure', 'environment', 'governance', 'governance_change'],
+  'orchestration': ['wave_completion', 'orchestration', 'task_execution', 'governance', 'governance_change']
 }
 
 /**
