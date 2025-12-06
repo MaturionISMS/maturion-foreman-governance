@@ -30,7 +30,8 @@ import {
 } from '@/types/reasoning'
 import { MemoryEntry, MemoryScope } from '@/types/memory'
 import {
-  loadMemoryBeforeAction
+  loadMemoryBeforeAction,
+  runDriftMonitoring
 } from '@/lib/foreman/memory'
 import {
   routeMemory,
@@ -43,6 +44,7 @@ import {
   findApplicablePatterns,
   applyPattern
 } from './patterns'
+import { DriftReport } from '@/types/drift'
 
 /**
  * Current memory version
@@ -53,6 +55,7 @@ const MEMORY_VERSION = '1.0.0'
  * Load memory snapshot for reasoning
  * 
  * Implements deterministic 5-step sequence:
+ * 0. Run drift monitoring (NEW)
  * 1. Load project memory
  * 2. Load global memory
  * 3. Load governance memory
@@ -63,9 +66,34 @@ const MEMORY_VERSION = '1.0.0'
  * @returns Memory snapshot
  */
 export async function loadMemorySnapshot(
-  context: ReasoningContext
+  context: ReasoningContext,
+  options: { skipDriftCheck?: boolean } = {}
 ): Promise<MemorySnapshot> {
   console.log('[MARE] Loading memory snapshot...')
+  
+  // Step 0: Run drift monitoring before loading memory
+  if (!options.skipDriftCheck) {
+    console.log('[MARE] Step 0: Running drift monitoring...')
+    const driftReport = await runDriftMonitoring()
+    
+    if (driftReport.executionBlocked) {
+      console.error('[MARE] CRITICAL: Memory drift detected - execution blocked')
+      console.error(driftReport.summary)
+      throw new Error(
+        `Memory drift detected - execution blocked. ` +
+        `Critical issues: ${driftReport.criticalCount}, ` +
+        `Error issues: ${driftReport.errorCount}. ` +
+        `Run drift monitoring for details.`
+      )
+    }
+    
+    if (driftReport.overallStatus !== 'healthy') {
+      console.warn(`[MARE] Warning: Memory drift status is ${driftReport.overallStatus}`)
+      console.warn(`[MARE] Issues: ${driftReport.totalIssues} (${driftReport.warningCount} warnings, ${driftReport.infoCount} info)`)
+    } else {
+      console.log('[MARE] Drift check passed: memory is healthy')
+    }
+  }
   
   const scopesToLoad: MemoryScope[] = getRecommendedScopes(context.intent)
   const recommendedTags = getRecommendedTags({
@@ -577,9 +605,18 @@ function buildReasoningSummary(
  * Convenience function: Load memory and execute reasoning in one call
  * 
  * @param context - Reasoning context
+ * @param options - Options for reasoning (skipDriftCheck)
  * @returns Reasoning result
  */
-export async function reason(context: ReasoningContext): Promise<ReasoningResult> {
-  const snapshot = await loadMemorySnapshot(context)
+export async function reason(
+  context: ReasoningContext,
+  options: { skipDriftCheck?: boolean } = {}
+): Promise<ReasoningResult> {
+  const snapshot = await loadMemorySnapshot(context, options)
   return await executeReasoning(snapshot, context)
 }
+
+/**
+ * Export drift monitoring for direct use
+ */
+export { runDriftMonitoring, createMemorySnapshot } from '@/lib/foreman/memory'
