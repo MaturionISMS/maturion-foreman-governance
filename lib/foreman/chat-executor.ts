@@ -96,6 +96,9 @@ export async function executeChatActions(
       'RECORD_BLOCKER',
       'SELF_TEST',
       'QA_RUN',
+      'EVOLVE_REASONING_PATTERNS',
+      'GET_EVOLUTION_STATS',
+      'SHOW_EVOLVED_PATTERNS',
     ])
     
     const allActionsSafe = actions.every(action => safeActionsSet.has(action.type))
@@ -234,6 +237,29 @@ export async function executeChatActions(
         )
         if (result.taskId) {
           taskIds.push(result.taskId)
+        }
+      }
+      // ========== Evolution Actions ==========
+      else if (action.type === 'EVOLVE_REASONING_PATTERNS') {
+        // Execute evolution cycle
+        const result = await executeEvolutionCycle(organisationId, statusUpdates)
+        return {
+          success: result.success,
+          statusUpdates,
+        }
+      } else if (action.type === 'GET_EVOLUTION_STATS') {
+        // Get evolution statistics
+        const result = await executeGetEvolutionStats(organisationId, statusUpdates)
+        return {
+          success: result.success,
+          statusUpdates,
+        }
+      } else if (action.type === 'SHOW_EVOLVED_PATTERNS') {
+        // Show improved patterns
+        const result = await executeShowEvolvedPatterns(organisationId, statusUpdates, action.params)
+        return {
+          success: result.success,
+          statusUpdates,
         }
       }
     }
@@ -1223,6 +1249,179 @@ async function executeGetProjectDashboard(
       timestamp: new Date(),
       status: 'error',
       message: error instanceof Error ? error.message : 'Failed to get project dashboard',
+    })
+    return { success: false }
+  }
+}
+
+/**
+ * Execute EVOLVE_REASONING_PATTERNS action
+ */
+async function executeEvolutionCycle(
+  organisationId: string,
+  statusUpdates: ChatStatusUpdate[]
+): Promise<{ success: boolean }> {
+  try {
+    statusUpdates.push({
+      timestamp: new Date(),
+      status: 'planning',
+      message: 'Starting reasoning pattern evolution cycle...',
+    })
+
+    const { runEvolutionCycle } = await import('@/lib/foreman/reasoning')
+    const result = await runEvolutionCycle('manual')
+
+    statusUpdates.push({
+      timestamp: new Date(),
+      status: 'complete',
+      message: result.summary,
+      metadata: {
+        patternsAnalyzed: result.patternsAnalyzed,
+        patternsUpdated: result.patternsUpdated,
+        patternsPromoted: result.patternsPromoted,
+        patternsRetired: result.patternsRetired,
+      },
+    })
+
+    foremanLogger.log(
+      LogLevel.INFO,
+      'EvolutionCycle',
+      result.summary,
+      { organisationId, ...result }
+    )
+
+    return { success: true }
+  } catch (error) {
+    statusUpdates.push({
+      timestamp: new Date(),
+      status: 'error',
+      message: error instanceof Error ? error.message : 'Evolution cycle failed',
+    })
+    return { success: false }
+  }
+}
+
+/**
+ * Execute GET_EVOLUTION_STATS action
+ */
+async function executeGetEvolutionStats(
+  organisationId: string,
+  statusUpdates: ChatStatusUpdate[]
+): Promise<{ success: boolean }> {
+  try {
+    statusUpdates.push({
+      timestamp: new Date(),
+      status: 'planning',
+      message: 'Retrieving evolution statistics...',
+    })
+
+    const { getEvolutionStats } = await import('@/lib/foreman/reasoning')
+    const stats = await getEvolutionStats()
+
+    const message = `
+Evolution Statistics:
+- Total patterns: ${stats.totalPatterns}
+- Stable patterns: ${stats.stablePatterns}
+- Monitored patterns: ${stats.monitoredPatterns}
+- Retirement candidates: ${stats.retirementCandidates}
+- Last evolution: ${stats.lastEvolutionCycle || 'Never'}
+- Total evolutions: ${stats.totalEvolutions}
+    `.trim()
+
+    statusUpdates.push({
+      timestamp: new Date(),
+      status: 'complete',
+      message,
+      metadata: stats,
+    })
+
+    return { success: true }
+  } catch (error) {
+    statusUpdates.push({
+      timestamp: new Date(),
+      status: 'error',
+      message: error instanceof Error ? error.message : 'Failed to get evolution stats',
+    })
+    return { success: false }
+  }
+}
+
+/**
+ * Execute SHOW_EVOLVED_PATTERNS action
+ */
+async function executeShowEvolvedPatterns(
+  organisationId: string,
+  statusUpdates: ChatStatusUpdate[],
+  params: any
+): Promise<{ success: boolean }> {
+  try {
+    statusUpdates.push({
+      timestamp: new Date(),
+      status: 'planning',
+      message: 'Loading evolved reasoning patterns...',
+    })
+
+    const { getEvolutionStats } = await import('@/lib/foreman/reasoning')
+    const stats = await getEvolutionStats()
+
+    // Load evolved patterns from consolidated directory
+    const fs = await import('fs')
+    const path = await import('path')
+    const consolidatedPath = path.join(
+      process.cwd(),
+      'memory',
+      'global',
+      'consolidated',
+      'reasoning',
+      'consolidated_reasoning_patterns.json'
+    )
+
+    let message = 'No evolved patterns found.'
+
+    if (fs.existsSync(consolidatedPath)) {
+      const data = JSON.parse(fs.readFileSync(consolidatedPath, 'utf-8'))
+      
+      const patternInfo = []
+      
+      // Filter by params if provided
+      const filterType = params?.filterType // 'stable', 'monitored', 'retirement'
+      const timeframe = params?.timeframe // 'week', 'month', 'all'
+
+      if (data.patterns?.stable && (!filterType || filterType === 'stable')) {
+        patternInfo.push(`\n**Stable Patterns (${data.patterns.stable.length}):**`)
+        data.patterns.stable.slice(0, 5).forEach((p: any) => {
+          patternInfo.push(`  - ${p.name}: ${p.description.substring(0, 100)}...`)
+        })
+      }
+
+      if (data.patterns?.monitored && (!filterType || filterType === 'monitored')) {
+        patternInfo.push(`\n**Monitored Patterns (${data.patterns.monitored.length}):**`)
+        data.patterns.monitored.slice(0, 5).forEach((p: any) => {
+          patternInfo.push(`  - ${p.name}: ${p.description.substring(0, 100)}...`)
+        })
+      }
+
+      message = `
+Evolved Reasoning Patterns:
+Last updated: ${data.lastUpdated}
+${patternInfo.join('\n')}
+
+Use "Explain why you modified pattern X" to get details on specific patterns.
+      `.trim()
+    }
+
+    statusUpdates.push({
+      timestamp: new Date(),
+      status: 'complete',
+      message,
+    })
+
+    return { success: true }
+  } catch (error) {
+    statusUpdates.push({
+      timestamp: new Date(),
+      status: 'error',
+      message: error instanceof Error ? error.message : 'Failed to show evolved patterns',
     })
     return { success: false }
   }
