@@ -305,3 +305,19 @@ export async function recordMilestoneCompletion(
   
   return await writeMemoryAfterAction(event, options)
 }
+
+/**
+ * Re-export drift monitoring functions
+ */
+export {
+  runDriftMonitoring,
+  detectSchemaDrift,
+  detectVersionDrift,
+  detectContradictionDrift,
+  detectStalenessDrift,
+  detectCrossAgentDrift,
+  detectProjectDrift,
+  detectPatternDrift,
+  detectGovernanceDrift,
+  createMemorySnapshot
+} from './drift-monitor'

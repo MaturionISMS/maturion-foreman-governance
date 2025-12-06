@@ -9,9 +9,13 @@
     "lint": "next lint",
     "test": "tsx --test tests/dashboard/*.test.ts",
     "test:dashboard": "tsx --test tests/dashboard/*.test.ts",
+    "test:drift": "tsx --test tests/memory-drift/*.test.ts",
+    "test:all": "tsx --test tests/**/*.test.ts",
     "test:watch": "tsx --test --watch tests/dashboard/*.test.ts"
   },
   "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
     "next": "^14.2.0",
     "octokit": "^3.1.2",
     "openai": "^4.0.0",
