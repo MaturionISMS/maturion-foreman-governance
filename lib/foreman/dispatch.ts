@@ -160,8 +160,20 @@ export async function dispatchBuilderTask(
     console.log(`[Dispatch] Memory context injected: ${memoryContext.memoryReferences.length} references`)
   } catch (error) {
     console.error('[Dispatch] Failed to compile memory context:', error)
-    // If memory compilation fails (e.g., drift detected), throw error
-    throw new Error(`Memory injection failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
+    // Determine specific failure reason for better error message
+    let failureReason = 'Unknown error'
+    if (error instanceof Error) {
+      if (error.message.includes('drift')) {
+        failureReason = 'Memory drift detected - execution blocked for safety'
+      } else if (error.message.includes('size')) {
+        failureReason = 'Memory context size limit exceeded'
+      } else if (error.message.includes('validation')) {
+        failureReason = 'Memory context validation failed'
+      } else {
+        failureReason = error.message
+      }
+    }
+    throw new Error(`Memory injection failed: ${failureReason}`)
   }
   
   // Determine initial status based on autonomous mode

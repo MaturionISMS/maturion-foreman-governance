@@ -173,9 +173,16 @@ function filterMemoryForBuilder(
   const architectureLessons = snapshot.architectureLessons
     .filter(lesson => {
       const relevantTags = buildTagsForBuilder(builderType, request.module)
-      return lesson.applicability.some(ctx => 
-        relevantTags.some(tag => ctx.toLowerCase().includes(tag.toLowerCase()))
-      )
+      return lesson.applicability.some(ctx => {
+        // Use exact matching on lowercase to avoid false positives
+        const ctxLower = ctx.toLowerCase()
+        return relevantTags.some(tag => {
+          const tagLower = tag.toLowerCase()
+          // Check for exact word match or exact tag match
+          const wordBoundaryRegex = new RegExp(`\\b${tagLower}\\b`)
+          return ctxLower === tagLower || wordBoundaryRegex.test(ctxLower)
+        })
+      })
     })
     .slice(0, 5) // Max 5 lessons
 
@@ -241,43 +248,53 @@ function trimMemoryContext(context: BuilderMemoryContext): BuilderMemoryContext 
 
   const trimmed = { ...context }
 
+  // Helper function to estimate item size
+  const estimateItemSize = (item: any): number => {
+    return Buffer.byteLength(JSON.stringify(item), 'utf8')
+  }
+
+  // Helper function to recalculate total size
+  const recalculateSize = (): number => {
+    return Buffer.byteLength(JSON.stringify(trimmed), 'utf8')
+  }
+
   // Priority order: governance > architecture > patterns > issues > insights
   // Keep governance rules intact (most critical)
   
   // Trim QA insights first
   while (trimmed.sizeBytes > MAX_CONTEXT_SIZE_BYTES && trimmed.qaInsights && trimmed.qaInsights.length > 0) {
     trimmed.qaInsights.pop()
-    trimmed.sizeBytes = Buffer.byteLength(JSON.stringify(trimmed), 'utf8')
+    trimmed.sizeBytes = recalculateSize()
   }
 
   // Trim project requirements
   while (trimmed.sizeBytes > MAX_CONTEXT_SIZE_BYTES && trimmed.projectRequirements && trimmed.projectRequirements.length > 0) {
     trimmed.projectRequirements.pop()
-    trimmed.sizeBytes = Buffer.byteLength(JSON.stringify(trimmed), 'utf8')
+    trimmed.sizeBytes = recalculateSize()
   }
 
   // Trim historical issues
   while (trimmed.sizeBytes > MAX_CONTEXT_SIZE_BYTES && trimmed.historicalIssues.length > 0) {
     trimmed.historicalIssues.pop()
-    trimmed.sizeBytes = Buffer.byteLength(JSON.stringify(trimmed), 'utf8')
+    trimmed.sizeBytes = recalculateSize()
   }
 
   // Trim reasoning patterns
   while (trimmed.sizeBytes > MAX_CONTEXT_SIZE_BYTES && trimmed.reasoningPatterns.length > 0) {
     trimmed.reasoningPatterns.pop()
-    trimmed.sizeBytes = Buffer.byteLength(JSON.stringify(trimmed), 'utf8')
+    trimmed.sizeBytes = recalculateSize()
   }
 
   // Trim architecture lessons
   while (trimmed.sizeBytes > MAX_CONTEXT_SIZE_BYTES && trimmed.architectureLessons.length > 0) {
     trimmed.architectureLessons.pop()
-    trimmed.sizeBytes = Buffer.byteLength(JSON.stringify(trimmed), 'utf8')
+    trimmed.sizeBytes = recalculateSize()
   }
 
   // Last resort: trim governance rules (but keep at least 1)
   while (trimmed.sizeBytes > MAX_CONTEXT_SIZE_BYTES && trimmed.governanceRules.length > 1) {
     trimmed.governanceRules.pop()
-    trimmed.sizeBytes = Buffer.byteLength(JSON.stringify(trimmed), 'utf8')
+    trimmed.sizeBytes = recalculateSize()
   }
 
   console.log(`[Memory Injector] Trimmed context to ${trimmed.sizeBytes} bytes`)
