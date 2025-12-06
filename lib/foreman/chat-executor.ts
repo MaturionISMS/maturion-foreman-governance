@@ -26,6 +26,12 @@ import {
 import { transitionToPhase, blockProject } from './projects/lifecycle'
 import { Project, ProjectPhase } from '@/types/project'
 import { MemoryEvent } from '@/types/memory'
+import { generateDashboardResponse } from './projects/dashboard'
+import { 
+  formatProjectDashboard, 
+  formatDashboardOverview, 
+  formatProjectDetail 
+} from './dashboard-formatter'
 
 export interface ChatExecutionResult {
   success: boolean
@@ -1102,10 +1108,13 @@ async function executeGetProjectStatus(
       return { success: false }
     }
 
+    // Format detailed status message
+    const formattedDetail = formatProjectDetail(detail)
+
     statusUpdates.push({
       timestamp: new Date(),
       status: 'complete',
-      message: `Project Status: ${project.name}`,
+      message: formattedDetail,
       metadata: {
         projectId: project.id,
         phase: project.phase,
@@ -1167,26 +1176,33 @@ async function executeGetProjectDashboard(
         return { success: false }
       }
 
+      // Generate complete dashboard response
+      const dashboardResponse = await generateDashboardResponse(project)
+      const formattedDashboard = formatProjectDashboard(dashboardResponse)
+
+      // Also get detail view for additional context
       const detail = await getProjectDetail(project.id)
 
       statusUpdates.push({
         timestamp: new Date(),
         status: 'complete',
-        message: `Dashboard for: ${project.name}`,
+        message: formattedDashboard,
         metadata: {
           projectId: project.id,
           view: 'detail',
           detail,
+          dashboardResponse,
         },
       })
     } else {
       // Get overview dashboard
       const dashboard = await getDashboardData()
+      const formattedOverview = formatDashboardOverview(dashboard)
 
       statusUpdates.push({
         timestamp: new Date(),
         status: 'complete',
-        message: 'Project Dashboard Overview',
+        message: formattedOverview,
         metadata: {
           view: 'overview',
           dashboard,
