@@ -121,7 +121,14 @@ export async function analyzePatternPerformance(
   pattern: ReasoningPattern
 ): Promise<PatternPerformanceMetrics> {
   // Load all memory to analyze pattern usage
-  const allMemory = await getAllMemory()
+  const allMemoryObj = await getAllMemory()
+  
+  // Flatten all memory entries into a single array
+  const allMemory: MemoryEntry[] = [
+    ...allMemoryObj.global,
+    ...allMemoryObj.foreman,
+    ...Object.values(allMemoryObj.projects).flat()
+  ]
   
   // Find memory entries that reference this pattern
   const patternUsages = allMemory.filter(entry => 
@@ -360,8 +367,16 @@ export async function runEvolutionCycle(
 
   console.log(`[Evolution] Starting evolution cycle (${cycleType}) at ${timestamp}`)
 
+  // Load all memory first
+  const allMemoryObj = await getAllMemory()
+  const allMemory: MemoryEntry[] = [
+    ...allMemoryObj.global,
+    ...allMemoryObj.foreman,
+    ...Object.values(allMemoryObj.projects).flat()
+  ]
+  
   // Load current patterns
-  const patterns = await loadReasoningPatterns()
+  const patterns = loadReasoningPatterns(allMemory)
   console.log(`[Evolution] Loaded ${patterns.length} patterns`)
 
   const proposals: PatternEvolutionProposal[] = []
@@ -472,7 +487,14 @@ export async function getEvolutionStats(): Promise<{
   lastEvolutionCycle?: string
   totalEvolutions: number
 }> {
-  const patterns = await loadReasoningPatterns()
+  // Load all memory first
+  const allMemoryObj = await getAllMemory()
+  const allMemory: MemoryEntry[] = [
+    ...allMemoryObj.global,
+    ...allMemoryObj.foreman,
+    ...Object.values(allMemoryObj.projects).flat()
+  ]
+  const patterns = loadReasoningPatterns(allMemory)
   
   let stableCount = 0
   let monitoredCount = 0
