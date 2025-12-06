@@ -393,7 +393,7 @@ When Johan asks you to run a pilot build, respond with:
         "wave": "pilot_foreman_sandbox"
       },
       "requiresApproval": false,
-      "organisationId": "maturion_isms"
+      "organisationId": "${organisationId}"
     }
   ],
   "autonomyIntent": "execute"

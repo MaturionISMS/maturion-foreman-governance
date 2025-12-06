@@ -219,9 +219,9 @@ async function testDashboardChatCommands() {
   }
 
   // Summary
-  console.log('=' .repeat(60))
+  console.log('='.repeat(60))
   console.log('📊 Dashboard Chat Command Test Summary')
-  console.log('=' .repeat(60))
+  console.log('='.repeat(60))
   console.log('All tests completed. Review output above for any failures.')
   console.log()
 }
