@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "tsx --test tests/dashboard/*.test.ts",
+    "test:dashboard": "tsx --test tests/dashboard/*.test.ts",
+    "test:watch": "tsx --test --watch tests/dashboard/*.test.ts"
   },
   "dependencies": {
     "next": "^14.2.0",

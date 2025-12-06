@@ -1,0 +1,95 @@
+{
+  "id": "proj_scurve_001",
+  "name": "Project for S-Curve Testing",
+  "description": "A project with milestone completion history for S-curve generation",
+  "owner": "test_user",
+  "organisationId": "test_org",
+  "phase": "build",
+  "status": "active",
+  "progressPercentage": 60,
+  "milestones": [
+    {
+      "id": "m1",
+      "name": "Project Registered",
+      "phase": "concept",
+      "completionCriteria": "Project exists in registry with unique ID",
+      "weight": 10,
+      "completed": true,
+      "completedAt": "2024-01-01T10:00:00Z",
+      "completedBy": "system_auto",
+      "custom": false
+    },
+    {
+      "id": "m2",
+      "name": "Requirements Defined",
+      "phase": "concept",
+      "completionCriteria": "Project description and scope documented",
+      "weight": 20,
+      "completed": true,
+      "completedAt": "2024-01-05T10:00:00Z",
+      "completedBy": "test_user",
+      "custom": false
+    },
+    {
+      "id": "m3",
+      "name": "Concept Approved",
+      "phase": "concept",
+      "completionCriteria": "Stakeholder approval recorded",
+      "weight": 70,
+      "completed": true,
+      "completedAt": "2024-01-10T10:00:00Z",
+      "completedBy": "admin",
+      "custom": false
+    },
+    {
+      "id": "m4",
+      "name": "Architecture Analysis Complete",
+      "phase": "architecture",
+      "completionCriteria": "Architecture gaps identified and documented",
+      "weight": 30,
+      "completed": true,
+      "completedAt": "2024-01-15T10:00:00Z",
+      "completedBy": "system_auto",
+      "custom": false
+    },
+    {
+      "id": "m5",
+      "name": "Module Breakdown Defined",
+      "phase": "architecture",
+      "completionCriteria": "Modules and components specified",
+      "weight": 30,
+      "completed": true,
+      "completedAt": "2024-01-20T10:00:00Z",
+      "completedBy": "system_auto",
+      "custom": false
+    },
+    {
+      "id": "m8",
+      "name": "Builder Tasks Created",
+      "phase": "build",
+      "completionCriteria": "All tasks dispatched to builders",
+      "weight": 10,
+      "completed": true,
+      "completedAt": "2024-01-25T10:00:00Z",
+      "completedBy": "system_auto",
+      "custom": false
+    },
+    {
+      "id": "m9",
+      "name": "Builder Tasks Executed",
+      "phase": "build",
+      "completionCriteria": "All builder tasks completed successfully",
+      "weight": 30,
+      "completed": false,
+      "custom": false,
+      "dependencies": ["m8"]
+    }
+  ],
+  "builds": [],
+  "deployments": [],
+  "createdAt": "2024-01-01T10:00:00Z",
+  "updatedAt": "2024-01-30T10:00:00Z",
+  "createdBy": "test_user",
+  "tags": ["test", "scurve"],
+  "priority": "medium"
+}

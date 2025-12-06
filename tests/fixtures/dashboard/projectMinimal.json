@@ -1,0 +1,48 @@
+{
+  "id": "proj_minimal_001",
+  "name": "Minimal Test Project",
+  "description": "A minimal project for testing basic dashboard functionality",
+  "owner": "test_user",
+  "organisationId": "test_org",
+  "phase": "concept",
+  "status": "active",
+  "progressPercentage": 0,
+  "milestones": [
+    {
+      "id": "m1",
+      "name": "Project Registered",
+      "phase": "concept",
+      "completionCriteria": "Project exists in registry with unique ID",
+      "weight": 10,
+      "completed": true,
+      "completedAt": "2024-01-01T10:00:00Z",
+      "completedBy": "system_auto",
+      "custom": false
+    },
+    {
+      "id": "m2",
+      "name": "Requirements Defined",
+      "phase": "concept",
+      "completionCriteria": "Project description and scope documented",
+      "weight": 20,
+      "completed": false,
+      "custom": false
+    },
+    {
+      "id": "m3",
+      "name": "Concept Approved",
+      "phase": "concept",
+      "completionCriteria": "Stakeholder approval recorded",
+      "weight": 70,
+      "completed": false,
+      "custom": false
+    }
+  ],
+  "builds": [],
+  "deployments": [],
+  "createdAt": "2024-01-01T10:00:00Z",
+  "updatedAt": "2024-01-01T10:00:00Z",
+  "createdBy": "test_user",
+  "tags": ["test"],
+  "priority": "medium"
+}

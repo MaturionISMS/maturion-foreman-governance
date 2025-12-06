@@ -1,0 +1,83 @@
+{
+  "id": "proj_drift_001",
+  "name": "Project With Timeline Drift",
+  "description": "A project experiencing timeline drift",
+  "owner": "test_user",
+  "organisationId": "test_org",
+  "phase": "build",
+  "status": "active",
+  "progressPercentage": 30,
+  "milestones": [
+    {
+      "id": "m1",
+      "name": "Project Registered",
+      "phase": "concept",
+      "completionCriteria": "Project exists in registry with unique ID",
+      "weight": 10,
+      "completed": true,
+      "completedAt": "2024-01-01T10:00:00Z",
+      "completedBy": "system_auto",
+      "custom": false
+    },
+    {
+      "id": "m2",
+      "name": "Requirements Defined",
+      "phase": "concept",
+      "completionCriteria": "Project description and scope documented",
+      "weight": 20,
+      "completed": true,
+      "completedAt": "2024-01-15T10:00:00Z",
+      "completedBy": "test_user",
+      "custom": false
+    },
+    {
+      "id": "m3",
+      "name": "Concept Approved",
+      "phase": "concept",
+      "completionCriteria": "Stakeholder approval recorded",
+      "weight": 70,
+      "completed": true,
+      "completedAt": "2024-02-01T10:00:00Z",
+      "completedBy": "admin",
+      "custom": false
+    },
+    {
+      "id": "m8",
+      "name": "Builder Tasks Created",
+      "phase": "build",
+      "completionCriteria": "All tasks dispatched to builders",
+      "weight": 10,
+      "completed": true,
+      "completedAt": "2024-03-01T10:00:00Z",
+      "completedBy": "system_auto",
+      "custom": false
+    },
+    {
+      "id": "m9",
+      "name": "Builder Tasks Executed",
+      "phase": "build",
+      "completionCriteria": "All builder tasks completed successfully",
+      "weight": 30,
+      "completed": false,
+      "custom": false,
+      "dependencies": ["m8"]
+    }
+  ],
+  "builds": [
+    {
+      "sequenceId": "build_001",
+      "waveNumber": 1,
+      "status": "failed",
+      "startedAt": "2024-03-01T10:00:00Z",
+      "completedAt": "2024-03-01T11:00:00Z",
+      "builder": "copilot"
+    }
+  ],
+  "deployments": [],
+  "createdAt": "2024-01-01T10:00:00Z",
+  "updatedAt": "2024-03-15T10:00:00Z",
+  "createdBy": "test_user",
+  "tags": ["test", "delayed"],
+  "priority": "high",
+  "estimatedCompletion": "2024-02-01T00:00:00Z"
+}

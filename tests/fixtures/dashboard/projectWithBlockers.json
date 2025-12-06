@@ -1,0 +1,84 @@
+{
+  "id": "proj_blockers_001",
+  "name": "Project With Blockers",
+  "description": "A project with various blocker scenarios",
+  "owner": "test_user",
+  "organisationId": "test_org",
+  "phase": "build",
+  "status": "blocked",
+  "progressPercentage": 45,
+  "milestones": [
+    {
+      "id": "m1",
+      "name": "Project Registered",
+      "phase": "concept",
+      "completionCriteria": "Project exists in registry with unique ID",
+      "weight": 10,
+      "completed": true,
+      "completedAt": "2024-01-01T10:00:00Z",
+      "completedBy": "system_auto",
+      "custom": false
+    },
+    {
+      "id": "m8",
+      "name": "Builder Tasks Created",
+      "phase": "build",
+      "completionCriteria": "All tasks dispatched to builders",
+      "weight": 10,
+      "completed": true,
+      "completedAt": "2024-01-08T10:00:00Z",
+      "completedBy": "system_auto",
+      "custom": false
+    },
+    {
+      "id": "m9",
+      "name": "Builder Tasks Executed",
+      "phase": "build",
+      "completionCriteria": "All builder tasks completed successfully",
+      "weight": 30,
+      "completed": false,
+      "custom": false,
+      "dependencies": ["m8"]
+    }
+  ],
+  "builds": [],
+  "deployments": [],
+  "blockers": [
+    {
+      "id": "blocker_001",
+      "description": "Critical API dependency unavailable",
+      "category": "external",
+      "severity": "critical",
+      "createdAt": "2024-01-10T10:00:00Z"
+    },
+    {
+      "id": "blocker_002",
+      "description": "High priority database migration needed",
+      "category": "technical",
+      "severity": "high",
+      "createdAt": "2024-01-09T10:00:00Z"
+    },
+    {
+      "id": "blocker_003",
+      "description": "Medium priority code review pending",
+      "category": "approval",
+      "severity": "medium",
+      "createdAt": "2024-01-08T10:00:00Z"
+    },
+    {
+      "id": "blocker_004",
+      "description": "Low priority documentation update",
+      "category": "technical",
+      "severity": "low",
+      "createdAt": "2024-01-07T10:00:00Z",
+      "resolvedAt": "2024-01-08T10:00:00Z",
+      "resolvedBy": "test_user",
+      "resolution": "Documentation completed"
+    }
+  ],
+  "createdAt": "2024-01-01T10:00:00Z",
+  "updatedAt": "2024-01-10T10:00:00Z",
+  "createdBy": "test_user",
+  "tags": ["test", "blockers"],
+  "priority": "critical"
+}

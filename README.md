@@ -1622,6 +1622,26 @@ npx tsc --noEmit
 
 The repository includes comprehensive test scripts for all major components:
 
+#### Automated Dashboard API Tests
+
+Run the complete dashboard API test suite:
+
+```bash
+npm test
+```
+
+This runs 87 automated tests covering:
+- Dashboard aggregation logic
+- Milestone progress calculations  
+- Blocker escalation and severity
+- Phase timeline tracking
+- S-curve generation
+- Deployment readiness evaluation
+- Memory snapshot integration (stub)
+- Status calculation and transitions
+
+See [tests/dashboard/README.md](tests/dashboard/README.md) for detailed test documentation.
+
 #### Test Build Sequence Orchestration
 ```bash
 npx tsx scripts/test-build-sequence.ts

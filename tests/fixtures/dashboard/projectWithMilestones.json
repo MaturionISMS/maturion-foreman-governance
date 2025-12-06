@@ -1,0 +1,166 @@
+{
+  "id": "proj_milestones_001",
+  "name": "Project With Milestones",
+  "description": "A project with various milestone completion states",
+  "owner": "test_user",
+  "organisationId": "test_org",
+  "phase": "build",
+  "status": "active",
+  "progressPercentage": 50,
+  "milestones": [
+    {
+      "id": "m1",
+      "name": "Project Registered",
+      "phase": "concept",
+      "completionCriteria": "Project exists in registry with unique ID",
+      "weight": 10,
+      "completed": true,
+      "completedAt": "2024-01-01T10:00:00Z",
+      "completedBy": "system_auto",
+      "custom": false
+    },
+    {
+      "id": "m2",
+      "name": "Requirements Defined",
+      "phase": "concept",
+      "completionCriteria": "Project description and scope documented",
+      "weight": 20,
+      "completed": true,
+      "completedAt": "2024-01-02T10:00:00Z",
+      "completedBy": "test_user",
+      "custom": false
+    },
+    {
+      "id": "m3",
+      "name": "Concept Approved",
+      "phase": "concept",
+      "completionCriteria": "Stakeholder approval recorded",
+      "weight": 70,
+      "completed": true,
+      "completedAt": "2024-01-03T10:00:00Z",
+      "completedBy": "admin",
+      "custom": false
+    },
+    {
+      "id": "m4",
+      "name": "Architecture Analysis Complete",
+      "phase": "architecture",
+      "completionCriteria": "Architecture gaps identified and documented",
+      "weight": 30,
+      "completed": true,
+      "completedAt": "2024-01-04T10:00:00Z",
+      "completedBy": "system_auto",
+      "custom": false
+    },
+    {
+      "id": "m5",
+      "name": "Module Breakdown Defined",
+      "phase": "architecture",
+      "completionCriteria": "Modules and components specified",
+      "weight": 30,
+      "completed": true,
+      "completedAt": "2024-01-05T10:00:00Z",
+      "completedBy": "system_auto",
+      "custom": false
+    },
+    {
+      "id": "m6",
+      "name": "Build Tasks Planned",
+      "phase": "architecture",
+      "completionCriteria": "Builder tasks generated and approved",
+      "weight": 30,
+      "completed": true,
+      "completedAt": "2024-01-06T10:00:00Z",
+      "completedBy": "system_auto",
+      "custom": false
+    },
+    {
+      "id": "m7",
+      "name": "QA Strategy Defined",
+      "phase": "architecture",
+      "completionCriteria": "QA requirements and test plan documented",
+      "weight": 10,
+      "completed": true,
+      "completedAt": "2024-01-07T10:00:00Z",
+      "completedBy": "system_auto",
+      "custom": false
+    },
+    {
+      "id": "m8",
+      "name": "Builder Tasks Created",
+      "phase": "build",
+      "completionCriteria": "All tasks dispatched to builders",
+      "weight": 10,
+      "completed": true,
+      "completedAt": "2024-01-08T10:00:00Z",
+      "completedBy": "system_auto",
+      "custom": false
+    },
+    {
+      "id": "m9",
+      "name": "Builder Tasks Executed",
+      "phase": "build",
+      "completionCriteria": "All builder tasks completed successfully",
+      "weight": 30,
+      "completed": false,
+      "custom": false,
+      "dependencies": ["m8"]
+    },
+    {
+      "id": "m10",
+      "name": "QA Validation Passed",
+      "phase": "build",
+      "completionCriteria": "QA and QA-of-QA checks pass",
+      "weight": 30,
+      "completed": false,
+      "custom": false,
+      "dependencies": ["m9"]
+    },
+    {
+      "id": "m11",
+      "name": "Compliance Verified",
+      "phase": "build",
+      "completionCriteria": "No secrets, audit logs complete, org ID present",
+      "weight": 10,
+      "completed": false,
+      "custom": false,
+      "dependencies": ["m9"]
+    },
+    {
+      "id": "m12",
+      "name": "PR Created",
+      "phase": "build",
+      "completionCriteria": "Pull request created with all artifacts",
+      "weight": 10,
+      "completed": false,
+      "custom": false,
+      "dependencies": ["m10", "m11"]
+    },
+    {
+      "id": "m13",
+      "name": "PR Reviewed and Merged",
+      "phase": "build",
+      "completionCriteria": "PR approved and merged to main branch",
+      "weight": 10,
+      "completed": false,
+      "custom": false,
+      "dependencies": ["m12"]
+    }
+  ],
+  "builds": [
+    {
+      "sequenceId": "build_001",
+      "waveNumber": 1,
+      "status": "completed",
+      "startedAt": "2024-01-08T10:00:00Z",
+      "completedAt": "2024-01-08T11:00:00Z",
+      "builder": "copilot"
+    }
+  ],
+  "deployments": [],
+  "createdAt": "2024-01-01T10:00:00Z",
+  "updatedAt": "2024-01-08T11:00:00Z",
+  "createdBy": "test_user",
+  "tags": ["test"],
+  "priority": "high"
+}

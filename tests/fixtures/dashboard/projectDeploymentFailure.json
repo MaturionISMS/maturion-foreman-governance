@@ -1,0 +1,126 @@
+{
+  "id": "proj_deploy_fail_001",
+  "name": "Project With Deployment Failure",
+  "description": "A project with failed deployment",
+  "owner": "test_user",
+  "organisationId": "test_org",
+  "phase": "deployment",
+  "status": "active",
+  "progressPercentage": 85,
+  "milestones": [
+    {
+      "id": "m1",
+      "name": "Project Registered",
+      "phase": "concept",
+      "completionCriteria": "Project exists in registry with unique ID",
+      "weight": 10,
+      "completed": true,
+      "completedAt": "2024-01-01T10:00:00Z",
+      "completedBy": "system_auto",
+      "custom": false
+    },
+    {
+      "id": "m10",
+      "name": "QA Validation Passed",
+      "phase": "build",
+      "completionCriteria": "QA and QA-of-QA checks pass",
+      "weight": 30,
+      "completed": true,
+      "completedAt": "2024-01-10T10:00:00Z",
+      "completedBy": "system_auto",
+      "custom": false,
+      "dependencies": ["m9"]
+    },
+    {
+      "id": "m11",
+      "name": "Compliance Verified",
+      "phase": "build",
+      "completionCriteria": "No secrets, audit logs complete, org ID present",
+      "weight": 10,
+      "completed": true,
+      "completedAt": "2024-01-10T10:05:00Z",
+      "completedBy": "system_auto",
+      "custom": false,
+      "dependencies": ["m9"]
+    },
+    {
+      "id": "m14",
+      "name": "Deployment Plan Created",
+      "phase": "deployment",
+      "completionCriteria": "Deployment checklist and plan documented",
+      "weight": 20,
+      "completed": true,
+      "completedAt": "2024-01-11T10:00:00Z",
+      "completedBy": "test_user",
+      "custom": false
+    },
+    {
+      "id": "m15",
+      "name": "Deployment Approved",
+      "phase": "deployment",
+      "completionCriteria": "Admin approves deployment to production",
+      "weight": 20,
+      "completed": true,
+      "completedAt": "2024-01-12T10:00:00Z",
+      "completedBy": "admin",
+      "custom": false,
+      "dependencies": ["m14"]
+    },
+    {
+      "id": "m16",
+      "name": "Deployed to Production",
+      "phase": "deployment",
+      "completionCriteria": "Code deployed and services running",
+      "weight": 30,
+      "completed": false,
+      "custom": false,
+      "dependencies": ["m15"]
+    }
+  ],
+  "builds": [
+    {
+      "sequenceId": "build_001",
+      "waveNumber": 1,
+      "status": "completed",
+      "startedAt": "2024-01-08T10:00:00Z",
+      "completedAt": "2024-01-08T12:00:00Z",
+      "builder": "copilot",
+      "prUrl": "https://github.com/test/test-repo/pull/1",
+      "qaResults": {
+        "passed": false,
+        "checks": ["unit-tests", "integration-tests"]
+      }
+    }
+  ],
+  "deployments": [
+    {
+      "deploymentId": "deploy_001",
+      "environment": "staging",
+      "version": "1.0.0",
+      "deployedAt": "2024-01-12T14:00:00Z",
+      "deployedBy": "system",
+      "status": "completed",
+      "validationResults": {
+        "passed": true,
+        "tests": ["smoke-tests", "health-checks"]
+      }
+    },
+    {
+      "deploymentId": "deploy_002",
+      "environment": "production",
+      "version": "1.0.0",
+      "deployedAt": "2024-01-13T10:00:00Z",
+      "deployedBy": "admin",
+      "status": "failed",
+      "validationResults": {
+        "passed": false,
+        "tests": ["smoke-tests"]
+      }
+    }
+  ],
+  "createdAt": "2024-01-01T10:00:00Z",
+  "updatedAt": "2024-01-13T10:30:00Z",
+  "createdBy": "test_user",
+  "tags": ["test", "deployment"],
+  "priority": "critical"
+}
