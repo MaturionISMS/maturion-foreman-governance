@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "builder_url": "http://localhost:5050/builder/run",
+  "health_url": "http://localhost:5050/health",
+  "fallback_interval_minutes": 30,
+  "local_repo_path": "D:/AI_Projects/Foreman true north and Qa files/maturion-foreman-app",
+  "conditions": {
+    "copilot_failure": true,
+    "token_exhaustion": true,
+    "high_complexity_escalation": true,
+    "pipeline_timeout_seconds": 45
+  }
+}
