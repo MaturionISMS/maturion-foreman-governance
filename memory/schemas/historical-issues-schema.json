@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Historical Issue",
+  "description": "Schema for historical issues and their resolutions",
+  "type": "object",
+  "required": ["id", "type", "description", "resolution", "timestamp", "scope", "tags"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the issue"
+    },
+    "type": {
+      "type": "string",
+      "description": "Type of issue (e.g., qa_failure, deployment_failure)"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of the issue"
+    },
+    "resolution": {
+      "type": "string",
+      "description": "How the issue was resolved"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the issue occurred (ISO 8601)"
+    },
+    "scope": {
+      "type": "string",
+      "enum": ["global", "project", "foreman", "governance"],
+      "description": "Memory scope of the issue"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tags for categorizing the issue"
+    }
+  }
+}

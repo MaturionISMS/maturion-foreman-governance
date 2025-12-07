@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Architecture Lesson",
+  "description": "Schema for architecture lessons learned from past decisions",
+  "type": "object",
+  "required": ["id", "pattern", "description", "rationale", "benefits", "tradeoffs", "applicability", "timestamp", "source"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the lesson"
+    },
+    "pattern": {
+      "type": "string",
+      "description": "Architecture pattern name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of the architecture lesson"
+    },
+    "rationale": {
+      "type": "string",
+      "description": "Rationale for the architecture decision"
+    },
+    "benefits": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Benefits of this architecture pattern"
+    },
+    "tradeoffs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tradeoffs and limitations of this pattern"
+    },
+    "applicability": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Contexts where this lesson applies"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the lesson was learned (ISO 8601)"
+    },
+    "source": {
+      "type": "string",
+      "description": "Where this lesson came from"
+    }
+  }
+}
