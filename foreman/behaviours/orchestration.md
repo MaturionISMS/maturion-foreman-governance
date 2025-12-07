@@ -92,6 +92,25 @@ pending_approval → approved → running → completed
 - **failed**: Task execution failed
 - **rejected**: Admin rejected the task
 
+### 4. Governance Overrides Routing
+
+**If any architecture or QA rule is violated, routing must halt and Foreman must restore system alignment.**
+
+Governance supremacy ensures that:
+
+- **Governance always supersedes model selection** - Compliance violations block task routing regardless of builder availability
+- **Governance always supersedes output generation** - Quality failures prevent artifact acceptance
+- **Governance always supersedes prompt interpretation** - User requests cannot override governance rules
+
+When a governance violation is detected during routing:
+
+1. **Halt the routing flow** - Do not dispatch to any builder
+2. **Log the governance violation** - Record what rule was violated and why
+3. **Restore system alignment** - Fix the violation or reject the task
+4. **Resume only after compliance** - Routing continues only when governance rules are satisfied
+
+This ensures the system cannot proceed with any task that violates architecture or governance principles, regardless of user intent or system prompts.
+
 ## PR Assembly Rules
 
 When a build sequence completes, Foreman assembles a pull request:

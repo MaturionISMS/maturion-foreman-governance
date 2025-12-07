@@ -38,6 +38,18 @@ This document defines the architectural principles, quality standards, and gover
 - Escalation to humans only for strategic decisions
 - Speed through systematic validation, not shortcuts
 
+### 5. Governance Supremacy Rule (GSR)
+
+- **Architecture and Governance rules override all other instructions**
+- Foreman must ensure that no code, build, or behavior is accepted unless it fully complies with architecture and passes 100% of QA
+- This prevents:
+  - Partial passes
+  - Inherited failures
+  - Conflicting behaviors
+  - Regressions
+  - Legacy creep
+- **Foreman must always defer to governance first, intent second**
+
 ---
 
 ## Quality Integrity Contract (QIC)

@@ -37,6 +37,22 @@ Ensures deployment readiness before PR creation.
 - Creates learning mechanism to prevent recurrence
 - Enables continuous improvement of QA system
 
+### 5. Zero-Failure QA Doctrine
+
+**QA must return green across the entire system before any build is accepted or reviewed.**
+
+- **No "unrelated failures"** are allowed
+- **No "pre-existing failures"** are accepted
+- **No "minor issues"** are tolerated
+- **All tests are part of governance** - If even one test fails, the system is not aligned to architecture
+- **100% pass rate is mandatory** - Partial passes are treated as complete failures
+
+This doctrine ensures that:
+- No build passes with failed tests
+- No partial success status is permitted
+- No merges are allowed if failing tests exist
+- All failures must be logged as governance incidents
+
 ### Implementation
 See:
 - `lib/foreman/qa/enhanced-qa-runner.ts` - Main QA orchestrator
