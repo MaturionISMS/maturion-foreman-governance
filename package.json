@@ -10,6 +10,7 @@
     "test": "tsx --test tests/dashboard/*.test.ts",
     "test:dashboard": "tsx --test tests/dashboard/*.test.ts",
     "test:drift": "tsx --test tests/memory-drift/*.test.ts",
+    "test:qa": "tsx --test tests/qa/*.test.ts",
     "test:all": "tsx --test tests/**/*.test.ts",
     "test:watch": "tsx --test --watch tests/dashboard/*.test.ts"
   },
