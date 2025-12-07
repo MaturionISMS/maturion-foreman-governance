@@ -30,6 +30,7 @@ import {
   generateQIWReportMarkdown
 } from '../watchdog/quality-integrity-watchdog';
 import { QIWReport } from '@/types/watchdog';
+import * as fs from 'fs';
 
 export interface EnhancedQAResult {
   passed: boolean;
@@ -288,7 +289,6 @@ export function saveQAReport(
   result: EnhancedQAResult,
   outputPath: string
 ): void {
-  const fs = require('fs');
   fs.writeFileSync(outputPath, result.reportMarkdown, 'utf-8');
   console.log(`[Enhanced QA] Report saved to ${outputPath}`);
 }

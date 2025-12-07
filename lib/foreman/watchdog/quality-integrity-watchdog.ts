@@ -122,7 +122,7 @@ const WARNING_PATTERNS: Record<QIWChannel, RegExp[]> = {
  */
 function generateAnomalyId(): string {
   // Use timestamp + random to ensure uniqueness
-  return `qiw-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+  return `qiw-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`
 }
 
 /**

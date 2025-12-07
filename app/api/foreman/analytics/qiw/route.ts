@@ -8,7 +8,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import { runQIWMonitoring } from '@/lib/foreman/watchdog/quality-integrity-watchdog'
 import * as fs from 'fs'
 import * as path from 'path'
-import { GovernanceMemoryQIWEntry, QIWDashboardData } from '@/types/watchdog'
+import { 
+  GovernanceMemoryQIWEntry, 
+  QIWDashboardData,
+  QIWChannelResult,
+  QIWReport
+} from '@/types/watchdog'
 
 /**
  * GET /api/foreman/analytics/qiw
@@ -120,7 +125,7 @@ function calculateTrends(events: GovernanceMemoryQIWEntry[]): QIWDashboardData['
 /**
  * Determine channel status
  */
-function determineChannelStatus(channel: any): 'healthy' | 'warning' | 'error' | 'critical' {
+function determineChannelStatus(channel: QIWChannelResult): 'healthy' | 'warning' | 'error' | 'critical' {
   if (!channel.passed) {
     if (channel.errorCount > 0) {
       return 'error'
@@ -139,7 +144,7 @@ function determineChannelStatus(channel: any): 'healthy' | 'warning' | 'error' |
 /**
  * Determine overall QIW status
  */
-function determineOverallStatus(report: any): 'healthy' | 'warning' | 'error' | 'critical' {
+function determineOverallStatus(report: QIWReport): 'healthy' | 'warning' | 'error' | 'critical' {
   if (report.criticalCount > 0) {
     return 'critical'
   }
