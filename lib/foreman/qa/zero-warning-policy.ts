@@ -26,9 +26,9 @@ export interface ZeroWarningPolicyResult {
  * Patterns for detecting specific warning types
  */
 const BUILD_WARNING_PATTERNS = [
-  /webpack compiled with \d+ warning/i,
-  /\d+ warning\(s\)/i,
-  /Warning: /,
+  /^.*webpack compiled with \d+ warning/i,
+  /\d+ warning\(s\)\s*$/i,
+  /^Warning: /,
 ];
 
 const LINT_WARNING_PATTERNS = [

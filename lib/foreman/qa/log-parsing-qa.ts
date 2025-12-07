@@ -60,7 +60,7 @@ const ERROR_PATTERNS = [
   /\bFAIL\b/,
   /\bfailed\b/,
   /✖/,
-  /TS\d{4}:/, // TypeScript error codes
+  /error TS\d{4}:/, // TypeScript error codes (more specific)
 ];
 
 /**

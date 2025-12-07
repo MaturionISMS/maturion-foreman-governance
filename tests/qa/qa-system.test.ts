@@ -15,6 +15,19 @@ import * as path from 'path';
 import { parseLogFile, parseAllLogs, validateLogsExist } from '../../lib/foreman/qa/log-parsing-qa';
 import { runZeroWarningPolicy } from '../../lib/foreman/qa/zero-warning-policy';
 
+/**
+ * Helper function to cleanup test directory
+ */
+function cleanupTestDirectory(testLogsDir: string): void {
+  if (fs.existsSync(testLogsDir)) {
+    const files = fs.readdirSync(testLogsDir);
+    files.forEach(file => {
+      fs.unlinkSync(path.join(testLogsDir, file));
+    });
+    fs.rmdirSync(testLogsDir);
+  }
+}
+
 describe('Log Parsing QA', () => {
   const testLogsDir = path.join(process.cwd(), 'tests', 'qa', 'fixtures');
 
@@ -162,13 +175,7 @@ ReferenceError: foo is not defined
 
   after(() => {
     const testLogsDir = path.join(process.cwd(), 'tests', 'qa', 'fixtures');
-    if (fs.existsSync(testLogsDir)) {
-      const files = fs.readdirSync(testLogsDir);
-      files.forEach(file => {
-        fs.unlinkSync(path.join(testLogsDir, file));
-      });
-      fs.rmdirSync(testLogsDir);
-    }
+    cleanupTestDirectory(testLogsDir);
   });
 });
 
@@ -228,12 +235,6 @@ webpack compiled with 1 warning
 
   after(() => {
     const testLogsDir = path.join(process.cwd(), 'tests', 'qa', 'fixtures');
-    if (fs.existsSync(testLogsDir)) {
-      const files = fs.readdirSync(testLogsDir);
-      files.forEach(file => {
-        fs.unlinkSync(path.join(testLogsDir, file));
-      });
-      fs.rmdirSync(testLogsDir);
-    }
+    cleanupTestDirectory(testLogsDir);
   });
 });

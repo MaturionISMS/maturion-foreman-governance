@@ -97,8 +97,13 @@ export function recordQAMiss(event: Omit<QAMissEvent, 'id' | 'timestamp'>): QAMi
  * Generate unique ID for QA miss event
  */
 function generateQAMissId(): string {
+  // Use crypto.randomUUID() for guaranteed uniqueness
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return `qa_miss_${crypto.randomUUID()}`;
+  }
+  // Fallback for environments without crypto.randomUUID
   const timestamp = Date.now();
-  const random = Math.random().toString(36).substring(2, 8);
+  const random = Math.random().toString(36).substring(2, 15);
   return `qa_miss_${timestamp}_${random}`;
 }
 
