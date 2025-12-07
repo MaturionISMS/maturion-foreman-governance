@@ -677,20 +677,31 @@ function buildReasoningSummary(
  * @param options - Options for reasoning (skipDriftCheck, skipConsolidationCheck)
  * @returns Reasoning result
  */
+/**
+ * GSR governance message for QA/build/deployment phases
+ */
+const GSR_GOVERNANCE_MESSAGE = 
+  'GOVERNANCE SUPREMACY RULE: 100% QA passing is required before any build handover or PR merge. ' +
+  'No exceptions for pre-existing, unrelated, minor, historical, or out-of-scope failures.'
+
 export async function reason(
   context: ReasoningContext,
   options: { skipDriftCheck?: boolean, skipConsolidationCheck?: boolean } = {}
 ): Promise<ReasoningResult> {
-  console.log('[MARE] Starting reasoning process...')
-  console.log('[MARE] Context:', {
-    intent: context.intent,
-    phase: context.phase,
-    subsystem: context.subsystem,
-    projectId: context.projectId
-  })
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[MARE] Starting reasoning process...')
+    console.log('[MARE] Context:', {
+      intent: context.intent,
+      phase: context.phase,
+      subsystem: context.subsystem,
+      projectId: context.projectId
+    })
+  }
   
   // GSR-5: Governance check at intent interpretation phase
-  console.log('[MARE] GSR-5: Validating governance at intent interpretation...')
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[MARE] GSR-5: Validating governance at intent interpretation...')
+  }
   const intentGovernanceCheck = validateGovernanceAtPhase('intent', {
     userRequest: context.intent
   })
@@ -704,7 +715,9 @@ export async function reason(
   const snapshot = await loadMemorySnapshot(context, options)
   
   // GSR-5: Governance check at planning phase
-  console.log('[MARE] GSR-5: Validating governance at planning phase...')
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[MARE] GSR-5: Validating governance at planning phase...')
+  }
   const planningGovernanceCheck = validateGovernanceAtPhase('planning', {
     userRequest: context.intent
   })
@@ -719,12 +732,12 @@ export async function reason(
   
   // GSR-5: Add governance supremacy note to reasoning
   if (context.phase === 'qa' || context.phase === 'build' || context.phase === 'deployment') {
-    result.recommendedActions.unshift(
-      'GOVERNANCE SUPREMACY RULE: 100% QA passing is required before any build handover or PR merge. No exceptions for pre-existing, unrelated, minor, historical, or out-of-scope failures.'
-    )
+    result.recommendedActions.unshift(GSR_GOVERNANCE_MESSAGE)
   }
   
-  console.log('[MARE] Reasoning process complete')
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[MARE] Reasoning process complete')
+  }
   
   return result
 }

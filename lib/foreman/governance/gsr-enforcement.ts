@@ -225,6 +225,12 @@ export function validateBuildCompletion(
  * 
  * Classifies failures and determines how they should be resolved.
  * 
+ * **Current Implementation**: Heuristic-based classification using keyword matching
+ * **Future Enhancement**: AI/ML-powered classification for smarter categorization
+ * 
+ * TODO: Integrate with AI classification engine for improved accuracy
+ * FIXME: Current keyword matching may misclassify edge cases
+ * 
  * @param blockingIssue - Blocking issue to classify
  * @returns Classification with resolution steps
  */
@@ -232,7 +238,8 @@ export function classifyFailure(blockingIssue: GSRBlockingIssue): FailureClassif
   console.log('[GSR-3] Classifying failure:', blockingIssue.description)
   
   // Simple heuristic-based classification
-  // In production, this would use AI/ML for smarter classification
+  // LIMITATION: Uses basic keyword matching which may not catch all scenarios
+  // TODO: Replace with AI/ML classification for production use
   
   let category: FailureClassification['category'] = 'code_regression'
   let requiresArchitectureUpdate = false
@@ -387,12 +394,16 @@ export function validateGovernanceAtPhase(
 
 /**
  * Generate GSR enforcement report
+ * 
+ * @param qaResults - QA results to validate
+ * @param buildSequence - Build sequence data (required for full context)
+ * @returns Markdown-formatted GSR report
  */
 export function generateGSRReport(
   qaResults: QAResult[],
-  buildSequence?: BuildSequence
+  buildSequence: BuildSequence
 ): string {
-  const gsrResult = validateBuildCompletion(buildSequence!, qaResults)
+  const gsrResult = validateBuildCompletion(buildSequence, qaResults)
   
   let report = '# Governance Supremacy Rule (GSR) Enforcement Report\n\n'
   
