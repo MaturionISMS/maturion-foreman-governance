@@ -6,14 +6,33 @@
 import { getAllMemory } from '../memory/storage'
 import { runDriftMonitoring } from '../memory/drift-monitor'
 import { MemoryHealthMetrics, MemoryGrowthTrend } from '@/types/analytics'
+import { MemoryEntry } from '@/types/memory'
 import * as fs from 'fs'
 import * as path from 'path'
+
+/**
+ * Flatten memory object to array
+ */
+function flattenMemory(memoryObj: {
+  global: MemoryEntry[]
+  foreman: MemoryEntry[]
+  projects: Record<string, MemoryEntry[]>
+}): MemoryEntry[] {
+  const allEntries: MemoryEntry[] = []
+  allEntries.push(...memoryObj.global)
+  allEntries.push(...memoryObj.foreman)
+  for (const projectEntries of Object.values(memoryObj.projects)) {
+    allEntries.push(...projectEntries)
+  }
+  return allEntries
+}
 
 /**
  * Get memory health metrics
  */
 export async function getMemoryHealthMetrics(): Promise<MemoryHealthMetrics> {
-  const allMemory = await getAllMemory()
+  const memoryObj = await getAllMemory()
+  const allMemory = flattenMemory(memoryObj)
   
   // Count by lifecycle state
   let activeCount = 0
@@ -43,15 +62,21 @@ export async function getMemoryHealthMetrics(): Promise<MemoryHealthMetrics> {
     }
     
     // Calculate age
-    const createdAt = new Date(entry.createdAt).getTime()
-    const ageMs = now - createdAt
-    const ageDays = ageMs / (1000 * 60 * 60 * 24)
-    
-    totalAge += ageDays
-    oldestAge = Math.max(oldestAge, ageDays)
-    
-    if (ageDays > STALE_THRESHOLD_DAYS) {
-      staleCount++
+    if (entry.createdAt) {
+      const createdAt = new Date(entry.createdAt).getTime()
+      if (!isNaN(createdAt)) {
+        const ageMs = now - createdAt
+        const ageDays = ageMs / (1000 * 60 * 60 * 24)
+        
+        if (!isNaN(ageDays) && ageDays >= 0) {
+          totalAge += ageDays
+          oldestAge = Math.max(oldestAge, ageDays)
+          
+          if (ageDays > STALE_THRESHOLD_DAYS) {
+            staleCount++
+          }
+        }
+      }
     }
     
     // Track duplicates
@@ -61,7 +86,7 @@ export async function getMemoryHealthMetrics(): Promise<MemoryHealthMetrics> {
     keys.add(entry.key)
   }
   
-  const avgAge = allMemory.length > 0 ? totalAge / allMemory.length : 0
+  const avgAge = allMemory.length > 0 && !isNaN(totalAge) ? totalAge / allMemory.length : 0
   
   // Run drift monitoring to get drift status
   const driftReport = await runDriftMonitoring()
@@ -103,13 +128,19 @@ export async function getMemoryHealthMetrics(): Promise<MemoryHealthMetrics> {
  * Get memory growth trend over time
  */
 export async function getMemoryGrowthTrend(): Promise<MemoryGrowthTrend[]> {
-  const allMemory = await getAllMemory()
+  const memoryObj = await getAllMemory()
+  const allMemory = flattenMemory(memoryObj)
   
   // Group by date
   const trendMap = new Map<string, { active: number; consolidated: number; archived: number }>()
   
   for (const entry of allMemory) {
-    const date = new Date(entry.createdAt).toISOString().split('T')[0]
+    if (!entry.createdAt) continue
+    
+    const createdDate = new Date(entry.createdAt)
+    if (isNaN(createdDate.getTime())) continue
+    
+    const date = createdDate.toISOString().split('T')[0]
     
     if (!trendMap.has(date)) {
       trendMap.set(date, { active: 0, consolidated: 0, archived: 0 })

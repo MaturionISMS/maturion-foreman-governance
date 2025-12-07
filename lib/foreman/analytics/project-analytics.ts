@@ -7,13 +7,32 @@ import { ProjectIntelligenceAnalytics } from '@/types/analytics'
 import { listProjects } from '../projects/registry'
 import { getAllMemory } from '../memory/storage'
 import { runDriftMonitoring } from '../memory/drift-monitor'
+import { MemoryEntry } from '@/types/memory'
+
+/**
+ * Flatten memory object to array
+ */
+function flattenMemory(memoryObj: {
+  global: MemoryEntry[]
+  foreman: MemoryEntry[]
+  projects: Record<string, MemoryEntry[]>
+}): MemoryEntry[] {
+  const allEntries: MemoryEntry[] = []
+  allEntries.push(...memoryObj.global)
+  allEntries.push(...memoryObj.foreman)
+  for (const projectEntries of Object.values(memoryObj.projects)) {
+    allEntries.push(...projectEntries)
+  }
+  return allEntries
+}
 
 /**
  * Get project intelligence analytics
  */
 export async function getProjectIntelligenceAnalytics(): Promise<ProjectIntelligenceAnalytics> {
   const { projects } = await listProjects()
-  const allMemory = await getAllMemory()
+  const memoryObj = await getAllMemory()
+  const allMemory = flattenMemory(memoryObj)
   const driftReport = await runDriftMonitoring()
   
   // Build project metrics

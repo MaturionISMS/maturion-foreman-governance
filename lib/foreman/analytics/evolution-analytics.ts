@@ -5,14 +5,35 @@
 
 import { EvolutionAnalytics } from '@/types/analytics'
 import { loadReasoningPatterns } from '../reasoning/patterns'
+import { getAllMemory } from '../memory/storage'
+import { MemoryEntry } from '@/types/memory'
 import * as fs from 'fs'
 import * as path from 'path'
+
+/**
+ * Flatten memory object to array
+ */
+function flattenMemory(memoryObj: {
+  global: MemoryEntry[]
+  foreman: MemoryEntry[]
+  projects: Record<string, MemoryEntry[]>
+}): MemoryEntry[] {
+  const allEntries: MemoryEntry[] = []
+  allEntries.push(...memoryObj.global)
+  allEntries.push(...memoryObj.foreman)
+  for (const projectEntries of Object.values(memoryObj.projects)) {
+    allEntries.push(...projectEntries)
+  }
+  return allEntries
+}
 
 /**
  * Get evolution analytics
  */
 export async function getEvolutionAnalytics(): Promise<EvolutionAnalytics> {
-  const patterns = await loadReasoningPatterns()
+  const memoryObj = await getAllMemory()
+  const allMemory = flattenMemory(memoryObj)
+  const patterns = loadReasoningPatterns(allMemory)
   
   // Count patterns improved (those with performance score >= 0.8)
   const patternsImproved = patterns.filter(

@@ -5,14 +5,33 @@
 
 import { ConsolidationAnalytics } from '@/types/analytics'
 import { getAllMemory } from '../memory/storage'
+import { MemoryEntry } from '@/types/memory'
 import * as fs from 'fs'
 import * as path from 'path'
+
+/**
+ * Flatten memory object to array
+ */
+function flattenMemory(memoryObj: {
+  global: MemoryEntry[]
+  foreman: MemoryEntry[]
+  projects: Record<string, MemoryEntry[]>
+}): MemoryEntry[] {
+  const allEntries: MemoryEntry[] = []
+  allEntries.push(...memoryObj.global)
+  allEntries.push(...memoryObj.foreman)
+  for (const projectEntries of Object.values(memoryObj.projects)) {
+    allEntries.push(...projectEntries)
+  }
+  return allEntries
+}
 
 /**
  * Get consolidation analytics
  */
 export async function getConsolidationAnalytics(): Promise<ConsolidationAnalytics> {
-  const allMemory = await getAllMemory()
+  const memoryObj = await getAllMemory()
+  const allMemory = flattenMemory(memoryObj)
   
   // Count consolidated knowledge blocks
   const consolidatedEntries = allMemory.filter(

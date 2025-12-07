@@ -5,12 +5,31 @@
 
 import { BuilderPerformanceAnalytics } from '@/types/analytics'
 import { getAllMemory } from '../memory/storage'
+import { MemoryEntry } from '@/types/memory'
+
+/**
+ * Flatten memory object to array
+ */
+function flattenMemory(memoryObj: {
+  global: MemoryEntry[]
+  foreman: MemoryEntry[]
+  projects: Record<string, MemoryEntry[]>
+}): MemoryEntry[] {
+  const allEntries: MemoryEntry[] = []
+  allEntries.push(...memoryObj.global)
+  allEntries.push(...memoryObj.foreman)
+  for (const projectEntries of Object.values(memoryObj.projects)) {
+    allEntries.push(...projectEntries)
+  }
+  return allEntries
+}
 
 /**
  * Get builder performance analytics
  */
 export async function getBuilderPerformanceAnalytics(): Promise<BuilderPerformanceAnalytics> {
-  const allMemory = await getAllMemory()
+  const memoryObj = await getAllMemory()
+  const allMemory = flattenMemory(memoryObj)
   
   // Filter builder-related memory entries
   const builderEntries = allMemory.filter(

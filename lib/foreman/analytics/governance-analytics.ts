@@ -6,14 +6,33 @@
 import { GovernanceAlignmentAnalytics } from '@/types/analytics'
 import { getAllMemory } from '../memory/storage'
 import { runDriftMonitoring } from '../memory/drift-monitor'
+import { MemoryEntry } from '@/types/memory'
 import * as fs from 'fs'
 import * as path from 'path'
+
+/**
+ * Flatten memory object to array
+ */
+function flattenMemory(memoryObj: {
+  global: MemoryEntry[]
+  foreman: MemoryEntry[]
+  projects: Record<string, MemoryEntry[]>
+}): MemoryEntry[] {
+  const allEntries: MemoryEntry[] = []
+  allEntries.push(...memoryObj.global)
+  allEntries.push(...memoryObj.foreman)
+  for (const projectEntries of Object.values(memoryObj.projects)) {
+    allEntries.push(...projectEntries)
+  }
+  return allEntries
+}
 
 /**
  * Get governance alignment analytics
  */
 export async function getGovernanceAlignmentAnalytics(): Promise<GovernanceAlignmentAnalytics> {
-  const allMemory = await getAllMemory()
+  const memoryObj = await getAllMemory()
+  const allMemory = flattenMemory(memoryObj)
   const driftReport = await runDriftMonitoring()
   
   // Count governance violations from drift report
