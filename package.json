@@ -10,8 +10,13 @@
     "test": "tsx --test tests/dashboard/*.test.ts",
     "test:dashboard": "tsx --test tests/dashboard/*.test.ts",
     "test:drift": "tsx --test tests/memory-drift/*.test.ts",
+    "test:qa": "tsx --test tests/qa/*.test.ts",
     "test:all": "tsx --test tests/**/*.test.ts",
-    "test:watch": "tsx --test --watch tests/dashboard/*.test.ts"
+    "test:watch": "tsx --test --watch tests/dashboard/*.test.ts",
+    "test:structural": "tsx --test tests/qa-structural/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "typecheck:production": "tsc --noEmit --exclude 'tests/**/*'",
+    "qa:full": "npm run lint && npm run test:structural && npm run build"
   },
   "dependencies": {
     "ajv": "^8.17.1",

@@ -51,7 +51,8 @@ const DEFAULT_CONFIG: DriftMonitorConfig = {
     'cross_agent_drift',
     'project_drift',
     'pattern_drift',
-    'governance_drift'
+    'governance_drift',
+    'agent_experience_drift'
   ],
   stalenessThresholds: {
     reasoningPatterns: 180, // 6 months
@@ -590,6 +591,120 @@ export async function detectGovernanceDrift(
 }
 
 /**
+ * Detect agent-experience drift
+ * Checks builder feedback for patterns indicating memory/governance issues
+ */
+export async function detectAgentExperienceDrift(): Promise<DriftCheckResult> {
+  console.log('[Drift Monitor] Checking agent-experience drift...')
+  
+  const issues: DriftIssue[] = []
+  
+  // Load builder feedback history
+  const feedbackPath = path.join(process.cwd(), 'memory', 'global', 'builder-feedback-history.json')
+  
+  if (!fs.existsSync(feedbackPath)) {
+    // No feedback yet, nothing to check
+    return {
+      category: 'agent_experience_drift',
+      passed: true,
+      issues: [],
+      checkedAt: new Date().toISOString()
+    }
+  }
+  
+  try {
+    const feedbackHistory: BuilderFeedback[] = JSON.parse(fs.readFileSync(feedbackPath, 'utf-8'))
+    
+    // Get recent feedback (last 30 days)
+    const thirtyDaysAgo = new Date()
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
+    
+    const recentFeedback = feedbackHistory.filter((f: BuilderFeedback) => 
+      new Date(f.timestamp) >= thirtyDaysAgo
+    )
+    
+    if (recentFeedback.length === 0) {
+      return {
+        category: 'agent_experience_drift',
+        passed: true,
+        issues: [],
+        checkedAt: new Date().toISOString()
+      }
+    }
+    
+    // Check 1: High difficulty rate
+    const highDifficultyCount = recentFeedback.filter((f: BuilderFeedback) => f.difficultyScore > 0.7).length
+    const highDifficultyRate = highDifficultyCount / recentFeedback.length
+    
+    if (highDifficultyRate > 0.5) {
+      issues.push({
+        type: 'agent_experience_drift',
+        severity: 'warning',
+        description: `Over 50% of builder tasks rated high difficulty (${Math.round(highDifficultyRate * 100)}%)`,
+        location: 'memory/global/builder-feedback-history.json',
+        details: {
+          highDifficultyCount,
+          totalTasks: recentFeedback.length,
+          rate: highDifficultyRate
+        },
+        recommendation: 'Review reasoning patterns and task allocation strategies',
+        timestamp: new Date().toISOString()
+      })
+    }
+    
+    // Check 2: Missing memory patterns
+    const missingMemoryCount = recentFeedback.filter((f: BuilderFeedback) => 
+      f.missingMemoryDetected && f.missingMemoryDetected.length > 0
+    ).length
+    
+    if (missingMemoryCount >= 3) {
+      issues.push({
+        type: 'agent_experience_drift',
+        severity: 'warning',
+        description: `Builders repeatedly reporting missing memory context (${missingMemoryCount} times in 30 days)`,
+        location: 'memory/global',
+        details: {
+          occurrences: missingMemoryCount,
+          totalTasks: recentFeedback.length
+        },
+        recommendation: 'Review and enhance memory fabric with commonly needed context',
+        timestamp: new Date().toISOString()
+      })
+    }
+    
+    // Check 3: Governance conflicts
+    const governanceConflictCount = recentFeedback.filter((f: BuilderFeedback) => 
+      f.governanceConflicts && f.governanceConflicts.length > 0
+    ).length
+    
+    if (governanceConflictCount >= 2) {
+      issues.push({
+        type: 'agent_experience_drift',
+        severity: 'error',
+        description: `Builders repeatedly encountering governance conflicts (${governanceConflictCount} times in 30 days)`,
+        location: 'foreman/governance',
+        details: {
+          occurrences: governanceConflictCount,
+          totalTasks: recentFeedback.length
+        },
+        recommendation: 'Review and clarify governance rules to resolve conflicts',
+        timestamp: new Date().toISOString()
+      })
+    }
+    
+  } catch (error) {
+    console.error('[Drift Monitor] Error checking agent-experience drift:', error)
+  }
+  
+  return {
+    category: 'agent_experience_drift',
+    passed: issues.length === 0,
+    issues,
+    checkedAt: new Date().toISOString()
+  }
+}
+
+/**
  * Run complete drift monitoring
  */
 export async function runDriftMonitoring(
@@ -637,6 +752,10 @@ export async function runDriftMonitoring(
   
   if (config.enabledChecks.includes('governance_drift')) {
     checks.push(await detectGovernanceDrift(allEntries))
+  }
+  
+  if (config.enabledChecks.includes('agent_experience_drift')) {
+    checks.push(await detectAgentExperienceDrift())
   }
   
   // Aggregate results

@@ -1,0 +1,17 @@
+{
+  "build": [
+    "Schema not found: /home/runner/work/maturion-foreman-app/maturion-foreman-app/memory/schemas/historical-issues-schema.json",
+    "Schema not found: /home/runner/work/maturion-foreman-app/maturion-foreman-app/memory/schemas/knowledge-base-schema.json",
+    "Schema not found: /home/runner/work/maturion-foreman-app/maturion-foreman-app/memory/schemas/reasoning-patterns-schema.json",
+    "Schema not found: /home/runner/work/maturion-foreman-app/maturion-foreman-app/memory/schemas/project-memory-schema.json",
+    "[Drift Monitor] Completed: error",
+    "[Analytics] System health: warning",
+    "Foreman initialization incomplete:",
+    "No build cache found"
+  ],
+  "lint": [],
+  "test": [
+    "# Subtest:",
+    "ok "
+  ]
+}

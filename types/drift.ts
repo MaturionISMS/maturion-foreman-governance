@@ -17,6 +17,7 @@ export type DriftType =
   | 'project_drift'         // Project memory missing required files
   | 'pattern_drift'         // Reasoning patterns diverge from governance
   | 'governance_drift'      // Memory contradicts governance rules
+  | 'agent_experience_drift' // Builder repeatedly struggles with missing memory/conflicts
 
 /**
  * Drift Severity Classification

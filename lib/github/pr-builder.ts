@@ -7,6 +7,7 @@ import { Octokit } from 'octokit'
 import { github } from './client'
 import { PRContext, ChangeRecord, ComplianceResult } from '@/types/build-sequence'
 import { QAResult, BuilderTask } from '@/types/builder'
+import { BuilderFeedback } from '@/types/builder-feedback'
 
 /**
  * Generate PR title from context
@@ -356,3 +357,115 @@ export function assemblePRContext(
     complianceResults
   }
 }
+
+/**
+ * Generate builder feedback from PR context
+ * Creates structured feedback for the multi-agent learning loop
+ * Part of Issue #14: Multi-Agent Reasoning Feedback Loop
+ */
+export function generateBuilderFeedback(
+  taskId: string,
+  context: PRContext
+): BuilderFeedback {
+  const feedback: BuilderFeedback = {
+    taskId,
+    builder: 'copilot',
+    difficultyScore: calculateDifficultyScore(context),
+    timestamp: new Date().toISOString()
+  }
+  
+  // Extract failures from QA results
+  const failures = context.qaResults
+    .filter(r => r.status === 'failed')
+    .map(r => `${r.check}: ${r.message}`)
+  
+  if (failures.length > 0) {
+    feedback.failures = failures
+  }
+  
+  // Extract uncertainties from warnings
+  const uncertainties = context.qaResults
+    .filter(r => r.status === 'warning')
+    .map(r => `${r.check}: ${r.message}`)
+  
+  if (uncertainties.length > 0) {
+    feedback.uncertainties = uncertainties
+  }
+  
+  // Check for governance conflicts in compliance results
+  const governanceConflicts = context.complianceResults
+    .filter(r => r.status === 'failed' && r.check.toLowerCase().includes('governance'))
+    .map(r => r.message)
+  
+  if (governanceConflicts.length > 0) {
+    feedback.governanceConflicts = governanceConflicts
+  }
+  
+  // Identify missing memory based on task complexity
+  const missingMemory: string[] = []
+  
+  if (context.builderOutputs.length > 0) {
+    context.builderOutputs.forEach(output => {
+      // If memory context was empty or minimal, note it
+      if (!output.memoryContext || 
+          (output.memoryContext.historicalIssues.length === 0 &&
+           output.memoryContext.architectureLessons.length === 0 &&
+           output.memoryContext.reasoningPatterns.length === 0)) {
+        missingMemory.push(`No memory context available for ${output.module}`)
+      }
+    })
+  }
+  
+  if (missingMemory.length > 0) {
+    feedback.missingMemoryDetected = missingMemory
+  }
+  
+  return feedback
+}
+
+/**
+ * Calculate difficulty score based on context
+ */
+function calculateDifficultyScore(context: PRContext): number {
+  let score = 0
+  let factors = 0
+  
+  // Factor 1: QA failure rate (0-0.3)
+  if (context.qaResults.length > 0) {
+    const failureRate = context.qaResults.filter(r => r.status === 'failed').length / context.qaResults.length
+    score += failureRate * 0.3
+    factors++
+  }
+  
+  // Factor 2: Number of files changed (0-0.2)
+  const fileCount = context.changeRecords.length
+  if (fileCount > 0) {
+    const fileComplexity = Math.min(fileCount / 20, 1) * 0.2
+    score += fileComplexity
+    factors++
+  }
+  
+  // Factor 3: Compliance failures (0-0.3)
+  if (context.complianceResults.length > 0) {
+    const complianceFailureRate = context.complianceResults.filter(r => r.status === 'failed').length / context.complianceResults.length
+    score += complianceFailureRate * 0.3
+    factors++
+  }
+  
+  // Factor 4: Memory context availability (0-0.2)
+  let memoryContextScore = 0
+  if (context.builderOutputs.length > 0) {
+    const withoutContext = context.builderOutputs.filter(output => 
+      !output.memoryContext || 
+      (output.memoryContext.historicalIssues.length === 0 &&
+       output.memoryContext.architectureLessons.length === 0)
+    ).length
+    memoryContextScore = (withoutContext / context.builderOutputs.length) * 0.2
+    score += memoryContextScore
+    factors++
+  }
+  
+  // Normalize score to 0-1 range
+  return factors > 0 ? Math.min(score, 1) : 0.5 // Default to 0.5 if no factors
+}
+
