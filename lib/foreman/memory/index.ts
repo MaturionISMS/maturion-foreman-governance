@@ -316,6 +316,29 @@ export async function recordMilestoneCompletion(
 }
 
 /**
+ * Helper: Record governance event
+ */
+export async function recordGovernanceEvent(
+  eventType: string,
+  data: any,
+  options: {
+    projectId?: string
+    organisationId?: string
+  } = {}
+): Promise<MemoryEntry> {
+  const event: MemoryEvent = {
+    type: eventType as MemoryEventType,
+    scope: 'foreman',
+    description: `Governance event: ${eventType}`,
+    data,
+    timestamp: new Date().toISOString(),
+    createdBy: 'foreman',
+  }
+  
+  return await writeMemoryAfterAction(event, options)
+}
+
+/**
  * Re-export drift monitoring functions
  */
 export {
