@@ -49,6 +49,11 @@ next-env.d.ts
 /memory/**/*.json
 !/memory/projects/foreman_app_sandbox.json
 
+# memory consolidated data (auto-generated)
+# Ignore consolidated memory patterns and architecture principles
+/memory/global/consolidated/*.json
+/memory/global/consolidated/**/*.json
+
 # memory archive (retirement system)
 # Ignore archived memory entries and governance events from tests
 /memory/archive/

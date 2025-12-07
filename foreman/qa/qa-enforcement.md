@@ -4,6 +4,48 @@
 
 In the Maturion system, **Quality Assurance is not optional**. QA is the primary gatekeeper for all code that enters the repository. This is not a supplement to human review—it is the *replacement* for human review.
 
+## Enhanced QA System (2025 Upgrade)
+
+Following the Quality Integrity Contract mandate, the QA system has been enhanced with:
+
+### 1. Log Parsing QA
+- **Mandatory parsing** of `/tmp/build.log`, `/tmp/lint.log`, `/tmp/test.log`
+- **Pattern detection** for errors, warnings, and failures
+- **Whitelist support** for known acceptable warnings
+- **Zero tolerance** for unwhitelisted errors and warnings
+
+### 2. Zero-Warning Build Policy
+- Build warnings → QA FAIL (unless whitelisted)
+- Lint warnings → QA FAIL (unless whitelisted)
+- TypeScript warnings → QA FAIL (unless whitelisted)
+- Unused variables → QA FAIL
+- Deprecated APIs → QA FAIL
+
+This prevents gradual erosion of quality standards.
+
+### 3. Vercel Deployment Simulation
+- Production build simulation (`next build`)
+- Production lint simulation (`next lint`)
+- Strict mode validation (TypeScript + React)
+- Build output artifact validation
+
+Ensures deployment readiness before PR creation.
+
+### 4. QA Miss Tracking
+- **Governance memory** stores all instances where QA passed but failures existed
+- Tracks: missed signal, root cause, architectural gap, QA gap, enforcement rule
+- Creates learning mechanism to prevent recurrence
+- Enables continuous improvement of QA system
+
+### Implementation
+See:
+- `lib/foreman/qa/enhanced-qa-runner.ts` - Main QA orchestrator
+- `lib/foreman/qa/log-parsing-qa.ts` - Log parsing engine
+- `lib/foreman/qa/zero-warning-policy.ts` - Warning enforcement
+- `lib/foreman/qa/vercel-simulation-qa.ts` - Deployment simulation
+- `lib/foreman/memory/qa-miss-tracker.ts` - Learning mechanism
+- `foreman/governance/quality-integrity-contract.md` - Complete specification
+
 ## Why QA Enforcement is Supreme
 
 ### The Problem with Human Code Review
