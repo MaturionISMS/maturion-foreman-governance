@@ -1,0 +1,174 @@
+# GitHub Actions Workflow for QIEL
+# Quality Integrity Enforcement Layer - Continuous Integration
+#
+# Governance Enforcement: Foreman MUST validate itself
+# Per GSR (Governance Supremacy Rule), no system is exempt from rules it imposes.
+
+name: QIEL - Quality Integrity Enforcement
+
+on:
+  push:
+    branches: [ main, develop, 'feature/**' ]
+  pull_request:
+    branches: [ main, develop ]
+
+# Required permissions for QIEL enforcement
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  qiel-enforcement:
+    name: Quality Integrity Enforcement Layer
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run TypeScript typecheck
+        run: npm run typecheck 2>&1 | tee /tmp/build.log
+        continue-on-error: true
+      
+      - name: Run ESLint
+        run: npm run lint 2>&1 | tee /tmp/lint.log
+        continue-on-error: true
+      
+      - name: Run tests
+        run: npm run test:all 2>&1 | tee /tmp/test.log
+        continue-on-error: true
+      
+      - name: Run QIEL - Quick Check
+        id: qiel-quick
+        run: |
+          npm run qiel:quick -- \
+            --logs-dir /tmp \
+            --report ./qiel-quick-report.md \
+            --commit-sha ${{ github.sha }} \
+            --branch ${{ github.ref_name }}
+        continue-on-error: true
+      
+      - name: Upload QIEL Quick Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qiel-quick-report
+          path: ./qiel-quick-report.md
+          retention-days: 30
+      
+      - name: Run QIEL - Full Validation (on main/develop)
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+        id: qiel-full
+        run: |
+          npm run qiel:full -- \
+            --logs-dir /tmp \
+            --report ./qiel-full-report.md \
+            --commit-sha ${{ github.sha }} \
+            --branch ${{ github.ref_name }}
+      
+      - name: Upload QIEL Full Report
+        if: (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop') && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qiel-full-report
+          path: ./qiel-full-report.md
+          retention-days: 90
+      
+      - name: Comment PR with QIEL Results
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const reportPath = './qiel-quick-report.md';
+            
+            if (fs.existsSync(reportPath)) {
+              const report = fs.readFileSync(reportPath, 'utf-8');
+              
+              // Truncate report if too long for PR comment (max 65536 characters)
+              const maxLength = 60000;
+              const truncatedReport = report.length > maxLength 
+                ? report.substring(0, maxLength) + '\n\n... (Report truncated. Download full report from artifacts)'
+                : report;
+              
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: `## QIEL Report\n\n${truncatedReport}`
+              });
+            }
+      
+      - name: Check QIEL Status
+        if: steps.qiel-quick.outcome == 'failure' || (steps.qiel-full.outcome == 'failure' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'))
+        run: |
+          echo "::error::QIEL enforcement failed - Quality Integrity violations detected"
+          exit 1
+      
+      - name: Auto-commit regression tests
+        if: success() && github.event_name == 'push'
+        run: |
+          if [ -d "tests/qic/regression" ] && [ "$(ls -A tests/qic/regression)" ]; then
+            git config --local user.email "github-actions[bot]@users.noreply.github.com"
+            git config --local user.name "github-actions[bot]"
+            git add tests/qic/regression/*.test.ts
+            git commit -m "chore: Add auto-generated QIEL regression tests" || echo "No new regression tests to commit"
+            git push || echo "Nothing to push"
+          fi
+
+  # Optional: Create QI Incident issue for failures
+  create-qi-incident:
+    name: Create QI Incident Issue
+    runs-on: ubuntu-latest
+    needs: qiel-enforcement
+    if: failure()
+    
+    steps:
+      - name: Create GitHub Issue for QI Incident
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = `🚨 Quality Integrity Incident - ${{ github.ref_name }} - ${{ github.sha }}`;
+            const body = `
+            ## Quality Integrity Incident Detected
+            
+            **Branch**: ${{ github.ref_name }}
+            **Commit**: ${{ github.sha }}
+            **Workflow Run**: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            
+            QIEL enforcement detected quality integrity violations in this build.
+            
+            ### Actions Required:
+            1. Review QIEL report in workflow artifacts
+            2. Address all blockers identified
+            3. Ensure all QIC exit criteria are met
+            4. Re-run QIEL after fixes
+            
+            ### QIC Exit Criteria:
+            - [ ] Build logs contain zero errors or warnings
+            - [ ] Lint logs contain zero errors or warnings
+            - [ ] Tests contain zero errors or warnings
+            - [ ] All engines initialize cleanly
+            - [ ] All schemas match
+            - [ ] Zero silent failures detected
+            
+            This issue will be automatically closed when QIEL passes on this branch.
+            `;
+            
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['quality-integrity', 'qiel', 'automated']
+            });

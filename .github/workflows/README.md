@@ -1,27 +1,28 @@
-# QIEL Workflow Template
+# QIEL Workflow - Governance Enforcement
 
-This directory contains the GitHub Actions workflow template for QIEL (Quality Integrity Enforcement Layer).
+This directory contains the GitHub Actions workflow for QIEL (Quality Integrity Enforcement Layer).
 
-## ⚠️ Important Note
+## Governance Supremacy Rule (GSR)
 
-The file `qiel-template.yml.example` is a **template** and should NOT be used directly in this repository.
+**CRITICAL**: Per Maturion governance doctrine, **Foreman MUST run QIEL on itself**.
 
-## Why is this a template?
+### Why Foreman Validates Itself
 
-The QIEL workflow is designed for **projects that use the Foreman system**, not for the Foreman system itself. Running QIEL on the Foreman codebase would create circular dependencies and permission issues.
+1. **GSR (Governance Supremacy Rule)**: No system is exempt from rules it imposes
+2. **One Build**: Foreman follows the same rules as all projects
+3. **True North**: Quality enforcement applies universally
+4. **Zero Legacy**: No grandfather clauses or exceptions
+5. **QA Must Be 100% Green**: Foreman demonstrates this by example
 
-## How to use this template
+**This is NOT a circular dependency** - it is governance enforcement applied recursively and correctly.
 
-To enable QIEL in a project that uses Foreman:
+## Active Workflow
 
-1. Copy `qiel-template.yml.example` to your project's `.github/workflows/qiel.yml`
-2. Update the permissions section to include necessary GitHub permissions
-3. Customize the workflow triggers and parameters as needed
-4. Ensure your project has the required log files (`/tmp/build.log`, `/tmp/lint.log`, `/tmp/test.log`)
+The file `qiel.yml` is the **active workflow** that runs QIEL on every PR to this repository.
 
-## Required Permissions
+### Required Permissions
 
-When using this template, ensure your workflow has these permissions:
+The workflow requires these GitHub permissions:
 
 ```yaml
 permissions:
@@ -30,16 +31,42 @@ permissions:
   pull-requests: write  # Required for PR comments
 ```
 
-## Integration with Foreman
+## Workflow Triggers
 
-This workflow integrates with:
-- QIW (Quality Integrity Watchdog) - for log monitoring
-- QIEL (Quality Integrity Enforcement Layer) - for comprehensive QA
-- Governance Memory - for incident tracking
-- Dashboard - for real-time status
+QIEL runs on:
+- All pull requests to `main` or `develop` branches
+- All pushes to `main`, `develop`, or `feature/**` branches
 
-## More Information
+## What QIEL Validates
 
+1. **Build Logs** (`typecheck`) - Zero TypeScript errors
+2. **Lint Logs** (`lint`) - Zero ESLint errors/warnings
+3. **Test Logs** (`test:all`) - All tests passing
+4. **Schema Cohesion** - All engine schemas match
+5. **Engine Loading** - All cognitive engines initialize
+6. **Deployment Simulation** - Production builds succeed
+
+## Exit Criteria
+
+A PR can only merge when:
+- ✅ QIEL runs successfully
+- ✅ All checks pass
+- ✅ Zero errors or warnings
+- ✅ QIC (Quality Integrity Contract) satisfied
+- ✅ GSR enforced
+
+## Integration with QIW
+
+- **QIW (Quality Integrity Watchdog)** - Monitors logs in real-time
+- **QIEL** - Comprehensive enforcement layer with incident tracking
+- Both systems work together to ensure quality integrity
+
+## For Downstream Projects
+
+Projects that use Foreman should copy `qiel-template.yml.example` to their own `.github/workflows/qiel.yml` and customize as needed.
+
+## Governance Documentation
+
+- See `foreman/governance/quality-integrity-contract.md` for QIC details
 - See `docs/QIEL_README.md` for full QIEL documentation
 - See `lib/foreman/watchdog/README.md` for QIW documentation
-- See `lib/foreman/qa/qiel-runner.ts` for implementation details
