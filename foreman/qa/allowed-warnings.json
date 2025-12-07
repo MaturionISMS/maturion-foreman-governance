@@ -15,11 +15,6 @@
     "ok ",
     "not ok",
     "should",
-    "error",
-    "Error",
-    "warning",
-    "Warning",
-    "failed",
     "duration_ms",
     "location:",
     "failureType:",
@@ -29,6 +24,9 @@
     "pattern detected",
     "correctly ignored",
     "#   Error:",
-    "# ⚠️"
+    "# ⚠️",
+    "# should",
+    "# [",
+    "error.*as part of"
   ]
 }
