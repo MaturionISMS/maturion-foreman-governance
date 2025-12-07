@@ -175,6 +175,8 @@ export function runEnhancedQA(options?: {
   const qiwReport = runQIWMonitoring({
     logsDir,
     projectDir,
+    buildSequenceId,
+    projectId,
     blockOnCritical: true,
     blockOnErrors: true,
     blockOnWarnings: false,

@@ -389,8 +389,8 @@ export function runQIWMonitoring(
     summary,
     recommendations,
     generatedAt: new Date().toISOString(),
-    buildSequenceId: fullConfig.projectDir,
-    projectId: fullConfig.projectDir
+    buildSequenceId: fullConfig.buildSequenceId,
+    projectId: fullConfig.projectId
   }
 
   console.log(`[QIW] ${summary}`)

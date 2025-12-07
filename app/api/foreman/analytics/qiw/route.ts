@@ -27,9 +27,12 @@ export async function GET(request: NextRequest) {
   try {
     console.log('[QIW Analytics API] Generating QIW analytics...')
     
+    // Get logs directory from environment or default to /tmp
+    const logsDir = process.env.QIW_LOGS_DIR || '/tmp'
+    
     // Run QIW monitoring
     const latestReport = runQIWMonitoring({
-      logsDir: '/tmp',
+      logsDir,
       blockOnCritical: true,
       blockOnErrors: true,
       blockOnWarnings: false,

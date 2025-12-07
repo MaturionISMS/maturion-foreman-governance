@@ -158,6 +158,12 @@ export interface QIWConfig {
   
   /** Project directory */
   projectDir?: string
+  
+  /** Build sequence ID */
+  buildSequenceId?: string
+  
+  /** Project ID */
+  projectId?: string
 }
 
 /**
