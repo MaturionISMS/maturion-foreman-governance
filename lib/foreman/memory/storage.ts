@@ -219,13 +219,22 @@ export async function clearMemory(scope: MemoryScope, projectId?: string): Promi
 }
 
 /**
- * Get all memory entries across all scopes (for debugging/admin)
+ * Memory Fabric structure returned by getAllMemory()
+ * Contains separate arrays for each scope
  */
-export async function getAllMemory(): Promise<{
+export interface MemoryFabric {
   global: MemoryEntry[]
   foreman: MemoryEntry[]
   projects: Record<string, MemoryEntry[]>
-}> {
+}
+
+/**
+ * Get all memory entries across all scopes (for debugging/admin)
+ * 
+ * IMPORTANT: This returns a structured object, NOT a flat array.
+ * Use flattenMemory() to convert to a flat array if needed.
+ */
+export async function getAllMemory(): Promise<MemoryFabric> {
   const globalEntries = readMemoryFile(getMemoryFilePath('global'))
   const foremanEntries = readMemoryFile(getMemoryFilePath('foreman'))
   
@@ -249,4 +258,34 @@ export async function getAllMemory(): Promise<{
     foreman: foremanEntries,
     projects,
   }
+}
+
+/**
+ * Flatten Memory Fabric into a single array
+ * 
+ * Safely converts the structured Memory Fabric object returned by getAllMemory()
+ * into a flat array of all memory entries across all scopes.
+ * 
+ * @param memoryFabric - The Memory Fabric object from getAllMemory()
+ * @returns Flat array of all memory entries
+ */
+export function flattenMemory(memoryFabric: MemoryFabric): MemoryEntry[] {
+  return [
+    ...memoryFabric.global,
+    ...memoryFabric.foreman,
+    ...Object.values(memoryFabric.projects).flat()
+  ]
+}
+
+/**
+ * Get all memory entries as a flat array
+ * 
+ * Convenience function that combines getAllMemory() and flattenMemory()
+ * for cases where you need all memory entries in a single array.
+ * 
+ * @returns Flat array of all memory entries
+ */
+export async function getAllMemoryFlat(): Promise<MemoryEntry[]> {
+  const memoryFabric = await getAllMemory()
+  return flattenMemory(memoryFabric)
 }

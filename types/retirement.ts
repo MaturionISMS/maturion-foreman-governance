@@ -82,6 +82,7 @@ export interface RetirementCandidate {
     lastAccessed?: string
     usageCount?: number
     conflictCount?: number
+    obsoleteReferences?: string[]
   }
 }
 

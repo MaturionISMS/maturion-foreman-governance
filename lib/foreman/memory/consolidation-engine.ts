@@ -23,7 +23,7 @@ import {
   ArchivedEntryReference
 } from '@/types/consolidation'
 import { MemoryEntry, MemoryScope } from '@/types/memory'
-import { getAllMemory } from './storage'
+import { getAllMemory, flattenMemory } from './storage'
 
 /**
  * Default consolidation configuration

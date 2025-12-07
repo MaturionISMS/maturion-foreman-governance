@@ -46,7 +46,7 @@ next-env.d.ts
 # memory data (unified memory fabric)
 # Track directory structure and README files, but ignore memory.json files
 # This allows the memory system to work locally while keeping the repo clean
-/memory/*/*.json
+/memory/**/*.json
 !/memory/projects/foreman_app_sandbox.json
 
 # memory archive (retirement system)
@@ -54,6 +54,6 @@ next-env.d.ts
 /memory/archive/
 /memory/governance-events.json
 
-# memory consolidated (auto-generated during builds)
-# Ignore auto-generated consolidated files that change during builds/tests
-/memory/global/consolidated/architecture-principle.json
+# memory consolidation
+# Ignore consolidated memory files generated during tests
+/memory/global/consolidated/

@@ -24,7 +24,7 @@ import {
 } from '@/types/reasoning'
 import { MemoryEntry } from '@/types/memory'
 import { KnowledgeBlock } from '@/types/consolidation'
-import { getAllMemory } from '@/lib/foreman/memory/storage'
+import { getAllMemory, flattenMemory } from '@/lib/foreman/memory/storage'
 import { loadReasoningPatterns } from './patterns'
 import { DriftReport } from '@/types/drift'
 
@@ -212,12 +212,8 @@ export async function analyzePatternPerformance(
   // Load all memory to analyze pattern usage
   const allMemoryObj = await getAllMemory()
   
-  // Flatten all memory entries into a single array
-  const allMemory: MemoryEntry[] = [
-    ...allMemoryObj.global,
-    ...allMemoryObj.foreman,
-    ...Object.values(allMemoryObj.projects).flat()
-  ]
+  // Flatten all memory entries into a single array using the type-safe helper
+  const allMemory = flattenMemory(allMemoryObj)
   
   return analyzePatternPerformanceFromMemory(pattern, allMemory)
 }
@@ -402,11 +398,7 @@ export async function runEvolutionCycle(
 
   // Load all memory once and cache the flattened array for performance
   const allMemoryObj = await getAllMemory()
-  const allMemory: MemoryEntry[] = [
-    ...allMemoryObj.global,
-    ...allMemoryObj.foreman,
-    ...Object.values(allMemoryObj.projects).flat()
-  ]
+  const allMemory = flattenMemory(allMemoryObj)
   
   // Load current patterns
   const patterns = loadReasoningPatterns(allMemory)
@@ -522,11 +514,7 @@ export async function getEvolutionStats(): Promise<{
 }> {
   // Load all memory first
   const allMemoryObj = await getAllMemory()
-  const allMemory: MemoryEntry[] = [
-    ...allMemoryObj.global,
-    ...allMemoryObj.foreman,
-    ...Object.values(allMemoryObj.projects).flat()
-  ]
+  const allMemory = flattenMemory(allMemoryObj)
   const patterns = loadReasoningPatterns(allMemory)
   
   let stableCount = 0

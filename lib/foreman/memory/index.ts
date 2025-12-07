@@ -192,6 +192,15 @@ export async function getAllMemory() {
 }
 
 /**
+ * Get all memory as a flat array
+ * 
+ * For cases where you need to iterate over all memory entries
+ * regardless of scope. This is safer than trying to use getAllMemory()
+ * directly as an array.
+ */
+export { getAllMemoryFlat, flattenMemory, type MemoryFabric } from './storage'
+
+/**
  * Helper: Record architecture decision
  */
 export async function recordArchitectureDecision(

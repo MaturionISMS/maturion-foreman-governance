@@ -37,8 +37,7 @@ import {
   ReasoningPattern,
   ProjectMemory
 } from '@/types/reasoning'
-import { BuilderFeedback } from '@/types/builder-feedback'
-import { getAllMemory } from './index'
+import { getAllMemory, flattenMemory } from './index'
 
 /**
  * Default drift monitoring configuration
@@ -716,11 +715,7 @@ export async function runDriftMonitoring(
   
   // Load all memory
   const allMemory = await getAllMemory()
-  const allEntries: MemoryEntry[] = [
-    ...allMemory.global,
-    ...allMemory.foreman,
-    ...Object.values(allMemory.projects).flat()
-  ]
+  const allEntries = flattenMemory(allMemory)
   
   console.log(`[Drift Monitor] Loaded ${allEntries.length} memory entries`)
   
