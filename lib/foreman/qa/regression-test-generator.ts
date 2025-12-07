@@ -85,7 +85,7 @@ describe('Regression: ${context.errorClass}', () => {
     
     assert.ok(
       !errorPattern.test(buildLog),
-      \`Build log should not contain ${context.errorClass}: \${context.errorMessage}\`
+      \`Build log should not contain ${context.errorClass}: ${context.errorMessage}\`
     );
   });
 });
@@ -127,7 +127,7 @@ describe('Regression: ${context.errorClass}', () => {
     
     assert.ok(
       !errorPattern.test(lintLog),
-      \`Lint log should not contain ${context.errorClass}: \${context.errorMessage}\`
+      \`Lint log should not contain ${context.errorClass}: ${context.errorMessage}\`
     );
   });
 });
@@ -165,7 +165,7 @@ describe('Regression: ${context.errorClass}', () => {
       // Check if this is the same error class we're preventing
       if (errorMessage.includes('${context.errorClass}')) {
         assert.fail(
-          \`Runtime error recurred: ${context.errorClass} - \${errorMessage}\`
+          \`Runtime error recurred: ${context.errorClass} - $\{errorMessage}\`
         );
       }
       

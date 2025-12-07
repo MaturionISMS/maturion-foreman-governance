@@ -27,7 +27,7 @@ describe('Regression: LintError', () => {
     
     assert.ok(
       !errorPattern.test(lintLog),
-      `Lint log should not contain LintError: ${context.errorMessage}`
+      `Lint log should not contain LintError: Lint error detected: error: Unexpected token`
     );
   });
 });

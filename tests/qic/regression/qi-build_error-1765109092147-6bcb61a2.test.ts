@@ -1,7 +1,7 @@
 /**
  * Auto-generated regression test
  * Prevents recurrence of: BuildError
- * Original error: Build error detected: TypeError: Cannot read property
+ * Original error: Build error detected: ERROR: Build failed
  * Source: build.log:1
  */
 
@@ -23,11 +23,11 @@ describe('Regression: BuildError', () => {
     const buildLog = fs.readFileSync(buildLogPath, 'utf-8');
     
     // Pattern that should NOT appear in build log
-    const errorPattern = /Build.*error.*detected.*TypeError.*Cannot/i;
+    const errorPattern = /Build.*error.*detected.*ERROR.*Build/i;
     
     assert.ok(
       !errorPattern.test(buildLog),
-      `Build log should not contain BuildError: ${context.errorMessage}`
+      `Build log should not contain BuildError: Build error detected: ERROR: Build failed`
     );
   });
 });

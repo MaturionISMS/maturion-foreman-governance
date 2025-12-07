@@ -27,7 +27,7 @@ describe('Regression: BuildError', () => {
     
     assert.ok(
       !errorPattern.test(buildLog),
-      `Build log should not contain BuildError: ${context.errorMessage}`
+      `Build log should not contain BuildError: Build error detected: TypeError: Cannot read property`
     );
   });
 });
