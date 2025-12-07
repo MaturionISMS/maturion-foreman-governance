@@ -15,7 +15,8 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
   const [activeSection, setActiveSection] = useState('chat');
 
   const menuItems = [
-    { id: 'chat', label: 'Chat', icon: '💬' },
+    { id: 'chat', label: 'Chat', icon: '💬', href: '/foreman' },
+    { id: 'analytics', label: 'Analytics', icon: '🔭', href: '/foreman/analytics' },
     { id: 'history', label: 'Build History', icon: '📜' },
     { id: 'tasks', label: 'Tasks', icon: '✓' },
     { id: 'logs', label: 'Logs', icon: '📋' },
@@ -32,20 +33,43 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
       {/* Navigation Menu */}
       <nav className="flex-1 px-3 py-4">
         <div className="space-y-1">
-          {menuItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => handleClick(item.id)}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                activeSection === item.id
-                  ? 'bg-foremanOffice-primary text-white'
-                  : 'text-gray-400 hover:bg-foremanOffice-panel hover:text-foremanOffice-text'
-              }`}
-            >
-              <span className="text-xl">{item.icon}</span>
-              <span className="font-medium text-sm">{item.label}</span>
-            </button>
-          ))}
+          {menuItems.map((item) => {
+            const content = (
+              <>
+                <span className="text-xl">{item.icon}</span>
+                <span className="font-medium text-sm">{item.label}</span>
+              </>
+            );
+            
+            const className = `w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors ${
+              activeSection === item.id
+                ? 'bg-foremanOffice-primary text-white'
+                : 'text-gray-400 hover:bg-foremanOffice-panel hover:text-foremanOffice-text'
+            }`;
+            
+            if (item.href) {
+              return (
+                <a
+                  key={item.id}
+                  href={item.href}
+                  onClick={() => handleClick(item.id)}
+                  className={className}
+                >
+                  {content}
+                </a>
+              );
+            }
+            
+            return (
+              <button
+                key={item.id}
+                onClick={() => handleClick(item.id)}
+                className={className}
+              >
+                {content}
+              </button>
+            );
+          })}
         </div>
       </nav>
 

@@ -274,8 +274,7 @@ export function detectObsolescenceRetirement(
         explanation: `Entry references obsolete components or features`,
         recommendedAction: 'deprecate',
         metadata: {
-          ageInDays: Math.floor((Date.now() - new Date(entry.metadata.createdAt).getTime()) / (1000 * 60 * 60 * 24)),
-          obsoleteReferences: hasObsoletePattern ? ['pattern-match'] : []
+          ageInDays: Math.floor((Date.now() - new Date(entry.metadata.createdAt).getTime()) / (1000 * 60 * 60 * 24))
         }
       })
     }
@@ -750,7 +749,7 @@ export async function getRetirementStatistics(): Promise<RetirementStatistics> {
   
   retiredEntries.forEach(e => {
     const reason = e.value._retired?.reason as RetirementReason | undefined
-    if (reason) {
+    if (reason && reason in retirementsByReason) {
       retirementsByReason[reason] = (retirementsByReason[reason] || 0) + 1
     }
   })
