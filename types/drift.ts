@@ -130,6 +130,20 @@ export interface GovernanceRule {
 }
 
 /**
+ * Drift Entry - Record of detected drift
+ */
+export interface DriftEntry {
+  id: string
+  type: DriftType
+  severity: DriftSeverity
+  description: string
+  detectedAt: string
+  resolvedAt?: string
+  status: 'open' | 'resolved' | 'acknowledged'
+  affectedEntries: string[]
+}
+
+/**
  * Memory integrity snapshot
  */
 export interface MemoryIntegritySnapshot {

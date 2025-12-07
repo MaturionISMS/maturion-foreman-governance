@@ -87,6 +87,19 @@ export interface RetirementCandidate {
 }
 
 /**
+ * Retirement Decision - Action to take on a candidate
+ */
+export interface RetirementDecision {
+  candidateId: string
+  action: 'retire' | 'archive' | 'deprecate' | 'review' | 'keep'
+  confidence: number // 0-1
+  reason: string
+  lifecycle: MemoryLifecycleState
+  executedAt?: string
+  executedBy?: string
+}
+
+/**
  * Retirement Report
  */
 export interface RetirementReport {
