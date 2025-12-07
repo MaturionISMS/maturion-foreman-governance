@@ -183,6 +183,17 @@ console.log(watchdogResult.uiReviewMessage)
 // Output: "✅ QA is green — UI is now safe to review."
 ```
 
+#### Governance Channel — GSR Enforcement
+
+The Watchdog must enforce the following governance rules:
+
+- **No build passes with failed tests** - Any test failure blocks the entire build
+- **No partial success status is permitted** - 99% passing is the same as 0% passing
+- **No merges allowed if failing tests exist** - PR creation and merging blocked on any failure
+- **All failures must be logged as governance incidents** - Every failure creates a QI Incident in Governance Memory
+
+This ensures tests cannot be ignored or classified as "not part of the PR". All tests are governance tests, and all failures are governance failures.
+
 ### GSR-5: Modify Foreman's Reasoning Stack
 
 **Purpose**: Insert Governance Supremacy into every phase of Foreman's reasoning process.
