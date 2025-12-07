@@ -53,3 +53,7 @@ next-env.d.ts
 # Ignore archived memory entries and governance events from tests
 /memory/archive/
 /memory/governance-events.json
+
+# memory consolidated (auto-generated during builds)
+# Ignore auto-generated consolidated files that change during builds/tests
+/memory/global/consolidated/architecture-principle.json
