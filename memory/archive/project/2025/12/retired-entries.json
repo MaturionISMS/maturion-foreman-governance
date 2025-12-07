@@ -193,5 +193,785 @@
     },
     "archivedAt": "2025-12-06T18:30:58.857Z",
     "archiveVersion": 1
+  },
+  {
+    "originalEntry": {
+      "id": "project_init_foreman_app_sandbox_1733494800000",
+      "scope": "project",
+      "key": "project_initialization",
+      "value": {
+        "type": "project_state_transition",
+        "description": "Initialized Foreman App Sandbox project",
+        "data": {
+          "projectId": "foreman_app_sandbox",
+          "projectName": "Foreman App Sandbox",
+          "repository": "https://github.com/MaturionISMS/maturion-foreman-app.git",
+          "defaultBranch": "main",
+          "phase": "development",
+          "purpose": "Safe sandbox area for pilot builds and testing"
+        }
+      },
+      "metadata": {
+        "createdAt": "2024-12-06T15:00:00.000Z",
+        "updatedAt": "2024-12-06T15:00:00.000Z",
+        "createdBy": "foreman",
+        "version": 1
+      },
+      "tags": [
+        "initialization",
+        "sandbox",
+        "development"
+      ]
+    },
+    "retirementInfo": {
+      "reason": "staleness",
+      "severity": "medium",
+      "lifecycle": "archival",
+      "explanation": "Entry is 365 days old, exceeding 30 day threshold by 335 days",
+      "manualReviewRequired": false
+    },
+    "archivedAt": "2025-12-06T19:10:17.636Z",
+    "archiveVersion": 1
+  },
+  {
+    "originalEntry": {
+      "id": "project_init_foreman_app_sandbox_1733494800000",
+      "scope": "project",
+      "key": "project_initialization",
+      "value": {
+        "type": "project_state_transition",
+        "description": "Initialized Foreman App Sandbox project",
+        "data": {
+          "projectId": "foreman_app_sandbox",
+          "projectName": "Foreman App Sandbox",
+          "repository": "https://github.com/MaturionISMS/maturion-foreman-app.git",
+          "defaultBranch": "main",
+          "phase": "development",
+          "purpose": "Safe sandbox area for pilot builds and testing"
+        }
+      },
+      "metadata": {
+        "createdAt": "2024-12-06T15:00:00.000Z",
+        "updatedAt": "2024-12-06T15:00:00.000Z",
+        "createdBy": "foreman",
+        "version": 1
+      },
+      "tags": [
+        "initialization",
+        "sandbox",
+        "development"
+      ]
+    },
+    "retirementInfo": {
+      "reason": "staleness",
+      "severity": "medium",
+      "lifecycle": "archival",
+      "explanation": "Entry is 365 days old, exceeding 30 day threshold by 335 days",
+      "manualReviewRequired": false
+    },
+    "archivedAt": "2025-12-06T19:10:17.639Z",
+    "archiveVersion": 1
+  },
+  {
+    "originalEntry": {
+      "id": "project_init_foreman_app_sandbox_1733494800000",
+      "scope": "project",
+      "key": "project_initialization",
+      "value": {
+        "type": "project_state_transition",
+        "description": "Initialized Foreman App Sandbox project",
+        "data": {
+          "projectId": "foreman_app_sandbox",
+          "projectName": "Foreman App Sandbox",
+          "repository": "https://github.com/MaturionISMS/maturion-foreman-app.git",
+          "defaultBranch": "main",
+          "phase": "development",
+          "purpose": "Safe sandbox area for pilot builds and testing"
+        }
+      },
+      "metadata": {
+        "createdAt": "2024-12-06T15:00:00.000Z",
+        "updatedAt": "2024-12-06T15:00:00.000Z",
+        "createdBy": "foreman",
+        "version": 1
+      },
+      "tags": [
+        "initialization",
+        "sandbox",
+        "development"
+      ]
+    },
+    "retirementInfo": {
+      "reason": "staleness",
+      "severity": "medium",
+      "lifecycle": "archival",
+      "explanation": "Entry is 365 days old, exceeding 30 day threshold by 335 days",
+      "manualReviewRequired": false
+    },
+    "archivedAt": "2025-12-06T19:10:17.641Z",
+    "archiveVersion": 1
+  },
+  {
+    "originalEntry": {
+      "id": "project_init_foreman_app_sandbox_1733494800000",
+      "scope": "project",
+      "key": "project_initialization",
+      "value": {
+        "type": "project_state_transition",
+        "description": "Initialized Foreman App Sandbox project",
+        "data": {
+          "projectId": "foreman_app_sandbox",
+          "projectName": "Foreman App Sandbox",
+          "repository": "https://github.com/MaturionISMS/maturion-foreman-app.git",
+          "defaultBranch": "main",
+          "phase": "development",
+          "purpose": "Safe sandbox area for pilot builds and testing"
+        }
+      },
+      "metadata": {
+        "createdAt": "2024-12-06T15:00:00.000Z",
+        "updatedAt": "2024-12-06T15:00:00.000Z",
+        "createdBy": "foreman",
+        "version": 1
+      },
+      "tags": [
+        "initialization",
+        "sandbox",
+        "development"
+      ]
+    },
+    "retirementInfo": {
+      "reason": "staleness",
+      "severity": "medium",
+      "lifecycle": "archival",
+      "explanation": "Entry is 365 days old, exceeding 30 day threshold by 335 days",
+      "manualReviewRequired": false
+    },
+    "archivedAt": "2025-12-06T19:10:17.645Z",
+    "archiveVersion": 1
+  },
+  {
+    "originalEntry": {
+      "id": "project_init_foreman_app_sandbox_1733494800000",
+      "scope": "project",
+      "key": "project_initialization",
+      "value": {
+        "type": "project_state_transition",
+        "description": "Initialized Foreman App Sandbox project",
+        "data": {
+          "projectId": "foreman_app_sandbox",
+          "projectName": "Foreman App Sandbox",
+          "repository": "https://github.com/MaturionISMS/maturion-foreman-app.git",
+          "defaultBranch": "main",
+          "phase": "development",
+          "purpose": "Safe sandbox area for pilot builds and testing"
+        }
+      },
+      "metadata": {
+        "createdAt": "2024-12-06T15:00:00.000Z",
+        "updatedAt": "2024-12-06T15:00:00.000Z",
+        "createdBy": "foreman",
+        "version": 1
+      },
+      "tags": [
+        "initialization",
+        "sandbox",
+        "development"
+      ]
+    },
+    "retirementInfo": {
+      "reason": "staleness",
+      "severity": "medium",
+      "lifecycle": "archival",
+      "explanation": "Entry is 365 days old, exceeding 30 day threshold by 335 days",
+      "manualReviewRequired": false
+    },
+    "archivedAt": "2025-12-06T19:10:17.647Z",
+    "archiveVersion": 1
+  },
+  {
+    "originalEntry": {
+      "id": "project_init_foreman_app_sandbox_1733494800000",
+      "scope": "project",
+      "key": "project_initialization",
+      "value": {
+        "type": "project_state_transition",
+        "description": "Initialized Foreman App Sandbox project",
+        "data": {
+          "projectId": "foreman_app_sandbox",
+          "projectName": "Foreman App Sandbox",
+          "repository": "https://github.com/MaturionISMS/maturion-foreman-app.git",
+          "defaultBranch": "main",
+          "phase": "development",
+          "purpose": "Safe sandbox area for pilot builds and testing"
+        }
+      },
+      "metadata": {
+        "createdAt": "2024-12-06T15:00:00.000Z",
+        "updatedAt": "2024-12-06T15:00:00.000Z",
+        "createdBy": "foreman",
+        "version": 1
+      },
+      "tags": [
+        "initialization",
+        "sandbox",
+        "development"
+      ]
+    },
+    "retirementInfo": {
+      "reason": "staleness",
+      "severity": "medium",
+      "lifecycle": "archival",
+      "explanation": "Entry is 365 days old, exceeding 30 day threshold by 335 days",
+      "manualReviewRequired": false
+    },
+    "archivedAt": "2025-12-06T19:10:39.399Z",
+    "archiveVersion": 1
+  },
+  {
+    "originalEntry": {
+      "id": "project_init_foreman_app_sandbox_1733494800000",
+      "scope": "project",
+      "key": "project_initialization",
+      "value": {
+        "type": "project_state_transition",
+        "description": "Initialized Foreman App Sandbox project",
+        "data": {
+          "projectId": "foreman_app_sandbox",
+          "projectName": "Foreman App Sandbox",
+          "repository": "https://github.com/MaturionISMS/maturion-foreman-app.git",
+          "defaultBranch": "main",
+          "phase": "development",
+          "purpose": "Safe sandbox area for pilot builds and testing"
+        }
+      },
+      "metadata": {
+        "createdAt": "2024-12-06T15:00:00.000Z",
+        "updatedAt": "2024-12-06T15:00:00.000Z",
+        "createdBy": "foreman",
+        "version": 1
+      },
+      "tags": [
+        "initialization",
+        "sandbox",
+        "development"
+      ]
+    },
+    "retirementInfo": {
+      "reason": "staleness",
+      "severity": "medium",
+      "lifecycle": "archival",
+      "explanation": "Entry is 365 days old, exceeding 30 day threshold by 335 days",
+      "manualReviewRequired": false
+    },
+    "archivedAt": "2025-12-06T19:10:39.404Z",
+    "archiveVersion": 1
+  },
+  {
+    "originalEntry": {
+      "id": "project_init_foreman_app_sandbox_1733494800000",
+      "scope": "project",
+      "key": "project_initialization",
+      "value": {
+        "type": "project_state_transition",
+        "description": "Initialized Foreman App Sandbox project",
+        "data": {
+          "projectId": "foreman_app_sandbox",
+          "projectName": "Foreman App Sandbox",
+          "repository": "https://github.com/MaturionISMS/maturion-foreman-app.git",
+          "defaultBranch": "main",
+          "phase": "development",
+          "purpose": "Safe sandbox area for pilot builds and testing"
+        }
+      },
+      "metadata": {
+        "createdAt": "2024-12-06T15:00:00.000Z",
+        "updatedAt": "2024-12-06T15:00:00.000Z",
+        "createdBy": "foreman",
+        "version": 1
+      },
+      "tags": [
+        "initialization",
+        "sandbox",
+        "development"
+      ]
+    },
+    "retirementInfo": {
+      "reason": "staleness",
+      "severity": "medium",
+      "lifecycle": "archival",
+      "explanation": "Entry is 365 days old, exceeding 30 day threshold by 335 days",
+      "manualReviewRequired": false
+    },
+    "archivedAt": "2025-12-06T19:10:39.408Z",
+    "archiveVersion": 1
+  },
+  {
+    "originalEntry": {
+      "id": "project_init_foreman_app_sandbox_1733494800000",
+      "scope": "project",
+      "key": "project_initialization",
+      "value": {
+        "type": "project_state_transition",
+        "description": "Initialized Foreman App Sandbox project",
+        "data": {
+          "projectId": "foreman_app_sandbox",
+          "projectName": "Foreman App Sandbox",
+          "repository": "https://github.com/MaturionISMS/maturion-foreman-app.git",
+          "defaultBranch": "main",
+          "phase": "development",
+          "purpose": "Safe sandbox area for pilot builds and testing"
+        }
+      },
+      "metadata": {
+        "createdAt": "2024-12-06T15:00:00.000Z",
+        "updatedAt": "2024-12-06T15:00:00.000Z",
+        "createdBy": "foreman",
+        "version": 1
+      },
+      "tags": [
+        "initialization",
+        "sandbox",
+        "development"
+      ]
+    },
+    "retirementInfo": {
+      "reason": "staleness",
+      "severity": "medium",
+      "lifecycle": "archival",
+      "explanation": "Entry is 365 days old, exceeding 30 day threshold by 335 days",
+      "manualReviewRequired": false
+    },
+    "archivedAt": "2025-12-06T19:10:39.413Z",
+    "archiveVersion": 1
+  },
+  {
+    "originalEntry": {
+      "id": "project_init_foreman_app_sandbox_1733494800000",
+      "scope": "project",
+      "key": "project_initialization",
+      "value": {
+        "type": "project_state_transition",
+        "description": "Initialized Foreman App Sandbox project",
+        "data": {
+          "projectId": "foreman_app_sandbox",
+          "projectName": "Foreman App Sandbox",
+          "repository": "https://github.com/MaturionISMS/maturion-foreman-app.git",
+          "defaultBranch": "main",
+          "phase": "development",
+          "purpose": "Safe sandbox area for pilot builds and testing"
+        }
+      },
+      "metadata": {
+        "createdAt": "2024-12-06T15:00:00.000Z",
+        "updatedAt": "2024-12-06T15:00:00.000Z",
+        "createdBy": "foreman",
+        "version": 1
+      },
+      "tags": [
+        "initialization",
+        "sandbox",
+        "development"
+      ]
+    },
+    "retirementInfo": {
+      "reason": "staleness",
+      "severity": "medium",
+      "lifecycle": "archival",
+      "explanation": "Entry is 365 days old, exceeding 30 day threshold by 335 days",
+      "manualReviewRequired": false
+    },
+    "archivedAt": "2025-12-06T19:10:39.418Z",
+    "archiveVersion": 1
+  },
+  {
+    "originalEntry": {
+      "id": "project_init_foreman_app_sandbox_1733494800000",
+      "scope": "project",
+      "key": "project_initialization",
+      "value": {
+        "type": "project_state_transition",
+        "description": "Initialized Foreman App Sandbox project",
+        "data": {
+          "projectId": "foreman_app_sandbox",
+          "projectName": "Foreman App Sandbox",
+          "repository": "https://github.com/MaturionISMS/maturion-foreman-app.git",
+          "defaultBranch": "main",
+          "phase": "development",
+          "purpose": "Safe sandbox area for pilot builds and testing"
+        }
+      },
+      "metadata": {
+        "createdAt": "2024-12-06T15:00:00.000Z",
+        "updatedAt": "2024-12-06T15:00:00.000Z",
+        "createdBy": "foreman",
+        "version": 1
+      },
+      "tags": [
+        "initialization",
+        "sandbox",
+        "development"
+      ]
+    },
+    "retirementInfo": {
+      "reason": "staleness",
+      "severity": "medium",
+      "lifecycle": "archival",
+      "explanation": "Entry is 365 days old, exceeding 30 day threshold by 335 days",
+      "manualReviewRequired": false
+    },
+    "archivedAt": "2025-12-06T19:14:53.363Z",
+    "archiveVersion": 1
+  },
+  {
+    "originalEntry": {
+      "id": "project_init_foreman_app_sandbox_1733494800000",
+      "scope": "project",
+      "key": "project_initialization",
+      "value": {
+        "type": "project_state_transition",
+        "description": "Initialized Foreman App Sandbox project",
+        "data": {
+          "projectId": "foreman_app_sandbox",
+          "projectName": "Foreman App Sandbox",
+          "repository": "https://github.com/MaturionISMS/maturion-foreman-app.git",
+          "defaultBranch": "main",
+          "phase": "development",
+          "purpose": "Safe sandbox area for pilot builds and testing"
+        }
+      },
+      "metadata": {
+        "createdAt": "2024-12-06T15:00:00.000Z",
+        "updatedAt": "2024-12-06T15:00:00.000Z",
+        "createdBy": "foreman",
+        "version": 1
+      },
+      "tags": [
+        "initialization",
+        "sandbox",
+        "development"
+      ]
+    },
+    "retirementInfo": {
+      "reason": "staleness",
+      "severity": "medium",
+      "lifecycle": "archival",
+      "explanation": "Entry is 365 days old, exceeding 30 day threshold by 335 days",
+      "manualReviewRequired": false
+    },
+    "archivedAt": "2025-12-06T19:14:53.368Z",
+    "archiveVersion": 1
+  },
+  {
+    "originalEntry": {
+      "id": "project_init_foreman_app_sandbox_1733494800000",
+      "scope": "project",
+      "key": "project_initialization",
+      "value": {
+        "type": "project_state_transition",
+        "description": "Initialized Foreman App Sandbox project",
+        "data": {
+          "projectId": "foreman_app_sandbox",
+          "projectName": "Foreman App Sandbox",
+          "repository": "https://github.com/MaturionISMS/maturion-foreman-app.git",
+          "defaultBranch": "main",
+          "phase": "development",
+          "purpose": "Safe sandbox area for pilot builds and testing"
+        }
+      },
+      "metadata": {
+        "createdAt": "2024-12-06T15:00:00.000Z",
+        "updatedAt": "2024-12-06T15:00:00.000Z",
+        "createdBy": "foreman",
+        "version": 1
+      },
+      "tags": [
+        "initialization",
+        "sandbox",
+        "development"
+      ]
+    },
+    "retirementInfo": {
+      "reason": "staleness",
+      "severity": "medium",
+      "lifecycle": "archival",
+      "explanation": "Entry is 365 days old, exceeding 30 day threshold by 335 days",
+      "manualReviewRequired": false
+    },
+    "archivedAt": "2025-12-06T19:14:53.371Z",
+    "archiveVersion": 1
+  },
+  {
+    "originalEntry": {
+      "id": "project_init_foreman_app_sandbox_1733494800000",
+      "scope": "project",
+      "key": "project_initialization",
+      "value": {
+        "type": "project_state_transition",
+        "description": "Initialized Foreman App Sandbox project",
+        "data": {
+          "projectId": "foreman_app_sandbox",
+          "projectName": "Foreman App Sandbox",
+          "repository": "https://github.com/MaturionISMS/maturion-foreman-app.git",
+          "defaultBranch": "main",
+          "phase": "development",
+          "purpose": "Safe sandbox area for pilot builds and testing"
+        }
+      },
+      "metadata": {
+        "createdAt": "2024-12-06T15:00:00.000Z",
+        "updatedAt": "2024-12-06T15:00:00.000Z",
+        "createdBy": "foreman",
+        "version": 1
+      },
+      "tags": [
+        "initialization",
+        "sandbox",
+        "development"
+      ]
+    },
+    "retirementInfo": {
+      "reason": "staleness",
+      "severity": "medium",
+      "lifecycle": "archival",
+      "explanation": "Entry is 365 days old, exceeding 30 day threshold by 335 days",
+      "manualReviewRequired": false
+    },
+    "archivedAt": "2025-12-06T19:14:53.376Z",
+    "archiveVersion": 1
+  },
+  {
+    "originalEntry": {
+      "id": "project_init_foreman_app_sandbox_1733494800000",
+      "scope": "project",
+      "key": "project_initialization",
+      "value": {
+        "type": "project_state_transition",
+        "description": "Initialized Foreman App Sandbox project",
+        "data": {
+          "projectId": "foreman_app_sandbox",
+          "projectName": "Foreman App Sandbox",
+          "repository": "https://github.com/MaturionISMS/maturion-foreman-app.git",
+          "defaultBranch": "main",
+          "phase": "development",
+          "purpose": "Safe sandbox area for pilot builds and testing"
+        }
+      },
+      "metadata": {
+        "createdAt": "2024-12-06T15:00:00.000Z",
+        "updatedAt": "2024-12-06T15:00:00.000Z",
+        "createdBy": "foreman",
+        "version": 1
+      },
+      "tags": [
+        "initialization",
+        "sandbox",
+        "development"
+      ]
+    },
+    "retirementInfo": {
+      "reason": "staleness",
+      "severity": "medium",
+      "lifecycle": "archival",
+      "explanation": "Entry is 365 days old, exceeding 30 day threshold by 335 days",
+      "manualReviewRequired": false
+    },
+    "archivedAt": "2025-12-06T19:14:53.379Z",
+    "archiveVersion": 1
+  },
+  {
+    "originalEntry": {
+      "id": "project_init_foreman_app_sandbox_1733494800000",
+      "scope": "project",
+      "key": "project_initialization",
+      "value": {
+        "type": "project_state_transition",
+        "description": "Initialized Foreman App Sandbox project",
+        "data": {
+          "projectId": "foreman_app_sandbox",
+          "projectName": "Foreman App Sandbox",
+          "repository": "https://github.com/MaturionISMS/maturion-foreman-app.git",
+          "defaultBranch": "main",
+          "phase": "development",
+          "purpose": "Safe sandbox area for pilot builds and testing"
+        }
+      },
+      "metadata": {
+        "createdAt": "2024-12-06T15:00:00.000Z",
+        "updatedAt": "2024-12-06T15:00:00.000Z",
+        "createdBy": "foreman",
+        "version": 1
+      },
+      "tags": [
+        "initialization",
+        "sandbox",
+        "development"
+      ]
+    },
+    "retirementInfo": {
+      "reason": "staleness",
+      "severity": "medium",
+      "lifecycle": "archival",
+      "explanation": "Entry is 365 days old, exceeding 30 day threshold by 335 days",
+      "manualReviewRequired": false
+    },
+    "archivedAt": "2025-12-06T19:22:06.701Z",
+    "archiveVersion": 1
+  },
+  {
+    "originalEntry": {
+      "id": "project_init_foreman_app_sandbox_1733494800000",
+      "scope": "project",
+      "key": "project_initialization",
+      "value": {
+        "type": "project_state_transition",
+        "description": "Initialized Foreman App Sandbox project",
+        "data": {
+          "projectId": "foreman_app_sandbox",
+          "projectName": "Foreman App Sandbox",
+          "repository": "https://github.com/MaturionISMS/maturion-foreman-app.git",
+          "defaultBranch": "main",
+          "phase": "development",
+          "purpose": "Safe sandbox area for pilot builds and testing"
+        }
+      },
+      "metadata": {
+        "createdAt": "2024-12-06T15:00:00.000Z",
+        "updatedAt": "2024-12-06T15:00:00.000Z",
+        "createdBy": "foreman",
+        "version": 1
+      },
+      "tags": [
+        "initialization",
+        "sandbox",
+        "development"
+      ]
+    },
+    "retirementInfo": {
+      "reason": "staleness",
+      "severity": "medium",
+      "lifecycle": "archival",
+      "explanation": "Entry is 365 days old, exceeding 30 day threshold by 335 days",
+      "manualReviewRequired": false
+    },
+    "archivedAt": "2025-12-06T19:22:06.707Z",
+    "archiveVersion": 1
+  },
+  {
+    "originalEntry": {
+      "id": "project_init_foreman_app_sandbox_1733494800000",
+      "scope": "project",
+      "key": "project_initialization",
+      "value": {
+        "type": "project_state_transition",
+        "description": "Initialized Foreman App Sandbox project",
+        "data": {
+          "projectId": "foreman_app_sandbox",
+          "projectName": "Foreman App Sandbox",
+          "repository": "https://github.com/MaturionISMS/maturion-foreman-app.git",
+          "defaultBranch": "main",
+          "phase": "development",
+          "purpose": "Safe sandbox area for pilot builds and testing"
+        }
+      },
+      "metadata": {
+        "createdAt": "2024-12-06T15:00:00.000Z",
+        "updatedAt": "2024-12-06T15:00:00.000Z",
+        "createdBy": "foreman",
+        "version": 1
+      },
+      "tags": [
+        "initialization",
+        "sandbox",
+        "development"
+      ]
+    },
+    "retirementInfo": {
+      "reason": "staleness",
+      "severity": "medium",
+      "lifecycle": "archival",
+      "explanation": "Entry is 365 days old, exceeding 30 day threshold by 335 days",
+      "manualReviewRequired": false
+    },
+    "archivedAt": "2025-12-06T19:22:06.711Z",
+    "archiveVersion": 1
+  },
+  {
+    "originalEntry": {
+      "id": "project_init_foreman_app_sandbox_1733494800000",
+      "scope": "project",
+      "key": "project_initialization",
+      "value": {
+        "type": "project_state_transition",
+        "description": "Initialized Foreman App Sandbox project",
+        "data": {
+          "projectId": "foreman_app_sandbox",
+          "projectName": "Foreman App Sandbox",
+          "repository": "https://github.com/MaturionISMS/maturion-foreman-app.git",
+          "defaultBranch": "main",
+          "phase": "development",
+          "purpose": "Safe sandbox area for pilot builds and testing"
+        }
+      },
+      "metadata": {
+        "createdAt": "2024-12-06T15:00:00.000Z",
+        "updatedAt": "2024-12-06T15:00:00.000Z",
+        "createdBy": "foreman",
+        "version": 1
+      },
+      "tags": [
+        "initialization",
+        "sandbox",
+        "development"
+      ]
+    },
+    "retirementInfo": {
+      "reason": "staleness",
+      "severity": "medium",
+      "lifecycle": "archival",
+      "explanation": "Entry is 365 days old, exceeding 30 day threshold by 335 days",
+      "manualReviewRequired": false
+    },
+    "archivedAt": "2025-12-06T19:22:06.717Z",
+    "archiveVersion": 1
+  },
+  {
+    "originalEntry": {
+      "id": "project_init_foreman_app_sandbox_1733494800000",
+      "scope": "project",
+      "key": "project_initialization",
+      "value": {
+        "type": "project_state_transition",
+        "description": "Initialized Foreman App Sandbox project",
+        "data": {
+          "projectId": "foreman_app_sandbox",
+          "projectName": "Foreman App Sandbox",
+          "repository": "https://github.com/MaturionISMS/maturion-foreman-app.git",
+          "defaultBranch": "main",
+          "phase": "development",
+          "purpose": "Safe sandbox area for pilot builds and testing"
+        }
+      },
+      "metadata": {
+        "createdAt": "2024-12-06T15:00:00.000Z",
+        "updatedAt": "2024-12-06T15:00:00.000Z",
+        "createdBy": "foreman",
+        "version": 1
+      },
+      "tags": [
+        "initialization",
+        "sandbox",
+        "development"
+      ]
+    },
+    "retirementInfo": {
+      "reason": "staleness",
+      "severity": "medium",
+      "lifecycle": "archival",
+      "explanation": "Entry is 365 days old, exceeding 30 day threshold by 335 days",
+      "manualReviewRequired": false
+    },
+    "archivedAt": "2025-12-06T19:22:06.722Z",
+    "archiveVersion": 1
   }
 ]
