@@ -35,6 +35,7 @@ export type BuildSequenceStatus =
   | 'executing_tasks'
   | 'running_qa'
   | 'assembling_pr'
+  | 'blocked'  // GSR: Added for when governance rules block build
   | 'completed'
   | 'failed'
 

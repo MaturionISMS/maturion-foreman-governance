@@ -1,11 +1,16 @@
 /**
  * Foreman → Builder Dispatch Logic
  * Handles routing of tasks to appropriate builders with governance enforcement
+ * 
+ * GSR Integration:
+ * - Validates governance rules before builder assignment
+ * - Enforces QA gates during task execution
  */
 
 import { BuilderType, BuilderRequest, BuilderTask, BuilderTaskStatus, QAResult } from '@/types/builder'
 import { getBuilderCapability, isTaskTypeSupported } from '@/lib/builder/capabilities'
 import { compileBuilderMemoryContext } from '@/lib/builder/memory-injector'
+import { validateGovernanceAtPhase } from './governance/gsr-enforcement'
 
 /**
  * In-memory task store (in production, this would be a database)
@@ -127,6 +132,17 @@ export async function dispatchBuilderTask(
   request: BuilderRequest
 ): Promise<BuilderTask> {
   console.log(`[Dispatch] Dispatching task to ${builder} builder`)
+  
+  // GSR-5: Governance check at builder assignment phase
+  console.log('[Dispatch] GSR-5: Validating governance at builder assignment...')
+  const builderGovernanceCheck = validateGovernanceAtPhase('builder_assignment', {
+    userRequest: request.taskDescription
+  })
+  
+  if (!builderGovernanceCheck.allowed) {
+    console.error('[Dispatch] Governance violation at builder assignment:', builderGovernanceCheck.reason)
+    throw new Error(`Governance override: ${builderGovernanceCheck.reason}`)
+  }
   
   // Validate organisation ID is present
   if (!request.organisationId) {

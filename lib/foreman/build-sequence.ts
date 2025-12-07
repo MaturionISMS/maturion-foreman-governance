@@ -16,6 +16,12 @@ import {
   AIGeneratedTaskRequest
 } from '@/types/build-sequence'
 import { recordWaveCompletion, recordArchitectureDecision, recordQAFailure } from './memory'
+import { 
+  validateBuildCompletion, 
+  enforceWatchdogQA, 
+  generateGSRReport,
+  validateGovernanceAtPhase
+} from './governance/gsr-enforcement'
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || 'placeholder',
@@ -372,6 +378,69 @@ export async function runBuildSequence(
       sequenceStore.set(sequence.id, sequence)
       
       sequence.qaResults = await runQACycle(config.organisationId, sequence.tasks)
+    }
+    
+    // GSR-4: Watchdog QA Enforcement
+    // This is the critical gate that prevents build handover with ANY failures
+    console.log('[BuildSequence] Enforcing Watchdog QA (GSR-4)...')
+    const watchdogResult = enforceWatchdogQA(sequence.qaResults)
+    
+    if (!watchdogResult.allowed) {
+      // QA failures detected - BLOCK build completion
+      sequence.status = 'blocked'
+      sequence.error = watchdogResult.reason
+      sequence.updatedAt = new Date()
+      sequenceStore.set(sequence.id, sequence)
+      
+      console.error('[BuildSequence] Build BLOCKED by Watchdog QA:', watchdogResult.reason)
+      console.error('[BuildSequence] GSR Report:')
+      const gsrReport = generateGSRReport(sequence.qaResults, sequence)
+      console.error(gsrReport)
+      
+      throw new Error(`Build blocked by Governance Supremacy Rule: ${watchdogResult.reason}`)
+    }
+    
+    // GSR-2: Build Completion Rule Validation
+    console.log('[BuildSequence] Validating Build Completion Rule (GSR-2)...')
+    const completionValidation = validateBuildCompletion(sequence, sequence.qaResults)
+    
+    if (!completionValidation.passed) {
+      // Build completion requirements not met - BLOCK
+      sequence.status = 'blocked'
+      sequence.error = completionValidation.reason
+      sequence.updatedAt = new Date()
+      sequenceStore.set(sequence.id, sequence)
+      
+      console.error('[BuildSequence] Build BLOCKED by Completion Rule:', completionValidation.reason)
+      console.error('[BuildSequence] Blocking Issues:', completionValidation.blockingIssues.length)
+      console.error('[BuildSequence] Governance Violations:', completionValidation.governanceViolations.length)
+      
+      throw new Error(`Build blocked by Build Completion Rule: ${completionValidation.reason}`)
+    }
+    
+    // GSR-5: Governance check at build completion phase
+    console.log('[BuildSequence] Validating governance at build completion phase (GSR-5)...')
+    const governanceCheck = validateGovernanceAtPhase('build_completion', {
+      qaResults: sequence.qaResults,
+      buildSequence: sequence
+    })
+    
+    if (!governanceCheck.allowed) {
+      sequence.status = 'blocked'
+      sequence.error = governanceCheck.reason
+      sequence.updatedAt = new Date()
+      sequenceStore.set(sequence.id, sequence)
+      
+      console.error('[BuildSequence] Build BLOCKED by Governance:', governanceCheck.reason)
+      throw new Error(`Build blocked by Governance: ${governanceCheck.reason}`)
+    }
+    
+    // All governance checks passed - build can proceed
+    console.log('[BuildSequence] ✅ All GSR checks passed. Build approved.')
+    
+    // GSR-6: UI Review Ready Message
+    if (watchdogResult.uiReviewMessage) {
+      console.log(`[BuildSequence] ${watchdogResult.uiReviewMessage}`)
     }
     
     // Step 6: PR Assembly (handled separately)
