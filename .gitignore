@@ -48,6 +48,7 @@ next-env.d.ts
 # This allows the memory system to work locally while keeping the repo clean
 /memory/**/*.json
 !/memory/projects/foreman_app_sandbox.json
+!/memory/schemas/*.json
 
 # memory consolidated data (auto-generated)
 # Ignore consolidated memory patterns and architecture principles

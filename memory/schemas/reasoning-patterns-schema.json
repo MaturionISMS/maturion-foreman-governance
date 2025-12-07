@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Reasoning Pattern",
+  "description": "Schema for learned decision-making patterns",
+  "type": "object",
+  "required": ["id", "name", "description", "context", "approach", "examples", "tags"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the pattern"
+    },
+    "name": {
+      "type": "string",
+      "description": "Name of the reasoning pattern"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of what this pattern does"
+    },
+    "context": {
+      "type": "string",
+      "description": "When to apply this pattern"
+    },
+    "approach": {
+      "type": "string",
+      "description": "How to apply this pattern"
+    },
+    "examples": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Examples of this pattern in use"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tags for categorizing the pattern"
+    },
+    "successRate": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Success rate of this pattern (0-1)"
+    },
+    "usageCount": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of times this pattern has been used"
+    },
+    "performanceScore": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Performance score for pattern evolution (0-1)"
+    },
+    "lastEvolved": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this pattern was last evolved (ISO 8601)"
+    }
+  }
+}

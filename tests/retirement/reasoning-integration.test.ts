@@ -41,7 +41,7 @@ describe('Reasoning Integration with Retirement', () => {
           )
         }
       }
-    } catch (error) {
+    } catch (error: unknown) {
       // If memory loading fails due to missing files, that's acceptable for this test
       if (error instanceof Error && !error.message.includes('ENOENT') && !error.message.includes('no such file')) {
         throw error
@@ -67,7 +67,7 @@ describe('Reasoning Integration with Retirement', () => {
       // This is tested by checking if the snapshot includes knowledge blocks
       assert.ok(snapshot.meta, 'Snapshot should have metadata')
       assert.ok(snapshot.meta.loadedAt, 'Should have load timestamp')
-    } catch (error) {
+    } catch (error: unknown) {
       // If memory loading fails due to missing files, that's acceptable for this test
       if (error instanceof Error && !error.message.includes('ENOENT') && !error.message.includes('no such file')) {
         throw error
@@ -96,7 +96,7 @@ describe('Reasoning Integration with Retirement', () => {
       assert.ok(Array.isArray(snapshot.issues), 'Should have issues array')
       assert.ok(Array.isArray(snapshot.architectureLessons), 'Should have lessons array')
       assert.ok(Array.isArray(snapshot.reasoningPatterns), 'Should have patterns array')
-    } catch (error) {
+    } catch (error: unknown) {
       // If memory loading fails due to missing files, that's acceptable for this test
       if (error instanceof Error && !error.message.includes('ENOENT') && !error.message.includes('no such file')) {
         throw error

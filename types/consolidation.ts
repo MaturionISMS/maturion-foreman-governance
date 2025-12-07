@@ -86,6 +86,29 @@ export interface DuplicateCollapseResult {
 }
 
 /**
+ * Consolidation Candidate - Entry eligible for consolidation
+ */
+export interface ConsolidationCandidate {
+  entries: MemoryEntry[]
+  pattern: string
+  category: KnowledgeCategory
+  confidence: number // 0-1
+  significance: number // 0-100
+  recommendedAction: 'consolidate' | 'archive' | 'keep'
+}
+
+/**
+ * Consolidation Decision - Action to take on candidates
+ */
+export interface ConsolidationDecision {
+  candidateId: string
+  action: 'consolidate' | 'archive' | 'keep' | 'review'
+  knowledgeBlockId?: string
+  confidence: number // 0-1
+  executedAt?: string
+}
+
+/**
  * Consolidation run result
  */
 export interface ConsolidationResult {
