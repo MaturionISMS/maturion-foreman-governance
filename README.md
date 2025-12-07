@@ -2,6 +2,21 @@
 
 The Maturion Foreman App is a Next.js application that serves as the runtime orchestration engine for the Foreman system. It receives GitHub webhooks, orchestrates builder agents, applies governance rules, and executes build waves.
 
+## Governance Supremacy Rule (GSR)
+
+The Foreman system enforces the **Governance Supremacy Rule (GSR)** to ensure builds are never handed over or accepted unless **100% of QA passes**. This means:
+
+- ✅ **Zero-Tolerance QA**: 301/303 passing = BLOCKED (no partial passes)
+- ✅ **Absolute Requirement**: No exceptions for pre-existing, unrelated, minor, historical, or out-of-scope failures
+- ✅ **Governance Override**: User requests cannot bypass governance rules
+- ✅ **Automatic Classification**: Failures are categorized with resolution steps
+- ✅ **Watchdog Blocking**: Prevents build handover and PR merging when QA fails
+- ✅ **UI Review Gating**: "UI is now safe to review" only shown when 100% QA passes
+
+**Documentation**: See [`foreman/governance/governance-supremacy-rule.md`](foreman/governance/governance-supremacy-rule.md) for complete specification.
+
+**Philosophy**: QA must be absolute, not contextual. Pre-existing, unrelated, minor, historical, and out-of-scope failures still block builds. 99.9% pass rate = total failure.
+
 ## Overview
 
 The Foreman App is designed to:
