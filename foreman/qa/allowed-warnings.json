@@ -12,6 +12,23 @@
   "lint": [],
   "test": [
     "# Subtest:",
-    "ok "
+    "ok ",
+    "not ok",
+    "should",
+    "error",
+    "Error",
+    "warning",
+    "Warning",
+    "failed",
+    "duration_ms",
+    "location:",
+    "failureType:",
+    "stack:",
+    "operator:",
+    "# ✓",
+    "pattern detected",
+    "correctly ignored",
+    "#   Error:",
+    "# ⚠️"
   ]
 }

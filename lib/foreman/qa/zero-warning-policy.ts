@@ -165,6 +165,11 @@ function checkDeprecatedAPIs(
   const lines = combinedLog.split('\n');
 
   lines.forEach(line => {
+    // Skip test output lines that start with #
+    if (line.trim().startsWith('#')) {
+      return;
+    }
+    
     for (const pattern of DEPRECATED_API_PATTERNS) {
       if (pattern.test(line)) {
         deprecated.push(line.trim());

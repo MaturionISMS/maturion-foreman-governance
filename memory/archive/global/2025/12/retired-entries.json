@@ -859,5 +859,251 @@
     },
     "archivedAt": "2025-12-07T13:42:20.428Z",
     "archiveVersion": 1
+  },
+  {
+    "originalEntry": {
+      "id": "entry_1",
+      "scope": "global",
+      "key": "test_entry",
+      "value": {
+        "description": "Test entry"
+      },
+      "metadata": {
+        "createdAt": "2025-12-07T13:51:34.564Z",
+        "updatedAt": "2025-12-07T13:51:34.564Z",
+        "createdBy": "test",
+        "version": 1
+      },
+      "tags": [
+        "test"
+      ]
+    },
+    "retirementInfo": {
+      "reason": "staleness",
+      "severity": "low",
+      "lifecycle": "archival",
+      "explanation": "Test retirement",
+      "manualReviewRequired": false
+    },
+    "archivedAt": "2025-12-07T13:51:34.565Z",
+    "archiveVersion": 1
+  },
+  {
+    "originalEntry": {
+      "id": "entry_with_metadata",
+      "scope": "global",
+      "key": "metadata_test",
+      "value": {
+        "description": "Entry with metadata",
+        "data": {
+          "important": "information",
+          "nested": {
+            "value": "preserved"
+          }
+        }
+      },
+      "metadata": {
+        "createdAt": "2024-01-01T00:00:00Z",
+        "updatedAt": "2024-06-01T00:00:00Z",
+        "createdBy": "original-creator",
+        "version": 5
+      },
+      "tags": [
+        "important",
+        "metadata",
+        "test"
+      ]
+    },
+    "retirementInfo": {
+      "reason": "staleness",
+      "severity": "low",
+      "lifecycle": "archival",
+      "explanation": "Test",
+      "manualReviewRequired": false
+    },
+    "archivedAt": "2025-12-07T13:51:34.570Z",
+    "archiveVersion": 1
+  },
+  {
+    "originalEntry": {
+      "id": "versioned_entry",
+      "scope": "global",
+      "key": "version_test",
+      "value": {
+        "description": "Versioned entry"
+      },
+      "metadata": {
+        "createdAt": "2025-12-07T13:51:34.572Z",
+        "updatedAt": "2025-12-07T13:51:34.572Z",
+        "createdBy": "test",
+        "version": 3
+      },
+      "tags": [
+        "version"
+      ]
+    },
+    "retirementInfo": {
+      "reason": "staleness",
+      "severity": "low",
+      "lifecycle": "archival",
+      "explanation": "Test",
+      "manualReviewRequired": false
+    },
+    "archivedAt": "2025-12-07T13:51:34.572Z",
+    "archiveVersion": 1
+  },
+  {
+    "originalEntry": {
+      "id": "recoverable_entry",
+      "scope": "global",
+      "key": "recovery_test",
+      "value": {
+        "description": "Entry to be recovered",
+        "data": {
+          "critical": "data"
+        }
+      },
+      "metadata": {
+        "createdAt": "2025-12-07T13:51:34.575Z",
+        "updatedAt": "2025-12-07T13:51:34.575Z",
+        "createdBy": "test",
+        "version": 1
+      },
+      "tags": [
+        "recoverable"
+      ]
+    },
+    "retirementInfo": {
+      "reason": "staleness",
+      "severity": "low",
+      "lifecycle": "archival",
+      "explanation": "Test recovery",
+      "manualReviewRequired": false
+    },
+    "archivedAt": "2025-12-07T13:51:34.575Z",
+    "archiveVersion": 1
+  },
+  {
+    "originalEntry": {
+      "id": "entry_1",
+      "scope": "global",
+      "key": "test_entry",
+      "value": {
+        "description": "Test entry"
+      },
+      "metadata": {
+        "createdAt": "2025-12-07T13:54:19.850Z",
+        "updatedAt": "2025-12-07T13:54:19.850Z",
+        "createdBy": "test",
+        "version": 1
+      },
+      "tags": [
+        "test"
+      ]
+    },
+    "retirementInfo": {
+      "reason": "staleness",
+      "severity": "low",
+      "lifecycle": "archival",
+      "explanation": "Test retirement",
+      "manualReviewRequired": false
+    },
+    "archivedAt": "2025-12-07T13:54:19.852Z",
+    "archiveVersion": 1
+  },
+  {
+    "originalEntry": {
+      "id": "entry_with_metadata",
+      "scope": "global",
+      "key": "metadata_test",
+      "value": {
+        "description": "Entry with metadata",
+        "data": {
+          "important": "information",
+          "nested": {
+            "value": "preserved"
+          }
+        }
+      },
+      "metadata": {
+        "createdAt": "2024-01-01T00:00:00Z",
+        "updatedAt": "2024-06-01T00:00:00Z",
+        "createdBy": "original-creator",
+        "version": 5
+      },
+      "tags": [
+        "important",
+        "metadata",
+        "test"
+      ]
+    },
+    "retirementInfo": {
+      "reason": "staleness",
+      "severity": "low",
+      "lifecycle": "archival",
+      "explanation": "Test",
+      "manualReviewRequired": false
+    },
+    "archivedAt": "2025-12-07T13:54:19.857Z",
+    "archiveVersion": 1
+  },
+  {
+    "originalEntry": {
+      "id": "versioned_entry",
+      "scope": "global",
+      "key": "version_test",
+      "value": {
+        "description": "Versioned entry"
+      },
+      "metadata": {
+        "createdAt": "2025-12-07T13:54:19.859Z",
+        "updatedAt": "2025-12-07T13:54:19.859Z",
+        "createdBy": "test",
+        "version": 3
+      },
+      "tags": [
+        "version"
+      ]
+    },
+    "retirementInfo": {
+      "reason": "staleness",
+      "severity": "low",
+      "lifecycle": "archival",
+      "explanation": "Test",
+      "manualReviewRequired": false
+    },
+    "archivedAt": "2025-12-07T13:54:19.859Z",
+    "archiveVersion": 1
+  },
+  {
+    "originalEntry": {
+      "id": "recoverable_entry",
+      "scope": "global",
+      "key": "recovery_test",
+      "value": {
+        "description": "Entry to be recovered",
+        "data": {
+          "critical": "data"
+        }
+      },
+      "metadata": {
+        "createdAt": "2025-12-07T13:54:19.862Z",
+        "updatedAt": "2025-12-07T13:54:19.862Z",
+        "createdBy": "test",
+        "version": 1
+      },
+      "tags": [
+        "recoverable"
+      ]
+    },
+    "retirementInfo": {
+      "reason": "staleness",
+      "severity": "low",
+      "lifecycle": "archival",
+      "explanation": "Test recovery",
+      "manualReviewRequired": false
+    },
+    "archivedAt": "2025-12-07T13:54:19.862Z",
+    "archiveVersion": 1
   }
 ]
