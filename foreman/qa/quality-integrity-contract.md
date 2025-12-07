@@ -44,8 +44,8 @@ QIC establishes:
 ```typescript
 // QA Builder must parse build logs for error patterns
 const BUILD_ERROR_PATTERNS = [
-  /ERR[^a-z]/i,           // ERR (not part of another word)
-  /ERROR/i,                // ERROR
+  /\bERR\b/i,              // ERR as a complete word (not part of another word)
+  /\bERROR\b/i,            // ERROR as a complete word
   /TypeError/,             // TypeError
   /ReferenceError/,        // ReferenceError
   /Failed to compile/i,    // Failed to compile

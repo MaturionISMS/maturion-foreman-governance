@@ -19,8 +19,8 @@ export const QIC_VERSION = '1.0.0'
  * Build error patterns that must be detected per QIC-1
  */
 export const BUILD_ERROR_PATTERNS = [
-  /ERR[^a-z]/i,           // ERR (not part of another word)
-  /ERROR/i,                // ERROR
+  /\bERR\b/i,              // ERR as a complete word (not part of another word)
+  /\bERROR\b/i,            // ERROR as a complete word
   /TypeError/,             // TypeError
   /ReferenceError/,        // ReferenceError
   /Failed to compile/i,    // Failed to compile

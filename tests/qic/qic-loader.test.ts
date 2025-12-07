@@ -137,11 +137,20 @@ describe('Build Log Parsing (QIC-1)', () => {
     const logOutput = 'Building project...\nDetecting ERRORHANDLER module\nBuild successful'
     const result = parseBuildLogs(logOutput)
     
-    // Note: Current implementation will match this. If we want to avoid matching ERROR
-    // as part of ERRORHANDLER, we would need to update the regex pattern
-    // For now, documenting that ERROR will match even in compound words
+    // With word boundary patterns, ERRORHANDLER should NOT match ERROR
+    assert.strictEqual(result.status, 'passed', 'Status should be passed when ERROR is part of another word')
     
-    console.log('✓ Build log parsing tested for word boundaries')
+    console.log('✓ ERROR as part of ERRORHANDLER correctly ignored')
+  })
+
+  test('should not detect ERR as part of ERRATIC', () => {
+    const logOutput = 'Building project...\nERRATIC behavior detected in logs\nBuild successful'
+    const result = parseBuildLogs(logOutput)
+    
+    // With word boundary patterns, ERRATIC should NOT match ERR
+    assert.strictEqual(result.status, 'passed', 'Status should be passed when ERR is part of another word')
+    
+    console.log('✓ ERR as part of ERRATIC correctly ignored')
   })
 
   test('should have all required error patterns', () => {
