@@ -37,6 +37,8 @@ export async function detectRepositoryDrift(
     console.warn(`No local path configured for repository: ${repositoryId}`);
     return {
       hasDrift: false,
+      divergedFiles: [],
+      conflictResolutionRequired: false,
       safeToMerge: true,
     };
   }
@@ -66,6 +68,7 @@ export async function detectRepositoryDrift(
     console.error(`Drift detection failed for ${repositoryId}:`, error);
     return {
       hasDrift: true,
+      divergedFiles: [],
       conflictResolutionRequired: true,
       safeToMerge: false,
     };
