@@ -120,12 +120,14 @@ describe('End-to-End Build Flow', () => {
 
   test('should reference memory in builder reasoning', async () => {
     // Create QA failure memory
-    await recordQAFailure({
-      description: 'Missing error handling in API calls',
-      resolution: 'Added try-catch blocks',
-      timestamp: new Date().toISOString(),
-      createdBy: 'test'
-    })
+    await recordQAFailure(
+      'Missing error handling in API calls',
+      {
+        resolution: 'Added try-catch blocks',
+        timestamp: new Date().toISOString(),
+        createdBy: 'test'
+      }
+    )
 
     const request: BuilderRequest = {
       module: 'api-client',
@@ -194,7 +196,7 @@ describe('End-to-End Build Flow', () => {
 
     // Memory references should be tracked
     assert.ok(
-      task.memoryContext?.memoryReferences.length > 0,
+      task.memoryContext?.memoryReferences && task.memoryContext.memoryReferences.length > 0,
       'Should track memory references'
     )
 

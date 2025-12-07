@@ -85,9 +85,9 @@ async function validateEngineLoad(
     const modulePath = `@/${enginePath.replace('.ts', '')}`;
     
     // Dynamic import - this will throw if the module has syntax/compilation errors
-    let module: any;
+    let loadedModule: any;
     try {
-      module = await import(modulePath);
+      loadedModule = await import(modulePath);
       result.loaded = true;
       result.loadTime = Date.now() - startTime;
     } catch (importError) {
@@ -99,7 +99,7 @@ async function validateEngineLoad(
     // Check that required exports exist
     const missingExports: string[] = [];
     for (const exportName of requiredExports) {
-      if (!(exportName in module)) {
+      if (!(exportName in loadedModule)) {
         missingExports.push(exportName);
       }
     }
@@ -114,9 +114,9 @@ async function validateEngineLoad(
 
     // Basic runtime self-test - check that exports are functions
     for (const exportName of requiredExports) {
-      if (module[exportName] && typeof module[exportName] !== 'function') {
+      if (loadedModule[exportName] && typeof loadedModule[exportName] !== 'function') {
         result.warnings.push(
-          `Export '${exportName}' is not a function (type: ${typeof module[exportName]})`
+          `Export '${exportName}' is not a function (type: ${typeof loadedModule[exportName]})`
         );
       }
     }

@@ -13,7 +13,7 @@ describe('Reasoning Integration with Retirement', () => {
     const context: ReasoningContext = {
       intent: 'architecture_review',
       phase: 'build',
-      subsystem: 'test',
+      subsystem: 'architecture',
       tags: ['architecture'],
       riskLevel: 'medium'
     }
@@ -43,7 +43,7 @@ describe('Reasoning Integration with Retirement', () => {
       }
     } catch (error) {
       // If memory loading fails due to missing files, that's acceptable for this test
-      if (!error.message.includes('ENOENT') && !error.message.includes('no such file')) {
+      if (error instanceof Error && !error.message.includes('ENOENT') && !error.message.includes('no such file')) {
         throw error
       }
     }
@@ -53,7 +53,7 @@ describe('Reasoning Integration with Retirement', () => {
     const context: ReasoningContext = {
       intent: 'build_planning',
       phase: 'build',
-      subsystem: 'builder',
+      subsystem: 'build',
       riskLevel: 'low'
     }
     
@@ -69,7 +69,7 @@ describe('Reasoning Integration with Retirement', () => {
       assert.ok(snapshot.meta.loadedAt, 'Should have load timestamp')
     } catch (error) {
       // If memory loading fails due to missing files, that's acceptable for this test
-      if (!error.message.includes('ENOENT') && !error.message.includes('no such file')) {
+      if (error instanceof Error && !error.message.includes('ENOENT') && !error.message.includes('no such file')) {
         throw error
       }
     }
@@ -98,7 +98,7 @@ describe('Reasoning Integration with Retirement', () => {
       assert.ok(Array.isArray(snapshot.reasoningPatterns), 'Should have patterns array')
     } catch (error) {
       // If memory loading fails due to missing files, that's acceptable for this test
-      if (!error.message.includes('ENOENT') && !error.message.includes('no such file')) {
+      if (error instanceof Error && !error.message.includes('ENOENT') && !error.message.includes('no such file')) {
         throw error
       }
     }

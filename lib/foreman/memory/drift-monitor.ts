@@ -37,6 +37,7 @@ import {
   ReasoningPattern,
   ProjectMemory
 } from '@/types/reasoning'
+import { BuilderFeedback } from '@/types/builder-feedback'
 import { getAllMemory, flattenMemory } from './index'
 
 /**

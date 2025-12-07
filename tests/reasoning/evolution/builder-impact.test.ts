@@ -60,11 +60,9 @@ describe('Builder Impact', () => {
 
     // Generate builder context
     const request: BuilderRequest = {
-      taskId: 'test-task-1',
       organisationId: 'test_org',
       module: 'test-module',
-      description: 'Update multiple files',
-      files: []
+      taskDescription: 'Update multiple files'
     }
     
     const builderContext = await compileBuilderMemoryContext(
@@ -161,11 +159,9 @@ describe('Builder Impact', () => {
 
     // Create builder request
     const request: BuilderRequest = {
-      taskId: 'test-task-2',
       organisationId: 'test_org',
       module: 'test-module',
-      description: 'Test task',
-      files: []
+      taskDescription: 'Test task'
     }
 
     // Generate builder context before evolution
@@ -371,11 +367,9 @@ describe('Builder Impact', () => {
 
     // Create builder request
     const request: BuilderRequest = {
-      taskId: 'test-task-3',
       organisationId: 'test_org',
       module: 'test-module',
-      description: 'Test task with memory',
-      files: []
+      taskDescription: 'Test task with memory'
     }
 
     // Generate builder context

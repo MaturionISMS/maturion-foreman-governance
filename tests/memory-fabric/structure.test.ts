@@ -56,7 +56,7 @@ describe('Memory Fabric Structure Tests', () => {
     // This test verifies the runtime behavior
     assert.throws(
       () => {
-        // @ts-expect-error - This should not be allowed
+        // This should not be allowed
         (result as any).filter(() => true)
       },
       TypeError,
@@ -65,7 +65,7 @@ describe('Memory Fabric Structure Tests', () => {
     
     assert.throws(
       () => {
-        // @ts-expect-error - This should not be allowed
+        // This should not be allowed
         (result as any).map(() => {})
       },
       TypeError,

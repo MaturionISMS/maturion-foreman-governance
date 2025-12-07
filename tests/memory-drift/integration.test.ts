@@ -166,7 +166,7 @@ describe('Memory Drift Monitoring Integration', () => {
     )
     
     const context: ReasoningContext = {
-      subsystem: 'test',
+      subsystem: 'qa',
       phase: 'planning'
     }
     
