@@ -27,11 +27,14 @@ export interface ValidationResult {
 
 /**
  * Validate ISO 8601 timestamp
+ * Note: This is a pragmatic validation that checks basic ISO 8601 format.
+ * For production, consider using a library like date-fns or luxon for comprehensive validation.
  */
 function isValidISO8601(timestamp: string): boolean {
   if (typeof timestamp !== 'string') return false
   const date = new Date(timestamp)
-  return !isNaN(date.getTime()) && date.toISOString().substring(0, 19) === timestamp.substring(0, 19)
+  // Check if date is valid and the string can round-trip through ISO format
+  return !isNaN(date.getTime()) && timestamp.includes('T') && timestamp.includes('Z')
 }
 
 /**

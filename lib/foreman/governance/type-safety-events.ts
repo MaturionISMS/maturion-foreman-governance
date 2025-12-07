@@ -108,8 +108,10 @@ function saveGovernanceEvents(events: any[]): void {
     fs.mkdirSync(dir, { recursive: true })
   }
   
-  // Keep only last 2000 events to prevent file bloat
-  const trimmedEvents = events.slice(-2000)
+  // Keep only last N events to prevent file bloat
+  // Default: 2000 events, configurable via GOVERNANCE_EVENT_LIMIT env var
+  const eventLimit = parseInt(process.env.GOVERNANCE_EVENT_LIMIT || '2000', 10)
+  const trimmedEvents = events.slice(-eventLimit)
   
   fs.writeFileSync(eventPath, JSON.stringify(trimmedEvents, null, 2), 'utf-8')
 }
