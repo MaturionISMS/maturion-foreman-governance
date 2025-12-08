@@ -72,22 +72,7 @@ export async function validateCompliance(
 ): Promise<void> {
   console.log('[GitHub Governance] Validating compliance...')
   
-  if (!complianceResults.passed) {
-    const failureMessage = 'COMPLIANCE FAILED: Compliance checks did not pass'
-    
-    await logGovernanceEvent({
-      type: 'github_mutation_blocked',
-      severity: 'critical',
-      description: failureMessage,
-      metadata: {
-        complianceResults,
-        blockReason: 'compliance_failed',
-      },
-    })
-    
-    throw new ComplianceViolationError(failureMessage)
-  }
-  
+  // Check for specific violations first (more informative error messages)
   if (complianceResults.secretsDetected) {
     const secretsMessage = 'COMPLIANCE FAILED: Secrets detected in content'
     
@@ -118,6 +103,23 @@ export async function validateCompliance(
     })
     
     throw new ComplianceViolationError(orgMessage)
+  }
+  
+  // Finally check overall passed status
+  if (!complianceResults.passed) {
+    const failureMessage = 'COMPLIANCE FAILED: Compliance checks did not pass'
+    
+    await logGovernanceEvent({
+      type: 'github_mutation_blocked',
+      severity: 'critical',
+      description: failureMessage,
+      metadata: {
+        complianceResults,
+        blockReason: 'compliance_failed',
+      },
+    })
+    
+    throw new ComplianceViolationError(failureMessage)
   }
   
   console.log('[GitHub Governance] ✓ Compliance validation passed')
