@@ -154,4 +154,6 @@ export interface ArchivedEntryReference {
   retentionUntil?: string // When to permanently delete
 }
 
-
+/**
+ * Consolidation Status - Current state of consolidation process
+ */

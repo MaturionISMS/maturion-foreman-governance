@@ -18,6 +18,7 @@ import type {
 import { logGovernanceEvent } from '@/lib/foreman/memory/governance-memory';
 import { selectModel, executeWithEscalation } from '@/lib/foreman/model-escalation';
 import { checkLocalBuilderHealth } from '@/lib/foreman/desktop-sync';
+import { github } from '@/lib/github/client';
 
 const DEFAULT_CONFIG: OvernightExecutionConfig = {
   enabled: process.env.OVERNIGHT_EXECUTION_ENABLED === 'true',
@@ -33,22 +34,70 @@ const DEFAULT_CONFIG: OvernightExecutionConfig = {
 /**
  * Retrieve all open issues from GitHub
  */
-async function fetchOpenIssues(owner: string, repo: string): Promise<IssueWithDependencies[]> {
-  // This would normally use the GitHub API to fetch open issues
-  // For now, we return a stub implementation
-  
+async function fetchOpenIssues(owner: string, repo: string, config: OvernightExecutionConfig = DEFAULT_CONFIG): Promise<IssueWithDependencies[]> {
   console.log(`Fetching open issues from ${owner}/${repo}...`);
   
-  // In a real implementation:
-  // const octokit = getOctokitClient();
-  // const { data: issues } = await octokit.issues.listForRepo({
-  //   owner,
-  //   repo,
-  //   state: 'open',
-  //   per_page: config.maxIssuesPerRun,
-  // });
-  
-  return [];
+  try {
+    const { data: issues } = await github.rest.issues.listForRepo({
+      owner,
+      repo,
+      state: 'open',
+      per_page: config.maxIssuesPerRun,
+    });
+
+    return issues.map(issue => ({
+      issueNumber: issue.number,
+      title: issue.title,
+      body: issue.body || '',
+      labels: issue.labels.map(label => typeof label === 'string' ? label : label.name || ''),
+      sequenceType: 'build', // Will be classified later
+      dependencies: [],
+      estimatedComplexity: estimateComplexity(issue),
+      requiresEscalation: false,
+    }));
+  } catch (error) {
+    console.error('Failed to fetch issues:', error);
+    await logGovernanceEvent({
+      type: 'issue_fetch_failed',
+      severity: 'high',
+      description: `Failed to fetch issues from ${owner}/${repo}`,
+      metadata: { error: (error as Error).message },
+    });
+    return [];
+  }
+}
+
+/**
+ * Estimate issue complexity based on title, body, and labels
+ */
+function estimateComplexity(issue: any): 'low' | 'medium' | 'high' {
+  const body = (issue.body || '').toLowerCase();
+  const title = issue.title.toLowerCase();
+  const labels = issue.labels.map((l: any) => typeof l === 'string' ? l.toLowerCase() : (l.name || '').toLowerCase());
+
+  // Check for high complexity indicators
+  if (
+    labels.includes('architecture') ||
+    labels.includes('breaking-change') ||
+    labels.includes('high-priority') ||
+    body.includes('architecture') ||
+    body.includes('refactor') ||
+    body.length > 2000
+  ) {
+    return 'high';
+  }
+
+  // Check for medium complexity indicators
+  if (
+    labels.includes('enhancement') ||
+    labels.includes('governance') ||
+    body.length > 500 ||
+    body.includes('multiple files')
+  ) {
+    return 'medium';
+  }
+
+  return 'low';
 }
 
 /**
@@ -186,11 +235,108 @@ function sortIssues(
 }
 
 /**
+ * Post execution summary as a comment on the issue
+ */
+async function postExecutionSummary(
+  owner: string,
+  repo: string,
+  issueNumber: number,
+  result: IssueExecutionResult
+): Promise<void> {
+  const summary = generateExecutionSummary(result);
+  
+  try {
+    await github.rest.issues.createComment({
+      owner,
+      repo,
+      issue_number: issueNumber,
+      body: summary,
+    });
+    
+    console.log(`Posted execution summary to issue #${issueNumber}`);
+  } catch (error) {
+    console.error(`Failed to post summary to issue #${issueNumber}:`, error);
+    await logGovernanceEvent({
+      type: 'comment_post_failed',
+      severity: 'medium',
+      description: `Failed to post execution summary to issue #${issueNumber}`,
+      metadata: { error: (error as Error).message },
+    });
+  }
+}
+
+/**
+ * Generate a markdown summary of the execution result
+ */
+function generateExecutionSummary(result: IssueExecutionResult): string {
+  let summary = `## 🤖 Overnight Execution Summary\n\n`;
+  summary += `**Status:** ${result.status === 'success' ? '✅ Success' : result.status === 'failed' ? '❌ Failed' : '⏭️ Skipped'}\n`;
+  summary += `**Execution Time:** ${(result.executionTime / 1000).toFixed(2)}s\n`;
+  summary += `**Sequence Type:** ${result.sequenceType}\n\n`;
+
+  if (result.status === 'failed' && result.errorMessage) {
+    summary += `### ❌ Error\n\n${result.errorMessage}\n\n`;
+  }
+
+  if (result.status === 'skipped' && result.errorMessage) {
+    summary += `### ⏭️ Skipped Reason\n\n${result.errorMessage}\n\n`;
+  }
+
+  if (result.qaResults) {
+    summary += `### QA Validation\n\n`;
+    summary += `- **Overall:** ${result.qaResults.passed ? '✅ Passed' : '❌ Failed'}\n`;
+    summary += `- **Checks Passed:** ${result.qaResults.passedChecks}/${result.qaResults.totalChecks}\n`;
+    summary += `- QIC: ${result.qaResults.qicPassed ? '✅' : '❌'}\n`;
+    summary += `- QIEL: ${result.qaResults.qielPassed ? '✅' : '❌'}\n`;
+    summary += `- CDW: ${result.qaResults.cdwPassed ? '✅' : '❌'}\n`;
+    summary += `- Memory Fabric: ${result.qaResults.memoryFabricPassed ? '✅' : '❌'}\n`;
+    summary += `- Drift Check: ${result.qaResults.driftCheckPassed ? '✅' : '❌'}\n`;
+    summary += `- Governance: ${result.qaResults.governanceCheckPassed ? '✅' : '❌'}\n\n`;
+  }
+
+  if (result.governanceResults) {
+    summary += `### Governance Validation\n\n`;
+    summary += `- **Overall:** ${result.governanceResults.passed ? '✅ Passed' : '❌ Failed'}\n`;
+    summary += `- **Violations:** ${result.governanceResults.violations.length}\n`;
+    summary += `- **Escalations:** ${result.governanceResults.escalationsLogged}\n`;
+    summary += `- **Drift Introduced:** ${result.governanceResults.driftIntroduced ? '⚠️ Yes' : '✅ No'}\n`;
+    summary += `- **Conflicting Instructions:** ${result.governanceResults.conflictingInstructions ? '⚠️ Yes' : '✅ No'}\n\n`;
+    
+    if (result.governanceResults.violations.length > 0) {
+      summary += `#### Violations\n\n`;
+      for (const violation of result.governanceResults.violations) {
+        summary += `- **${violation.severity.toUpperCase()}**: ${violation.description}\n`;
+        if (violation.file) {
+          summary += `  - File: ${violation.file}${violation.line ? `:${violation.line}` : ''}\n`;
+        }
+      }
+      summary += '\n';
+    }
+  }
+
+  if (result.modelEscalations && result.modelEscalations > 0) {
+    summary += `### Model Escalations\n\n`;
+    summary += `- **Total Escalations:** ${result.modelEscalations}\n\n`;
+  }
+
+  if (result.prUrl) {
+    summary += `### Pull Request\n\n`;
+    summary += `[View Pull Request](${result.prUrl})\n\n`;
+  }
+
+  summary += `---\n`;
+  summary += `*Generated by Foreman Overnight Execution at ${new Date().toISOString()}*\n`;
+
+  return summary;
+}
+/**
  * Execute a single issue with full QA and governance validation
  */
 async function executeIssue(
   issue: IssueWithDependencies,
-  config: OvernightExecutionConfig
+  config: OvernightExecutionConfig,
+  owner: string,
+  repo: string
 ): Promise<IssueExecutionResult> {
   const startTime = Date.now();
 
@@ -249,6 +395,17 @@ async function executeIssue(
 
     const executionTime = Date.now() - startTime;
 
+    const result: IssueExecutionResult = {
+      issueNumber: issue.issueNumber,
+      title: issue.title,
+      sequenceType: issue.sequenceType,
+      status: 'success',
+      qaResults,
+      governanceResults,
+      modelEscalations: modelSelection.escalated ? 1 : 0,
+      executionTime,
+    };
+
     await logGovernanceEvent({
       type: 'issue_execution_completed',
       severity: 'info',
@@ -263,19 +420,24 @@ async function executeIssue(
       },
     });
 
-    return {
-      issueNumber: issue.issueNumber,
-      title: issue.title,
-      sequenceType: issue.sequenceType,
-      status: 'success',
-      qaResults,
-      governanceResults,
-      modelEscalations: modelSelection.escalated ? 1 : 0,
-      executionTime,
-    };
+    // Post execution summary to the issue
+    if (config.createPRsAutomatically) {
+      await postExecutionSummary(owner, repo, issue.issueNumber, result);
+    }
+
+    return result;
   } catch (error) {
     const executionTime = Date.now() - startTime;
     const errorMessage = (error as Error).message;
+
+    const result: IssueExecutionResult = {
+      issueNumber: issue.issueNumber,
+      title: issue.title,
+      sequenceType: issue.sequenceType,
+      status: 'failed',
+      executionTime,
+      errorMessage,
+    };
 
     await logGovernanceEvent({
       type: 'issue_execution_failed',
@@ -288,15 +450,119 @@ async function executeIssue(
       },
     });
 
-    return {
-      issueNumber: issue.issueNumber,
-      title: issue.title,
-      sequenceType: issue.sequenceType,
-      status: 'failed',
-      executionTime,
-      errorMessage,
-    };
+    // Post failure summary to the issue
+    if (config.createPRsAutomatically) {
+      await postExecutionSummary(owner, repo, issue.issueNumber, result);
+    }
+
+    return result;
   }
+}
+
+/**
+ * Post overall execution summary to governance memory
+ */
+async function postOvernightExecutionSummary(
+  owner: string,
+  repo: string,
+  run: OvernightExecutionRun,
+  config: OvernightExecutionConfig
+): Promise<void> {
+  console.log('\n📊 Generating overnight execution summary...');
+  
+  const summary = generateOvernightExecutionSummary(run);
+  
+  console.log(summary);
+  
+  await logGovernanceEvent({
+    type: 'overnight_execution_summary',
+    severity: 'info',
+    description: 'Overnight execution summary generated',
+    metadata: {
+      runId: run.id,
+      summary,
+    },
+  });
+}
+
+/**
+ * Generate a markdown summary of the overnight execution run
+ */
+function generateOvernightExecutionSummary(run: OvernightExecutionRun): string {
+  let summary = `# 🌙 Overnight Execution Summary\n\n`;
+  summary += `**Run ID:** ${run.id}\n`;
+  summary += `**Start Time:** ${run.startTime}\n`;
+  summary += `**End Time:** ${run.endTime}\n`;
+  summary += `**Status:** ${run.status === 'completed' ? '✅ Completed' : run.status === 'partial' ? '⚠️ Partial' : '❌ Failed'}\n\n`;
+  
+  summary += `## Statistics\n\n`;
+  summary += `- **Total Issues:** ${run.totalIssues}\n`;
+  summary += `- **Processed:** ${run.processedIssues}\n`;
+  summary += `- **Successful:** ${run.successfulIssues} ✅\n`;
+  summary += `- **Failed:** ${run.failedIssues} ❌\n`;
+  summary += `- **Skipped:** ${run.skippedIssues} ⏭️\n\n`;
+  
+  if (run.issueResults.length > 0) {
+    summary += `## Issue Results\n\n`;
+    
+    // Group by status
+    const successResults = run.issueResults.filter(r => r.status === 'success');
+    const failedResults = run.issueResults.filter(r => r.status === 'failed');
+    const skippedResults = run.issueResults.filter(r => r.status === 'skipped');
+    
+    if (successResults.length > 0) {
+      summary += `### ✅ Successful (${successResults.length})\n\n`;
+      for (const result of successResults) {
+        summary += `- #${result.issueNumber}: ${result.title}\n`;
+        if (result.prUrl) {
+          summary += `  - PR: ${result.prUrl}\n`;
+        }
+      }
+      summary += '\n';
+    }
+    
+    if (failedResults.length > 0) {
+      summary += `### ❌ Failed (${failedResults.length})\n\n`;
+      for (const result of failedResults) {
+        summary += `- #${result.issueNumber}: ${result.title}\n`;
+        if (result.errorMessage) {
+          summary += `  - Error: ${result.errorMessage}\n`;
+        }
+      }
+      summary += '\n';
+    }
+    
+    if (skippedResults.length > 0) {
+      summary += `### ⏭️ Skipped (${skippedResults.length})\n\n`;
+      for (const result of skippedResults) {
+        summary += `- #${result.issueNumber}: ${result.title}\n`;
+        if (result.errorMessage) {
+          summary += `  - Reason: ${result.errorMessage}\n`;
+        }
+      }
+      summary += '\n';
+    }
+  }
+  
+  // Model escalation summary
+  const totalEscalations = run.issueResults.reduce((sum, r) => sum + (r.modelEscalations || 0), 0);
+  if (totalEscalations > 0) {
+    summary += `## Model Escalations\n\n`;
+    summary += `- **Total Escalations:** ${totalEscalations}\n\n`;
+  }
+  
+  if (run.errors.length > 0) {
+    summary += `## Errors\n\n`;
+    for (const error of run.errors) {
+      summary += `- ${error}\n`;
+    }
+    summary += '\n';
+  }
+  
+  summary += `---\n`;
+  summary += `*Generated at ${new Date().toISOString()}*\n`;
+  
+  return summary;
 }
 
 /**
@@ -326,7 +592,7 @@ export async function runOvernightExecution(
   try {
     // Step 1: Retrieve all open issues
     console.log('📋 Step 1: Retrieving open issues...');
-    let issues = await fetchOpenIssues(owner, repo);
+    let issues = await fetchOpenIssues(owner, repo, config);
     console.log(`   Found ${issues.length} open issues`);
 
     // Classify issues
@@ -389,7 +655,7 @@ export async function runOvernightExecution(
       }
 
       // Execute the issue
-      const result = await executeIssue(issue, config);
+      const result = await executeIssue(issue, config, owner, repo);
       issueResults.push(result);
 
       if (result.status === 'success') {
@@ -446,6 +712,9 @@ export async function runOvernightExecution(
       description: `Overnight execution completed: ${successfulIssues}/${sortedIssues.length} successful`,
       metadata: run,
     });
+
+    // Post overall summary
+    await postOvernightExecutionSummary(owner, repo, run, config);
 
     return run;
   } catch (error) {

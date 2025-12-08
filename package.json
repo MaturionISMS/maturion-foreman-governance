@@ -15,12 +15,15 @@
     "test:all": "tsx --test tests/**/*.test.ts",
     "test:watch": "tsx --test --watch tests/dashboard/*.test.ts",
     "test:structural": "tsx --test tests/qa-structural/*.test.ts",
+    "test:overnight": "tsx --test tests/overnight-execution/*.test.ts",
     "typecheck": "tsc --noEmit",
     "typecheck:production": "tsc --noEmit --exclude 'tests/**/*'",
     "qa:full": "npm run lint && npm run test:structural && npm run build",
     "qiel": "tsx scripts/run-qiel.ts",
     "qiel:quick": "tsx scripts/run-qiel.ts --quick",
-    "qiel:full": "tsx scripts/run-qiel.ts --full"
+    "qiel:full": "tsx scripts/run-qiel.ts --full",
+    "overnight": "tsx scripts/run-overnight-execution.ts",
+    "overnight:dry-run": "tsx scripts/run-overnight-execution.ts --dry-run"
   },
   "dependencies": {
     "ajv": "^8.17.1",

@@ -586,6 +586,15 @@ For questions or issues:
 
 ## Version History
 
+- **v1.1** (2024-12-07 - Update 2): Enhanced with GitHub API integration and CLI tools
+  - Real GitHub API integration for fetching open issues
+  - Issue complexity estimation and classification
+  - PR comment posting for execution summaries
+  - CLI script for manual execution (`scripts/run-overnight-execution.ts`)
+  - npm scripts for easy usage (`npm run overnight`, `npm run overnight:dry-run`)
+  - Comprehensive user documentation (`docs/OVERNIGHT_EXECUTION_GUIDE.md`)
+  - Fixed duplicate TypeScript interface declarations
+  
 - **v1.0** (2024-12-07): Initial implementation
   - Overnight execution orchestrator
   - Model escalation with fallback

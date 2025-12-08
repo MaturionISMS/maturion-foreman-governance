@@ -190,29 +190,6 @@ export interface GovernanceAlignmentAnalytics {
 }
 
 /**
- * Analytics Event - Tracking event for analytics
- */
-export interface AnalyticsEvent {
-  id: string
-  type: 'memory_update' | 'drift_detected' | 'consolidation' | 'retirement' | 'evolution' | 'builder_run'
-  timestamp: string
-  source: string
-  metadata: Record<string, any>
-}
-
-/**
- * Analytics Metric - Quantitative measurement
- */
-export interface AnalyticsMetric {
-  name: string
-  value: number
-  unit?: string
-  timestamp: string
-  category: 'memory' | 'drift' | 'consolidation' | 'retirement' | 'evolution' | 'builder' | 'governance'
-  tags?: string[]
-}
-
-/**
  * Complete Analytics Summary
  */
 export interface AnalyticsSummary {
