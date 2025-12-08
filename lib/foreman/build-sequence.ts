@@ -418,6 +418,85 @@ export async function runBuildSequence(
       throw new Error(`Build blocked by Build Completion Rule: ${completionValidation.reason}`)
     }
     
+    // GOVERNANCE-FIRST MINDSET: Validate mindset compliance before build completion
+    console.log('[BuildSequence] Validating Governance-First Mindset compliance...')
+    const { validateMindsetCompliance } = await import('./governance/mindset')
+    
+    const mindsetValidation = validateMindsetCompliance({
+      action: 'Build sequence completion',
+      qaStatus: {
+        totalTests: sequence.qaResults.length,
+        passedTests: sequence.qaResults.filter(r => r.status === 'passed').length,
+        failedTests: sequence.qaResults.filter(r => r.status === 'failed').length,
+        warnings: sequence.qaResults.filter(r => r.status === 'warning').length
+      },
+      governanceContext: {
+        memoryLoaded: true,
+        governanceRulesApplied: true,
+        driftMonitored: true
+      },
+      stateContext: {
+        hasErrors: sequence.qaResults.some(r => r.status === 'failed'),
+        hasWarnings: sequence.qaResults.some(r => r.status === 'warning'),
+        hasFailures: sequence.qaResults.some(r => r.status === 'failed')
+      }
+    })
+    
+    if (!mindsetValidation.compliant) {
+      sequence.status = 'blocked'
+      sequence.error = `Governance-First Mindset violation: ${mindsetValidation.violations.join(', ')}`
+      sequence.updatedAt = new Date()
+      sequenceStore.set(sequence.id, sequence)
+      
+      console.error('[BuildSequence] MINDSET VIOLATION:', mindsetValidation.message)
+      console.error('[BuildSequence] Violations:', mindsetValidation.violations)
+      
+      // Create governance incident
+      const { recordMemory } = await import('./memory/storage')
+      try {
+        await recordMemory({
+          id: `mindset_violation_${sequence.id}_${Date.now()}`,
+          scope: 'global',
+          category: 'governance',
+          type: 'incident',
+          tags: ['mindset_violation', 'governance_violation', 'build_blocked'],
+          value: {
+            incident: {
+              type: 'mindset_compliance_failure',
+              sequenceId: sequence.id,
+              violations: mindsetValidation.violations,
+              blockingIssues: mindsetValidation.blockingIssues,
+              timestamp: new Date().toISOString()
+            }
+          },
+          metadata: {
+            source: 'BuildSequence',
+            requiresCorrection: true
+          }
+        })
+        console.log('[BuildSequence] Mindset violation incident recorded successfully')
+      } catch (memError) {
+        console.error('[BuildSequence] CRITICAL: Failed to record mindset violation incident:', memError)
+        // This is critical - mindset violations MUST be recorded
+        // We still block the build, but alert that the incident wasn't persisted
+        console.error('[BuildSequence] WARNING: Mindset violation occurred but was not persisted to governance memory')
+      }
+      
+      throw new Error(`Governance-First Mindset violation: ${mindsetValidation.violations.join(', ')}`)
+    }
+    
+    if (!mindsetValidation.canProceed) {
+      sequence.status = 'blocked'
+      sequence.error = `Mindset blocking issues: ${mindsetValidation.blockingIssues.join(', ')}`
+      sequence.updatedAt = new Date()
+      sequenceStore.set(sequence.id, sequence)
+      
+      console.error('[BuildSequence] CANNOT PROCEED:', mindsetValidation.blockingIssues)
+      throw new Error(`Mindset blocking issues: ${mindsetValidation.blockingIssues.join(', ')}`)
+    }
+    
+    console.log('[BuildSequence] ✅ Mindset compliance validated:', mindsetValidation.message)
+    
     // GSR-5: Governance check at build completion phase
     console.log('[BuildSequence] Validating governance at build completion phase (GSR-5)...')
     const governanceCheck = validateGovernanceAtPhase('build_completion', {

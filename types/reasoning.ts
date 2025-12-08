@@ -80,6 +80,7 @@ export interface ReasoningPattern {
   usageCount?: number
   performanceScore?: number // 0-1.0 performance score for evolution
   lastEvolved?: string // ISO 8601 timestamp
+  immutable?: boolean // If true, pattern cannot be modified or removed (Governance-First patterns)
 }
 
 /**

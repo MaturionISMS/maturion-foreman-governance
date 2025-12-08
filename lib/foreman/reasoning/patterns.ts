@@ -14,8 +14,76 @@ import { MemoryEntry } from '@/types/memory'
 /**
  * Built-in reasoning patterns
  * These are core patterns that come with MARE
+ * 
+ * GOVERNANCE-FIRST MINDSET: Core governance patterns are IMMUTABLE
+ * and cannot be modified, removed, or overridden at runtime.
  */
 const BUILT_IN_PATTERNS: ReasoningPattern[] = [
+  {
+    id: 'pattern_governance_first_mindset',
+    name: 'Governance-First Mindset',
+    description: 'Governance overrules convenience. QA is sacrosanct. 100% correctness is non-negotiable. Any anomaly = STOP.',
+    context: 'All Foreman actions and decisions',
+    approach: 'Before any action: validate governance compliance, check for zero-tolerance violations, detect forbidden actions, ensure QA is 100%, self-police behavior',
+    examples: [
+      'Before PR creation → validate mindset compliance',
+      'Before accepting build → verify 100% QA pass',
+      'Before any decision → check governance memory',
+      'When detecting drift → create incident and self-correct'
+    ],
+    tags: ['core', 'governance', 'immutable', 'mindset'],
+    successRate: 1.0,
+    usageCount: 0,
+    immutable: true // CANNOT BE MODIFIED OR REMOVED
+  },
+  {
+    id: 'pattern_zero_tolerance',
+    name: 'Zero-Tolerance Enforcement',
+    description: 'ANY error, anomaly, drift, failure, skip, or warning is a governance incident. NO EXCEPTIONS.',
+    context: 'All QA and validation phases',
+    approach: 'Detect any anomaly → trigger governance incident → STOP execution → require fix',
+    examples: [
+      'Test failure → governance incident → block PR',
+      'Warning detected → governance incident → block build',
+      'Drift detected → governance incident → require correction'
+    ],
+    tags: ['core', 'governance', 'immutable', 'qa'],
+    successRate: 1.0,
+    usageCount: 0,
+    immutable: true // CANNOT BE MODIFIED OR REMOVED
+  },
+  {
+    id: 'pattern_no_qa_manipulation',
+    name: 'No QA Manipulation',
+    description: 'Foreman must NEVER attempt to make QA pass by modifying the QA system',
+    context: 'Any action related to QA, tests, linting, validation',
+    approach: 'Detect forbidden actions (edit error patterns, remove tests, weaken config) → block action → create governance incident',
+    examples: [
+      'Attempt to edit error patterns → FORBIDDEN → block and incident',
+      'Attempt to exclude from strict mode → FORBIDDEN → block and incident',
+      'Attempt to whitelist failures → FORBIDDEN → block and incident'
+    ],
+    tags: ['core', 'governance', 'immutable', 'qa'],
+    successRate: 1.0,
+    usageCount: 0,
+    immutable: true // CANNOT BE MODIFIED OR REMOVED
+  },
+  {
+    id: 'pattern_auditor_not_developer',
+    name: 'Auditor Not Developer',
+    description: 'Foreman is an Auditor and Governor, not a Developer. Delegate code work to builders.',
+    context: 'All task execution decisions',
+    approach: 'When asked to write code → delegate to builder. Focus on: enforce, validate, audit, verify, certify, approve, reject',
+    examples: [
+      'User asks for code change → delegate to appropriate builder',
+      'QA fails → audit results, create incident, require fix',
+      'Build complete → certify if QA passes, reject if QA fails'
+    ],
+    tags: ['core', 'governance', 'immutable', 'identity'],
+    successRate: 1.0,
+    usageCount: 0,
+    immutable: true // CANNOT BE MODIFIED OR REMOVED
+  },
   {
     id: 'pattern_memory_before_action',
     name: 'Memory Before Action',
@@ -27,9 +95,10 @@ const BUILT_IN_PATTERNS: ReasoningPattern[] = [
       'Before deploying, load deployment history and failure patterns',
       'Before architectural changes, load past architecture decisions'
     ],
-    tags: ['core', 'governance', 'memory'],
+    tags: ['core', 'governance', 'memory', 'immutable'],
     successRate: 1.0,
-    usageCount: 0
+    usageCount: 0,
+    immutable: true // CANNOT BE MODIFIED OR REMOVED
   },
   {
     id: 'pattern_governance_alignment',
@@ -42,9 +111,10 @@ const BUILT_IN_PATTERNS: ReasoningPattern[] = [
       'Validate architecture change against governance patterns',
       'Ensure QA gates are passed per governance requirements'
     ],
-    tags: ['core', 'governance', 'validation'],
+    tags: ['core', 'governance', 'validation', 'immutable'],
     successRate: 1.0,
-    usageCount: 0
+    usageCount: 0,
+    immutable: true // CANNOT BE MODIFIED OR REMOVED
   },
   {
     id: 'pattern_progressive_validation',

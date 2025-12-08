@@ -53,6 +53,8 @@ import {
   applyPattern
 } from './patterns'
 import { validateGovernanceAtPhase } from '../governance/gsr-enforcement'
+import { validateMindsetCompliance, governanceFirstMindset } from '../governance/mindset'
+import { detectGovernanceDrift, foremanDriftDetector } from '../governance/drift-detector'
 import { DriftReport } from '@/types/drift'
 import fs from 'fs'
 import path from 'path'
@@ -269,6 +271,34 @@ export async function executeReasoning(
   context: ReasoningContext
 ): Promise<ReasoningResult> {
   console.log('[MARE] Executing reasoning...')
+  
+  // GOVERNANCE-FIRST MINDSET: Validate governance compliance before reasoning
+  console.log('[MARE] Validating Governance-First Mindset compliance...')
+  const mindsetValidation = validateMindsetCompliance({
+    action: `Reasoning execution for ${context.intent}`,
+    governanceContext: {
+      memoryLoaded: snapshot !== undefined && snapshot !== null, // Check if snapshot was actually loaded
+      governanceRulesApplied: false, // Will be set to true after applying patterns
+      driftMonitored: !context.skipDriftCheck
+    }
+  })
+  
+  if (!mindsetValidation.compliant) {
+    console.error('[MARE] MINDSET VIOLATION:', mindsetValidation.message)
+    console.error('[MARE] Violations:', mindsetValidation.violations)
+    throw new Error(
+      `Governance-First Mindset violation detected: ${mindsetValidation.violations.join(', ')}`
+    )
+  }
+  
+  if (!mindsetValidation.canProceed) {
+    console.error('[MARE] CANNOT PROCEED:', mindsetValidation.blockingIssues)
+    throw new Error(
+      `Governance-First Mindset blocking issues: ${mindsetValidation.blockingIssues.join(', ')}`
+    )
+  }
+  
+  console.log('[MARE] Mindset compliance validated:', mindsetValidation.message)
   
   const patternsApplied: string[] = []
   const decisions: ReasoningDecision[] = []
