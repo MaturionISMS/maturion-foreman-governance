@@ -71,3 +71,6 @@ preflight-validation-report.md
 # memory consolidation
 # Ignore consolidated memory files generated during tests
 /memory/global/consolidated/
+
+# QIEL regression tests (auto-generated, committed by workflow only)
+/tests/qic/regression/qi-*.test.ts
