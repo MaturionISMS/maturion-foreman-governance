@@ -378,6 +378,9 @@ async function recordGovernanceIncident(incident: {
  * Ensures builders cannot hand over code that cannot pass strict QIEL
  * 
  * This should be called BEFORE builder task approval
+ * 
+ * TODO: Fully implement this function to pre-validate builder outputs
+ * Currently returns placeholder success - needs actual QIEL simulation
  */
 export async function validateBuilderHandover(options: {
   builderId: string;
@@ -388,7 +391,7 @@ export async function validateBuilderHandover(options: {
 
   console.log(`[PR Gatekeeper] Validating builder handover for task ${taskId}`);
 
-  // In a full implementation, this would:
+  // TODO: In a full implementation, this would:
   // 1. Simulate QIEL run on the builder's artifacts
   // 2. Check if the code would pass strict QIEL
   // 3. Block handover if QIEL would fail
@@ -405,9 +408,10 @@ export async function validateBuilderHandover(options: {
     },
   });
 
-  // Placeholder: In full implementation, would run pre-validation checks
+  // PLACEHOLDER: In full implementation, would run pre-validation checks
+  // WARNING: This currently allows all handovers - to be implemented
   return {
     valid: true,
-    reason: 'Builder handover validation passed (placeholder)',
+    reason: 'Builder handover validation passed (PLACEHOLDER - not yet fully implemented)',
   };
 }
