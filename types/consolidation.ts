@@ -154,25 +154,4 @@ export interface ArchivedEntryReference {
   retentionUntil?: string // When to permanently delete
 }
 
-/**
- * Consolidation Candidate - Entries eligible for consolidation
- */
-export interface ConsolidationCandidate {
-  entries: string[] // Entry IDs
-  commonality: number // 0-100 similarity score
-  proposedKnowledge: string
-  category: KnowledgeCategory
-  importance: KnowledgeImportance
-}
 
-/**
- * Consolidation Decision - Decision made about a candidate
- */
-export interface ConsolidationDecision {
-  candidateId: string
-  action: 'consolidate' | 'skip' | 'manual_review'
-  reason: string
-  knowledgeBlockId?: string
-  approvedBy?: string
-  approvedAt?: string
-}
