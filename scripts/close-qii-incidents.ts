@@ -1,4 +1,4 @@
-#!/usr/bin/env tsx
+#!/usr/bin/env node
 /**
  * Script to document QIC/QIEL/QII incidents that should be closed
  * 
@@ -6,6 +6,10 @@
  * environmental misalignment (now solved via QIEL Environment Alignment + Drift Detector Enforcement)
  * 
  * This script generates a report of all quality-integrity issues that should be closed.
+ * 
+ * Requirements:
+ * - Node.js runtime
+ * - Can be run with: npx tsx scripts/close-qii-incidents.ts
  * 
  * Note: This script requires GitHub API access with issues:write permission to actually close issues.
  * The Copilot agent environment does not have permission to modify issues directly.
