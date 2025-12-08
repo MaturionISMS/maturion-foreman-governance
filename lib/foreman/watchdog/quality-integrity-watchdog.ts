@@ -10,6 +10,11 @@
  * - QIW-3: Test Log Monitoring
  * - QIW-4: Deployment Simulation Monitoring
  * - QIW-5: Governance Memory Integration
+ * 
+ * CRITICAL: Per QIEL Environment Alignment:
+ * - All thresholds are sourced from lib/foreman/qiel-config.ts
+ * - Identical configuration as GitHub Actions
+ * - Zero drift tolerance
  */
 
 import * as fs from 'fs'
@@ -23,99 +28,48 @@ import {
   QIWConfig,
   GovernanceMemoryQIWEntry
 } from '@/types/watchdog'
+import { QIEL_CONFIG } from '../qiel-config'
 
 /**
- * Default QIW configuration
+ * Default QIW configuration (now sourced from unified config)
  */
 const DEFAULT_CONFIG: QIWConfig = {
-  enabledChannels: ['build', 'lint', 'test', 'deployment_simulation', 'runtime_initialization'],
-  blockOnCritical: true,
-  blockOnErrors: true,
-  blockOnWarnings: false,
+  enabledChannels: QIEL_CONFIG.qiw.enabledChannels as unknown as QIWChannel[],
+  blockOnCritical: QIEL_CONFIG.qiw.blockOnCritical,
+  blockOnErrors: QIEL_CONFIG.qiw.blockOnErrors,
+  blockOnWarnings: QIEL_CONFIG.qiw.blockOnWarnings,
   logsDir: '/tmp',
   writeGovernanceMemory: true
 }
 
 /**
  * Error patterns for different log types
- * Based on Quality Integrity Contract
+ * Based on Quality Integrity Contract and unified config
+ * Memoized to avoid recreating RegExp objects on every access
  */
-const ERROR_PATTERNS: Record<QIWChannel, RegExp[]> = {
-  build: [
-    /\bERROR\b/i,
-    /\bError:/,
-    /Build failed/i,
-    /Compilation error/i,
-    /Failed to compile/i,
-    /TypeError:/,
-    /ReferenceError:/,
-    /SyntaxError:/,
-    /error TS\d{4}:/,
-    /Module not found/i,
-    /Cannot find module/i,
-    /Unexpected token/i,
-  ],
-  lint: [
-    /\berror\b/i,
-    /✖/,
-    /\d+:\d+\s+error/i,
-  ],
-  test: [
-    /\bFAIL\b/,
-    /\bfailed\b/i,
-    /\bERROR\b/i,
-    /TypeError:/,
-    /ReferenceError:/,
-    /AssertionError:/,
-    /Test.*failed/i,
-    /\d+ failing/i,
-  ],
-  deployment_simulation: [
-    /\bERROR\b/i,
-    /Build failed/i,
-    /Deployment failed/i,
-    /Failed to start/i,
-    /Error:/,
-  ],
-  runtime_initialization: [
-    /\bERROR\b/i,
-    /TypeError:/,
-    /ReferenceError:/,
-    /Failed to initialize/i,
-    /Unhandled.*exception/i,
-  ]
-}
+const ERROR_PATTERNS: Record<QIWChannel, RegExp[]> = (() => {
+  const patterns: Partial<Record<QIWChannel, RegExp[]>> = {};
+  patterns.build = QIEL_CONFIG.qiw.errorPatterns.build.map(p => new RegExp(p, 'i'));
+  patterns.lint = QIEL_CONFIG.qiw.errorPatterns.lint.map(p => new RegExp(p, 'i'));
+  patterns.test = QIEL_CONFIG.qiw.errorPatterns.test.map(p => new RegExp(p, 'i'));
+  patterns.deployment_simulation = QIEL_CONFIG.qiw.errorPatterns.deployment_simulation.map(p => new RegExp(p, 'i'));
+  patterns.runtime_initialization = QIEL_CONFIG.qiw.errorPatterns.runtime_initialization.map(p => new RegExp(p, 'i'));
+  return patterns as Record<QIWChannel, RegExp[]>;
+})();
 
 /**
- * Warning patterns for different log types
+ * Warning patterns for different log types (from unified config)
+ * Memoized to avoid recreating RegExp objects on every access
  */
-const WARNING_PATTERNS: Record<QIWChannel, RegExp[]> = {
-  build: [
-    /\bWARN\b/i,
-    /\bWarning:/i,
-    /⚠/,
-    /warning TS\d{4}:/,
-    /deprecated/i,
-  ],
-  lint: [
-    /\bwarning\b/i,
-    /⚠/,
-    /\d+:\d+\s+warning/i,
-  ],
-  test: [
-    /\bskipped\b/i,
-    /\bpending\b/i,
-    /\bWARN\b/i,
-  ],
-  deployment_simulation: [
-    /\bWARN\b/i,
-    /\bWarning:/i,
-  ],
-  runtime_initialization: [
-    /\bWARN\b/i,
-    /\bWarning:/i,
-  ]
-}
+const WARNING_PATTERNS: Record<QIWChannel, RegExp[]> = (() => {
+  const patterns: Partial<Record<QIWChannel, RegExp[]>> = {};
+  patterns.build = QIEL_CONFIG.qiw.warningPatterns.build.map(p => new RegExp(p, 'i'));
+  patterns.lint = QIEL_CONFIG.qiw.warningPatterns.lint.map(p => new RegExp(p, 'i'));
+  patterns.test = QIEL_CONFIG.qiw.warningPatterns.test.map(p => new RegExp(p, 'i'));
+  patterns.deployment_simulation = QIEL_CONFIG.qiw.warningPatterns.deployment_simulation.map(p => new RegExp(p, 'i'));
+  patterns.runtime_initialization = QIEL_CONFIG.qiw.warningPatterns.runtime_initialization.map(p => new RegExp(p, 'i'));
+  return patterns as Record<QIWChannel, RegExp[]>;
+})();
 
 /**
  * Generate unique anomaly ID

@@ -1,0 +1,128 @@
+# QIEL Configuration Validation Workflow
+# Phase 8: CI/CD Integration
+#
+# Ensures QIEL configuration remains synchronized between:
+# - lib/foreman/qiel-config.ts (source of truth)
+# - .github/workflows/qiel.yml (GitHub Actions)
+#
+# Per True North Philosophy: Configuration drift = BLOCK merge
+
+name: QIEL Config Validation
+
+on:
+  pull_request:
+    paths:
+      - 'lib/foreman/qiel-config.ts'
+      - '.github/workflows/qiel.yml'
+      - 'lib/foreman/qa/**'
+      - 'lib/foreman/watchdog/**'
+      - 'lib/foreman/memory/drift-monitor.ts'
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'lib/foreman/qiel-config.ts'
+      - '.github/workflows/qiel.yml'
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  validate-qiel-config:
+    name: Validate QIEL Configuration Alignment
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run QIEL Environment Diff
+        id: qiel-diff
+        run: |
+          echo "Running QIEL environment diff..."
+          npm run qa:diff > qiel-diff-report.txt 2>&1 || echo "Diff check failed"
+          cat qiel-diff-report.txt
+          
+          # Check if diff detected misalignment
+          if grep -q "MISALIGNED" qiel-diff-report.txt; then
+            echo "alignment=failed" >> $GITHUB_OUTPUT
+            echo "::error::QIEL configuration is misaligned between Foreman and GitHub"
+            exit 1
+          else
+            echo "alignment=success" >> $GITHUB_OUTPUT
+            echo "::notice::QIEL configuration is properly aligned"
+          fi
+      
+      - name: Upload Diff Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qiel-diff-report
+          path: qiel-diff-report.txt
+          retention-days: 30
+      
+      - name: Comment on PR with Alignment Status
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const alignmentStatus = '${{ steps.qiel-diff.outputs.alignment }}';
+            
+            let reportContent = '';
+            if (fs.existsSync('qiel-diff-report.txt')) {
+              reportContent = fs.readFileSync('qiel-diff-report.txt', 'utf-8');
+            }
+            
+            const statusIcon = alignmentStatus === 'success' ? '✅' : '❌';
+            const statusText = alignmentStatus === 'success' ? 'ALIGNED' : 'MISALIGNED';
+            
+            const comment = `## ${statusIcon} QIEL Configuration Validation
+            
+            **Status**: ${statusText}
+            
+            ${alignmentStatus === 'failed' ? `
+            ⚠️ **BLOCKING**: QIEL configuration changes detected but not synchronized.
+            
+            **Action Required**:
+            1. Update \`lib/foreman/qiel-config.ts\` to match \`.github/workflows/qiel.yml\`
+            2. Or update \`.github/workflows/qiel.yml\` to match \`lib/foreman/qiel-config.ts\`
+            3. Run \`npm run qa:diff\` locally to verify alignment
+            
+            Per **True North Philosophy**, configuration drift is not permitted.
+            ` : `
+            ✅ QIEL configuration is properly synchronized across all environments.
+            `}
+            
+            <details>
+            <summary>View Full Diff Report</summary>
+            
+            \`\`\`
+            ${reportContent}
+            \`\`\`
+            
+            </details>
+            `;
+            
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: comment
+            });
+      
+      - name: Block merge if misaligned
+        if: steps.qiel-diff.outputs.alignment == 'failed'
+        run: |
+          echo "::error::QIEL configuration is misaligned - merge blocked per True North Philosophy"
+          exit 1

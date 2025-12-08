@@ -11,6 +11,11 @@
  * - Governance violations
  * 
  * Halts execution when critical drift is detected.
+ * 
+ * CRITICAL: Per QIEL Environment Alignment:
+ * - All thresholds are sourced from lib/foreman/qiel-config.ts
+ * - Identical configuration as GitHub Actions
+ * - Zero drift tolerance
  */
 
 import * as fs from 'fs'
@@ -39,37 +44,23 @@ import {
 } from '@/types/reasoning'
 import { BuilderFeedback } from '@/types/builder-feedback'
 import { getAllMemory, flattenMemory } from './index'
+import { QIEL_CONFIG } from '../qiel-config'
 
 /**
- * Default drift monitoring configuration
+ * Default drift monitoring configuration (now sourced from unified config)
  */
 const DEFAULT_CONFIG: DriftMonitorConfig = {
-  enabledChecks: [
-    'schema_drift',
-    'version_drift',
-    'contradiction_drift',
-    'staleness_drift',
-    'cross_agent_drift',
-    'project_drift',
-    'pattern_drift',
-    'governance_drift',
-    'agent_experience_drift'
-  ],
-  stalenessThresholds: {
-    reasoningPatterns: 180, // 6 months
-    architectureLessons: 365, // 1 year
-    issues: 90, // 3 months
-    projectMemory: 30 // 1 month
-  },
-  blockOnCritical: true,
-  blockOnMultipleErrors: true,
-  errorThreshold: 3
+  enabledChecks: QIEL_CONFIG.drift.enabledChecks as unknown as DriftType[],
+  stalenessThresholds: QIEL_CONFIG.drift.stalenessThresholds,
+  blockOnCritical: QIEL_CONFIG.drift.blockOnCritical,
+  blockOnMultipleErrors: QIEL_CONFIG.drift.blockOnMultipleErrors,
+  errorThreshold: QIEL_CONFIG.drift.errorThreshold
 }
 
 /**
- * Current memory version
+ * Current memory version (from unified config)
  */
-const MEMORY_VERSION = '1.0.0'
+const MEMORY_VERSION = QIEL_CONFIG.drift.memoryVersion
 
 /**
  * JSON schema validator cache

@@ -13,13 +13,23 @@
  * - QIEL-8: Auto-Generated Regression Tests
  * 
  * Exit Criteria: ALL checks must pass for QA to succeed
+ * 
+ * CRITICAL: Per QIEL Environment Alignment (Issue #XXX):
+ * - Foreman MUST run ACTUAL build/lint/test commands
+ * - Foreman MUST NOT use synthetic logs
+ * - Foreman MUST produce IDENTICAL logs as GitHub Actions
+ * - Configuration MUST be unified via qiel-config.ts
  */
 
 import {
   parseAllLogs,
-  validateLogsExist,
+  validateLogsExist as validateLogsExistOld,
   generateLogParsingReport,
 } from './log-parsing-qa';
+import {
+  generateAllLogs,
+  validateLogsExist,
+} from './log-generator';
 import {
   runZeroWarningPolicy,
   generateZeroWarningReport,
@@ -48,11 +58,13 @@ import {
   countRegressionTests,
 } from './regression-test-generator';
 import { QualityIntegrityIncident } from '@/types/memory';
+import { QIEL_CONFIG } from '../qiel-config';
 
 export interface QIELResult {
   passed: boolean;
   timestamp: string;
   checks: {
+    logsGenerated: boolean;
     logsExist: boolean;
     buildLogsPassed: boolean;
     lintLogsPassed: boolean;
@@ -63,6 +75,7 @@ export interface QIELResult {
     engineLoadPassed: boolean;
   };
   results: {
+    logGeneration: ReturnType<typeof generateAllLogs>;
     logValidation: ReturnType<typeof validateLogsExist>;
     logParsing: ReturnType<typeof parseAllLogs>;
     zeroWarning: ReturnType<typeof runZeroWarningPolicy>;
@@ -76,6 +89,7 @@ export interface QIELResult {
   overallSummary: string;
   blockersFound: string[];
   reportMarkdown: string;
+  configVersion: string;
 }
 
 /**
@@ -105,15 +119,31 @@ export async function runQIEL(options?: {
   console.log('═══════════════════════════════════════════════════════');
   console.log('  QIEL: Quality Integrity Enforcement Layer');
   console.log('  Enforcing Quality Integrity Contract (QIC)');
+  console.log(`  Config Version: ${QIEL_CONFIG.version}`);
+  console.log(`  Node Version: ${QIEL_CONFIG.nodeVersion}`);
   console.log('═══════════════════════════════════════════════════════\n');
 
   const timestamp = new Date().toISOString();
   const blockersFound: string[] = [];
   const qiIncidents: QualityIntegrityIncident[] = [];
 
+  // ========== QIEL-0: Log Generation (NEW) ==========
+  console.log('🔨 [QIEL-0] Generating logs by running ACTUAL commands...');
+  console.log('    This ensures identical logs as GitHub Actions workflow\n');
+  
+  const logGeneration = generateAllLogs(projectDir);
+  const logsGenerated = logGeneration.allSucceeded;
+
+  if (!logsGenerated) {
+    console.log('⚠️  Warning: Some commands failed during log generation');
+    console.log('    Logs will still be parsed for error detection\n');
+  } else {
+    console.log('✅ All commands executed successfully\n');
+  }
+
   // ========== QIEL-1, QIEL-2, QIEL-3: Log Validation ==========
   console.log('📋 [QIEL-1,2,3] Validating logs exist...');
-  const logValidation = validateLogsExist(logsDir);
+  const logValidation = validateLogsExist();
   const logsExist = logValidation.allExist;
 
   if (!logsExist) {
@@ -126,7 +156,7 @@ export async function runQIEL(options?: {
 
   // ========== QIEL-1, QIEL-2, QIEL-3: Log Parsing ==========
   console.log('🔍 [QIEL-1,2,3] Parsing logs for errors and warnings...');
-  const logParsing = parseAllLogs(logsDir);
+  const logParsing = parseAllLogs('/tmp');
   const buildLogsPassed = logParsing.build.passed;
   const lintLogsPassed = logParsing.lint.passed;
   const testLogsPassed = logParsing.test.passed;
@@ -180,7 +210,7 @@ export async function runQIEL(options?: {
 
   // ========== QIEL-2: Zero-Warning Policy ==========
   console.log('⚠️  [QIEL-2] Enforcing zero-warning policy...');
-  const zeroWarning = runZeroWarningPolicy(logsDir);
+  const zeroWarning = runZeroWarningPolicy('/tmp');
   const zeroWarningPassed = zeroWarning.passed;
 
   if (!zeroWarningPassed) {
@@ -298,6 +328,7 @@ export async function runQIEL(options?: {
 
   // ========== Overall Status ==========
   const passed =
+    logsGenerated &&
     logsExist &&
     buildLogsPassed &&
     lintLogsPassed &&
@@ -337,7 +368,9 @@ export async function runQIEL(options?: {
 
   // Checklist
   reportSections.push('## QIC Exit Criteria Checklist\n');
-  reportSections.push(`- [${logsExist ? 'x' : ' '}] Build logs contain zero errors or warnings`);
+  reportSections.push(`- [${logsGenerated ? 'x' : ' '}] Commands executed successfully`);
+  reportSections.push(`- [${logsExist ? 'x' : ' '}] All log files exist`);
+  reportSections.push(`- [${buildLogsPassed ? 'x' : ' '}] Build logs contain zero errors or warnings`);
   reportSections.push(`- [${lintLogsPassed ? 'x' : ' '}] Lint logs contain zero errors or warnings`);
   reportSections.push(`- [${testLogsPassed ? 'x' : ' '}] Tests contain zero errors or warnings`);
   reportSections.push(`- [${deploymentSimulationPassed ? 'x' : ' '}] Preview & production deploys both succeed`);
@@ -396,6 +429,7 @@ export async function runQIEL(options?: {
     passed,
     timestamp,
     checks: {
+      logsGenerated,
       logsExist,
       buildLogsPassed,
       lintLogsPassed,
@@ -406,6 +440,7 @@ export async function runQIEL(options?: {
       engineLoadPassed,
     },
     results: {
+      logGeneration,
       logValidation,
       logParsing,
       zeroWarning,
@@ -419,6 +454,7 @@ export async function runQIEL(options?: {
     overallSummary,
     blockersFound,
     reportMarkdown,
+    configVersion: QIEL_CONFIG.version,
   };
 }
 
