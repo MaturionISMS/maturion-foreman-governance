@@ -856,12 +856,21 @@ export async function setBranchProtection(
     
     await retryMutation(async () => {
       const octokit = await getGitHubClient()
-      await octokit.rest.repos.updateBranchProtection({
+      
+      // Construct the protection config with proper types for GitHub API
+      const protectionConfig: any = {
         owner,
         repo,
         branch,
-        ...rules,
-      })
+        required_status_checks: rules.required_status_checks || null,
+        enforce_admins: rules.enforce_admins ?? null,
+        required_pull_request_reviews: rules.required_pull_request_reviews || null,
+        restrictions: rules.restrictions ?? null,
+        allow_force_pushes: rules.allow_force_pushes ?? false,
+        allow_deletions: rules.allow_deletions ?? false,
+      }
+      
+      await octokit.rest.repos.updateBranchProtection(protectionConfig)
     }, 'setBranchProtection')
     
     await recordMutation({
