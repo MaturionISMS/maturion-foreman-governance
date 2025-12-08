@@ -8,6 +8,8 @@ import { github } from './client'
 import { PRContext, ChangeRecord, ComplianceResult } from '@/types/build-sequence'
 import { QAResult, BuilderTask } from '@/types/builder'
 import { BuilderFeedback } from '@/types/builder-feedback'
+import { enforcePRGatekeeper } from '@/lib/foreman/pr-gatekeeper'
+import { logGovernanceEvent } from '@/lib/foreman/memory/governance-memory'
 
 /**
  * Generate PR title from context
@@ -286,7 +288,6 @@ export async function createPullRequest(
   if (!skipGatekeeperCheck) {
     console.log('[PRBuilder] Verifying PR Gatekeeper compliance...')
     
-    const { enforcePRGatekeeper } = await import('@/lib/foreman/pr-gatekeeper')
     const gatekeeperResult = await enforcePRGatekeeper({
       buildId,
       sequenceId,
@@ -308,7 +309,6 @@ export async function createPullRequest(
     console.warn('[PRBuilder] ⚠️  WARNING: PR Gatekeeper check SKIPPED')
     console.warn('[PRBuilder] This may indicate a governance bypass attempt')
     
-    const { logGovernanceEvent } = await import('@/lib/foreman/memory/governance-memory')
     await logGovernanceEvent({
       type: 'pr_gatekeeper_skipped',
       severity: 'high',
@@ -341,7 +341,6 @@ export async function createPullRequest(
     console.log(`[PRBuilder] Pull request created: ${response.data.html_url}`)
     
     // Log successful PR creation to governance
-    const { logGovernanceEvent } = await import('@/lib/foreman/memory/governance-memory')
     await logGovernanceEvent({
       type: 'pr_created',
       severity: 'info',
@@ -366,7 +365,6 @@ export async function createPullRequest(
     console.error('[PRBuilder] Failed to create pull request:', error)
     
     // Log PR creation failure to governance
-    const { logGovernanceEvent } = await import('@/lib/foreman/memory/governance-memory')
     await logGovernanceEvent({
       type: 'pr_creation_failed',
       severity: 'high',

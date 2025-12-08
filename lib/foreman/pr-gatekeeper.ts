@@ -33,7 +33,7 @@
 import { runQIEL, QIELResult } from './qa/qiel-runner';
 import { QIEL_CONFIG } from './qiel-config';
 import { logGovernanceEvent } from './memory/governance-memory';
-import { recordMemory } from './memory/storage';
+import { writeMemory } from './memory/storage';
 
 /**
  * PR Gatekeeper Result
@@ -322,8 +322,6 @@ async function recordGovernanceIncident(incident: {
   timestamp: string;
 }): Promise<void> {
   try {
-    const { writeMemory } = await import('./memory/storage');
-    
     await writeMemory({
       entry: {
         id: `pr_gatekeeper_block_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,

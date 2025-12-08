@@ -9,7 +9,7 @@
  * - No bypasses are possible
  */
 
-import { describe, it, beforeEach } from 'node:test';
+import { describe, it } from 'node:test';
 import assert from 'node:assert';
 import * as fs from 'fs';
 import * as path from 'path';
