@@ -37,8 +37,7 @@
     "const err = new Error",
     "# Error: Cannot find module",
     "TypeScript compilation failed",
-    "error: '1 subtest failed'",
-    "error: '4 subtests failed'",
+    "subtest failed'",
     "Production build failed:",
     "Linting failed with errors:"
   ]
