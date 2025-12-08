@@ -174,12 +174,19 @@ export async function POST(request: NextRequest) {
         )
         
         // Create pull request
+        // NOTE: PR Gatekeeper is enforced in build-sequence.ts before this point
+        // The gatekeeper check in createPullRequest is a safety net
         prUrl = await createPullRequest(
           owner,
           repo,
           branch,
           baseBranch,
-          prContext
+          prContext,
+          {
+            buildId: sequence.id,
+            sequenceId: sequence.id,
+            skipGatekeeperCheck: false, // Always enforce gatekeeper
+          }
         )
         
         sequence.prUrl = prUrl
@@ -188,7 +195,31 @@ export async function POST(request: NextRequest) {
         
       } catch (prError) {
         console.error('[RunBuild] Failed to create PR:', prError)
-        // Don't fail the entire build sequence if PR creation fails
+        console.error('[RunBuild] This may indicate a governance violation or QIEL failure')
+        
+        // PR creation failure is now a critical error - don't silently swallow it
+        // The build sequence should have been blocked earlier if QIEL failed
+        // If we get here with a PR error, it's likely a GitHub API issue
+        const errorMessage = prError instanceof Error ? prError.message : 'Unknown error'
+        
+        // Check if this is a governance block
+        if (errorMessage.includes('PR blocked by governance')) {
+          console.error('[RunBuild] CRITICAL: PR blocked by governance after build completion')
+          console.error('[RunBuild] This indicates the PR Gatekeeper was not enforced in build-sequence.ts')
+          
+          // Fail the entire request to surface the governance issue
+          return NextResponse.json<RunBuildResponse>(
+            {
+              success: false,
+              error: errorMessage,
+              message: 'PR creation blocked by governance enforcement'
+            },
+            { status: 403 } // Forbidden - governance violation
+          )
+        }
+        
+        // For other errors (e.g., GitHub API issues), log but don't fail the build
+        console.warn('[RunBuild] PR creation failed but build sequence completed')
       }
     }
     

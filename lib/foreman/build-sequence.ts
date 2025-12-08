@@ -522,6 +522,41 @@ export async function runBuildSequence(
       console.log(`[BuildSequence] ${watchdogResult.uiReviewMessage}`)
     }
     
+    // PR GATEKEEPER: Enforce QIEL validation before PR assembly
+    // This is the CRITICAL gate that prevents PR creation unless QIEL passes
+    console.log('[BuildSequence] Enforcing PR Gatekeeper (QIEL validation)...')
+    const { enforcePRGatekeeper } = await import('./pr-gatekeeper')
+    
+    const gatekeeperResult = await enforcePRGatekeeper({
+      buildId: sequence.id,
+      sequenceId: sequence.id,
+      logsDir: '/tmp',
+    })
+    
+    if (!gatekeeperResult.allowed) {
+      // PR Gatekeeper BLOCKED - QIEL did not pass
+      sequence.status = 'blocked'
+      sequence.error = gatekeeperResult.reason
+      sequence.updatedAt = new Date()
+      sequenceStore.set(sequence.id, sequence)
+      
+      console.error('[BuildSequence] BUILD BLOCKED BY PR GATEKEEPER')
+      console.error('[BuildSequence] Reason:', gatekeeperResult.reason)
+      console.error('[BuildSequence] Blocking Issues:', gatekeeperResult.blockingIssues.length)
+      gatekeeperResult.blockingIssues.forEach((issue, idx) => {
+        console.error(`  ${idx + 1}. ${issue}`)
+      })
+      console.error('[BuildSequence] Governance Violations:', gatekeeperResult.governanceViolations.length)
+      gatekeeperResult.governanceViolations.forEach((violation, idx) => {
+        console.error(`  ${idx + 1}. ${violation}`)
+      })
+      
+      throw new Error(`PR blocked by governance: QIEL not passed under merge-queue conditions. ${gatekeeperResult.blockingIssues.join(', ')}`)
+    }
+    
+    console.log('[BuildSequence] ✅ PR Gatekeeper passed - QIEL validation successful')
+    console.log('[BuildSequence] PR assembly may proceed')
+    
     // Step 6: PR Assembly (handled separately)
     sequence.status = 'assembling_pr'
     sequence.updatedAt = new Date()
