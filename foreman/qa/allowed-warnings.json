@@ -27,6 +27,19 @@
     "# ⚠️",
     "# should",
     "# [",
-    "error.*as part of"
+    "error.*as part of",
+    "error: 'test failed'",
+    "code: 'ERR_TEST_FAILURE'",
+    "error: |-",
+    "error TS",
+    "TypeError:",
+    "ReferenceError:",
+    "const err = new Error",
+    "# Error: Cannot find module",
+    "TypeScript compilation failed",
+    "error: '1 subtest failed'",
+    "error: '4 subtests failed'",
+    "Production build failed:",
+    "Linting failed with errors:"
   ]
 }
