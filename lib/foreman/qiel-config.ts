@@ -373,10 +373,14 @@ export function validateGitHubWorkflowAlignment(): {
 
     const workflowContent = fs.readFileSync(workflowPath, 'utf-8');
 
-    // Simple text-based validation (without YAML parser dependency)
+    // ========================================
+    // ONE FILE ARCHITECTURE VALIDATION
+    // ========================================
+    // Per the One QIEL File principle, the workflow should ONLY run
+    // "npm run qiel:full" and NOT have hardcoded individual commands.
+    // This ensures zero drift between local and CI execution.
     
-    // Check Node version - extracts major version only (e.g., "20" from "20.0.0")
-    // Matches: node-version: '20' or node-version: '20.15.0'
+    // 1. Check Node version - extracts major version only (e.g., "20" from "20.0.0")
     const nodeVersionMatch = workflowContent.match(/node-version:\s*['"]?(\d+)(?:\.\d+(?:\.\d+)?)?['"]?/);
     const workflowMajorVersion = nodeVersionMatch ? nodeVersionMatch[1] : null;
     
@@ -386,39 +390,32 @@ export function validateGitHubWorkflowAlignment(): {
       );
     }
 
-    // Check log paths
-    if (!workflowContent.includes('/tmp/build.log')) {
-      differences.push('Workflow does not use /tmp/build.log for typecheck logs');
-    }
-
-    if (!workflowContent.includes('/tmp/lint.log')) {
-      differences.push('Workflow does not use /tmp/lint.log for lint logs');
-    }
-
-    if (!workflowContent.includes('/tmp/test.log')) {
-      differences.push('Workflow does not use /tmp/test.log for test logs');
-    }
-
-    // Check QIEL commands
-    if (!workflowContent.includes('npm run qiel:quick')) {
-      differences.push('Workflow does not use npm run qiel:quick');
-    }
-
+    // 2. Check that workflow uses npm run qiel:full (ONE COMMAND)
     if (!workflowContent.includes('npm run qiel:full')) {
-      differences.push('Workflow does not use npm run qiel:full');
+      differences.push('Workflow must run "npm run qiel:full" to ensure ONE FILE architecture');
     }
 
-    // Check required commands are present
-    if (!workflowContent.includes('npm run typecheck')) {
-      differences.push('Workflow does not run npm run typecheck');
+    // 3. Check that workflow does NOT have hardcoded individual commands (NO DUPLICATION)
+    // Look for the old pattern of running typecheck/lint/test separately
+    const hasHardcodedTypecheck = workflowContent.match(/run:.*npm run typecheck.*2>&1.*tee/);
+    const hasHardcodedLint = workflowContent.match(/run:.*npm run lint.*2>&1.*tee/);
+    const hasHardcodedTest = workflowContent.match(/run:.*npm run test:all.*2>&1.*tee/);
+    
+    if (hasHardcodedTypecheck) {
+      differences.push('Workflow has hardcoded "npm run typecheck" command - violates ONE FILE principle');
+    }
+    
+    if (hasHardcodedLint) {
+      differences.push('Workflow has hardcoded "npm run lint" command - violates ONE FILE principle');
+    }
+    
+    if (hasHardcodedTest) {
+      differences.push('Workflow has hardcoded "npm run test:all" command - violates ONE FILE principle');
     }
 
-    if (!workflowContent.includes('npm run lint')) {
-      differences.push('Workflow does not run npm run lint');
-    }
-
-    if (!workflowContent.includes('npm run test:all')) {
-      differences.push('Workflow does not run npm run test:all');
+    // 4. Verify the workflow includes the ONE FILE architecture comment
+    if (!workflowContent.includes('ONE QIEL FILE') && !workflowContent.includes('one file')) {
+      differences.push('Workflow should document the ONE FILE architecture principle');
     }
 
   } catch (error) {
