@@ -62,7 +62,7 @@ const ENGINE_SCHEMAS = {
   },
   'analytics-engine': {
     path: 'types/analytics.ts',
-    requiredTypes: ['AnalyticsEvent', 'AnalyticsMetric'],
+    requiredTypes: ['AnalyticsSummary', 'MemoryHealthMetrics'],
   },
 };
 

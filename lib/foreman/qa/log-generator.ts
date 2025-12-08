@@ -198,6 +198,32 @@ export function generateTestLog(
 }
 
 /**
+ * Clean up auto-generated regression tests before running tests
+ * These are gitignored but may exist from previous QIEL runs
+ */
+function cleanupRegressionTests(): void {
+  const regressionDir = path.join(process.cwd(), 'tests/qic/regression');
+  
+  if (fs.existsSync(regressionDir)) {
+    try {
+      const files = fs.readdirSync(regressionDir);
+      const testFiles = files.filter(f => f.startsWith('qi-') && f.endsWith('.test.ts'));
+      
+      for (const file of testFiles) {
+        fs.unlinkSync(path.join(regressionDir, file));
+      }
+      
+      if (testFiles.length > 0) {
+        console.log(`[QIEL] Cleaned up ${testFiles.length} auto-generated regression test(s)`);
+      }
+    } catch (error) {
+      // Ignore errors - regression tests are optional
+      console.log(`[QIEL] Note: Could not clean regression tests: ${error}`);
+    }
+  }
+}
+
+/**
  * Run all log generation steps
  * Returns summary of all log generation results
  */
@@ -211,6 +237,9 @@ export function generateAllLogs(
 } {
   console.log('[QIEL] Generating all logs by running actual commands...');
   console.log('[QIEL] This matches GitHub Actions workflow execution\n');
+  
+  // Clean up regression tests before running tests to avoid circular dependency
+  cleanupRegressionTests();
 
   const buildLog = generateBuildLog(projectDir);
   const lintLog = generateLintLog(projectDir);
