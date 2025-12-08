@@ -20,6 +20,7 @@
     "typecheck:production": "tsc --noEmit --exclude 'tests/**/*'",
     "qa:full": "npm run lint && npm run test:structural && npm run build",
     "qa:diff": "tsx scripts/qiel-env-diff.ts",
+    "qa:preflight": "tsx scripts/pre-flight-validation.ts",
     "qiel": "tsx scripts/run-qiel.ts",
     "qiel:quick": "tsx scripts/run-qiel.ts --quick",
     "qiel:full": "tsx scripts/run-qiel.ts --full",

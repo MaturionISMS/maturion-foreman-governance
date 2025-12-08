@@ -37,7 +37,11 @@ next-env.d.ts
 
 # QIEL auto-generated files
 qiel-env-report.md
+preflight-validation-report.md
 /tmp/*.log
+
+# memory governance data (preflight validations)
+/memory/foreman/preflight-validations.json
 
 # build reports (test artifacts)
 /reports/*.md
