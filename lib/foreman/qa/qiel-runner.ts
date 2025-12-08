@@ -2,6 +2,15 @@
  * Quality Integrity Enforcement Layer (QIEL) Runner
  * 
  * Comprehensive QA system that enforces the Quality Integrity Contract (QIC).
+ * 
+ * ⚠️  GSR-QA-STRICT-001: STRICT ZERO-TOLERANCE MODE ENFORCED ⚠️
+ * 
+ * This system operates under STRICT mode with:
+ * - NO WHITELISTING of any errors or warnings
+ * - IMMEDIATE FAILURE on ANY detected issue
+ * - ZERO TOLERANCE for drift warnings
+ * - BLOCKING on all QIW anomalies
+ * 
  * Integrates all QIEL components:
  * - QIEL-1: Build Log Parser
  * - QIEL-2: Lint Log Parser
@@ -12,7 +21,7 @@
  * - QIEL-7: QI Incident Writer
  * - QIEL-8: Auto-Generated Regression Tests
  * 
- * Exit Criteria: ALL checks must pass for QA to succeed
+ * Exit Criteria: ALL checks must pass for QA to succeed - NO EXCEPTIONS
  * 
  * CRITICAL: Per QIEL Environment Alignment (Issue #XXX):
  * - Foreman MUST run ACTUAL build/lint/test commands

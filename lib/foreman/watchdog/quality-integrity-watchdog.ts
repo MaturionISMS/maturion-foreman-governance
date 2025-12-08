@@ -255,7 +255,7 @@ function determineRecommendation(
   
   // Deprecated API
   if (/deprecated/i.test(logLine)) {
-    return 'Update to use non-deprecated API or whitelist if intentional'
+    return 'Update to use non-deprecated API immediately - strict mode enforced'
   }
   
   // Test failures
@@ -275,9 +275,9 @@ function determineRecommendation(
   
   // Generic recommendation
   if (severity === 'error') {
-    return `Fix error in ${channel} - review log context and address the issue`
+    return `Fix error in ${channel} - review log context and address the issue immediately`
   } else {
-    return `Address warning in ${channel} - review and fix or whitelist if acceptable`
+    return `Address warning in ${channel} - ALL warnings are blockers under GSR-QA-STRICT-001`
   }
 }
 
@@ -512,7 +512,7 @@ function determineMissingRule(anomaly: QIWAnomaly): string | undefined {
   }
   
   if (/deprecated/i.test(anomaly.logLine)) {
-    return 'Deprecated APIs MUST be migrated or explicitly whitelisted'
+    return 'Deprecated APIs MUST be migrated immediately - no exceptions allowed under GSR-QA-STRICT-001'
   }
   
   if (anomaly.severity === 'critical') {

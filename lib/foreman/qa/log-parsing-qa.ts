@@ -17,7 +17,6 @@ export interface LogParsingResult {
   parsed: boolean;
   errors: ErrorEntry[];
   warnings: WarningEntry[];
-  unwhitelistedWarnings: WarningEntry[];
   passed: boolean;
   summary: string;
 }
@@ -34,12 +33,6 @@ export interface WarningEntry {
   message: string;
   pattern: string;
   context?: string;
-}
-
-export interface AllowedWarnings {
-  build: string[];
-  lint: string[];
-  test: string[];
 }
 
 /**
@@ -75,40 +68,6 @@ const WARNING_PATTERNS = [
 ];
 
 /**
- * Load allowed warnings whitelist
- */
-export function loadAllowedWarnings(): AllowedWarnings {
-  const whitelistPath = path.join(
-    process.cwd(),
-    'foreman',
-    'qa',
-    'allowed-warnings.json'
-  );
-
-  if (!fs.existsSync(whitelistPath)) {
-    return { build: [], lint: [], test: [] };
-  }
-
-  try {
-    const content = fs.readFileSync(whitelistPath, 'utf-8');
-    return JSON.parse(content) as AllowedWarnings;
-  } catch (error) {
-    console.error('[QA] Failed to load allowed warnings:', error);
-    return { build: [], lint: [], test: [] };
-  }
-}
-
-/**
- * Check if a warning is whitelisted
- */
-function isWarningWhitelisted(
-  warning: string,
-  whitelist: string[]
-): boolean {
-  return whitelist.some(allowed => warning.includes(allowed));
-}
-
-/**
  * Parse a log file for errors and warnings
  */
 export function parseLogFile(
@@ -121,7 +80,6 @@ export function parseLogFile(
     parsed: false,
     errors: [],
     warnings: [],
-    unwhitelistedWarnings: [],
     passed: false,
     summary: '',
   };
@@ -137,8 +95,6 @@ export function parseLogFile(
   try {
     const content = fs.readFileSync(logFilePath, 'utf-8');
     const lines = content.split('\n');
-    const allowedWarnings = loadAllowedWarnings();
-    const whitelist = allowedWarnings[logType] || [];
 
     // Parse each line for errors and warnings
     lines.forEach((line, index) => {
@@ -147,16 +103,12 @@ export function parseLogFile(
       // Check for errors
       for (const pattern of ERROR_PATTERNS) {
         if (pattern.test(line)) {
-          // Check if error is whitelisted
-          const isWhitelisted = isWarningWhitelisted(line, whitelist);
-          if (!isWhitelisted) {
-            result.errors.push({
-              line: lineNumber,
-              message: line.trim(),
-              pattern: pattern.source,
-              context: getContext(lines, index),
-            });
-          }
+          result.errors.push({
+            line: lineNumber,
+            message: line.trim(),
+            pattern: pattern.source,
+            context: getContext(lines, index),
+          });
           break; // Only match first pattern per line
         }
       }
@@ -172,11 +124,6 @@ export function parseLogFile(
           };
 
           result.warnings.push(warning);
-
-          // Check if warning is whitelisted
-          if (!isWarningWhitelisted(line, whitelist)) {
-            result.unwhitelistedWarnings.push(warning);
-          }
           break; // Only match first pattern per line
         }
       }
@@ -184,23 +131,19 @@ export function parseLogFile(
 
     result.parsed = true;
 
-    // Determine pass/fail status
-    result.passed =
-      result.errors.length === 0 &&
-      result.unwhitelistedWarnings.length === 0;
+    // Determine pass/fail status - STRICT MODE: zero tolerance for errors AND warnings
+    result.passed = result.errors.length === 0 && result.warnings.length === 0;
 
     // Generate summary
     if (result.passed) {
-      result.summary = `${logType} log parsed: ${result.errors.length} errors, ${result.unwhitelistedWarnings.length} unwhitelisted warnings`;
+      result.summary = `${logType} log parsed: 0 errors, 0 warnings`;
     } else {
       const issues: string[] = [];
       if (result.errors.length > 0) {
         issues.push(`${result.errors.length} errors`);
       }
-      if (result.unwhitelistedWarnings.length > 0) {
-        issues.push(
-          `${result.unwhitelistedWarnings.length} unwhitelisted warnings`
-        );
+      if (result.warnings.length > 0) {
+        issues.push(`${result.warnings.length} warnings`);
       }
       result.summary = `${logType} log FAILED: ${issues.join(', ')}`;
     }
@@ -332,7 +275,6 @@ export function generateLogParsingReport(results: {
   sections.push(`- **Parsed**: ${results.lint.parsed ? 'Yes' : 'No'}`);
   sections.push(`- **Errors**: ${results.lint.errors.length}`);
   sections.push(`- **Warnings**: ${results.lint.warnings.length}`);
-  sections.push(`- **Unwhitelisted Warnings**: ${results.lint.unwhitelistedWarnings.length}`);
   sections.push(`- **Status**: ${results.lint.passed ? '✅ PASSED' : '❌ FAILED'}\n`);
 
   if (results.lint.errors.length > 0) {
@@ -343,9 +285,9 @@ export function generateLogParsingReport(results: {
     sections.push('');
   }
 
-  if (results.lint.unwhitelistedWarnings.length > 0) {
-    sections.push('### Lint Unwhitelisted Warnings\n');
-    results.lint.unwhitelistedWarnings.forEach(warn => {
+  if (results.lint.warnings.length > 0) {
+    sections.push('### Lint Warnings\n');
+    results.lint.warnings.forEach(warn => {
       sections.push(`- Line ${warn.line}: ${warn.message}`);
     });
     sections.push('');
@@ -358,7 +300,6 @@ export function generateLogParsingReport(results: {
   sections.push(`- **Parsed**: ${results.test.parsed ? 'Yes' : 'No'}`);
   sections.push(`- **Errors**: ${results.test.errors.length}`);
   sections.push(`- **Warnings**: ${results.test.warnings.length}`);
-  sections.push(`- **Unwhitelisted Warnings**: ${results.test.unwhitelistedWarnings.length}`);
   sections.push(`- **Status**: ${results.test.passed ? '✅ PASSED' : '❌ FAILED'}\n`);
 
   if (results.test.errors.length > 0) {
@@ -369,9 +310,9 @@ export function generateLogParsingReport(results: {
     sections.push('');
   }
 
-  if (results.test.unwhitelistedWarnings.length > 0) {
-    sections.push('### Test Unwhitelisted Warnings\n');
-    results.test.unwhitelistedWarnings.forEach(warn => {
+  if (results.test.warnings.length > 0) {
+    sections.push('### Test Warnings\n');
+    results.test.warnings.forEach(warn => {
       sections.push(`- Line ${warn.line}: ${warn.message}`);
     });
     sections.push('');

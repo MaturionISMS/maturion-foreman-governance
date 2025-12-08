@@ -49,10 +49,10 @@ export const QIW_CONFIG = {
     'runtime_initialization',
   ] as const,
 
-  // Blocking behavior
+  // Blocking behavior - GSR-QA-STRICT-001: STRICT MODE
   blockOnCritical: true,
   blockOnErrors: true,
-  blockOnWarnings: false, // Zero-warning policy enforced separately
+  blockOnWarnings: true, // STRICT: All warnings block QA
 
   // Error detection patterns (RegExp strings for serialization)
   errorPatterns: {
@@ -208,10 +208,10 @@ export const DRIFT_CONFIG = {
   memoryVersion: '1.0.0',
   schemaVersion: '1.0.0',
 
-  // Blocking behavior
+  // Blocking behavior - GSR-QA-STRICT-001: STRICT MODE
   blockOnCritical: true,
   blockOnMultipleErrors: true,
-  errorThreshold: 3,
+  errorThreshold: 1, // STRICT: Block on ANY error (changed from 3)
 } as const;
 
 /**
