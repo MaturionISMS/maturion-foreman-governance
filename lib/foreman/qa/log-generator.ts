@@ -56,10 +56,10 @@ function executeAndLog(
 
     // Execute command with output capture
     // ALWAYS use shell to enable stderr redirection (2>&1) to match GitHub Actions
+    // When encoding is set, output is automatically captured as string
     const output = execSync(command, {
       cwd,
       encoding: 'utf-8',
-      stdio: 'pipe', // Capture all output
       timeout,
       shell: true, // REQUIRED for 2>&1 redirection
     });
@@ -77,15 +77,20 @@ function executeAndLog(
     };
   } catch (error: any) {
     // Command failed, but we still want to capture the output
-    // When using shell: true, the output is in error.output array
-    // error.output format: [stdin, stdout, stderr]
+    // When using encoding: 'utf-8' and shell: true, the output is captured differently
     let output = '';
-    if (error.output && Array.isArray(error.output)) {
-      const [, stdout, stderr] = error.output;
-      output = (stdout || '') + (stderr || '');
-    } else {
-      // Fallback to error properties
-      output = error.stdout || error.stderr || error.message || '';
+    
+    // Try to get output from various error properties
+    if (error.stdout) {
+      output += error.stdout.toString();
+    }
+    if (error.stderr) {
+      output += error.stderr.toString();
+    }
+    
+    // If no output captured, use error message
+    if (!output) {
+      output = error.message || 'Command failed with no output';
     }
     
     // Write output to log file even on failure
