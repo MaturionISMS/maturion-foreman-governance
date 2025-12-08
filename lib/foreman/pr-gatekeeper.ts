@@ -322,36 +322,40 @@ async function recordGovernanceIncident(incident: {
   timestamp: string;
 }): Promise<void> {
   try {
-    await recordMemory({
-      id: `pr_gatekeeper_block_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
-      scope: 'global',
-      category: 'governance',
-      type: 'incident',
-      tags: [
-        'pr_gatekeeper',
-        'pr_creation_blocked',
-        'governance_violation',
-        'qiel_failure',
-        ...incident.governanceViolations.map(v => v.toLowerCase()),
-      ],
-      value: {
-        incident: {
-          type: incident.type,
-          reason: incident.reason,
-          blockingIssues: incident.blockingIssues,
-          governanceViolations: incident.governanceViolations,
-          qielPassed: incident.qielResult?.passed || false,
-          qiIncidents: incident.qielResult?.qiIncidents.length || 0,
-          buildId: incident.buildId,
-          sequenceId: incident.sequenceId,
-          timestamp: incident.timestamp,
+    const { writeMemory } = await import('./memory/storage');
+    
+    await writeMemory({
+      entry: {
+        id: `pr_gatekeeper_block_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
+        scope: 'global',
+        category: 'governance',
+        type: 'incident',
+        tags: [
+          'pr_gatekeeper',
+          'pr_creation_blocked',
+          'governance_violation',
+          'qiel_failure',
+          ...incident.governanceViolations.map(v => v.toLowerCase()),
+        ],
+        value: {
+          incident: {
+            type: incident.type,
+            reason: incident.reason,
+            blockingIssues: incident.blockingIssues,
+            governanceViolations: incident.governanceViolations,
+            qielPassed: incident.qielResult?.passed || false,
+            qiIncidents: incident.qielResult?.qiIncidents.length || 0,
+            buildId: incident.buildId,
+            sequenceId: incident.sequenceId,
+            timestamp: incident.timestamp,
+          },
         },
-      },
-      metadata: {
-        source: 'PRGatekeeper',
-        requiresCorrection: true,
-        severity: 'critical',
-      },
+        metadata: {
+          source: 'PRGatekeeper',
+          requiresCorrection: true,
+          severity: 'critical',
+        },
+      }
     });
 
     console.log('[PR Gatekeeper] Governance incident recorded to memory fabric');

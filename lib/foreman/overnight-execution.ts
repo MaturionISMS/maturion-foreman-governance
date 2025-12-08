@@ -369,6 +369,13 @@ async function executeIssue(
     // 4. Run full QIC, QIEL, CDW, SQL, Memory Fabric, Drift, Governance checks
     // 5. Rebuild until all checks pass
     // 6. Create PR only when 100% QA pass
+    // 
+    // CRITICAL: PR creation MUST be guarded by PR Gatekeeper
+    // When fully implemented, this should:
+    // - Call enforcePRGatekeeper() before any PR creation attempt
+    // - Block PR creation if QIEL does not pass
+    // - Log all blocks to governance memory
+    // - Ensure zero bypasses, zero whitelisting
 
     // Simulate QA validation
     const qaResults: QAValidationSummary = {
