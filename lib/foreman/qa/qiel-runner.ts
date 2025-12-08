@@ -133,6 +133,14 @@ export async function runQIEL(options?: {
   const logValidation = validateLogsExist(logsDir);
   const logsExist = logValidation.allExist;
   
+  // Helper: Create mock log generation result for when we skip generation
+  const createMockLogGeneration = (): ReturnType<typeof generateAllLogs> => ({
+    buildLog: { success: true, logPath: '', exitCode: 0 },
+    lintLog: { success: true, logPath: '', exitCode: 0 },
+    testLog: { success: true, logPath: '', exitCode: 0 },
+    allSucceeded: true,
+  });
+  
   let logGeneration: ReturnType<typeof generateAllLogs>;
   let logsGenerated = false;
   
@@ -150,25 +158,14 @@ export async function runQIEL(options?: {
     } else {
       console.log('✅ All commands executed successfully\n');
     }
-  } else if (!logsExist) {
-    // Logs don't exist and we're not using default /tmp (probably a test)
-    console.log('📋 [QIEL-0] Using provided logs directory\n');
-    logGeneration = {
-      buildLog: { success: true, logPath: '', exitCode: 0 },
-      lintLog: { success: true, logPath: '', exitCode: 0 },
-      testLog: { success: true, logPath: '', exitCode: 0 },
-      allSucceeded: true,
-    };
-    logsGenerated = true;
   } else {
-    // Logs exist, skip generation
-    logGeneration = {
-      buildLog: { success: true, logPath: '', exitCode: 0 },
-      lintLog: { success: true, logPath: '', exitCode: 0 },
-      testLog: { success: true, logPath: '', exitCode: 0 },
-      allSucceeded: true,
-    };
-    logsGenerated = true;
+    // Either logs exist or we're using a non-default directory (test mode)
+    // Skip generation and use existing logs
+    if (!logsExist) {
+      console.log('📋 [QIEL-0] Using provided logs directory\n');
+    }
+    logGeneration = createMockLogGeneration();
+    logsGenerated = logsExist; // Only consider generated if logs actually exist
   }
 
   // ========== QIEL-1, QIEL-2, QIEL-3: Log Validation ==========

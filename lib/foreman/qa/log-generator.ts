@@ -242,9 +242,14 @@ export function validateLogsExist(logsDir: string = '/tmp'): {
   test: boolean;
   missing: string[];
 } {
-  const buildPath = logsDir === '/tmp' ? QIEL_CONFIG.logPaths.build : path.join(logsDir, 'build.log');
-  const lintPath = logsDir === '/tmp' ? QIEL_CONFIG.logPaths.lint : path.join(logsDir, 'lint.log');
-  const testPath = logsDir === '/tmp' ? QIEL_CONFIG.logPaths.test : path.join(logsDir, 'test.log');
+  // Helper to get log path - use config paths for /tmp, otherwise construct path
+  const getLogPath = (filename: string, configPath: string): string => {
+    return logsDir === '/tmp' ? configPath : path.join(logsDir, filename);
+  };
+  
+  const buildPath = getLogPath('build.log', QIEL_CONFIG.logPaths.build);
+  const lintPath = getLogPath('lint.log', QIEL_CONFIG.logPaths.lint);
+  const testPath = getLogPath('test.log', QIEL_CONFIG.logPaths.test);
   
   const build = fs.existsSync(buildPath);
   const lint = fs.existsSync(lintPath);
