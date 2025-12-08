@@ -215,8 +215,8 @@ async function runPilotBuildExample() {
   console.log('✅ QA Validation Results')
   console.log('-'.repeat(60))
   const passedChecks = mockSequence.qaResults.filter(r => r.status === 'passed').length
-  const failedChecks = mockSequence.qaResults.filter(r => r.status === 'failed').length
-  const warningChecks = mockSequence.qaResults.filter(r => r.status === 'warning').length
+  const failedChecks = mockSequence.qaResults.filter((r): r is QAResult & { status: 'failed' } => r.status === 'failed').length
+  const warningChecks = mockSequence.qaResults.filter((r): r is QAResult & { status: 'warning' } => r.status === 'warning').length
   
   console.log(`Total Checks: ${mockSequence.qaResults.length}`)
   console.log(`✅ Passed: ${passedChecks}`)

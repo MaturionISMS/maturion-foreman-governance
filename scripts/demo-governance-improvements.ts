@@ -113,7 +113,7 @@ async function demoGovernanceImprovements() {
       {
         query: 'Foreman, list all governance files you have loaded.',
         expected: 'All 13 files with correct repository paths',
-        status: systemPrompt.match(/\d+\.\s+[^\n]+\.md/g)?.length >= 13 ? '✅' : '❌'
+        status: (systemPrompt.match(/\d+\.\s+[^\n]+\.md/g)?.length ?? 0) >= 13 ? '✅' : '❌'
       },
       {
         query: 'Foreman, who constructs your system prompt?',

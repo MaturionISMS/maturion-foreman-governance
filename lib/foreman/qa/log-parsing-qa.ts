@@ -99,6 +99,30 @@ export function parseLogFile(
     // Parse each line for errors and warnings
     lines.forEach((line, index) => {
       const lineNumber = index + 1;
+      const trimmedLine = line.trim();
+      
+      // Skip test framework metadata lines (comments, TAP output, etc.)
+      if (logType === 'test') {
+        // Skip TAP format lines and test framework metadata
+        if (
+          trimmedLine.startsWith('#') ||           // Comments
+          trimmedLine.startsWith('ok ') ||         // Passing tests
+          trimmedLine.startsWith('not ok') ||      // Failing tests (handled by TAP)
+          /^\d+\.\.\d+$/.test(trimmedLine) ||      // TAP plan
+          /^duration_ms:/.test(trimmedLine) ||     // Test metadata
+          /^location:/.test(trimmedLine) ||        // Test metadata
+          /^failureType:/.test(trimmedLine) ||     // Test metadata
+          /^stack:/.test(trimmedLine) ||           // Stack traces (metadata)
+          /^operator:/.test(trimmedLine) ||        // Assertion metadata
+          /^code:/.test(trimmedLine) ||            // Error codes (metadata)
+          /^name:/.test(trimmedLine) ||            // Error names (metadata)
+          /^error:/.test(trimmedLine) ||           // Error field (metadata)
+          /^type:/.test(trimmedLine) ||            // Type field (metadata)
+          /^Subtest:/.test(trimmedLine)            // Subtest names
+        ) {
+          return; // Skip this line
+        }
+      }
 
       // Check for errors
       for (const pattern of ERROR_PATTERNS) {
