@@ -269,9 +269,7 @@ export async function enforcePRGatekeeper(options?: {
       console.error('[PR Gatekeeper] GOVERNANCE DRIFT DETECTED: Attempting PR creation with incomplete QA');
       finalDriftCheck.forEach(drift => {
         console.error(`  - ${drift.driftType}: ${drift.description}`);
-        if (drift.driftType) {
-          governanceViolations.push(`DRIFT_${drift.driftType.toUpperCase()}`);
-        }
+        governanceViolations.push(`DRIFT_${String(drift.driftType).toUpperCase()}`);
       });
     }
   }
@@ -366,7 +364,8 @@ async function recordGovernanceIncident(incident: {
   timestamp: string;
 }): Promise<void> {
   try {
-    const incidentId = `pr_gatekeeper_block_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
+    // Use timestamp-based ID with random suffix for uniqueness
+    const incidentId = `pr_gatekeeper_block_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
     
     await writeMemory({
       scope: 'global',

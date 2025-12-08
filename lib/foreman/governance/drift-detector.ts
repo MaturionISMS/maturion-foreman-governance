@@ -772,7 +772,6 @@ export class ForemanGovernanceDriftDetector {
             timestamp: new Date().toISOString(),
             resolved: false,
             source: 'ForemanGovernanceDriftDetector',
-            detectionTime: new Date().toISOString(),
             requiresCorrection: true
           }
         },

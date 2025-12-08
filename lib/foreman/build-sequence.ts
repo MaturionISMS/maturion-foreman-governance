@@ -451,15 +451,12 @@ export async function runBuildSequence(
       console.error('[BuildSequence] MINDSET VIOLATION:', mindsetValidation.message)
       console.error('[BuildSequence] Violations:', mindsetValidation.violations)
       
-      // Create governance incident
-      const { recordMemory } = await import('./memory/storage')
+      // Create governance incident using writeMemory
+      const { writeMemory } = await import('./memory/storage')
       try {
-        await recordMemory({
-          id: `mindset_violation_${sequence.id}_${Date.now()}`,
+        await writeMemory({
           scope: 'global',
-          category: 'governance',
-          type: 'incident',
-          tags: ['mindset_violation', 'governance_violation', 'build_blocked'],
+          key: `mindset_violation_${sequence.id}_${Date.now()}`,
           value: {
             incident: {
               type: 'mindset_compliance_failure',
@@ -469,10 +466,8 @@ export async function runBuildSequence(
               timestamp: new Date().toISOString()
             }
           },
-          metadata: {
-            source: 'BuildSequence',
-            requiresCorrection: true
-          }
+          tags: ['mindset_violation', 'governance_violation', 'build_blocked'],
+          createdBy: 'build_sequence'
         })
         console.log('[BuildSequence] Mindset violation incident recorded successfully')
       } catch (memError) {

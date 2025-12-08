@@ -279,7 +279,7 @@ export async function executeReasoning(
     governanceContext: {
       memoryLoaded: snapshot !== undefined && snapshot !== null, // Check if snapshot was actually loaded
       governanceRulesApplied: false, // Will be set to true after applying patterns
-      driftMonitored: true // Drift monitoring is always run in loadMemorySnapshot
+      driftMonitored: true // Drift monitoring is run in loadMemorySnapshot unless explicitly skipped
     }
   })
   
