@@ -290,6 +290,7 @@ describe('Chat Wiring Integrity Tests', () => {
     it('should NOT have /api/chat route (deprecated)', async () => {
       // This test verifies old routes don't exist
       try {
+        // @ts-expect-error - Testing that deprecated route does not exist
         await import('@/app/api/chat/route');
         assert.fail('/api/chat route should not exist (deprecated)');
       } catch (error) {
@@ -300,6 +301,7 @@ describe('Chat Wiring Integrity Tests', () => {
 
     it('should NOT have /api/agent route (deprecated)', async () => {
       try {
+        // @ts-expect-error - Testing that deprecated route does not exist
         await import('@/app/api/agent/route');
         assert.fail('/api/agent route should not exist (deprecated)');
       } catch (error) {
