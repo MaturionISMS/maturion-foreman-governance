@@ -14,6 +14,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import { logGovernanceEvent } from '@/lib/foreman/memory/governance-memory'
+import { verifyConstitutionalHashes, areHashesValid, getHashMismatches } from './hash-checker'
 
 /**
  * Guardrails Configuration
@@ -320,6 +321,54 @@ export function validateAgentContract(): GuardrailCheckResult {
 }
 
 /**
+ * Validate constitutional hash integrity
+ */
+export function validateConstitutionalHashIntegrity(): GuardrailCheckResult {
+  try {
+    const results = verifyConstitutionalHashes()
+    const valid = areHashesValid(results)
+    const mismatches = getHashMismatches(results)
+    
+    if (!valid && mismatches.length > 0) {
+      return {
+        check: 'hash_integrity',
+        status: 'failed',
+        message: 'Constitutional hash verification failed',
+        details: {
+          mismatches: mismatches.map(m => ({
+            file: m.file,
+            message: m.message,
+            currentHash: m.currentHash,
+            expectedHash: m.expectedHash
+          })),
+          totalFiles: results.length,
+          failedFiles: mismatches.length
+        }
+      }
+    }
+    
+    return {
+      check: 'hash_integrity',
+      status: 'passed',
+      message: `All ${results.length} constitutional files verified`,
+      details: {
+        filesChecked: results.length,
+        allValid: true
+      }
+    }
+  } catch (error) {
+    return {
+      check: 'hash_integrity',
+      status: 'failed',
+      message: `Hash verification error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      details: {
+        error: error instanceof Error ? error.message : 'Unknown error'
+      }
+    }
+  }
+}
+
+/**
  * Evaluate governance drift
  * Detects if any protections are missing or compromised
  */
@@ -394,6 +443,7 @@ export async function runGuardrailChecks(): Promise<GuardrailValidationResult> {
       () => validateRequiredChecks(config),
       () => detectUnauthorizedWriteAccess(config),
       () => validateAgentContract(),
+      () => validateConstitutionalHashIntegrity(),
       () => evaluateGovernanceDrift(config)
     ]
     
