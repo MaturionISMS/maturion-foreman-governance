@@ -18,7 +18,14 @@ import {
   isLocalBuilderEnabled 
 } from './local-builder'
 import { FallbackEvent } from '@/types/local-builder'
-import { detectGovernanceDrift } from './governance/drift-detector';
+import { detectGovernanceDrift } from './governance/drift-detector'
+import { 
+  detectAllBuilders, 
+  detectOptimalBuilder,
+  checkGovernanceCompliance,
+  validateBuilderProtocol,
+  logBuilderDetection
+} from './builder-detection'
 
 /**
  * In-memory task store (in production, this would be a database)
@@ -669,4 +676,139 @@ export function validateGovernanceRules(task: BuilderTask): boolean {
   
   console.log('[Governance] All governance rules passed for task:', task.id)
   return true
+}
+
+/**
+ * Builder Network Sync Functions
+ * Synchronize Copilot and Local builders with protocol and governance compliance
+ */
+
+/**
+ * Detect and validate all available builders
+ */
+export async function syncBuilderNetwork(): Promise<{
+  copilot: { available: boolean; compliant: boolean; issues: string[] }
+  local: { available: boolean; compliant: boolean; issues: string[] }
+}> {
+  console.log('[BuilderSync] Synchronizing builder network...')
+  
+  // Detect all builders
+  const availability = await detectAllBuilders()
+  
+  const result = {
+    copilot: {
+      available: availability.copilot.available,
+      compliant: false,
+      issues: [] as string[]
+    },
+    local: {
+      available: availability.local.available,
+      compliant: false,
+      issues: [] as string[]
+    }
+  }
+  
+  // Validate Copilot compliance
+  if (availability.copilot.available) {
+    const protocolCheck = await validateBuilderProtocol('copilot')
+    const governanceCheck = await checkGovernanceCompliance('copilot')
+    
+    result.copilot.compliant = protocolCheck.compliant && 
+      governanceCheck.trueNorth &&
+      governanceCheck.qic &&
+      governanceCheck.qiel &&
+      governanceCheck.driftDetector
+    
+    if (!protocolCheck.compliant) {
+      result.copilot.issues.push(...protocolCheck.issues)
+    }
+    if (!governanceCheck.trueNorth) result.copilot.issues.push('True North non-compliant')
+    if (!governanceCheck.qic) result.copilot.issues.push('QIC non-compliant')
+    if (!governanceCheck.qiel) result.copilot.issues.push('QIEL non-compliant')
+    if (!governanceCheck.driftDetector) result.copilot.issues.push('Drift Detector disabled')
+    
+    logBuilderDetection('copilot', true, result.copilot.compliant ? 'Compliant' : result.copilot.issues.join(', '))
+  } else {
+    result.copilot.issues.push(availability.copilot.reason || 'Unavailable')
+    logBuilderDetection('copilot', false, availability.copilot.reason)
+  }
+  
+  // Validate Local builder compliance
+  if (availability.local.available) {
+    const protocolCheck = await validateBuilderProtocol('local')
+    const governanceCheck = await checkGovernanceCompliance('local')
+    
+    result.local.compliant = protocolCheck.compliant &&
+      availability.local.healthy &&
+      governanceCheck.trueNorth &&
+      governanceCheck.qic &&
+      governanceCheck.qiel &&
+      governanceCheck.driftDetector
+    
+    if (!protocolCheck.compliant) {
+      result.local.issues.push(...protocolCheck.issues)
+    }
+    if (!availability.local.healthy) result.local.issues.push('Health check failed')
+    if (!governanceCheck.trueNorth) result.local.issues.push('True North non-compliant')
+    if (!governanceCheck.qic) result.local.issues.push('QIC non-compliant')
+    if (!governanceCheck.qiel) result.local.issues.push('QIEL non-compliant')
+    if (!governanceCheck.driftDetector) result.local.issues.push('Drift Detector disabled')
+    
+    logBuilderDetection('local', true, result.local.compliant ? 'Compliant' : result.local.issues.join(', '))
+  } else {
+    result.local.issues.push(availability.local.reason || 'Unavailable')
+    logBuilderDetection('local', false, availability.local.reason)
+  }
+  
+  console.log('[BuilderSync] Sync complete:', {
+    copilot: `${result.copilot.available ? 'Available' : 'Unavailable'} - ${result.copilot.compliant ? 'Compliant' : 'Non-compliant'}`,
+    local: `${result.local.available ? 'Available' : 'Unavailable'} - ${result.local.compliant ? 'Compliant' : 'Non-compliant'}`
+  })
+  
+  return result
+}
+
+/**
+ * Select optimal builder with network sync
+ */
+export async function selectBuilderWithSync(
+  taskComplexity?: 'low' | 'medium' | 'high'
+): Promise<'copilot' | 'local' | null> {
+  console.log('[BuilderSync] Selecting optimal builder with network sync...')
+  
+  // Sync builder network first
+  const syncResult = await syncBuilderNetwork()
+  
+  // Prefer compliant builders
+  if (taskComplexity === 'high') {
+    if (syncResult.local.available && syncResult.local.compliant) {
+      console.log('[BuilderSync] Selected Local builder for high complexity task')
+      return 'local'
+    }
+    if (syncResult.copilot.available && syncResult.copilot.compliant) {
+      console.log('[BuilderSync] Selected Copilot builder (local unavailable) for high complexity task')
+      return 'copilot'
+    }
+  } else {
+    if (syncResult.copilot.available && syncResult.copilot.compliant) {
+      console.log('[BuilderSync] Selected Copilot builder for standard task')
+      return 'copilot'
+    }
+    if (syncResult.local.available && syncResult.local.compliant) {
+      console.log('[BuilderSync] Selected Local builder (Copilot unavailable) for standard task')
+      return 'local'
+    }
+  }
+  
+  // If no compliant builders, try non-compliant but available builders
+  console.warn('[BuilderSync] No compliant builders available, checking for any available builder')
+  const builder = await detectOptimalBuilder(taskComplexity)
+  
+  if (builder) {
+    console.warn(`[BuilderSync] Selected ${builder} builder (non-compliant but available)`)
+  } else {
+    console.error('[BuilderSync] No builders available')
+  }
+  
+  return builder
 }
