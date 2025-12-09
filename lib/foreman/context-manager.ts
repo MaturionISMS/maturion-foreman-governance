@@ -6,15 +6,23 @@
 import type { ChatMessage } from '@/types/foreman';
 import { compressPrompt, requiresCompression, type CompressionOptions } from './context/prompt-compressor';
 
-// Conservative token limits to stay well under API limits
-export const MAX_TOTAL_TOKENS = 8000; // Target max for entire context
-export const MAX_SYSTEM_PROMPT_TOKENS = 4000; // Reserve half for system prompt
-export const MAX_CONVERSATION_TOKENS = 3500; // Reserve for conversation history
+// Conservative token limits to stay well under API limits for gpt-4 (8k context)
+export const MAX_TOTAL_TOKENS = 7000; // Reduced from 8000 for safety margin
+export const MAX_SYSTEM_PROMPT_TOKENS = 1200; // Reduced for headroom
+export const MAX_CONVERSATION_TOKENS = 1800; // Reduced for headroom
 export const MAX_COMPLETION_TOKENS = 2000; // Reserve for response
 
-// Extended limits for large prompts (with model escalation)
-export const MAX_TOTAL_TOKENS_EXTENDED = 120000; // For gpt-4-turbo
+// Extended limits for large prompts (with model escalation to gpt-4-turbo/gpt-5.1)
+export const MAX_TOTAL_TOKENS_EXTENDED = 120000; // For gpt-4-turbo (128k context)
 export const MAX_USER_MESSAGE_TOKENS = 20000; // Support up to 20k token prompts
+
+// Model-specific context windows for economic use
+export const MODEL_CONTEXT_WINDOWS = {
+  'gpt-4': 8000,
+  'gpt-4-turbo': 128000,
+  'gpt-5.1': 200000,
+  'gpt-5.1-large': 1000000,
+} as const;
 
 // Approximate token counting (rough estimate: 1 token ≈ 4 characters)
 const AVG_CHARS_PER_TOKEN = 4;
@@ -93,6 +101,23 @@ export function compressConversationHistory(
   }
 
   return compressed.join('\n\n');
+}
+
+/**
+ * Create ultra-condensed system prompt for basic chat
+ * Minimal context for simple queries to maximize token budget
+ */
+export function createUltraCondensedSystemPrompt(organisationId: string): string {
+  return `You are Foreman, the Maturion orchestration AI.
+
+**Role**: Coordinate builders (UI, API, Schema, QA) for ${organisationId}.
+**Mode**: Autonomous with QA validation gates.
+**Not**: A code writer (you orchestrate; builders write).
+
+Respond concisely. For actions, use JSON:
+{"replyText": "...", "proposedActions": [...], "autonomyIntent": "execute"}
+
+QA validation is absolute. No bypasses permitted.`;
 }
 
 /**
@@ -221,8 +246,13 @@ export async function buildOptimizedContext(
   const maxConvTokens = options.maxConversationTokens ?? MAX_CONVERSATION_TOKENS;
   const enableLargePrompts = options.enableLargePrompts ?? true;
 
-  // Build system prompt (always use condensed for now to prevent context overflow)
-  const systemPrompt = createCondensedSystemPrompt(organisationId);
+  // Determine if this is a simple query (use ultra-condensed prompt)
+  const isSimpleQuery = estimateTokenCount(currentMessage) < 500 && messages.length < 5;
+
+  // Build system prompt - use ultra-condensed for simple queries
+  const systemPrompt = isSimpleQuery 
+    ? createUltraCondensedSystemPrompt(organisationId)
+    : createCondensedSystemPrompt(organisationId);
 
   // Compress conversation history
   const conversationHistory = compressConversationHistory(messages, maxConvTokens);
@@ -239,7 +269,7 @@ export async function buildOptimizedContext(
     console.log(`[ContextManager] Large prompt detected: ${userMessageTokens} tokens, applying compression`);
     
     const compressionOptions: CompressionOptions = {
-      targetMaxTokens: 4000, // Compress to reasonable size
+      targetMaxTokens: 2000, // Aggressive compression for economic model use
       preserveGovernance: true,
       preserveArchitecture: true,
       preserveCriticalInstructions: true,

@@ -216,12 +216,13 @@ export async function POST(request: NextRequest) {
 
     // Validate context size
     if (context.metadata.totalTokens > MAX_TOTAL_TOKENS) {
-      console.warn('[Chat] Context still too large after optimization, using minimal context');
-      // Fall back to minimal context with escalated model if needed
-      const minimalSystemPrompt = createCondensedSystemPrompt(orgId);
+      console.warn('[Chat] Context still too large after optimization, using ultra-minimal context');
+      // Fall back to ultra-minimal context with escalated model if needed
+      const { createUltraCondensedSystemPrompt } = await import('@/lib/foreman/context-manager');
+      const minimalSystemPrompt = createUltraCondensedSystemPrompt(orgId);
       const messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
         { role: 'system', content: minimalSystemPrompt },
-        { role: 'user', content: userMessage }
+        { role: 'user', content: context.userMessage } // Use compressed user message
       ];
 
       try {
@@ -233,6 +234,13 @@ export async function POST(request: NextRequest) {
         });
 
         const rawResponse = completion.choices[0]?.message?.content || '';
+        
+        console.log('[Chat] Ultra-minimal context used successfully:', {
+          systemTokens: estimateTokenCount(minimalSystemPrompt),
+          userTokens: estimateTokenCount(context.userMessage),
+          totalTokens: estimateTokenCount(minimalSystemPrompt) + estimateTokenCount(context.userMessage)
+        });
+        
         return buildSuccessResponse(rawResponse, convId, orgId, finalModel);
       } catch (error) {
         return handleChatError(error, 'minimal_context');
@@ -639,19 +647,36 @@ function calculateDynamicMaxTokens(contextTokens: number, model: ModelTier): num
 
 /**
  * Determine if model escalation is needed based on context size
+ * ECONOMIC MODEL USE: Start with cheapest model, escalate only when necessary
+ * 
+ * Model costs (approximate, relative):
+ * - gpt-4: 1x (baseline, 8k context)
+ * - gpt-4-turbo: 2x (but 128k context)
+ * - gpt-5.1: 10x (but 200k context + better reasoning)
+ * - gpt-5.1-large: 50x (1M context, reserved for extreme cases)
+ * 
+ * Strategy: Use smallest model that fits the context window
  */
 function shouldEscalateForContext(contextTokens: number, currentModel: ModelTier): ModelTier | null {
-  // Escalation thresholds
-  const GPT4_THRESHOLD = 7000; // Escalate to gpt-4-turbo if > 7k tokens
-  const GPT4_TURBO_THRESHOLD = 100000; // Escalate to gpt-5.1 if > 100k tokens
+  // Escalation thresholds based on model context windows
+  // Leave 20% buffer for safety and completion tokens
+  
+  const GPT4_SAFE_LIMIT = 6400; // 80% of 8k context
+  const GPT4_TURBO_SAFE_LIMIT = 102400; // 80% of 128k context
+  const GPT51_SAFE_LIMIT = 160000; // 80% of 200k context
 
-  if (contextTokens > GPT4_TURBO_THRESHOLD && currentModel !== 'gpt-5.1') {
+  // Escalate to gpt-5.1 if context exceeds gpt-4-turbo safe limit
+  if (contextTokens > GPT4_TURBO_SAFE_LIMIT && currentModel !== 'gpt-5.1') {
+    console.log(`[ModelEscalation] Context ${contextTokens} tokens exceeds gpt-4-turbo limit, escalating to gpt-5.1`);
     return 'gpt-5.1';
   }
 
-  if (contextTokens > GPT4_THRESHOLD && currentModel === 'gpt-4') {
+  // Escalate to gpt-4-turbo if context exceeds gpt-4 safe limit
+  if (contextTokens > GPT4_SAFE_LIMIT && currentModel === 'gpt-4') {
+    console.log(`[ModelEscalation] Context ${contextTokens} tokens exceeds gpt-4 limit, escalating to gpt-4-turbo`);
     return 'gpt-4-turbo';
   }
 
+  // Stay with current model - it can handle the context
   return null;
 }
