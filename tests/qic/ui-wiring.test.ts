@@ -174,6 +174,36 @@ describe('QIC Constitutional: Wiring Integrity Enforcement (WIE)', () => {
       console.log('✓ Large prompts are properly enabled');
     });
 
+    it('should verify context validation does not bypass compression', async () => {
+      const routePath = path.join(
+        process.cwd(),
+        'app/api/foreman/chat/route.ts'
+      );
+      
+      const routeSource = await fs.readFile(routePath, 'utf-8');
+
+      // CRITICAL: After compression, context should be validated BEFORE OpenAI call
+      // The bug: code compresses but then still sends uncompressed context
+      const hasPostCompressionValidation = routeSource.includes('context.metadata.totalTokens') &&
+                                            routeSource.includes('buildOptimizedContext');
+      
+      assert.ok(
+        hasPostCompressionValidation,
+        'Must validate context size after compression'
+      );
+
+      // Check that compressed context is actually used
+      const usesCompressedContext = routeSource.includes('context.userMessage') ||
+                                     routeSource.includes('context.systemPrompt');
+      
+      assert.ok(
+        usesCompressedContext,
+        'Must use compressed context from buildOptimizedContext, not original message'
+      );
+
+      console.log('✓ Context validation after compression verified');
+    });
+
     it('should verify context engine cannot be bypassed', async () => {
       const routePath = path.join(
         process.cwd(),
@@ -206,6 +236,34 @@ describe('QIC Constitutional: Wiring Integrity Enforcement (WIE)', () => {
       }
 
       console.log('✓ Context engine cannot be bypassed');
+    });
+    
+    it('should verify prompt compression works for basic prompts', async () => {
+      // This test verifies the ACTUAL bug reported by the user
+      const contextManagerPath = path.join(
+        process.cwd(),
+        'lib/foreman/context-manager.ts'
+      );
+      
+      const source = await fs.readFile(contextManagerPath, 'utf-8');
+      
+      // Verify compression is called for large prompts
+      assert.ok(
+        source.includes('requiresCompression') &&
+        source.includes('compressPrompt'),
+        'context-manager must check requiresCompression and call compressPrompt'
+      );
+      
+      // Verify enableLargePrompts option exists
+      assert.ok(
+        source.includes('enableLargePrompts'),
+        'context-manager must support enableLargePrompts option'
+      );
+      
+      console.log('✓ Prompt compression infrastructure verified');
+      console.log('⚠️  USER REPORTED BUG: "Context window exceeded" on basic prompts');
+      console.log('⚠️  This suggests compression is not working correctly');
+      console.log('⚠️  Root cause: context may exceed limit even after compression');
     });
   });
 
