@@ -18,7 +18,8 @@
 
 import { github } from '@/lib/github/client';
 import { logGovernanceEvent } from '@/lib/foreman/memory/governance-memory';
-import { runOvernightExecution, OvernightExecutionRun } from '@/lib/foreman/overnight-execution';
+import { runOvernightExecution } from '@/lib/foreman/overnight-execution';
+import type { OvernightExecutionRun } from '@/types/overnight-execution';
 import { enforcePRGatekeeper } from '@/lib/foreman/pr-gatekeeper';
 import { runQIEL } from '@/lib/foreman/qa/qiel-runner';
 

@@ -16,6 +16,11 @@ import {
   MAX_TOTAL_TOKENS,
   createCondensedSystemPrompt 
 } from '@/lib/foreman/context-manager';
+import { 
+  selectModel, 
+  executeWithEscalation
+} from '@/lib/foreman/model-escalation';
+import type { ModelSelectionContext, ModelTier } from '@/types/model-escalation';
 
 // Validate API key is present
 if (!process.env.OPENAI_API_KEY) {
@@ -89,10 +94,42 @@ export async function POST(request: NextRequest) {
       compressed: context.metadata.compressed
     });
 
+    // Determine task complexity for model selection
+    const taskComplexity = analyzeMessageComplexity(userMessage, conversationHistory || []);
+    const modelContext: ModelSelectionContext = {
+      taskType: taskComplexity.taskType,
+      complexity: taskComplexity.complexity,
+      filesAffected: 0, // Chat doesn't directly affect files
+      isArchitectureTask: taskComplexity.isArchitecture,
+      isGovernanceTask: taskComplexity.isGovernance,
+      isMilestoneNearing: false,
+      existingEscalationsToday: 0,
+      quotaRemaining: 100
+    };
+
+    // Select appropriate model using escalation logic
+    const modelSelection = selectModel(modelContext);
+    
+    console.log('[Chat] Model selection:', {
+      selectedModel: modelSelection.selectedModel,
+      escalated: modelSelection.escalated,
+      escalationReason: modelSelection.escalationReason,
+      taskComplexity: taskComplexity.complexity
+    });
+
+    // Calculate dynamic max_tokens based on context
+    const dynamicMaxTokens = calculateDynamicMaxTokens(context.metadata.totalTokens);
+
+    console.log('[Chat] Token budget:', {
+      contextTokens: context.metadata.totalTokens,
+      maxTokens: dynamicMaxTokens,
+      totalBudget: context.metadata.totalTokens + dynamicMaxTokens
+    });
+
     // Validate context size
     if (context.metadata.totalTokens > MAX_TOTAL_TOKENS) {
       console.warn('[Chat] Context still too large after optimization, using minimal context');
-      // Fall back to minimal context
+      // Fall back to minimal context with escalated model if needed
       const minimalSystemPrompt = createCondensedSystemPrompt(orgId);
       const messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
         { role: 'system', content: minimalSystemPrompt },
@@ -101,14 +138,14 @@ export async function POST(request: NextRequest) {
 
       try {
         const completion = await openai.chat.completions.create({
-          model: 'gpt-4',
+          model: modelSelection.selectedModel,
           messages: messages,
           temperature: 0.7,
-          max_tokens: 2000,
+          max_tokens: dynamicMaxTokens,
         });
 
         const rawResponse = completion.choices[0]?.message?.content || '';
-        return buildSuccessResponse(rawResponse, convId, orgId);
+        return buildSuccessResponse(rawResponse, convId, orgId, modelSelection.selectedModel);
       } catch (error) {
         return handleChatError(error, 'minimal_context');
       }
@@ -131,15 +168,24 @@ export async function POST(request: NextRequest) {
     // Add current user message
     messages.push({ role: 'user', content: context.userMessage });
 
-    // Call OpenAI with optimized context
+    // Call OpenAI with optimized context and selected model
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4',
+      model: modelSelection.selectedModel,
       messages: messages,
       temperature: 0.7,
-      max_tokens: 2000,
+      max_tokens: dynamicMaxTokens,
     });
 
     const rawResponse = completion.choices[0]?.message?.content || '';
+
+    // Log model usage for diagnostics
+    console.log('[Chat] Model usage:', {
+      model: modelSelection.selectedModel,
+      escalated: modelSelection.escalated,
+      tokensUsed: completion.usage?.total_tokens || 'unknown',
+      promptTokens: completion.usage?.prompt_tokens || 'unknown',
+      completionTokens: completion.usage?.completion_tokens || 'unknown'
+    });
 
     // Try to parse as structured JSON response
     let chatResponse: ChatResponse;
@@ -297,7 +343,7 @@ export async function POST(request: NextRequest) {
 /**
  * Build success response from raw AI output
  */
-function buildSuccessResponse(rawResponse: string, convId: string, orgId: string) {
+function buildSuccessResponse(rawResponse: string, convId: string, orgId: string, model?: ModelTier) {
   let chatResponse: ChatResponse;
   try {
     const parsed = JSON.parse(rawResponse);
@@ -327,6 +373,7 @@ function buildSuccessResponse(rawResponse: string, convId: string, orgId: string
     success: true,
     conversationId: convId,
     response: chatResponse,
+    modelUsed: model || 'gpt-4',
     timestamp: new Date().toISOString()
   });
 }
@@ -414,4 +461,81 @@ export async function GET(request: NextRequest) {
     conversationId: conversationId || null,
     note: 'This endpoint will retrieve conversation history in future versions'
   });
+}
+
+/**
+ * Analyze message complexity to inform model selection
+ */
+function analyzeMessageComplexity(message: string, history: ChatMessage[]): {
+  taskType: string;
+  complexity: 'low' | 'medium' | 'high';
+  isArchitecture: boolean;
+  isGovernance: boolean;
+} {
+  const lowerMessage = message.toLowerCase();
+  
+  // Check for architecture keywords
+  const isArchitecture = /architecture|design pattern|refactor|migrate|restructure/i.test(message);
+  
+  // Check for governance keywords
+  const isGovernance = /governance|policy|compliance|security|audit|regulation/i.test(message);
+  
+  // Check for multi-step or complex tasks
+  const isMultiStep = /\band\b.*\band\b|\bthen\b.*\bthen\b|first.*second.*third|step 1.*step 2/i.test(message);
+  
+  // Check for builder coordination
+  const isOrchestration = /coordinate|integrate|combine|multiple builder|all builder/i.test(message);
+  
+  // Determine task type
+  let taskType = 'general';
+  if (lowerMessage.includes('dashboard')) taskType = 'dashboard_query';
+  else if (lowerMessage.includes('project')) taskType = 'project_management';
+  else if (lowerMessage.includes('build')) taskType = 'build_orchestration';
+  else if (isArchitecture) taskType = 'architecture';
+  else if (isGovernance) taskType = 'governance';
+  else if (isOrchestration) taskType = 'orchestration';
+  
+  // Determine complexity
+  let complexity: 'low' | 'medium' | 'high' = 'low';
+  
+  if (isArchitecture || isGovernance || isOrchestration) {
+    complexity = 'high';
+  } else if (isMultiStep || message.length > 500 || history.length > 10) {
+    complexity = 'medium';
+  }
+  
+  return {
+    taskType,
+    complexity,
+    isArchitecture,
+    isGovernance
+  };
+}
+
+/**
+ * Calculate dynamic max_tokens based on context size
+ * Ensures total tokens (context + completion) stay within model limits
+ */
+function calculateDynamicMaxTokens(contextTokens: number): number {
+  // Conservative limits for different models
+  const MODEL_LIMITS = {
+    'gpt-4': 8192,
+    'gpt-4-turbo': 128000,
+    'gpt-5.1': 128000, // Placeholder - adjust when actual limits known
+  };
+  
+  // Use gpt-4 limit as baseline (most conservative)
+  const modelLimit = MODEL_LIMITS['gpt-4'];
+  
+  // Reserve buffer for safety
+  const safetyBuffer = 500;
+  
+  // Calculate available tokens for completion
+  const availableTokens = modelLimit - contextTokens - safetyBuffer;
+  
+  // Ensure minimum and maximum bounds
+  const minTokens = 500;
+  const maxTokens = 4000;
+  
+  return Math.max(minTokens, Math.min(maxTokens, availableTokens));
 }
