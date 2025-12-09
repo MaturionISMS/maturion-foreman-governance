@@ -31,6 +31,8 @@
     "qa:diff": "tsx scripts/qiel-env-diff.ts",
     "qa:preflight": "tsx scripts/pre-flight-validation.ts",
     "guardrail:report": "tsx scripts/generate-guardrail-report.ts",
+    "guardrail:baseline": "tsx scripts/generate-baseline-hashes.ts",
+    "guardrail:scan-suppressions": "tsx scripts/scan-suppressions.ts",
     "qiel": "tsx scripts/run-qiel.ts",
     "qiel:quick": "tsx scripts/run-qiel.ts --quick",
     "qiel:full": "tsx scripts/run-qiel.ts --full",

@@ -17,6 +17,43 @@ The Foreman system enforces the **Governance Supremacy Rule (GSR)** to ensure bu
 
 **Philosophy**: QA must be absolute, not contextual. Pre-existing, unrelated, minor, historical, and out-of-scope failures still block builds. 99.9% pass rate = total failure.
 
+## Constitutional Guardrails (CS1)
+
+The **Constitutional Guardrail Runtime Engine (CS1)** enforces immutable governance rules that prevent Foreman from weakening quality standards, modifying protected files, or bypassing checks autonomously.
+
+### Key Protections
+
+- 🔒 **Immutable Paths**: Cannot modify `.github/workflows/`, `foreman/constitution/`, `docs/governance/`, or `.github/foreman/`
+- 🔐 **Hash-Based Integrity**: SHA-256 verification of constitutional files detects unauthorized changes
+- 🚫 **Zero-Suppression Policy**: Cannot add `eslint-disable`, `@ts-ignore`, or other QA bypasses without approval
+- ✅ **Runtime Validation**: 6 critical checks run on Foreman startup, halting execution if violations detected
+- 📋 **Audit Trail**: All guardrail events logged to governance memory
+
+### What CS1 Prevents
+
+- ✅ No "ignore npm warning" incidents
+- ✅ No QA weakening
+- ✅ No autonomy drift
+- ✅ No governance bypasses
+- ✅ No false "green" conditions
+
+### Usage
+
+```bash
+# Generate constitutional baseline hashes
+npm run guardrail:baseline
+
+# Scan for QA suppressions
+npm run guardrail:scan-suppressions
+
+# Run guardrail tests
+npm run test:guardrails
+```
+
+**Documentation**: See [`docs/governance/GUARDRAILS.md`](docs/governance/GUARDRAILS.md) for complete specification.
+
+**Implementation**: See [`CS1_IMPLEMENTATION_COMPLETE.md`](CS1_IMPLEMENTATION_COMPLETE.md) for technical details.
+
 ## Overview
 
 The Foreman App is designed to:

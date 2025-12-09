@@ -6,3 +6,5 @@
 
 export * from './runtime'
 export * from './report'
+export * from './hash-checker'
+export * from './path-protection'
