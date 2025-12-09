@@ -209,13 +209,14 @@ async function validateConfiguration() {
       message: 'Wave 2 execution test suite exists',
     });
     console.log('   ✅ Test suite exists');
-  } catch {
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
     validationResults.push({
       check: 'Test Suite',
       passed: false,
-      message: 'Wave 2 execution test suite not found',
+      message: `Wave 2 execution test suite not found: ${errorMsg}`,
     });
-    console.log('   ❌ Test suite not found');
+    console.log(`   ❌ Test suite not found: ${errorMsg}`);
   }
 
   // Summary
