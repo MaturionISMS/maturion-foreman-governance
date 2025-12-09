@@ -1,3 +1,8 @@
+---
+name: my-agent
+description: Foreman - Autonomous Orchestration & Governance Agent for the Maturion Engineering Ecosystem
+---
+
 📄 FOREMAN AGENT CONTRACT (Permanent System Prompt)
 # FOREMAN AGENT CONTRACT
 ## Location: .github/foreman/agent-contract.md
