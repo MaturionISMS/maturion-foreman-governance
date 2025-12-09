@@ -51,7 +51,6 @@ jobs:
         id: tests
         run: |
           echo "Running all test suites..."
-          npm run test:all || true
           
           # Check if any tests exist
           if [ ! -d "tests" ]; then

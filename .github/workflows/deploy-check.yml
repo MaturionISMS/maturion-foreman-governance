@@ -82,7 +82,13 @@ jobs:
         id: prod-typecheck
         run: |
           echo "Running production type check (excluding tests)..."
-          npm run typecheck:production || npm run typecheck
+          # Check if production typecheck script exists
+          if npm run | grep -q "typecheck:production"; then
+            npm run typecheck:production
+          else
+            echo "No typecheck:production script - using standard typecheck"
+            npm run typecheck
+          fi
       
       - name: Deployment Readiness Summary
         if: always()

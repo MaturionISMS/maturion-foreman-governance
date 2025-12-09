@@ -9,15 +9,20 @@ name: Foreman Governance - Policy Validation
 on:
   push:
     branches: [ main, develop, 'feature/**' ]
+    paths:
+      - 'foreman/governance/**'
+      - 'foreman/autonomy-rules.md'
+      - 'foreman/true-north-architecture.md'
+      - 'docs/governance/**'
+      - '.github/workflows/**'
   pull_request:
     branches: [ main, develop ]
-  # Trigger when governance files are modified
-  paths:
-    - 'foreman/governance/**'
-    - 'foreman/autonomy-rules.md'
-    - 'foreman/true-north-architecture.md'
-    - 'docs/governance/**'
-    - '.github/workflows/**'
+    paths:
+      - 'foreman/governance/**'
+      - 'foreman/autonomy-rules.md'
+      - 'foreman/true-north-architecture.md'
+      - 'docs/governance/**'
+      - '.github/workflows/**'
 
 permissions:
   contents: read
