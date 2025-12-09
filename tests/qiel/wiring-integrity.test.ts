@@ -20,10 +20,7 @@ import path from 'path';
 describe('QIEL Wiring Integrity Tests', () => {
   describe('UI → API Alignment', () => {
     it('should verify UI calls /api/foreman/chat (not deprecated routes)', async () => {
-      const pagePath = path.join(
-        '/home/runner/work/maturion-foreman-app/maturion-foreman-app',
-        'app/foreman/page.tsx'
-      );
+      const pagePath = path.resolve(process.cwd(), 'app/foreman/page.tsx');
       
       const pageSource = await fs.readFile(pagePath, 'utf-8');
 
@@ -45,10 +42,7 @@ describe('QIEL Wiring Integrity Tests', () => {
     });
 
     it('should verify UI sends required parameters', async () => {
-      const pagePath = path.join(
-        '/home/runner/work/maturion-foreman-app/maturion-foreman-app',
-        'app/foreman/page.tsx'
-      );
+      const pagePath = path.resolve(process.cwd(), 'app/foreman/page.tsx');
       
       const pageSource = await fs.readFile(pagePath, 'utf-8');
 
@@ -66,10 +60,7 @@ describe('QIEL Wiring Integrity Tests', () => {
     });
 
     it('should verify UI handles file uploads', async () => {
-      const pagePath = path.join(
-        '/home/runner/work/maturion-foreman-app/maturion-foreman-app',
-        'app/foreman/page.tsx'
-      );
+      const pagePath = path.resolve(process.cwd(), 'app/foreman/page.tsx');
       
       const pageSource = await fs.readFile(pagePath, 'utf-8');
 
@@ -84,7 +75,7 @@ describe('QIEL Wiring Integrity Tests', () => {
   describe('API Route → Context Engine Alignment', () => {
     it('should verify chat route imports context-manager', async () => {
       const routePath = path.join(
-        '/home/runner/work/maturion-foreman-app/maturion-foreman-app',
+        process.cwd(),
         'app/api/foreman/chat/route.ts'
       );
       
@@ -103,7 +94,7 @@ describe('QIEL Wiring Integrity Tests', () => {
 
     it('should verify chat route imports model-escalation', async () => {
       const routePath = path.join(
-        '/home/runner/work/maturion-foreman-app/maturion-foreman-app',
+        process.cwd(),
         'app/api/foreman/chat/route.ts'
       );
       
@@ -121,7 +112,7 @@ describe('QIEL Wiring Integrity Tests', () => {
 
     it('should verify chat route invokes prompt compression', async () => {
       const routePath = path.join(
-        '/home/runner/work/maturion-foreman-app/maturion-foreman-app',
+        process.cwd(),
         'app/api/foreman/chat/route.ts'
       );
       
@@ -142,7 +133,7 @@ describe('QIEL Wiring Integrity Tests', () => {
 
     it('should verify chat route processes files', async () => {
       const routePath = path.join(
-        '/home/runner/work/maturion-foreman-app/maturion-foreman-app',
+        process.cwd(),
         'app/api/foreman/chat/route.ts'
       );
       
@@ -157,7 +148,7 @@ describe('QIEL Wiring Integrity Tests', () => {
 
     it('should verify chat route logs component invocations', async () => {
       const routePath = path.join(
-        '/home/runner/work/maturion-foreman-app/maturion-foreman-app',
+        process.cwd(),
         'app/api/foreman/chat/route.ts'
       );
       
@@ -188,7 +179,7 @@ describe('QIEL Wiring Integrity Tests', () => {
   describe('Build Artifact Completeness', () => {
     it('should verify all context components are built', async () => {
       const contextDir = path.join(
-        '/home/runner/work/maturion-foreman-app/maturion-foreman-app',
+        process.cwd(),
         'lib/foreman/context'
       );
       
@@ -207,7 +198,7 @@ describe('QIEL Wiring Integrity Tests', () => {
 
     it('should verify context-manager exists', async () => {
       const managerPath = path.join(
-        '/home/runner/work/maturion-foreman-app/maturion-foreman-app',
+        process.cwd(),
         'lib/foreman/context-manager.ts'
       );
       
@@ -226,7 +217,7 @@ describe('QIEL Wiring Integrity Tests', () => {
 
     it('should verify model-escalation exists', async () => {
       const escalationPath = path.join(
-        '/home/runner/work/maturion-foreman-app/maturion-foreman-app',
+        process.cwd(),
         'lib/foreman/model-escalation.ts'
       );
       
@@ -246,7 +237,7 @@ describe('QIEL Wiring Integrity Tests', () => {
 
     it('should verify chat route exists at correct path', async () => {
       const routePath = path.join(
-        '/home/runner/work/maturion-foreman-app/maturion-foreman-app',
+        process.cwd(),
         'app/api/foreman/chat/route.ts'
       );
       
@@ -263,7 +254,7 @@ describe('QIEL Wiring Integrity Tests', () => {
   describe('No Stale Routes', () => {
     it('should NOT have /app/api/chat/route.ts (deprecated)', async () => {
       const deprecatedPath = path.join(
-        '/home/runner/work/maturion-foreman-app/maturion-foreman-app',
+        process.cwd(),
         'app/api/chat/route.ts'
       );
       
@@ -278,7 +269,7 @@ describe('QIEL Wiring Integrity Tests', () => {
 
     it('should NOT have /app/api/agent/route.ts (deprecated)', async () => {
       const deprecatedPath = path.join(
-        '/home/runner/work/maturion-foreman-app/maturion-foreman-app',
+        process.cwd(),
         'app/api/agent/route.ts'
       );
       
@@ -293,7 +284,7 @@ describe('QIEL Wiring Integrity Tests', () => {
 
     it('should verify only /api/foreman/chat is used for chat', async () => {
       const apiDir = path.join(
-        '/home/runner/work/maturion-foreman-app/maturion-foreman-app',
+        process.cwd(),
         'app/api'
       );
       
@@ -341,7 +332,7 @@ describe('QIEL Wiring Integrity Tests', () => {
   describe('Deployment Cache Verification', () => {
     it('should verify .next/cache is in .gitignore', async () => {
       const gitignorePath = path.join(
-        '/home/runner/work/maturion-foreman-app/maturion-foreman-app',
+        process.cwd(),
         '.gitignore'
       );
       
@@ -355,7 +346,7 @@ describe('QIEL Wiring Integrity Tests', () => {
 
     it('should verify vercel.json does not cache API routes aggressively', async () => {
       const vercelPath = path.join(
-        '/home/runner/work/maturion-foreman-app/maturion-foreman-app',
+        process.cwd(),
         'vercel.json'
       );
       
@@ -392,7 +383,7 @@ describe('QIEL Wiring Integrity Tests', () => {
   describe('Type Safety and Contracts', () => {
     it('should verify ChatRequest type includes required fields', async () => {
       const typesPath = path.join(
-        '/home/runner/work/maturion-foreman-app/maturion-foreman-app',
+        process.cwd(),
         'types/foreman.ts'
       );
       
@@ -415,7 +406,7 @@ describe('QIEL Wiring Integrity Tests', () => {
 
     it('should verify ChatRequest supports files', async () => {
       const typesPath = path.join(
-        '/home/runner/work/maturion-foreman-app/maturion-foreman-app',
+        process.cwd(),
         'types/foreman.ts'
       );
       
@@ -430,7 +421,7 @@ describe('QIEL Wiring Integrity Tests', () => {
 
     it('should verify ChatRequest supports systemContext', async () => {
       const typesPath = path.join(
-        '/home/runner/work/maturion-foreman-app/maturion-foreman-app',
+        process.cwd(),
         'types/foreman.ts'
       );
       
@@ -448,7 +439,7 @@ describe('QIEL Wiring Integrity Tests', () => {
     it('should have wiring integrity documented in architecture', async () => {
       // Check for documentation files
       const docsDir = path.join(
-        '/home/runner/work/maturion-foreman-app/maturion-foreman-app'
+        process.cwd()
       );
       
       const files = await fs.readdir(docsDir);

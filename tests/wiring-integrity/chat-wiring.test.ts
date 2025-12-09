@@ -386,8 +386,9 @@ describe('Chat Wiring Integrity Tests', () => {
     it('should log component invocations (verify log points exist)', async () => {
       // Read the chat route source to verify WIRING_CHECKPOINT logs exist
       const fs = await import('fs/promises');
+      const path = await import('path');
       const routeSource = await fs.readFile(
-        '/home/runner/work/maturion-foreman-app/maturion-foreman-app/app/api/foreman/chat/route.ts',
+        path.resolve(process.cwd(), 'app/api/foreman/chat/route.ts'),
         'utf-8'
       );
 

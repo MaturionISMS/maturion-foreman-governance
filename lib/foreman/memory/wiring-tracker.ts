@@ -238,7 +238,8 @@ export async function validateWiringIntegrity(): Promise<{
 
   try {
     // Check 1: Verify chat route exists and is accessible
-    const chatRoutePath = '/home/runner/work/maturion-foreman-app/maturion-foreman-app/app/api/foreman/chat/route.ts';
+    const path = await import('path');
+    const chatRoutePath = path.resolve(process.cwd(), 'app/api/foreman/chat/route.ts');
     const fs = await import('fs/promises');
     
     try {
@@ -248,7 +249,7 @@ export async function validateWiringIntegrity(): Promise<{
     }
 
     // Check 2: Verify UI calls correct endpoint
-    const uiPagePath = '/home/runner/work/maturion-foreman-app/maturion-foreman-app/app/foreman/page.tsx';
+    const uiPagePath = path.resolve(process.cwd(), 'app/foreman/page.tsx');
     try {
       const uiSource = await fs.readFile(uiPagePath, 'utf-8');
       if (!uiSource.includes('/api/foreman/chat')) {
