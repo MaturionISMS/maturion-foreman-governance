@@ -57,6 +57,35 @@ jobs:
             --commit-sha ${{ github.sha }} \
             --branch ${{ github.ref_name }}
       
+      # CONSTITUTIONAL QA CATEGORIES (CS1-CS5)
+      # These tests enforce immutable governance requirements
+      # NO PR may merge unless ALL constitutional checks pass
+      
+      - name: Run Wiring Integrity Tests (WIE)
+        id: wiring
+        if: always()
+        run: npm run test:ui-wiring
+      
+      - name: Run Guardrail Integrity Tests (CS1)
+        id: guardrails
+        if: always()
+        run: npm run test:guardrails
+      
+      - name: Run Architecture Integrity Tests (CS2)
+        id: architecture
+        if: always()
+        run: npm run test:architecture
+      
+      - name: Run Incident Feedback Tests (CS3)
+        id: incident
+        if: always()
+        run: npm run test:incident
+      
+      - name: Run Performance Integrity Tests (CS5)
+        id: performance
+        if: always()
+        run: npm run test:performance
+      
       - name: Upload QIEL Report
         if: always()
         uses: actions/upload-artifact@v4
@@ -73,19 +102,38 @@ jobs:
           echo "==================================================="
           echo ""
           echo "✅ QIEL Full Validation: ${{ steps.qiel.outcome }}"
+          echo "✅ Wiring Integrity (WIE): ${{ steps.wiring.outcome }}"
+          echo "✅ Guardrail Integrity (CS1): ${{ steps.guardrails.outcome }}"
+          echo "✅ Architecture Integrity (CS2): ${{ steps.architecture.outcome }}"
+          echo "✅ Incident Feedback (CS3): ${{ steps.incident.outcome }}"
+          echo "✅ Performance Integrity (CS5): ${{ steps.performance.outcome }}"
           echo ""
           echo "==================================================="
           
-          if [ "${{ steps.qiel.outcome }}" != "success" ]; then
-            echo "❌ QIC FAILED - Quality violations detected"
+          if [ "${{ steps.qiel.outcome }}" != "success" ] ||
+             [ "${{ steps.wiring.outcome }}" != "success" ] ||
+             [ "${{ steps.guardrails.outcome }}" != "success" ] ||
+             [ "${{ steps.architecture.outcome }}" != "success" ] ||
+             [ "${{ steps.incident.outcome }}" != "success" ] ||
+             [ "${{ steps.performance.outcome }}" != "success" ]; then
+            echo "❌ QIC FAILED - Constitutional QA violated"
+            echo ""
+            echo "VIOLATIONS DETECTED:"
+            [ "${{ steps.qiel.outcome }}" != "success" ] && echo "  ❌ QIEL validation failed"
+            [ "${{ steps.wiring.outcome }}" != "success" ] && echo "  ❌ Wiring Integrity failed"
+            [ "${{ steps.guardrails.outcome }}" != "success" ] && echo "  ❌ Guardrail Integrity failed"
+            [ "${{ steps.architecture.outcome }}" != "success" ] && echo "  ❌ Architecture Integrity failed"
+            [ "${{ steps.incident.outcome }}" != "success" ] && echo "  ❌ Incident Feedback failed"
+            [ "${{ steps.performance.outcome }}" != "success" ] && echo "  ❌ Performance Integrity failed"
             echo ""
             echo "TRUE NORTH VIOLATION:"
             echo "If local QIEL passed but merge QIEL failed,"
             echo "this indicates configuration drift - investigate immediately."
             exit 1
           else
-            echo "✅ QIC PASSED - Quality standards met"
+            echo "✅ QIC PASSED - All quality standards met"
             echo "✅ TRUE NORTH COMPLIANCE: One QA source verified"
+            echo "✅ CONSTITUTIONAL QA: All CS1-CS5 checks passed"
           fi
       
       - name: Comment PR with QIC Results
@@ -95,29 +143,55 @@ jobs:
           script: |
             const fs = require('fs');
             const qielStatus = '${{ steps.qiel.outcome }}';
-            const statusIcon = qielStatus === 'success' ? '✅' : '❌';
+            const wiringStatus = '${{ steps.wiring.outcome }}';
+            const guardrailsStatus = '${{ steps.guardrails.outcome }}';
+            const architectureStatus = '${{ steps.architecture.outcome }}';
+            const incidentStatus = '${{ steps.incident.outcome }}';
+            const performanceStatus = '${{ steps.performance.outcome }}';
+            
+            const allPassed = qielStatus === 'success' && 
+                              wiringStatus === 'success' && 
+                              guardrailsStatus === 'success' && 
+                              architectureStatus === 'success' && 
+                              incidentStatus === 'success' && 
+                              performanceStatus === 'success';
+            
+            const statusIcon = allPassed ? '✅' : '❌';
             
             let reportContent = '';
             const reportPath = './qiel-report.md';
             if (fs.existsSync(reportPath)) {
               reportContent = fs.readFileSync(reportPath, 'utf-8');
               // Truncate if needed
-              const maxLength = 60000;
+              const maxLength = 50000;
               reportContent = reportContent.length > maxLength 
                 ? reportContent.substring(0, maxLength) + '\n\n... (truncated)'
                 : reportContent;
             }
             
+            const getStatusEmoji = (status) => status === 'success' ? '✅' : '❌';
+            
             const body = `## ${statusIcon} QIC - Quality Integrity Contract
 
-**Status**: ${qielStatus === 'success' ? 'PASSED ✅' : 'FAILED ❌'}
+**Overall Status**: ${allPassed ? 'PASSED ✅' : 'FAILED ❌'}
 
 ### TRUE NORTH: One QA, One Build, One Handover
 
 This validation runs **THE SAME QIEL** that Copilot runs locally.
 - **Config:** \`lib/foreman/qiel-config.ts\`
 - **Script:** \`npm run qiel:full\`
-- **Principle:** Zero drift, zero duplica tion, zero regression
+- **Principle:** Zero drift, zero duplication, zero regression
+
+### Constitutional QA Categories
+
+| Category | Status | Description |
+|----------|--------|-------------|
+| **QIEL Full Validation** | ${getStatusEmoji(qielStatus)} | Core QA pipeline (lint, build, test) |
+| **WIE - Wiring Integrity** | ${getStatusEmoji(wiringStatus)} | UI → API → Context → Model flow |
+| **CS1 - Guardrail Integrity** | ${getStatusEmoji(guardrailsStatus)} | Immutable governance files protected |
+| **CS2 - Architecture Integrity** | ${getStatusEmoji(architectureStatus)} | Architecture changes require approval |
+| **CS3 - Incident Feedback** | ${getStatusEmoji(incidentStatus)} | Deployment verification loop |
+| **CS5 - Performance Integrity** | ${getStatusEmoji(performanceStatus)} | No TODOs, no lazy fixes |
 
 ${reportContent ? `
 ### QIEL Report
@@ -125,9 +199,11 @@ ${reportContent ? `
 ${reportContent}
 ` : ''}
 
-${qielStatus !== 'success' ? `
-⚠️ **Action Required**: QIEL validation failed.
+${!allPassed ? `
+⚠️ **Action Required**: Constitutional QA violations detected.
 
+**Failed Checks:**
+${qielStatus !== 'success' ? '- ❌ QIEL Full Validation\n' : ''}${wiringStatus !== 'success' ? '- ❌ Wiring Integrity (WIE)\n' : ''}${guardrailsStatus !== 'success' ? '- ❌ Guardrail Integrity (CS1)\n' : ''}${architectureStatus !== 'success' ? '- ❌ Architecture Integrity (CS2)\n' : ''}${incidentStatus !== 'success' ? '- ❌ Incident Feedback (CS3)\n' : ''}${performanceStatus !== 'success' ? '- ❌ Performance Integrity (CS5)\n' : ''}
 **If local QIEL passed but this failed**, investigate configuration drift immediately.
 This violates TRUE NORTH principles.
 ` : `
@@ -137,6 +213,14 @@ TRUE NORTH COMPLIANCE:
 - ✅ One QA source of truth verified
 - ✅ Zero configuration drift
 - ✅ One-time build handover complete
+
+CONSTITUTIONAL QA COMPLIANCE:
+- ✅ All CS1-CS5 checks passed
+- ✅ Wiring integrity verified
+- ✅ Guardrails protected
+- ✅ Architecture governance enforced
+- ✅ Incident feedback loop validated
+- ✅ Performance standards met
 `}
 
 ---
