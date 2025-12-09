@@ -20,15 +20,18 @@ import { bulkAddEntries } from './storage'
  * Discovery patterns for finding upgrade suggestions
  */
 const DISCOVERY_PATTERNS: DiscoveryPattern[] = [
-  // Future enhancements
-  { type: 'future', pattern: /FUTURE[:\s]+([^\n]+)/gi, category: 'Other', priorityBoost: 5, tags: ['future'] },
+  // Future enhancements sections - HIGH PRIORITY
+  { type: 'future-enhancement', pattern: /FUTURE[:\s]+([^\n]+)/gi, category: 'Other', priorityBoost: 5, tags: ['future'] },
+  { type: 'future-improvement', pattern: /(?:future improvement|future roadmap|future enhancement)[:\s]*([^\n]+)/gi, category: 'Other', priorityBoost: 8, tags: ['future', 'enhancement'] },
+  
+  // TODO and enhancement markers
   { type: 'todo', pattern: /TODO[:\s]+([^\n]+)/gi, category: 'Other', priorityBoost: 3, tags: ['todo'] },
   { type: 'enhancement', pattern: /ENHANCEMENT[:\s]+([^\n]+)/gi, category: 'Other', priorityBoost: 8, tags: ['enhancement'] },
   
   // Proposed improvements
   { type: 'proposed', pattern: /proposed improvement[:\s]+([^\n]+)/gi, category: 'Other', priorityBoost: 7, tags: ['proposed'] },
   { type: 'suggestion', pattern: /feature suggestion[:\s]+([^\n]+)/gi, category: 'Other', priorityBoost: 6, tags: ['suggestion'] },
-  { type: 'consider', pattern: /consider adding[:\s]+([^\n]+)/gi, category: 'Other', priorityBoost: 5, tags: ['consideration'] },
+  { type: 'consider', pattern: /consider (?:adding|implementing)[:\s]+([^\n]+)/gi, category: 'Other', priorityBoost: 6, tags: ['consideration'] },
   
   // Category-specific patterns
   { type: 'ui', pattern: /UI improvement[:\s]+([^\n]+)/gi, category: 'UI', priorityBoost: 7, tags: ['ui'] },
@@ -175,7 +178,11 @@ async function scanFile(filePath: string): Promise<ParkingStationEntry[]> {
     if (filePath.includes('governance')) sourceType = 'Governance Report'
     if (filePath.includes('ISSUE')) sourceType = 'Issue Summary'
     
-    // Apply each pattern
+    // First, scan for Future sections and extract all items
+    const futureEntries = extractFutureSectionItems(content, relativePath, sourceType)
+    entries.push(...futureEntries)
+    
+    // Then apply pattern-based discovery
     for (const pattern of DISCOVERY_PATTERNS) {
       const regex = typeof pattern.pattern === 'string' 
         ? new RegExp(pattern.pattern, 'gi') 
@@ -219,6 +226,115 @@ async function scanFile(filePath: string): Promise<ParkingStationEntry[]> {
     console.warn(`Failed to scan file ${filePath}:`, error)
     return []
   }
+}
+
+/**
+ * Extract items from "Future" sections (Future Enhancements, Future Improvements, etc.)
+ */
+function extractFutureSectionItems(
+  content: string,
+  relativePath: string,
+  sourceType: 'Feedback File' | 'Governance Report' | 'Implementation Summary' | 'Issue Summary'
+): ParkingStationEntry[] {
+  const entries: ParkingStationEntry[] = []
+  
+  // Find all "Future" section headers
+  const sectionRegex = /^##+ (?:Future|Next Steps|Roadmap|Known Limitations?)(?: (?:Enhancements?|Improvements?|Work|Features?|Considerations?))?\s*$/gim
+  const lines = content.split('\n')
+  
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i]
+    
+    if (sectionRegex.test(line)) {
+      // Found a Future section, extract items until next major heading
+      const sectionLevel = (line.match(/^#+/) || ['##'])[0].length
+      const items: string[] = []
+      let currentItem = ''
+      
+      for (let j = i + 1; j < lines.length; j++) {
+        const itemLine = lines[j]
+        
+        // Stop if we hit another section of equal or higher level
+        const headingMatch = itemLine.match(/^(#+)\s/)
+        if (headingMatch && headingMatch[1].length <= sectionLevel) {
+          break
+        }
+        
+        // Skip empty lines
+        if (!itemLine.trim()) {
+          if (currentItem) {
+            items.push(currentItem.trim())
+            currentItem = ''
+          }
+          continue
+        }
+        
+        // Check for list items (numbered or bulleted)
+        const listItemMatch = itemLine.match(/^[\s]*(?:\d+\.|[-*+])\s+(.+)$/)
+        if (listItemMatch) {
+          // Save previous item if exists
+          if (currentItem) {
+            items.push(currentItem.trim())
+          }
+          currentItem = listItemMatch[1]
+        } else if (currentItem && itemLine.match(/^[\s]{2,}/)) {
+          // Continuation of current item (indented)
+          currentItem += ' ' + itemLine.trim()
+        } else if (currentItem) {
+          // New paragraph, save current item
+          items.push(currentItem.trim())
+          currentItem = ''
+        }
+      }
+      
+      // Don't forget the last item
+      if (currentItem) {
+        items.push(currentItem.trim())
+      }
+      
+      // Create parking station entries for each item
+      for (const item of items) {
+        // Extract title (before : or - if present)
+        const titleMatch = item.match(/^[\*\*]*([^:]+?)[\*\*]*[:\-]/)
+        const title = titleMatch ? titleMatch[1].trim() : item.substring(0, 80)
+        
+        // Clean up the item text
+        let cleanItem = item
+          .replace(/^\*\*/g, '')  // Remove leading **
+          .replace(/\*\*$/g, '')  // Remove trailing **
+          .trim()
+        
+        if (cleanItem.length < 10) continue
+        
+        const category = refineCategory(cleanItem, 'Other')
+        const priority = computePriority(category, relativePath, 8, cleanItem) // High priority for Future sections
+        const wave = determineSuggestedWave(priority, cleanItem)
+        const tags = ['future-enhancement', ...extractTags(cleanItem, category)]
+        
+        entries.push({
+          id: generateEntryId(),
+          name: title.length > 80 ? title.substring(0, 77) + '...' : title,
+          category,
+          source: sourceType,
+          sourceLocation: `/${relativePath}`,
+          summary: cleanItem,
+          description: `Discovered from Future section in ${relativePath}\n\n${cleanItem}`,
+          suggestedWave: wave,
+          priority,
+          status: 'Parked',
+          tags: Array.from(new Set(tags)),
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          createdBy: 'foreman-discovery-engine',
+          metadata: {
+            extractedContext: `From section: ${line}`,
+          },
+        })
+      }
+    }
+  }
+  
+  return entries
 }
 
 /**

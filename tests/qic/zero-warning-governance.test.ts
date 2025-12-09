@@ -17,7 +17,7 @@ import {
   loadAllowedWarnings,
   validateAllowedWarnings,
   isWarningAllowed,
-} from '../../../lib/foreman/qa/allowed-warnings-loader';
+} from '@/lib/foreman/qa/allowed-warnings-loader';
 
 describe('QIC: Zero-Warning Policy Governance', () => {
   it('should have allowed-warnings.json file', () => {

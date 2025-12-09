@@ -141,6 +141,65 @@ QIC enforces both traditional QA checks and constitutional governance requiremen
 
 ---
 
+### 7. CS6 - Zero-Warning Policy Governance
+
+**Purpose**: Ensure zero-warning policy is strictly enforced with governance-approved exceptions only
+
+**Checks**:
+- ✅ `foreman/qa/allowed-warnings.json` exists
+- ✅ `foreman/qa/allowed-warnings-schema.json` exists and is valid
+- ✅ Zero-warning policy loads and validates allowed warnings
+- ✅ No warnings approved by Foreman (only Johan may approve)
+- ✅ All allowed warnings have Parking Station IDs for tech-debt tracking
+- ✅ All allowed warnings have target waves for elimination
+- ✅ All allowed warnings have approval, reason, and source
+- ✅ All warning patterns are valid regular expressions
+- ✅ No blanket ignore patterns (patterns must be specific)
+- ✅ No expired warnings in allowlist
+- ✅ Zero-warning policy properly categorizes warnings as allowed/blocked
+- ✅ No silent npm warning suppression in code
+
+**Test File**: `tests/qic/zero-warning-governance.test.ts`
+
+**Enforcement**: Run via `npm run test:zero-warning-governance`
+
+**Governance Rules**:
+1. **Foreman may NOT add warnings to allowlist autonomously**
+2. **All warning exceptions must be approved by Johan**
+3. **Each allowed warning must have a Parking Station tech-debt entry**
+4. **Warnings not in allowlist MUST cause QA to fail**
+5. **No blanket "ignore npm" or similar broad suppression rules**
+
+**Allowed Warnings Structure**:
+```json
+{
+  "version": "1.0.0",
+  "lastUpdated": "YYYY-MM-DD",
+  "warnings": [
+    {
+      "id": "unique-id",
+      "pattern": "specific-regex-pattern",
+      "source": "e.g., transitive dependency via next@14",
+      "reason": "justification for allowing this warning",
+      "target_wave": "the wave where we plan to eliminate it",
+      "approved_by": "Johan (not Foreman)",
+      "created_at": "ISO 8601 timestamp",
+      "parking_station_id": "reference to parking station entry",
+      "metadata": {
+        "package_name": "package-name",
+        "package_version": "1.0.0",
+        "impact": "low|medium|high|critical",
+        "upgrade_plan": "description of upgrade plan"
+      }
+    }
+  ]
+}
+```
+
+**Note**: This check ensures the Zero-Warning Policy remains a constitutional rule, not a convenience feature.
+
+---
+
 ## QIC Workflow
 
 QIC is enforced via GitHub Actions: `.github/workflows/qic.yml`

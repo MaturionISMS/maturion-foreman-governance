@@ -24,6 +24,7 @@
     "test:ui-wiring": "tsx --test tests/qic/ui-wiring.test.ts",
     "test:incident": "tsx --test tests/qic/incident-feedback.test.ts",
     "test:performance": "tsx --test tests/qic/performance-integrity.test.ts",
+    "test:zero-warning-governance": "tsx --test tests/qic/zero-warning-governance.test.ts",
     "typecheck": "tsc --noEmit",
     "typecheck:production": "tsc --noEmit",
     "qa:full": "npm run lint && npm run test:structural && npm run build",
