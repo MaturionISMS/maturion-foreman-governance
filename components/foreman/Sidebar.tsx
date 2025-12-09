@@ -16,6 +16,7 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
 
   const menuItems = [
     { id: 'chat', label: 'Chat', icon: '💬', href: '/foreman' },
+    { id: 'parking-station', label: 'Parking Station', icon: '🅿️', href: '/foreman/parking-station' },
     { id: 'analytics', label: 'Analytics', icon: '🔭', href: '/foreman/analytics' },
     { id: 'history', label: 'Build History', icon: '📜' },
     { id: 'tasks', label: 'Tasks', icon: '✓' },
