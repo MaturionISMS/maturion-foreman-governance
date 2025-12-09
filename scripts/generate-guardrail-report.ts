@@ -14,7 +14,7 @@ import { generateGuardrailStatusReport, writeReportToFile, displayReport } from 
 
 async function main() {
   console.log('🔒 Immutable Guardrail Runtime Engine')
-  console.log('=' .repeat(80))
+  console.log('='.repeat(80))
   console.log('')
   
   console.log('Running guardrail checks...')

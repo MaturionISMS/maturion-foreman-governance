@@ -272,10 +272,16 @@ export function validateAgentContract(): GuardrailCheckResult {
       }
     }
     
-    // Check for essential contract markers
+    // Check for essential contract markers and structure
+    // Validate that the contract contains required sections
     const hasHeader = content.includes('# ') || content.includes('## ')
     const hasGuidelines = content.toLowerCase().includes('foreman') || 
                           content.toLowerCase().includes('agent')
+    
+    // Additional validation: check for key governance concepts
+    const hasGovernanceTerms = content.toLowerCase().includes('governance') ||
+                               content.toLowerCase().includes('autonomy') ||
+                               content.toLowerCase().includes('constitutional')
     
     if (!hasHeader || !hasGuidelines) {
       return {
@@ -285,6 +291,7 @@ export function validateAgentContract(): GuardrailCheckResult {
         details: {
           hasHeader,
           hasGuidelines,
+          hasGovernanceTerms,
           path: contractPath
         }
       }
@@ -296,7 +303,8 @@ export function validateAgentContract(): GuardrailCheckResult {
       message: 'Agent contract validated',
       details: {
         path: contractPath,
-        size: content.length
+        size: content.length,
+        hasGovernanceTerms
       }
     }
   } catch (error) {
