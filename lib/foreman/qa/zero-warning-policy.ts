@@ -155,6 +155,11 @@ function checkDeprecatedAPIs(
       return;
     }
     
+    // Skip npm package deprecation warnings (transitive dependencies we don't control)
+    if (line.includes('npm warn deprecated')) {
+      return;
+    }
+    
     for (const pattern of DEPRECATED_API_PATTERNS) {
       if (pattern.test(line)) {
         deprecated.push(line.trim());

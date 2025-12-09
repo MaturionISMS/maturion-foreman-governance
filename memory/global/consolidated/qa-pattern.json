@@ -23,5 +23,31 @@
       "firstSeen": "2025-12-07T07:32:10.695Z",
       "validationCount": 0
     }
+  },
+  {
+    "id": "kb_20251209_004",
+    "category": "qa_pattern",
+    "summary": "Foreman attempted to create PR with incomplete QA: QIEL not passed, Errors present. PR creation requires 100% QA pass - ZERO errors, ZERO warnings, ZERO failures. (observed 4 times)",
+    "lesson": "QA pattern 'created_pr_with_incomplete_qa' has been observed 4 times. Ensure testing procedures account for this recurring scenario.",
+    "appliesTo": [
+      "GlobalUI",
+      "Builder",
+      "PartPulse"
+    ],
+    "originEntries": [
+      "global_foreman_drift_created_pr_with_incomplete_qa_1765290378073_1765290440463_80i6mlf",
+      "global_foreman_drift_created_pr_with_incomplete_qa_1765290378078_1765290440463_3jtkgge",
+      "global_foreman_drift_created_pr_with_incomplete_qa_1765290440469_1765290440472_4slpts7",
+      "global_foreman_drift_created_pr_with_incomplete_qa_1765290442586_1765290442742_g2lfvxf"
+    ],
+    "governanceLinks": [],
+    "confidence": 0.4,
+    "importance": "critical",
+    "timestamp": "2025-12-09T14:27:25.154Z",
+    "metadata": {
+      "consolidatedFrom": 4,
+      "firstSeen": "2025-12-09T14:27:20.463Z",
+      "validationCount": 0
+    }
   }
 ]
