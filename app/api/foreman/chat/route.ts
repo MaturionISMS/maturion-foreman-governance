@@ -79,19 +79,24 @@ export async function POST(request: NextRequest) {
       userMessage = `Context flags: ${contextFlags.join(', ')}\n\n${message}`;
     }
 
-    // Build optimized context to prevent token overflow
-    const context = buildOptimizedContext(
+    // Build optimized context to prevent token overflow (now supports large prompts)
+    const context = await buildOptimizedContext(
       conversationHistory || [],
       userMessage,
       orgId,
-      { useCondensedPrompt: true }
+      { 
+        useCondensedPrompt: true,
+        enableLargePrompts: true, // Enable large prompt support
+      }
     );
 
     console.log('[Chat] Context optimization:', {
       totalTokens: context.metadata.totalTokens,
       maxAllowed: MAX_TOTAL_TOKENS,
       messagesIncluded: context.metadata.messagesIncluded,
-      compressed: context.metadata.compressed
+      compressed: context.metadata.compressed,
+      promptCompressed: context.metadata.promptCompressed,
+      promptCompressionRatio: context.metadata.promptCompressionRatio,
     });
 
     // Determine task complexity for model selection
@@ -115,17 +120,30 @@ export async function POST(request: NextRequest) {
     // Select appropriate model using escalation logic
     const modelSelection = selectModel(modelContext);
     
+    // Check if we need to escalate based on context size
+    const contextEscalation = shouldEscalateForContext(
+      context.metadata.totalTokens,
+      modelSelection.selectedModel
+    );
+
+    // Use escalated model if context requires it
+    const finalModel = contextEscalation || modelSelection.selectedModel;
+    const wasEscalatedForContext = contextEscalation !== null;
+    
     console.log('[Chat] Model selection:', {
-      selectedModel: modelSelection.selectedModel,
-      escalated: modelSelection.escalated,
-      escalationReason: modelSelection.escalationReason,
-      taskComplexity: taskComplexity.complexity
+      selectedModel: finalModel,
+      escalated: modelSelection.escalated || wasEscalatedForContext,
+      escalationReason: wasEscalatedForContext 
+        ? 'large_context' 
+        : modelSelection.escalationReason,
+      taskComplexity: taskComplexity.complexity,
+      contextTokens: context.metadata.totalTokens,
     });
 
     // Calculate dynamic max_tokens based on context and selected model
     const dynamicMaxTokens = calculateDynamicMaxTokens(
       context.metadata.totalTokens,
-      modelSelection.selectedModel
+      finalModel
     );
 
     console.log('[Chat] Token budget:', {
@@ -146,14 +164,14 @@ export async function POST(request: NextRequest) {
 
       try {
         const completion = await openai.chat.completions.create({
-          model: modelSelection.selectedModel,
+          model: finalModel,
           messages: messages,
           temperature: 0.7,
           max_tokens: dynamicMaxTokens,
         });
 
         const rawResponse = completion.choices[0]?.message?.content || '';
-        return buildSuccessResponse(rawResponse, convId, orgId, modelSelection.selectedModel);
+        return buildSuccessResponse(rawResponse, convId, orgId, finalModel);
       } catch (error) {
         return handleChatError(error, 'minimal_context');
       }
@@ -178,7 +196,7 @@ export async function POST(request: NextRequest) {
 
     // Call OpenAI with optimized context and selected model
     const completion = await openai.chat.completions.create({
-      model: modelSelection.selectedModel,
+      model: finalModel,
       messages: messages,
       temperature: 0.7,
       max_tokens: dynamicMaxTokens,
@@ -188,8 +206,8 @@ export async function POST(request: NextRequest) {
 
     // Log model usage for diagnostics
     console.log('[Chat] Model usage:', {
-      model: modelSelection.selectedModel,
-      escalated: modelSelection.escalated,
+      model: finalModel,
+      escalated: modelSelection.escalated || wasEscalatedForContext,
       tokensUsed: completion.usage?.total_tokens || 'unknown',
       promptTokens: completion.usage?.prompt_tokens || 'unknown',
       completionTokens: completion.usage?.completion_tokens || 'unknown'
@@ -219,6 +237,13 @@ export async function POST(request: NextRequest) {
         metadata: extractChatMetadata(rawResponse),
         autonomyIntent: 'proposal_only'
       };
+    }
+
+    // Add compression notice if prompt was compressed
+    if (context.metadata.promptCompressed && context.metadata.promptCompressionRatio) {
+      const compressionPercent = ((1 - context.metadata.promptCompressionRatio) * 100).toFixed(0);
+      const notice = `\n\n💡 **Long prompt compressed** - Your prompt was compressed by ${compressionPercent}% while preserving critical details.\n\n`;
+      chatResponse.replyText = notice + chatResponse.replyText;
     }
 
     // Check if we should execute actions
@@ -548,4 +573,23 @@ function calculateDynamicMaxTokens(contextTokens: number, model: ModelTier): num
   const maxTokens = model === 'gpt-4' ? 2000 : 4000;
   
   return Math.max(minTokens, Math.min(maxTokens, availableTokens));
+}
+
+/**
+ * Determine if model escalation is needed based on context size
+ */
+function shouldEscalateForContext(contextTokens: number, currentModel: ModelTier): ModelTier | null {
+  // Escalation thresholds
+  const GPT4_THRESHOLD = 7000; // Escalate to gpt-4-turbo if > 7k tokens
+  const GPT4_TURBO_THRESHOLD = 100000; // Escalate to gpt-5.1 if > 100k tokens
+
+  if (contextTokens > GPT4_TURBO_THRESHOLD && currentModel !== 'gpt-5.1') {
+    return 'gpt-5.1';
+  }
+
+  if (contextTokens > GPT4_THRESHOLD && currentModel === 'gpt-4') {
+    return 'gpt-4-turbo';
+  }
+
+  return null;
 }

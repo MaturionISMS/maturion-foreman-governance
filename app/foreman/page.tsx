@@ -23,6 +23,8 @@ export default function ForemanChatPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [currentModel, setCurrentModel] = useState<string>('gpt-4');
   const [modelEscalated, setModelEscalated] = useState<boolean>(false);
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [compressionNotice, setCompressionNotice] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom when messages change
@@ -137,13 +139,26 @@ export default function ForemanChatPage() {
     }
 
     try {
+      // Process uploaded file if present
+      let messageToSend = currentMessage;
+      if (uploadedFile) {
+        try {
+          const fileContent = await uploadedFile.text();
+          messageToSend = `${currentMessage}\n\n---\n## Attached Document: ${uploadedFile.name}\n\n${fileContent}`;
+          // Clear uploaded file after including it
+          setUploadedFile(null);
+        } catch (error) {
+          console.error('Error reading file:', error);
+        }
+      }
+
       const response = await fetch('/api/foreman/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          message: currentMessage,
+          message: messageToSend,
           conversationId: conversationId,
           conversationHistory: messages, // Send conversation history for context
           // Organisation ID is set server-side from environment or request context
@@ -163,6 +178,12 @@ export default function ForemanChatPage() {
           setCurrentModel(data.modelUsed);
           // Check if model was escalated (not gpt-4)
           setModelEscalated(data.modelUsed !== 'gpt-4');
+        }
+
+        // Show compression notice if prompt was compressed
+        if (data.response?.replyText && data.response.replyText.includes('Long prompt compressed')) {
+          setCompressionNotice('Long prompt compressed while preserving details');
+          setTimeout(() => setCompressionNotice(''), 5000); // Clear after 5 seconds
         }
 
         // Handle execution status if present
@@ -367,11 +388,18 @@ export default function ForemanChatPage() {
                     </span>
                   )}
                 </div>
-                {messages.length > 0 && (
-                  <p className="text-xs text-gray-500">
-                    {messages.length} message{messages.length !== 1 ? 's' : ''} in conversation
-                  </p>
-                )}
+                <div className="flex items-center gap-3">
+                  {messages.length > 0 && (
+                    <p className="text-xs text-gray-500">
+                      {messages.length} message{messages.length !== 1 ? 's' : ''} in conversation
+                    </p>
+                  )}
+                  {compressionNotice && (
+                    <p className="text-xs text-yellow-400">
+                      💡 {compressionNotice}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -399,12 +427,25 @@ export default function ForemanChatPage() {
               )}
             </div>
 
-            {/* Document Upload Placeholder */}
+            {/* Document Upload */}
             <div>
               <h2 className="text-lg font-semibold text-foremanOffice-text mb-4">
                 Documents
               </h2>
-              <UploadDropzone />
+              <UploadDropzone 
+                onFileUpload={(file) => {
+                  setUploadedFile(file);
+                  // Show notice
+                  setInputMessage(prev => 
+                    prev ? `${prev}\n\n[Attached: ${file.name}]` : `[Attached: ${file.name}]\n\n`
+                  );
+                }}
+              />
+              {uploadedFile && (
+                <div className="mt-3 text-xs text-gray-400">
+                  <p>💡 File content will be included with your next message</p>
+                </div>
+              )}
             </div>
 
             {/* Quick Actions */}

@@ -4,12 +4,17 @@
  */
 
 import type { ChatMessage } from '@/types/foreman';
+import { compressPrompt, requiresCompression, type CompressionOptions } from './context/prompt-compressor';
 
 // Conservative token limits to stay well under API limits
 export const MAX_TOTAL_TOKENS = 8000; // Target max for entire context
 export const MAX_SYSTEM_PROMPT_TOKENS = 4000; // Reserve half for system prompt
 export const MAX_CONVERSATION_TOKENS = 3500; // Reserve for conversation history
 export const MAX_COMPLETION_TOKENS = 2000; // Reserve for response
+
+// Extended limits for large prompts (with model escalation)
+export const MAX_TOTAL_TOKENS_EXTENDED = 120000; // For gpt-4-turbo
+export const MAX_USER_MESSAGE_TOKENS = 20000; // Support up to 20k token prompts
 
 // Approximate token counting (rough estimate: 1 token ≈ 4 characters)
 const AVG_CHARS_PER_TOKEN = 4;
@@ -189,8 +194,95 @@ export function validateContextSize(
 /**
  * Build optimized context for chat API
  * Automatically compresses if needed to stay within limits
+ * Supports large prompts with intelligent compression
  */
-export function buildOptimizedContext(
+export async function buildOptimizedContext(
+  messages: ChatMessage[],
+  currentMessage: string,
+  organisationId: string,
+  options: {
+    useCondensedPrompt?: boolean;
+    maxConversationTokens?: number;
+    enableLargePrompts?: boolean;
+  } = {}
+): Promise<{
+  systemPrompt: string;
+  conversationHistory: string;
+  userMessage: string;
+  metadata: {
+    totalTokens: number;
+    compressed: boolean;
+    messagesIncluded: number;
+    promptCompressed?: boolean;
+    promptCompressionRatio?: number;
+  };
+}> {
+  const useCondensed = options.useCondensedPrompt ?? false;
+  const maxConvTokens = options.maxConversationTokens ?? MAX_CONVERSATION_TOKENS;
+  const enableLargePrompts = options.enableLargePrompts ?? true;
+
+  // Build system prompt (always use condensed for now to prevent context overflow)
+  const systemPrompt = createCondensedSystemPrompt(organisationId);
+
+  // Compress conversation history
+  const conversationHistory = compressConversationHistory(messages, maxConvTokens);
+
+  // Handle large prompts with intelligent compression
+  let userMessage = currentMessage;
+  let promptCompressed = false;
+  let promptCompressionRatio = 1.0;
+
+  const userMessageTokens = estimateTokenCount(currentMessage);
+
+  // Check if user message requires compression
+  if (enableLargePrompts && requiresCompression(currentMessage, MAX_USER_MESSAGE_TOKENS)) {
+    console.log(`[ContextManager] Large prompt detected: ${userMessageTokens} tokens, applying compression`);
+    
+    const compressionOptions: CompressionOptions = {
+      targetMaxTokens: 4000, // Compress to reasonable size
+      preserveGovernance: true,
+      preserveArchitecture: true,
+      preserveCriticalInstructions: true,
+    };
+
+    const compressed = await compressPrompt(currentMessage, compressionOptions);
+    userMessage = compressed.compressedPrompt;
+    promptCompressed = true;
+    promptCompressionRatio = compressed.compressionRatio;
+
+    console.log(`[ContextManager] Prompt compressed: ${compressed.originalTokens} -> ${compressed.compressedTokens} tokens (${(promptCompressionRatio * 100).toFixed(1)}%)`);
+  } else if (userMessageTokens > 500 && !enableLargePrompts) {
+    // Fallback to truncation if large prompts not enabled
+    userMessage = truncateToTokenLimit(currentMessage, 500);
+  }
+
+  // Calculate totals
+  const validation = validateContextSize(systemPrompt, conversationHistory, userMessage);
+
+  // Determine if conversation history compression occurred
+  const wasCompressed = messages.length > 0 && (
+    conversationHistory.includes('earlier messages omitted') || 
+    estimateTokenCount(conversationHistory) < estimateTokenCount(messages.map(compressMessage).join('\n\n'))
+  );
+
+  return {
+    systemPrompt,
+    conversationHistory,
+    userMessage,
+    metadata: {
+      totalTokens: validation.totalTokens,
+      compressed: wasCompressed || promptCompressed,
+      messagesIncluded: messages.length,
+      promptCompressed,
+      promptCompressionRatio: promptCompressed ? promptCompressionRatio : undefined,
+    }
+  };
+}
+
+/**
+ * Synchronous version for backward compatibility
+ */
+export function buildOptimizedContextSync(
   messages: ChatMessage[],
   currentMessage: string,
   organisationId: string,
@@ -217,7 +309,7 @@ export function buildOptimizedContext(
   // Compress conversation history
   const conversationHistory = compressConversationHistory(messages, maxConvTokens);
 
-  // Truncate user message if needed
+  // Truncate user message if needed (sync version doesn't support large prompts)
   const userMessage = truncateToTokenLimit(currentMessage, 500);
 
   // Calculate totals

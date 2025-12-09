@@ -163,7 +163,7 @@ describe('Context Manager', () => {
   });
 
   describe('buildOptimizedContext', () => {
-    it('should build optimized context', () => {
+    it('should build optimized context', async () => {
       const messages: ChatMessage[] = [
         {
           id: '1',
@@ -177,7 +177,7 @@ describe('Context Manager', () => {
       const currentMessage = 'New message';
       const organisationId = 'test-org';
 
-      const context = buildOptimizedContext(messages, currentMessage, organisationId);
+      const context = await buildOptimizedContext(messages, currentMessage, organisationId);
       
       assert.ok(context.systemPrompt.length > 0, 'Should have system prompt');
       assert.ok(context.userMessage.length > 0, 'Should have user message');
@@ -185,7 +185,7 @@ describe('Context Manager', () => {
       assert.ok(context.metadata.totalTokens <= MAX_TOTAL_TOKENS, 'Should stay within limits');
     });
 
-    it('should compress when needed', () => {
+    it('should compress when needed', async () => {
       const manyMessages: ChatMessage[] = Array.from({ length: 100 }, (_, i) => ({
         id: `${i}`,
         role: i % 2 === 0 ? 'user' as const : 'assistant' as const,
@@ -197,7 +197,7 @@ describe('Context Manager', () => {
       const currentMessage = 'New message';
       const organisationId = 'test-org';
 
-      const context = buildOptimizedContext(manyMessages, currentMessage, organisationId);
+      const context = await buildOptimizedContext(manyMessages, currentMessage, organisationId);
       
       assert.ok(context.metadata.totalTokens <= MAX_TOTAL_TOKENS, 'Should compress to fit within limits');
       // With 100 large messages, compression should definitely occur
@@ -206,8 +206,8 @@ describe('Context Manager', () => {
                 'Should show evidence of compression');
     });
 
-    it('should handle empty conversation history', () => {
-      const context = buildOptimizedContext([], 'Test message', 'test-org');
+    it('should handle empty conversation history', async () => {
+      const context = await buildOptimizedContext([], 'Test message', 'test-org');
       
       assert.ok(context.systemPrompt.length > 0, 'Should have system prompt');
       assert.ok(context.userMessage === 'Test message', 'Should preserve user message');
