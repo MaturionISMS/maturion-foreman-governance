@@ -26,6 +26,7 @@ import {
   validateBuilderProtocol,
   logBuilderDetection
 } from './builder-detection'
+import { runGuardrailChecks, haltExecution } from './guardrails/runtime'
 
 /**
  * In-memory task store (in production, this would be a database)
@@ -139,6 +140,47 @@ function generateTaskId(): string {
 }
 
 /**
+ * Guardrail initialization flag
+ */
+let guardrailsValidated = false
+
+/**
+ * Initialize and validate guardrails on Foreman startup
+ * This MUST be called before any task dispatch
+ */
+export async function initializeGuardrails(): Promise<void> {
+  if (guardrailsValidated) {
+    console.log('[Guardrails] Already validated in this session')
+    return
+  }
+  
+  console.log('[Guardrails] Initializing Immutable Guardrail Runtime Engine...')
+  
+  try {
+    const validationResult = await runGuardrailChecks()
+    
+    if (validationResult.overall === 'failed') {
+      console.error('[Guardrails] Validation FAILED')
+      haltExecution(validationResult.violations)
+    }
+    
+    guardrailsValidated = true
+    console.log('[Guardrails] ✓ All guardrail checks passed')
+    console.log(`[Guardrails] Validated ${validationResult.checks.length} checks`)
+  } catch (error) {
+    console.error('[Guardrails] Critical error during initialization:', error)
+    haltExecution([error instanceof Error ? error.message : 'Unknown initialization error'])
+  }
+}
+
+/**
+ * Get guardrail validation status
+ */
+export function areGuardrailsValidated(): boolean {
+  return guardrailsValidated
+}
+
+/**
  * Dispatch a task to a builder
  * This enforces governance rules and handles autonomous/manual approval modes
  */
@@ -147,6 +189,12 @@ export async function dispatchBuilderTask(
   request: BuilderRequest
 ): Promise<BuilderTask> {
   console.log(`[Dispatch] Dispatching task to ${builder} builder`)
+  
+  // Guardrail check: Ensure guardrails have been validated before dispatch
+  if (!guardrailsValidated) {
+    console.log('[Dispatch] Guardrails not yet validated, running initialization...')
+    await initializeGuardrails()
+  }
   
   // GSR-5: Governance check at builder assignment phase
   console.log('[Dispatch] GSR-5: Validating governance at builder assignment...')

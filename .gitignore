@@ -45,6 +45,7 @@ preflight-validation-report.md
 
 # build reports (test artifacts)
 /reports/*.md
+/reports/*.txt
 !/reports/.gitkeep
 
 # project data (local storage)

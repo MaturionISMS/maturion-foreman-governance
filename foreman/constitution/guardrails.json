@@ -1,0 +1,19 @@
+{
+  "immutablePaths": [
+    ".github/workflows",
+    "foreman/constitution",
+    "docs/governance",
+    ".github/foreman/agent-contract.md"
+  ],
+  "requiredChecks": [
+    "qiel",
+    "deploy-check",
+    "qic",
+    "foreman-governance"
+  ],
+  "protectedFiles": [
+    ".github/workflows/qiel.yml",
+    ".github/workflows/deploy-check.yml",
+    ".github/foreman/agent-contract.md"
+  ]
+}
