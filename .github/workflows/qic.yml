@@ -39,13 +39,13 @@ jobs:
         id: lint
         run: |
           echo "Running ESLint in strict mode..."
-          npm run lint
+          npm run lint 2>&1 | tee /tmp/lint.log
       
       - name: Run TypeScript Type Check
         id: typecheck
         run: |
           echo "Running TypeScript type check..."
-          npm run typecheck
+          npm run typecheck 2>&1 | tee /tmp/build.log
       
       - name: Run All Tests
         id: tests
@@ -66,7 +66,13 @@ jobs:
           fi
           
           # If we have tests, they must pass
-          npm run test:all
+          npm run test:all 2>&1 | tee /tmp/test.log
+      
+      - name: Run QIEL Quick Check
+        id: qiel
+        run: |
+          echo "Running QIEL quick check..."
+          npm run qiel:quick
       
       - name: QIC Validation Summary
         if: always()
@@ -78,12 +84,14 @@ jobs:
           echo "✅ ESLint: ${{ steps.lint.outcome }}"
           echo "✅ TypeScript: ${{ steps.typecheck.outcome }}"
           echo "✅ Tests: ${{ steps.tests.outcome }}"
+          echo "✅ QIEL: ${{ steps.qiel.outcome }}"
           echo ""
           echo "==================================================="
           
           if [ "${{ steps.lint.outcome }}" != "success" ] || \
              [ "${{ steps.typecheck.outcome }}" != "success" ] || \
-             [ "${{ steps.tests.outcome }}" != "success" ]; then
+             [ "${{ steps.tests.outcome }}" != "success" ] || \
+             [ "${{ steps.qiel.outcome }}" != "success" ]; then
             echo "❌ QIC FAILED - Quality violations detected"
             exit 1
           else
@@ -98,11 +106,13 @@ jobs:
             const lintStatus = '${{ steps.lint.outcome }}';
             const typecheckStatus = '${{ steps.typecheck.outcome }}';
             const testsStatus = '${{ steps.tests.outcome }}';
+            const qielStatus = '${{ steps.qiel.outcome }}';
             
             const statusIcon = (status) => status === 'success' ? '✅' : '❌';
             const overallPass = lintStatus === 'success' && 
                                typecheckStatus === 'success' && 
-                               testsStatus === 'success';
+                               testsStatus === 'success' &&
+                               qielStatus === 'success';
             
             const body = `## ${overallPass ? '✅' : '❌'} QIC - Quality Integrity Contract
             
@@ -113,6 +123,7 @@ jobs:
             - ${statusIcon(lintStatus)} **ESLint**: ${lintStatus}
             - ${statusIcon(typecheckStatus)} **TypeScript**: ${typecheckStatus}
             - ${statusIcon(testsStatus)} **Tests**: ${testsStatus}
+            - ${statusIcon(qielStatus)} **QIEL Quick Check**: ${qielStatus}
             
             ${!overallPass ? `
             ⚠️ **Action Required**: Fix quality issues before merging.
