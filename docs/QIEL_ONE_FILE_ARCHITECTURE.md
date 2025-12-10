@@ -72,7 +72,7 @@ The only difference is the environment (local vs GitHub Actions), which is fine 
 
 ## What The Watchdog Tests
 
-The alignment watchdog (`tests/qiel/qiel-alignment.test.ts`) now validates:
+The alignment watchdog (`tests/qic/qiel-alignment.test.ts`) now validates:
 
 1. ✅ Workflow runs `npm run qiel:full` (not hardcoded commands)
 2. ✅ Workflow uses Node version from qiel-config.ts

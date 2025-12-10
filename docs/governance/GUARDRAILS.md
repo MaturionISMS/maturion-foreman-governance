@@ -54,7 +54,7 @@ foreman/constitution/
    - Ensures governance files exist
    - Tests immutable paths
 
-3. **QIEL Tests** (`tests/qiel/constitution-integrity.test.ts`)
+3. **QIEL Tests** (`tests/qic/guardrails.test.ts`)
    - Hash-based integrity checking
    - Suppression detection
    - Constitutional drift detection
@@ -300,7 +300,7 @@ npm run test:qic
 
 ### QIEL Tests
 
-`tests/qiel/constitution-integrity.test.ts` validates:
+`tests/qic/guardrails.test.ts` validates:
 - Hash-based integrity
 - Path protection
 - Suppression detection
@@ -462,7 +462,7 @@ When guardrails fail:
 - **Hash Checker**: `lib/foreman/guardrails/hash-checker.ts`
 - **Path Protection**: `lib/foreman/guardrails/path-protection.ts`
 - **QIC Tests**: `tests/qic/guardrails.test.ts`
-- **QIEL Tests**: `tests/qiel/constitution-integrity.test.ts`
+- **QIEL Tests**: `tests/qic/guardrails.test.ts`
 
 ---
 

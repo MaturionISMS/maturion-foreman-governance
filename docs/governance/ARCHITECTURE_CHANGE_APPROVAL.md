@@ -263,7 +263,7 @@ Tests are located in:
 - `tests/architecture/approval-workflow.test.ts` - Approval/rejection/discussion
 - `tests/pr-gatekeeper/architecture-approval.test.ts` - PR gatekeeper integration
 - `tests/qic/architecture-integrity.test.ts` - QIC enforcement
-- `tests/qiel/architecture-diff.test.ts` - QIEL detection
+- `tests/qic/architecture-integrity.test.ts` - QIEL detection
 
 Run tests:
 ```bash

@@ -402,7 +402,7 @@ Each incident stored as: `memory/incidents/{incident_id}.json`
 
 ### 9. QIEL Integration
 
-**Test Location:** `tests/qiel/incident-lifecycle.test.ts`
+**Test Location:** `tests/qic/incident-feedback.test.ts`
 
 **Required Tests:**
 
@@ -555,7 +555,7 @@ To verify CS3 is **functionally working**, the following must be TRUE:
 ### QA Validation
 
 1. ✅ `npm run test:incident` passes 100%
-2. ✅ `npx tsx --test tests/qiel/incident-lifecycle.test.ts` passes 100%
+2. ✅ `npx tsx --test tests/qic/incident-feedback.test.ts` passes 100%
 3. ✅ Build succeeds with zero errors
 4. ✅ Build succeeds with zero warnings
 5. ✅ Type check passes: `npm run typecheck`

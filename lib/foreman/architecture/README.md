@@ -206,7 +206,7 @@ npx tsx --test tests/architecture/acr-engine.test.ts
 npx tsx --test tests/architecture/approval-workflow.test.ts
 npx tsx --test tests/pr-gatekeeper/architecture-approval.test.ts
 npx tsx --test tests/qic/architecture-integrity.test.ts
-npx tsx --test tests/qiel/architecture-diff.test.ts
+npx tsx --test tests/qic/architecture-integrity.test.ts
 ```
 
 ## Examples
