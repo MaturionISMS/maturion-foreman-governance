@@ -315,11 +315,11 @@ function checkMemorySystem(): InitializationCheckResult {
 
 /**
  * Check if MCP (Model Context Protocol) is configured
+ * MCP provides GitHub access for autonomous operations via the Model Context Protocol server
  */
 function checkMCPConfiguration(): InitializationCheckResult {
   const mcpToken = process.env.GITHUB_MCP_TOKEN
 
-  // MCP requires GITHUB_MCP_TOKEN
   if (!mcpToken) {
     return {
       name: 'MCP Configuration',

@@ -13,7 +13,7 @@
     "test:qa": "tsx tests/qa/*.test.ts",
     "test:qic": "tsx tests/qic/*.test.ts",
     "test:governance": "tsx tests/governance/*.test.ts",
-    "test:all": "for file in tests/**/*.test.ts; do tsx \"$file\" || exit 1; done",
+    "test:all": "find tests -name '*.test.ts' -type f -exec tsx {} \\; || exit 1",
     "test:watch": "tsx --watch tests/dashboard/*.test.ts",
     "test:structural": "tsx tests/qa-structural/*.test.ts",
     "test:overnight": "tsx tests/overnight-execution/*.test.ts",
