@@ -40,7 +40,8 @@
     "overnight:dry-run": "tsx scripts/run-overnight-execution.ts --dry-run",
     "wave2": "tsx scripts/run-wave2-execution.ts",
     "wave2:dry-run": "tsx scripts/run-wave2-execution.ts --dry-run",
-    "wave2:validate": "tsx scripts/validate-wave2-execution.ts"
+    "wave2:validate": "tsx scripts/validate-wave2-execution.ts",
+    "verify:cs3": "tsx scripts/verify-cs3-functional.ts"
   },
   "dependencies": {
     "ajv": "^8.17.1",
