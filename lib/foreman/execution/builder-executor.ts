@@ -52,7 +52,7 @@ export interface BuildExecutionResult {
 export interface ValidationResults {
   lint: { passed: boolean; errors: string[]; warnings: string[] }
   typecheck: { passed: boolean; errors: string[] }
-  tests: { passed: boolean; total: number; passed: number; failed: number }
+  tests: { passed: boolean; total: number; passedCount: number; failed: number }
   qiel: { passed: boolean; violations: string[] }
   build: { passed: boolean; errors: string[] }
 }
@@ -119,7 +119,7 @@ async function runAutomaticValidations(): Promise<ValidationResults> {
   const results: ValidationResults = {
     lint: { passed: false, errors: [], warnings: [] },
     typecheck: { passed: false, errors: [] },
-    tests: { passed: false, total: 0, passed: 0, failed: 0 },
+    tests: { passed: false, total: 0, passedCount: 0, failed: 0 },
     qiel: { passed: false, violations: [] },
     build: { passed: false, errors: [] }
   }
@@ -155,7 +155,14 @@ async function runAutomaticValidations(): Promise<ValidationResults> {
   try {
     const qielResult = await runQIEL()
     results.qiel.passed = qielResult.passed
-    results.qiel.violations = qielResult.violations || []
+    // Collect violations from failed checks
+    const violations: string[] = []
+    if (!qielResult.checks.buildLogsPassed) violations.push('Build logs have errors')
+    if (!qielResult.checks.lintLogsPassed) violations.push('Lint logs have errors')
+    if (!qielResult.checks.testLogsPassed) violations.push('Test logs have errors')
+    if (!qielResult.checks.zeroWarningPassed) violations.push('Zero warning policy failed')
+    if (!qielResult.checks.deploymentSimulationPassed) violations.push('Deployment simulation failed')
+    results.qiel.violations = violations
   } catch (error: any) {
     results.qiel.passed = false
     results.qiel.violations = [error.message]
@@ -242,7 +249,7 @@ export async function executeBuild(
   const useLocalBuilder = fallbackCheck.shouldFallback
   
   let builderOutput: BuilderTaskOutput
-  let builderUsed: 'github-copilot' | 'local-builder'
+  let builderUsed: 'github-copilot' | 'local-builder' = 'github-copilot' // Default
   
   try {
     if (useLocalBuilder) {
