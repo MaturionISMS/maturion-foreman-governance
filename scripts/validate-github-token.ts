@@ -60,7 +60,7 @@ async function validateToken() {
     process.exit(1);
   }
 
-  info(`Token format: ${token.substring(0, 10)}...${token.substring(token.length - 4)}`);
+  info(`Token format: ${token.startsWith('ghp_') ? 'Classic PAT (ghp_...)' : token.startsWith('github_pat_') ? 'Fine-grained PAT (github_pat_...)' : 'Unknown format'}`);
 
   // Determine token type
   const tokenType = token.startsWith('ghp_') 
@@ -92,17 +92,23 @@ async function validateToken() {
 
   // Test 2: Organization access
   section('Test 2: MaturionISMS Organization Access');
+  
+  let userLogin: string;
+  
   try {
     const { data: org } = await octokit.rest.orgs.get({ org: 'MaturionISMS' });
     success(`Can access MaturionISMS organization`);
     info(`Organization name: ${org.name || org.login}`);
     info(`Organization ID: ${org.id}`);
     
-    // Check if user is member
+    // Check if user is member (reuse user data from Test 1)
+    const { data: user } = await octokit.rest.users.getAuthenticated();
+    userLogin = user.login;
+    
     try {
       await octokit.rest.orgs.checkMembershipForUser({
         org: 'MaturionISMS',
-        username: (await octokit.rest.users.getAuthenticated()).data.login,
+        username: userLogin,
       });
       success('You are a member of MaturionISMS organization');
     } catch {
