@@ -86,7 +86,7 @@ function checkOpenAIConfiguration(): InitializationCheckResult {
  * Check if GitHub Token is configured (for loading behavior files)
  */
 function checkGitHubTokenConfiguration(): InitializationCheckResult {
-  const token = process.env.GITHUB_TOKEN
+  const token = process.env.GITHUB_MCP_TOKEN
   const repoOwner = process.env.FOREMAN_BEHAVIOUR_REPO_OWNER
   const repoName = process.env.FOREMAN_BEHAVIOUR_REPO_NAME
   const behaviorDir = process.env.FOREMAN_BEHAVIOUR_DIR
@@ -97,7 +97,7 @@ function checkGitHubTokenConfiguration(): InitializationCheckResult {
       return {
         name: 'GitHub Token Configuration',
         status: 'error',
-        message: 'GITHUB_TOKEN required when using external behavior repository',
+        message: 'GITHUB_MCP_TOKEN required when using external behavior repository',
         required: true
       }
     }
@@ -318,24 +318,13 @@ function checkMemorySystem(): InitializationCheckResult {
  */
 function checkMCPConfiguration(): InitializationCheckResult {
   const mcpToken = process.env.GITHUB_MCP_TOKEN
-  const githubToken = process.env.GITHUB_TOKEN
 
-  // MCP requires GITHUB_MCP_TOKEN specifically (not GITHUB_TOKEN)
+  // MCP requires GITHUB_MCP_TOKEN
   if (!mcpToken) {
     return {
       name: 'MCP Configuration',
       status: 'error',
       message: 'GITHUB_MCP_TOKEN not set - MCP server cannot authenticate. Autonomy disabled.',
-      required: true
-    }
-  }
-
-  // Verify MCP token is different from standard GITHUB_TOKEN
-  if (mcpToken === githubToken) {
-    return {
-      name: 'MCP Configuration',
-      status: 'warning',
-      message: 'GITHUB_MCP_TOKEN is same as GITHUB_TOKEN - should use dedicated token',
       required: true
     }
   }

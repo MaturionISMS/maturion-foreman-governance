@@ -3,7 +3,7 @@
 /**
  * GitHub Token Validation Script
  * 
- * Tests if the configured GITHUB_TOKEN has proper access to:
+ * Tests if the configured GITHUB_MCP_TOKEN has proper access to:
  * 1. GitHub API (basic authentication)
  * 2. MaturionISMS organization
  * 3. maturion-isms repository
@@ -13,7 +13,7 @@
  *   npx tsx scripts/validate-github-token.ts
  * 
  * Or with custom token:
- *   GITHUB_TOKEN=ghp_your_token npx tsx scripts/validate-github-token.ts
+ *   GITHUB_MCP_TOKEN=ghp_your_token npx tsx scripts/validate-github-token.ts
  */
 
 import { Octokit } from 'octokit';
@@ -52,11 +52,11 @@ async function validateToken() {
   section('GitHub Token Validation');
 
   // Check if token is configured
-  const token = process.env.GITHUB_TOKEN;
+  const token = process.env.GITHUB_MCP_TOKEN;
   if (!token) {
-    error('GITHUB_TOKEN environment variable is not set');
-    console.log('\nPlease set GITHUB_TOKEN in your .env.local file or as an environment variable.');
-    console.log('Example: GITHUB_TOKEN=ghp_your_token_here');
+    error('GITHUB_MCP_TOKEN environment variable is not set');
+    console.log('\nPlease set GITHUB_MCP_TOKEN in your .env.local file or as an environment variable.');
+    console.log('Example: GITHUB_MCP_TOKEN=ghp_your_token_here');
     process.exit(1);
   }
 
@@ -85,7 +85,7 @@ async function validateToken() {
     console.error(`Error: ${err.message}`);
     if (err.status === 401) {
       console.log('\n🔍 Diagnosis: Token is invalid or expired');
-      console.log('Solution: Generate a new token and update GITHUB_TOKEN');
+      console.log('Solution: Generate a new token and update GITHUB_MCP_TOKEN');
     }
     process.exit(1);
   }
@@ -250,7 +250,7 @@ async function validateToken() {
       console.log('2. Edit your token');
       console.log('3. Scroll to "Organization permissions"');
       console.log('4. Add "Members: Read-only" permission');
-      console.log('5. Regenerate token and update GITHUB_TOKEN');
+      console.log('5. Regenerate token and update GITHUB_MCP_TOKEN');
       console.log('\nWithout organization permissions, you will get 404 errors on org repositories!');
       console.log('See: ADD_ORGANIZATION_PERMISSIONS.md for detailed instructions\n');
     }
@@ -274,7 +274,7 @@ async function validateToken() {
   console.log('3. Test behavior file loading by starting the application');
   console.log('4. Enable autonomous mode if desired: MATURION_AUTONOMOUS_MODE=true\n');
   
-  info('For troubleshooting help, see: docs/GITHUB_TOKEN_TROUBLESHOOTING.md');
+  info('For troubleshooting help, see: docs/GITHUB_MCP_TOKEN_TROUBLESHOOTING.md');
 }
 
 // Run validation

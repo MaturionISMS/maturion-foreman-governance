@@ -239,7 +239,7 @@ async function validateConfiguration() {
     console.log('✅ Wave 2 Execution is ready to run');
     console.log('');
     console.log('To run Wave 2 Execution:');
-    console.log('  1. Set GITHUB_TOKEN environment variable');
+    console.log('  1. Set GITHUB_MCP_TOKEN environment variable');
     console.log('  2. Run: npm run wave2:dry-run (for testing)');
     console.log('  3. Run: npm run wave2 (for actual execution)');
   } else {
@@ -265,7 +265,7 @@ async function validateConfiguration() {
   console.log(`  ✅ Code implemented and available`);
   console.log(`  ✅ Test suite created (45 tests)`);
   console.log(`  ✅ All validation checks passed (${passedChecks}/${totalChecks})`);
-  console.log(`  ⏳ Ready for execution when GITHUB_TOKEN is available`);
+  console.log(`  ⏳ Ready for execution when GITHUB_MCP_TOKEN is available`);
   console.log('');
 
   // Log validation completion

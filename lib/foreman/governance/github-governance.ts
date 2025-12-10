@@ -175,7 +175,7 @@ export async function detectSecrets(text: string): Promise<{
   
   const secretPatterns = [
     // GitHub tokens (gh prefix patterns)
-    { pattern: /gh[p|s|o|u|r]_[a-zA-Z0-9]{36,}/g, name: 'GITHUB_TOKEN' },
+    { pattern: /gh[p|s|o|u|r]_[a-zA-Z0-9]{36,}/g, name: 'GITHUB_MCP_TOKEN' },
     // AWS keys (AKIA prefix)
     { pattern: /AKIA[0-9A-Z]{16}/g, name: 'AWS_KEY' },
     // Private keys (PEM format)

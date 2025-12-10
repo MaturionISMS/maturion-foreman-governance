@@ -2,12 +2,12 @@
 
 import { Octokit } from "octokit";
 
-if (!process.env.GITHUB_TOKEN) {
-  throw new Error("Missing GITHUB_TOKEN in environment variables.");
+if (!process.env.GITHUB_MCP_TOKEN) {
+  throw new Error("Missing GITHUB_MCP_TOKEN in environment variables.");
 }
 
 export const github = new Octokit({
-  auth: process.env.GITHUB_TOKEN,
+  auth: process.env.GITHUB_MCP_TOKEN,
 });
 
 // Close an issue

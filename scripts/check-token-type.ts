@@ -45,14 +45,14 @@ function error(text: string) {
 function main() {
   header('GitHub Token Type Checker');
 
-  const token = process.env.GITHUB_TOKEN;
+  const token = process.env.GITHUB_MCP_TOKEN;
 
   if (!token) {
-    error('GITHUB_TOKEN is not set in environment');
+    error('GITHUB_MCP_TOKEN is not set in environment');
     console.log('\n📋 Next steps:');
     console.log('1. Make sure you have a .env.local file');
     console.log('2. Add your GitHub token to it:');
-    console.log('   GITHUB_TOKEN=your_token_here');
+    console.log('   GITHUB_MCP_TOKEN=your_token_here');
     console.log('3. Run this script again\n');
     process.exit(1);
   }

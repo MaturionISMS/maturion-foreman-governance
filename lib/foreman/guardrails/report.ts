@@ -70,7 +70,7 @@ export function generateGuardrailStatusReport(validationResult: GuardrailValidat
   report.push('')
   
   const isProtectedMode = process.env.MATURION_PROTECTED_MODE === 'true'
-  const hasGitHubToken = process.env.GITHUB_TOKEN !== undefined
+  const hasGitHubToken = process.env.GITHUB_MCP_TOKEN !== undefined
   const isAutonomousMode = process.env.MATURION_AUTONOMOUS_MODE === 'true'
   
   report.push('Foreman Runtime Permissions:')

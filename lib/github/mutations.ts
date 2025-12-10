@@ -51,7 +51,7 @@ import { logGovernanceEvent } from '@/lib/foreman/memory/governance-memory'
 async function getGitHubClient(): Promise<Octokit> {
   // TODO: Implement proper GitHub App authentication with JWT
   // TODO: Add secrets management service integration
-  const token = process.env.GITHUB_TOKEN || process.env.GITHUB_APP_INSTALLATION_TOKEN
+  const token = process.env.GITHUB_MCP_TOKEN || process.env.GITHUB_APP_INSTALLATION_TOKEN
   
   if (!token) {
     throw new Error('GitHub authentication token not configured')

@@ -10,7 +10,7 @@
  *   npx tsx scripts/fetch-all-repo-trees.ts
  * 
  * Requirements:
- *   - GITHUB_TOKEN environment variable must be set
+ *   - GITHUB_MCP_TOKEN environment variable must be set
  *   - GitHub token must have access to MaturionISMS private repositories
  */
 
@@ -18,7 +18,7 @@ import { Octokit } from 'octokit';
 import * as fs from 'fs';
 import * as path from 'path';
 
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+const GITHUB_TOKEN = process.env.GITHUB_MCP_TOKEN;
 const ORG = 'MaturionISMS';
 
 const REPOSITORIES = [
@@ -153,7 +153,7 @@ function buildTreeStructure(nodes: TreeNode[], maxDepth: number = 3): string {
 
 async function generateMarkdown(): Promise<string> {
   if (!GITHUB_TOKEN) {
-    throw new Error('GITHUB_TOKEN environment variable is required');
+    throw new Error('GITHUB_MCP_TOKEN environment variable is required');
   }
 
   const octokit = new Octokit({ auth: GITHUB_TOKEN });
