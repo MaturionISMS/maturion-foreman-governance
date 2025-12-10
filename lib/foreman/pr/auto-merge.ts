@@ -18,6 +18,7 @@ import { runQIEL } from '../qa/qiel-runner'
 import { detectDrift } from '../governance/drift-detector'
 import { logGovernanceEvent } from '../memory/governance-memory'
 import { recordIncident } from '../incidents/recorder'
+import { execSync } from 'child_process'
 import fs from 'fs/promises'
 import path from 'path'
 
@@ -118,8 +119,6 @@ async function runQICValidation(): Promise<{ passed: boolean; errors: string[] }
   const errors: string[] = []
   
   try {
-    const { execSync } = require('child_process')
-    
     // Run lint
     try {
       execSync('npm run lint', { encoding: 'utf-8', stdio: 'pipe' })

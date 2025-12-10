@@ -12,10 +12,11 @@
  * - Automatic rollback on failures
  */
 
-import { BuilderTask, BuilderType, BuilderTaskOutput, BuilderTaskStatus } from '@/types/builder'
+import { BuilderTask, BuilderType, BuilderTaskOutput } from '@/types/builder'
 import { executeWithLocalBuilder, shouldTriggerFallback } from '../local-builder'
 import { logGovernanceEvent } from '../memory/governance-memory'
 import { runQIEL } from '../qa/qiel-runner'
+import { execSync } from 'child_process'
 
 export interface BuildExecutionConfig {
   /** Owner of the repository */
@@ -125,7 +126,6 @@ async function runAutomaticValidations(): Promise<ValidationResults> {
   
   // Lint validation
   try {
-    const { execSync } = require('child_process')
     execSync('npm run lint', { encoding: 'utf-8', stdio: 'pipe' })
     results.lint.passed = true
   } catch (error: any) {
@@ -135,7 +135,6 @@ async function runAutomaticValidations(): Promise<ValidationResults> {
   
   // TypeScript check
   try {
-    const { execSync } = require('child_process')
     execSync('npm run typecheck', { encoding: 'utf-8', stdio: 'pipe' })
     results.typecheck.passed = true
   } catch (error: any) {
@@ -145,7 +144,6 @@ async function runAutomaticValidations(): Promise<ValidationResults> {
   
   // Build check
   try {
-    const { execSync } = require('child_process')
     execSync('npm run build', { encoding: 'utf-8', stdio: 'pipe' })
     results.build.passed = true
   } catch (error: any) {
@@ -170,8 +168,6 @@ async function runAutomaticValidations(): Promise<ValidationResults> {
  * Perform rollback on failed build
  */
 async function performRollback(branch: string): Promise<void> {
-  const { execSync } = require('child_process')
-  
   try {
     // Reset to previous commit
     execSync('git reset --hard HEAD~1', { encoding: 'utf-8' })

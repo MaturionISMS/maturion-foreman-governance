@@ -181,17 +181,27 @@ async function executeBounded(
   config: WaveConfig
 ): Promise<ExecutionResult[]> {
   const results: ExecutionResult[] = []
-  const executing: Promise<ExecutionResult>[] = []
+  const executing: Set<Promise<ExecutionResult>> = new Set()
   
   for (const { issue, complexity } of issues) {
     // Wait if we've hit max parallel limit
-    if (executing.length >= config.maxParallelIssues) {
-      const completed = await Promise.race(executing)
+    while (executing.size >= config.maxParallelIssues) {
+      // Wait for any promise to complete
+      const completed = await Promise.race(Array.from(executing))
       results.push(completed)
       
-      // Remove completed from executing array
-      const index = executing.findIndex(p => p === Promise.resolve(completed))
-      if (index > -1) executing.splice(index, 1)
+      // Remove all completed promises from the set
+      // Since we don't know which exact promise completed, we filter by checking resolution
+      for (const promise of Array.from(executing)) {
+        promise.then((result) => {
+          if (result === completed) {
+            executing.delete(promise)
+          }
+        })
+      }
+      
+      // Give a small delay to allow promise cleanup
+      await new Promise(resolve => setTimeout(resolve, 10))
     }
     
     // Start execution with timeout
@@ -201,11 +211,14 @@ async function executeBounded(
       issue.number
     )
     
-    executing.push(executionPromise)
+    // Auto-remove from set when complete
+    executionPromise.then(() => executing.delete(executionPromise))
+    
+    executing.add(executionPromise)
   }
   
   // Wait for remaining executions
-  const remaining = await Promise.all(executing)
+  const remaining = await Promise.all(Array.from(executing))
   results.push(...remaining)
   
   return results
