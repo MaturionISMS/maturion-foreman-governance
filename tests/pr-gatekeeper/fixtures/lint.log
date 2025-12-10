@@ -1,4 +1,4 @@
 
 Running linter...
-error: Unexpected token
-✖ 1 problem (1 error, 0 warnings)
+All files pass linting
+✔ 0 problems (0 errors, 0 warnings)

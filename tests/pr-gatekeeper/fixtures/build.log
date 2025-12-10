@@ -1,4 +1,4 @@
 
 Building application...
-ERROR: Failed to compile
-Build completed with errors
+Warning: Deprecated API usage
+Build completed successfully

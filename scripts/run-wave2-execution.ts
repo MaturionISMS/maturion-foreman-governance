@@ -117,10 +117,10 @@ async function main() {
   console.log('║  🌙 OVERNIGHT EXECUTION WAVE 2 ORCHESTRATOR                ║');
   console.log('╚════════════════════════════════════════════════════════════╝\n');
 
-  // Check if GITHUB_TOKEN is available
-  if (!process.env.GITHUB_TOKEN) {
-    console.error('❌ Error: GITHUB_TOKEN environment variable is not set');
-    console.error('Please set GITHUB_TOKEN to a valid GitHub personal access token or GitHub App token');
+  // Check if GITHUB_MCP_TOKEN is available
+  if (!process.env.GITHUB_MCP_TOKEN) {
+    console.error('❌ Error: GITHUB_MCP_TOKEN environment variable is not set');
+    console.error('Please set GITHUB_MCP_TOKEN to a valid GitHub personal access token or GitHub App token');
     process.exit(1);
   }
 

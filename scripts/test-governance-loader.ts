@@ -27,7 +27,7 @@ async function testGovernanceLoader() {
     
     if (files.length === 0) {
       console.log('  ⚠ Warning: No files loaded (this is expected if GitHub token not configured)')
-      console.log('  → Files should load from GitHub in production with valid GITHUB_TOKEN')
+      console.log('  → Files should load from GitHub in production with valid GITHUB_MCP_TOKEN')
       console.log('  → Fallback to local files is working as expected\n')
     } else {
       console.log(`  ✓ Successfully loaded ${files.length} governance files`)
@@ -39,8 +39,8 @@ async function testGovernanceLoader() {
     }
   } catch (error) {
     console.error('  ✗ Error loading files:', error)
-    console.log('  → This may be expected if GITHUB_TOKEN is not configured')
-    console.log('  → Ensure GITHUB_TOKEN is set for production deployment\n')
+    console.log('  → This may be expected if GITHUB_MCP_TOKEN is not configured')
+    console.log('  → Ensure GITHUB_MCP_TOKEN is set for production deployment\n')
   }
   
   // Test 3: Verify expected governance files list
@@ -79,7 +79,7 @@ async function testGovernanceLoader() {
   console.log('  ✓ Architecture alignment verified')
   console.log('')
   console.log('Next Steps:')
-  console.log('  1. Set GITHUB_TOKEN environment variable for production')
+  console.log('  1. Set GITHUB_MCP_TOKEN environment variable for production')
   console.log('  2. Verify governance files exist in maturion-ai-foreman/foreman/')
   console.log('  3. Deploy and monitor logs for successful governance loading')
   console.log('')

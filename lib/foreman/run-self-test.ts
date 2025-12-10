@@ -68,7 +68,7 @@ export async function runSelfTest(): Promise<SelfTestResult> {
 async function checkEnvironmentVariables(): Promise<SelfTestCheck> {
   const requiredVars = [
     'OPENAI_API_KEY',
-    'GITHUB_TOKEN'
+    'GITHUB_MCP_TOKEN'
   ]
   
   const optionalVars = [
@@ -121,8 +121,8 @@ async function checkEnvironmentVariables(): Promise<SelfTestCheck> {
  */
 async function checkGitHubAPI(): Promise<SelfTestCheck> {
   try {
-    // The GitHub client uses GITHUB_TOKEN
-    if (!process.env.GITHUB_TOKEN) {
+    // The GitHub client uses GITHUB_MCP_TOKEN
+    if (!process.env.GITHUB_MCP_TOKEN) {
       // Check if GitHub App credentials are available as alternative
       const hasAppCreds = process.env.GITHUB_APP_ID && process.env.GITHUB_APP_PRIVATE_KEY
       
@@ -130,14 +130,14 @@ async function checkGitHubAPI(): Promise<SelfTestCheck> {
         return {
           name: 'GitHub API Connection',
           status: 'warning',
-          message: 'GitHub App credentials configured but GITHUB_TOKEN not set (client requires GITHUB_TOKEN)'
+          message: 'GitHub App credentials configured but GITHUB_MCP_TOKEN not set (client requires GITHUB_MCP_TOKEN)'
         }
       }
       
       return {
         name: 'GitHub API Connection',
         status: 'failed',
-        message: 'GITHUB_TOKEN not configured'
+        message: 'GITHUB_MCP_TOKEN not configured'
       }
     }
     

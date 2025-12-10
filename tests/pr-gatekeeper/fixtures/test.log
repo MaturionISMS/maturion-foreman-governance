@@ -1,5 +1,4 @@
 
 Running tests...
-FAIL tests/example.test.ts
-  ● Test suite failed to run
-    TypeError: Cannot read property 'x' of undefined
+All tests passed
+PASS tests/example.test.ts

@@ -193,7 +193,7 @@ export function detectUnauthorizedWriteAccess(config: GuardrailsConfig): Guardra
   // For now, we simulate by checking if we're in a protected mode
   
   const isProtectedMode = process.env.MATURION_PROTECTED_MODE === 'true'
-  const hasWriteToken = process.env.GITHUB_TOKEN !== undefined
+  const hasWriteToken = process.env.GITHUB_MCP_TOKEN !== undefined
   
   // Check if protected files are writable
   const writablePaths: string[] = []

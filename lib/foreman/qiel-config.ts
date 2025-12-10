@@ -322,7 +322,7 @@ export const ENVIRONMENT_CONFIG = {
 
   // Optional environment variables
   optionalEnvVars: [
-    'GITHUB_TOKEN',
+    'GITHUB_MCP_TOKEN',
     'OPENAI_API_KEY',
   ],
 
