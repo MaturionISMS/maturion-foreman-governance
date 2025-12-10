@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { isAutonomousModeEnabled, getAutonomousSafeguards } from '@/lib/foreman/dispatch'
 import { checkInitializationStatus, getInitializationSummary, InitializationStatus } from '@/lib/foreman/initialization'
+import { getBuilderAuthorizationStatus, type BuilderAuthorizationStatus } from '@/lib/foreman/constitution/external-builder-protection'
 import { exec } from 'child_process'
 import { promisify } from 'util'
 
@@ -26,6 +27,7 @@ interface ForemanStatusResponse {
   timestamp: string
   initialization: InitializationStatus
   initializationSummary: string
+  builderAuthorization: BuilderAuthorizationStatus
 }
 
 /**
@@ -65,6 +67,9 @@ export async function GET(request: NextRequest) {
     const initialization = checkInitializationStatus()
     const initializationSummary = getInitializationSummary(initialization)
     
+    // Get builder authorization status
+    const builderAuthorization = await getBuilderAuthorizationStatus()
+    
     const status: ForemanStatusResponse = {
       autonomousMode,
       qaGateRequired,
@@ -79,7 +84,8 @@ export async function GET(request: NextRequest) {
       uptime: process.uptime(),
       timestamp: new Date().toISOString(),
       initialization,
-      initializationSummary
+      initializationSummary,
+      builderAuthorization
     }
     
     console.log('[Status] Foreman status requested:', {

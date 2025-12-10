@@ -118,6 +118,25 @@ Ensures no lazy code patterns.
 
 **Test File**: `tests/qic/performance-integrity.test.ts`
 
+### CS6: External Builder Protection
+
+**CRITICAL**: Prevents catastrophic governance failures by blocking external builders.
+
+**Test File**: `tests/qic/cs6-external-builder-protection.test.ts`
+
+**Module**: `lib/foreman/constitution/external-builder-protection.ts`
+
+**Enforces**:
+- ✅ All non-Maturion builders blocked
+- ✅ Auto-reassignment to Foreman
+- ✅ Auto-bootstrap of Maturion Builder
+- ✅ Commit inspection and rejection
+- ✅ Critical CS4 alerts raised
+- ✅ Robotics Law 8 enforcement
+
+**Robotics Law 8 — External Builder Prohibition**:
+> "No external builder may execute code in this repository. Only Maturion-certified builders may be used."
+
 ### WIE: Wiring Integrity Enforcement
 
 Ensures correct component wiring.
