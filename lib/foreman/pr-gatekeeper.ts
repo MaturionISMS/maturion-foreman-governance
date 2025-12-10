@@ -40,6 +40,7 @@ import {
   filterProtectedFiles,
   validateArchitectureChangeApproval,
 } from './architecture';
+import { enforcePerformanceStandards, type PerformanceEnforcementResult } from './performance';
 
 /**
  * PR Gatekeeper Result
@@ -53,6 +54,7 @@ export interface PRGatekeeperResult {
   timestamp: string;
   architectureApprovalRequired?: boolean;
   requiredACR?: string;
+  performanceResult?: PerformanceEnforcementResult;
 }
 
 /**
@@ -161,6 +163,66 @@ export async function enforcePRGatekeeper(options?: {
         }
       }
     }
+  }
+
+  // PERFORMANCE ENFORCEMENT CHECK (CS5)
+  // This checks for performance violations before running expensive QIEL
+  console.log('[PR Gatekeeper] Running performance enforcement check...');
+  
+  let performanceResult: PerformanceEnforcementResult | undefined;
+  
+  try {
+    performanceResult = await enforcePerformanceStandards({
+      changedFiles,
+      buildId,
+      sequenceId,
+    });
+
+    if (!performanceResult.allowed) {
+      blockingIssues.push('Performance violations detected');
+      blockingIssues.push(...performanceResult.blockingIssues);
+      governanceViolations.push('PERFORMANCE_VIOLATIONS');
+
+      // Log critical governance event
+      await logGovernanceEvent({
+        type: 'pr_blocked_performance_violations',
+        severity: 'critical',
+        description: `PR creation blocked: ${performanceResult.scanResult.blockingViolations.length} performance violation(s)`,
+        metadata: {
+          blockingViolations: performanceResult.scanResult.blockingViolations.length,
+          totalViolations: performanceResult.scanResult.violations.length,
+          criticalCount: performanceResult.scanResult.criticalCount,
+          buildId,
+          sequenceId,
+          timestamp,
+        },
+      });
+
+      console.error('[PR Gatekeeper] ❌ Performance enforcement check FAILED');
+      console.error(`  Blocking violations: ${performanceResult.scanResult.blockingViolations.length}`);
+      performanceResult.blockingIssues.slice(0, 5).forEach(issue => {
+        console.error(`  - ${issue}`);
+      });
+    } else {
+      console.log('[PR Gatekeeper] ✅ Performance enforcement check PASSED');
+      console.log(`  Total violations: ${performanceResult.scanResult.violations.length}`);
+      console.log(`  Blocking violations: ${performanceResult.scanResult.blockingViolations.length}`);
+    }
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('[PR Gatekeeper] ⚠️ Performance enforcement check error:', errorMessage);
+    // Don't block PR on performance check error, but log it
+    await logGovernanceEvent({
+      type: 'performance_enforcement_error',
+      severity: 'high',
+      description: 'Performance enforcement check encountered an error',
+      metadata: {
+        error: errorMessage,
+        buildId,
+        sequenceId,
+        timestamp,
+      },
+    });
   }
 
   // DRIFT DETECTION HOOK: Check if attempting PR creation with incomplete QA
@@ -414,6 +476,7 @@ export async function enforcePRGatekeeper(options?: {
     timestamp,
     architectureApprovalRequired,
     requiredACR,
+    performanceResult,
   };
 }
 
