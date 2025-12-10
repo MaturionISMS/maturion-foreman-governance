@@ -15,7 +15,7 @@
  */
 
 import { runQIEL } from '../qa/qiel-runner'
-import { detectDrift } from '../memory/drift-detector'
+import { detectDrift } from '../governance/drift-detector'
 import { logGovernanceEvent } from '../memory/governance-memory'
 import { recordIncident } from '../incidents/recorder'
 import fs from 'fs/promises'
