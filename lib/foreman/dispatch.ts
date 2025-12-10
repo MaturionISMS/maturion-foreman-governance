@@ -847,7 +847,7 @@ export async function syncBuilderNetwork(): Promise<{
  */
 export async function selectBuilderWithSync(
   taskComplexity?: 'low' | 'medium' | 'high'
-): Promise<'copilot' | 'local' | null> {
+): Promise<'copilot' | 'local' | 'internal' | null> {
   console.log('[BuilderSync] Selecting optimal builder with network sync...')
   
   // Sync builder network first
