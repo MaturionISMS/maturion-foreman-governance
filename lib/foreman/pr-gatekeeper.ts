@@ -211,11 +211,16 @@ export async function enforcePRGatekeeper(options?: {
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     console.error('[PR Gatekeeper] ⚠️ Performance enforcement check error:', errorMessage);
-    // Don't block PR on performance check error, but log it
+    
+    // Performance check failure is critical - log and add as blocker
+    blockingIssues.push('Performance enforcement check failed');
+    governanceViolations.push('PERFORMANCE_CHECK_FAILURE');
+    
+    // Log as critical governance event
     await logGovernanceEvent({
       type: 'performance_enforcement_error',
-      severity: 'high',
-      description: 'Performance enforcement check encountered an error',
+      severity: 'critical',
+      description: 'Performance enforcement check encountered an error - treating as blocker',
       metadata: {
         error: errorMessage,
         buildId,
@@ -223,6 +228,24 @@ export async function enforcePRGatekeeper(options?: {
         timestamp,
       },
     });
+    
+    // Raise critical alert
+    try {
+      const { raiseCriticalAlert } = await import('./alerts/alert-engine');
+      await raiseCriticalAlert({
+        category: 'qa',
+        message: 'Performance Enforcement System Failure',
+        details: `Performance enforcement check failed: ${errorMessage}. This is treated as a blocker to prevent bypassing performance standards.`,
+        metadata: {
+          error: errorMessage,
+          buildId,
+          sequenceId,
+          timestamp,
+        },
+      });
+    } catch (alertError) {
+      console.error('[PR Gatekeeper] Failed to raise alert for performance check failure:', alertError);
+    }
   }
 
   // DRIFT DETECTION HOOK: Check if attempting PR creation with incomplete QA

@@ -101,12 +101,11 @@ async function scanFile(
       const line = lines[lineIndex];
 
       for (const pattern of patterns) {
-        const match = pattern.pattern.exec(line);
-        if (match) {
+        if (pattern.pattern.test(line)) {
           violations.push({
             file: filePath,
             line: lineIndex + 1,
-            column: match.index + 1,
+            column: line.search(pattern.pattern) + 1,
             pattern,
             code: line.trim(),
             message: `${pattern.name}: ${pattern.description}`,
