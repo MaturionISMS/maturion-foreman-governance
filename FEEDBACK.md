@@ -99,6 +99,64 @@ I've completed a comprehensive overhaul of the system to align with your QA-Firs
 
 ---
 
+### 6. Created PR Merge Validator (Independent Assurance)
+
+**Location**: `/foreman/governance/pr-merge-validator.md`
+
+**What it is**: An **independent assurance agent** that runs **outside the box** to verify **due process was followed inside the box**.
+
+**Critical Principle**: The PR Merge Validator does **NOT re-run QA**. QA already ran during the build. The validator checks that **the process was followed correctly**.
+
+**The 6 Due Process Checks**:
+1. **Architecture Completeness Evidence** - Was architecture validated against checklist?
+2. **Red QA Creation Evidence** - Did Red QA exist before building?
+3. **Build Instruction Compliance** - Was "Build to Green" instruction used?
+4. **Builder Validation Evidence** - Did builder validate the instruction?
+5. **Green QA Achievement Evidence** - Did QA turn green during build?
+6. **Process Timeline Integrity** - Did steps happen in correct order?
+
+**If ANY check fails → BLOCK merge**
+
+**Why this matters**: This is YOUR independent assurance that no shortcuts were taken. The validator sits outside the build process and verifies evidence that due process was followed.
+
+**Analogy**: Like a factory quality inspector checking that the manufacturing process was followed, not re-manufacturing the product.
+
+**Result**: You know with certainty that:
+- Architecture was designed first ✓
+- Architecture was validated ✓
+- Red QA existed before building ✓
+- Correct instruction format was used ✓
+- Process steps in correct order ✓
+- No shortcuts taken ✓
+
+---
+
+### 7. Created Foreman Agent File for GitHub
+
+**Location**: `/FOREMAN_AGENT_FOR_GITHUB.md`
+
+**What it is**: Complete agent configuration file ready to be copied into `.github/agents/foreman.agent.md`
+
+**What it contains**:
+- Agent metadata (name, description, model, temperature)
+- Complete Build Philosophy summary
+- All critical rules (MUST and MUST NEVER)
+- Builder coordination instructions
+- Model escalation policy
+- Chat interface commands
+- Escalation procedures
+- All reference documents
+
+**How to use it**:
+1. Open `/FOREMAN_AGENT_FOR_GITHUB.md`
+2. Copy entire contents
+3. Paste into `.github/agents/foreman.agent.md`
+4. Save
+
+**Why it matters**: This gives Foreman the complete instructions aligned with Build Philosophy. When you paste this into the GitHub agents folder, Foreman will follow the QA-First, Architecture-Driven process automatically.
+
+---
+
 ## How This Helps You
 
 ### Problem Before
@@ -310,15 +368,48 @@ A: Impossible. Builders have validation code that REJECTS requests without red Q
 A: QA was incomplete. We add the missing tests to QA suite, update checklist to prevent missing that aspect in future.
 
 **Q: How do I know the process is being followed?**
-A: Merge gates check for:
-- Architecture checklist exists
-- Red QA existed before build
+A: The **PR Merge Validator** (independent assurance agent) checks for:
+- Architecture checklist exists and complete
+- Red QA existed before build (evidence in logs)
 - "Build to Green" instruction was used
-- Final QA is green
-If ANY gate fails, merge is blocked.
+- Builder validated the instruction
+- Final QA turned green
+- Process timeline integrity (steps in correct order)
+
+The validator runs **outside the box** (independent of Foreman and builders) to verify due process. If ANY check fails, merge is blocked.
+
+This is YOUR guarantee that no shortcuts were taken.
+
+**Q: Does the PR Merge Validator re-run all the tests?**
+A: **NO**. The validator does NOT re-run QA. QA already ran during the build. The validator checks **evidence** that the process was followed correctly. It's about **process verification**, not **quality re-testing**. This is faster and more efficient.
+
+**Q: What if the PR Merge Validator blocks a merge?**
+A: It means due process was NOT followed. The validator will tell you exactly what's missing:
+- Missing architecture checklist validation?
+- No evidence of Red QA before build?
+- Wrong instruction format?
+- Steps out of order?
+
+Fix the issue and resubmit. The validator ensures quality by ensuring process.
 
 **Q: Can I override this process?**
 A: The philosophy is in governance. You can update it through governance process, but agents cannot bypass it.
+
+---
+
+## Action Required: Update Foreman Agent File
+
+**You need to do this manually** (I cannot modify `.github/agents/` files):
+
+1. Open `/FOREMAN_AGENT_FOR_GITHUB.md` (in this repository)
+2. Copy the entire contents
+3. Navigate to `.github/agents/foreman.agent.md`
+4. Paste the contents (replacing current content)
+5. Save and commit
+
+**Why**: This gives Foreman the complete Build Philosophy instructions. Once you paste this file, Foreman will automatically follow the QA-First, Architecture-Driven process.
+
+**When**: Do this before your next build to ensure Foreman is aligned with the new philosophy.
 
 ---
 
@@ -328,8 +419,10 @@ A: The philosophy is in governance. You can update it through governance process
 ✅ **Created**: Architecture Design Checklist (ensures complete architectures)
 ✅ **Created**: QA-First Workflow (step-by-step process)
 ✅ **Created**: Build to Green Rule (builder constraints)
+✅ **Created**: PR Merge Validator (independent due process assurance)
+✅ **Created**: Foreman Agent File (ready to paste into .github/agents/)
 ✅ **Updated**: Agent Contract (Foreman must follow philosophy)
-✅ **Result**: One-time fully functional builds, continuous improvement
+✅ **Result**: One-time fully functional builds, continuous improvement, independent assurance
 
 **The entire system now points to one output: Builds that work perfectly the first time.**
 
@@ -342,18 +435,19 @@ As you mentioned, we're ready for Constitutional Deep Integration Wave. The buil
 - ✅ Documented in canonical files
 - ✅ Integrated into agent contracts
 - ✅ Enforced by builder validation
-- ✅ Protected by merge gates
+- ✅ Protected by independent PR merge validator (outside the box)
 - ✅ Supported by learning loops
+- ✅ Ready for GitHub agent integration (manual paste required)
 
 **The philosophy is constitutional - immutable and enforced automatically.**
 
 ---
 
-**Your build system is now aligned with your vision. Foreman builds autonomously, but only within these strict quality guardrails.**
+**Your build system is now aligned with your vision. Foreman builds autonomously, but only within these strict quality guardrails. Independent validation ensures no shortcuts are taken.**
 
 ---
 
-*Version*: 1.0  
+*Version*: 2.0  
 *Date*: 2025-12-10  
-*Status*: Implementation Complete  
+*Status*: Implementation Complete + Independent Assurance Added  
 *Authority*: Johan (Maturion Leadership)

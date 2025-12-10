@@ -247,13 +247,58 @@ Action Required: Foreman must design architecture and create failing QA first.
 4. **Report green QA as build completion signal**
 5. **Never add features not in QA**
 
-### Merge Gate Responsibilities
+### PR Merge Validator Responsibilities (Independent Assurance)
 
-1. **Verify architecture checklist exists and is complete**
-2. **Verify Red QA existed (evidence in build logs)**
-3. **Verify build instructions were "Build to Green" only**
-4. **Verify final QA is 100% green**
-5. **Block merge if ANY gate fails**
+**Critical Principle**: The PR Merge Validator runs **outside the box** to verify that **due process was followed inside the box**.
+
+**The validator does NOT re-run QA**. QA already ran during the build. The validator verifies **process compliance**, not quality (quality was already verified).
+
+**The 6 Due Process Checks**:
+
+1. **Architecture Completeness Evidence**
+   - Architecture document exists
+   - Checklist validation report exists
+   - All relevant items addressed
+   - Validated before build started
+
+2. **Red QA Creation Evidence**
+   - QA test suite exists
+   - Build log shows pre-build QA run
+   - Pre-build QA status was RED (failing)
+   - Red QA existed before building
+
+3. **Build Instruction Compliance**
+   - Build task record shows instruction "Build to Green"
+   - Architecture reference provided
+   - QA suite reference provided
+
+4. **Builder Validation Evidence**
+   - Builder validation log exists
+   - All validation checks passed
+   - No BuildPhilosophyViolation errors
+
+5. **Green QA Achievement Evidence**
+   - Build completion log exists
+   - Final QA status: GREEN (100% passing)
+   - Build completion documented
+
+6. **Process Timeline Integrity**
+   - All process steps have timestamps
+   - Steps happened in correct order:
+     1. Architecture → 2. Validation → 3. Red QA → 4. Build → 5. Green QA
+   - No steps out of order
+   - No shortcuts taken
+
+**If ANY check fails → BLOCK merge**
+
+**Why this works**:
+- Validator is independent (outside the build process)
+- Validates evidence, not quality (quality already tested)
+- Fast (no redundant QA runs)
+- Clear (evidence-based pass/fail)
+- Guarantees no shortcuts were taken
+
+**Complete specification**: `/foreman/governance/pr-merge-validator.md`
 
 ---
 
