@@ -174,12 +174,12 @@ Returns comprehensive builder status:
 }
 ```
 
-### POST /api/foreman/builders/bootstrap
+### POST /api/foreman/builders
 
 Manually triggers internal builder bootstrap:
 
 ```bash
-curl -X POST http://localhost:3000/api/foreman/builders/bootstrap?organisationId=your-org-id
+curl -X POST http://localhost:3000/api/foreman/builders?organisationId=your-org-id
 ```
 
 Response:
