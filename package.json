@@ -28,6 +28,7 @@
     "typecheck": "tsc --noEmit",
     "typecheck:production": "tsc --noEmit",
     "validate:github-token": "tsx scripts/validate-github-token.ts",
+    "check:token-type": "tsx scripts/check-token-type.ts",
     "qa:full": "npm run lint && npm run test:structural && npm run build",
     "qa:diff": "tsx scripts/qiel-env-diff.ts",
     "qa:preflight": "tsx scripts/pre-flight-validation.ts",
