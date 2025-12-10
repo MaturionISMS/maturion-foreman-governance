@@ -18,7 +18,7 @@
     "test:structural": "tsx tests/qa-structural/*.test.ts",
     "test:overnight": "tsx tests/overnight-execution/*.test.ts",
     "test:wiring": "tsx tests/wiring-integrity/*.test.ts",
-    "test:wiring-qiel": "tsx tests/qiel/wiring-integrity.test.ts",
+    "test:wiring": "tsx tests/qic/ui-wiring.test.ts",
     "test:architecture": "tsx tests/qic/architecture-integrity.test.ts",
     "test:guardrails": "tsx tests/qic/guardrails.test.ts",
     "test:ui-wiring": "tsx tests/qic/ui-wiring.test.ts",
