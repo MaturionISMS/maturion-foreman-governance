@@ -56,13 +56,31 @@ interface AutonomousActionLog {
 const autonomousActionLogs: AutonomousActionLog[] = []
 
 /**
+ * Check if MCP (Model Context Protocol) is configured
+ * MCP is required for autonomy to function properly
+ */
+export function isMCPConfigured(): boolean {
+  const mcpToken = process.env.GITHUB_MCP_TOKEN
+  // MCP is considered configured if GITHUB_MCP_TOKEN is set
+  return !!mcpToken
+}
+
+/**
  * Check if autonomous mode is enabled
  * Supports multiple environment variable names for flexibility:
  * - FOREMAN_AUTONOMY_ENABLED (current standard)
  * - MATURION_AUTONOMOUS_MODE (legacy)
  * - MATURION_ALLOW_AUTONOMOUS_BUILDS (legacy)
+ * 
+ * NOTE: Autonomy requires MCP to be configured (GITHUB_MCP_TOKEN set)
  */
 export function isAutonomousModeEnabled(): boolean {
+  // MCP must be configured for autonomy to work
+  if (!isMCPConfigured()) {
+    console.warn('[Autonomy] GITHUB_MCP_TOKEN not set - autonomy disabled')
+    return false
+  }
+  
   // Check current standard variable first
   if (process.env.FOREMAN_AUTONOMY_ENABLED !== undefined) {
     return process.env.FOREMAN_AUTONOMY_ENABLED === 'true'

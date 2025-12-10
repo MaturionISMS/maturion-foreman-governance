@@ -314,6 +314,41 @@ function checkMemorySystem(): InitializationCheckResult {
 }
 
 /**
+ * Check if MCP (Model Context Protocol) is configured
+ */
+function checkMCPConfiguration(): InitializationCheckResult {
+  const mcpToken = process.env.GITHUB_MCP_TOKEN
+  const githubToken = process.env.GITHUB_TOKEN
+
+  // MCP requires GITHUB_MCP_TOKEN specifically (not GITHUB_TOKEN)
+  if (!mcpToken) {
+    return {
+      name: 'MCP Configuration',
+      status: 'error',
+      message: 'GITHUB_MCP_TOKEN not set - MCP server cannot authenticate. Autonomy disabled.',
+      required: true
+    }
+  }
+
+  // Verify MCP token is different from standard GITHUB_TOKEN
+  if (mcpToken === githubToken) {
+    return {
+      name: 'MCP Configuration',
+      status: 'warning',
+      message: 'GITHUB_MCP_TOKEN is same as GITHUB_TOKEN - should use dedicated token',
+      required: true
+    }
+  }
+
+  return {
+    name: 'MCP Configuration',
+    status: 'ready',
+    message: 'MCP token configured and ready',
+    required: true
+  }
+}
+
+/**
  * Perform comprehensive initialization check
  */
 export function checkInitializationStatus(): InitializationStatus {
@@ -323,6 +358,7 @@ export function checkInitializationStatus(): InitializationStatus {
     checkGitHubTokenConfiguration(),
     checkBehaviorFiles(),
     checkMemorySystem(),
+    checkMCPConfiguration(),
     checkAutonomousMode(),
     checkOrganizationId()
   ]
