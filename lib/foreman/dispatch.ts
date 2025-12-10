@@ -57,15 +57,23 @@ const autonomousActionLogs: AutonomousActionLog[] = []
 
 /**
  * Check if autonomous mode is enabled
- * Supports both new and legacy environment variables
+ * Supports multiple environment variable names for flexibility:
+ * - FOREMAN_AUTONOMY_ENABLED (current standard)
+ * - MATURION_AUTONOMOUS_MODE (legacy)
+ * - MATURION_ALLOW_AUTONOMOUS_BUILDS (legacy)
  */
 export function isAutonomousModeEnabled(): boolean {
-  // Check new environment variable first
+  // Check current standard variable first
+  if (process.env.FOREMAN_AUTONOMY_ENABLED !== undefined) {
+    return process.env.FOREMAN_AUTONOMY_ENABLED === 'true'
+  }
+  
+  // Check legacy environment variable (deprecated)
   if (process.env.MATURION_AUTONOMOUS_MODE !== undefined) {
     return process.env.MATURION_AUTONOMOUS_MODE === 'true'
   }
   
-  // Fall back to legacy variable for backwards compatibility
+  // Fall back to older legacy variable for backwards compatibility (deprecated)
   return process.env.MATURION_ALLOW_AUTONOMOUS_BUILDS === 'true'
 }
 
