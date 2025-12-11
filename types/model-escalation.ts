@@ -2,9 +2,10 @@
  * Model Escalation Types
  * 
  * Defines types for model escalation, fallback, and high-cost model governance.
+ * Enhanced for PHASE_09 - Model Escalation Governor
  */
 
-export type ModelTier = 'gpt-4' | 'gpt-4-turbo' | 'gpt-5.1' | 'local-builder';
+export type ModelTier = 'gpt-4o-mini' | 'gpt-4o' | 'gpt-4.1' | 'gpt-5.1' | 'local-builder';
 
 export type EscalationReason = 
   | 'heavy_task'
@@ -13,7 +14,18 @@ export type EscalationReason =
   | 'governance_task'
   | 'complex_reasoning'
   | 'multi_agent_coordination'
-  | 'project_milestone';
+  | 'project_milestone'
+  | 'large_context'
+  | 'constitutional_reasoning'
+  | 'drift_analysis'
+  | 'memory_activation'
+  | 'autonomy_wave_planning';
+
+/**
+ * PHASE_09: Escalation Policy Type
+ * Defines when escalation is allowed, forbidden, or mandatory
+ */
+export type EscalationPolicyType = 'allowed' | 'forbidden' | 'mandatory';
 
 export interface ModelEscalationConfig {
   defaultModel: ModelTier;
@@ -107,4 +119,56 @@ export interface DesktopSyncEvent {
   driftResult?: DriftDetectionResult;
   syncSuccess?: boolean;
   errorMessage?: string;
+}
+
+/**
+ * PHASE_09: Model Escalation Governor Types
+ */
+
+export interface EscalationPolicy {
+  reason: EscalationReason;
+  policyType: EscalationPolicyType;
+  targetModel: ModelTier;
+  requiresJustification: boolean;
+  bypassQuotaCheck: boolean;
+  safetyConditions?: string[];
+}
+
+export interface CognitiveBudget {
+  tokenBudget: number;
+  tokenUsed: number;
+  costBudget: number; // in USD
+  costUsed: number;
+  escalationsAllowed: number;
+  escalationsUsed: number;
+}
+
+export interface ModelEscalationJustification {
+  reason: EscalationReason;
+  description: string;
+  expectedBenefit: string;
+  alternatives: string[];
+  approvedBy?: string;
+  timestamp: string;
+}
+
+export interface EscalationGovernanceCheck {
+  checkType: 'policy' | 'budget' | 'safety' | 'justification';
+  passed: boolean;
+  message: string;
+  blockers?: string[];
+}
+
+export interface GovernedEscalationResult {
+  allowed: boolean;
+  selectedModel: ModelTier;
+  policyType: EscalationPolicyType;
+  governanceChecks: EscalationGovernanceCheck[];
+  justification?: ModelEscalationJustification;
+  budgetImpact: {
+    tokens: number;
+    cost: number;
+    escalations: number;
+  };
+  fallbackChain: ModelTier[];
 }

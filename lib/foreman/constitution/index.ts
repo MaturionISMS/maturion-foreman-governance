@@ -5,3 +5,5 @@
  */
 
 export * from './external-builder-protection'
+export * from './supervision-graph'
+export * from './supervision-runtime'
