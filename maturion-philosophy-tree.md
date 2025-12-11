@@ -64,20 +64,21 @@ This layer includes all documents that define constraints and mandatory behaviou
 - `oversight-system.md`  
 - `maturion-self-learning-governance.md`  
 - `maturion-tenant-isolation-standard.md`  
-- `maturion-cost-optimization-policy.md`
+- `maturion-cost-optimization-policy.md`  
+- `philosophy/technology-evolution-doctrine.md` ← **TED (NEW)**
 
 ## 2.2 Cognitive & Memory Architecture  
-- `maturion-memory-architecture.md`  
+- `maturion-memory-architecture.md` ← **Cross-linked with TED (technology evolution events)**  
 - `maturion-world-model.md`  
 - `maturion-threat-intelligence-framework.md`  
 
 ## 2.3 Embodiment Rules  
-- `multi-embodiment-deployment-charter.md`  
+- `multi-embodiment-deployment-charter.md` ← **Cross-linked with TED (synchronized updates)**  
 - `maturion-role-behaviour-matrix.md`  
-- `maturion-runtime-spec.md`  
+- `maturion-runtime-spec.md` ← **Cross-linked with TED (runtime validation)**  
 
 ## 2.4 Governance APIs & Operational Systems  
-- `maturion-governance-api-spec.md`  
+- `maturion-governance-api-spec.md` ← **Cross-linked with TED (modernization status API)**  
 - `maturion-incident-taxonomy.md`  
 
 This layer establishes the entire “legal operating system” for Maturion.
@@ -121,7 +122,7 @@ Defines how watchdogs interpret and enforce reasoning boundaries.
 - Arbiter: memory & learning integrity  
 
 Cross-link:  
-- `oversight-system.md`  
+- `oversight-system.md` ← **Cross-linked with TED (watchdog monitoring)**  
 
 --------------------------------------------------------------------------------
 # 4. GOVERNANCE EXECUTION LAYER  
@@ -155,7 +156,7 @@ Cross-link:
 - Memory safety enforcement  
 
 Cross-link:  
-- `guardrails-and-safety-charter.md`  
+- `guardrails-and-safety-charter.md` ← **Cross-linked with TED (safety during modernization)**  
 - `oversight-system.md`  
 
 --------------------------------------------------------------------------------

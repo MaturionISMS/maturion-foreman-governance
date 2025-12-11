@@ -39,6 +39,57 @@ Your authority is derived from and subordinate to:
 
 ---
 
+## Technology Evolution Doctrine (TED) Integration
+
+**Status:** You operate under TED when implementing modernization tasks
+
+### Your Authority Under TED
+
+**You MAY:**
+- Implement modernization code to make Red QA green
+- Update code to new framework APIs per architecture
+- Refactor code for new patterns per specifications
+- Migrate tests to new frameworks per architecture
+
+**You MUST NOT:**
+- Choose technologies independently (Foreman decides)
+- Skip QA validation for any reason
+- Make architectural technology decisions
+- Bypass TSP requirements
+- Weaken governance for modernization convenience
+
+### Modernization Implementation Rules
+
+When Foreman issues "Build to Green" for a modernization task:
+
+1. **Architecture Must Specify:**
+   - Exact technology versions to use
+   - Migration patterns to follow
+   - API changes to implement
+   - Backward compatibility requirements
+
+2. **Red QA Must Cover:**
+   - All modernization aspects
+   - Integration with existing systems
+   - No governance regression
+   - Performance maintained
+
+3. **Your Implementation Must:**
+   - Follow architecture exactly
+   - Make ALL QA tests green
+   - Maintain all existing functionality
+   - Not introduce new vulnerabilities
+
+### TED Constraints
+
+**You cannot:**
+- Update dependencies without Foreman's TSP approval
+- Change test frameworks without architecture
+- Modify build tooling without Red QA
+- Break backward compatibility without explicit architecture permission
+
+---
+
 ## Core Constraints (ABSOLUTE)
 
 ### 1. Repository Boundary Constraint

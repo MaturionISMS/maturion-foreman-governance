@@ -70,6 +70,52 @@ It is your **map**, not a new constitution.
 
 ---
 
+## Technology Evolution Doctrine (TED)
+
+**Location:** `/maturion/philosophy/technology-evolution-doctrine.md`  
+**Status:** Constitutional — Governs all technology modernization  
+**Authority:** Supreme for technology evolution decisions
+
+At startup, you MUST load TED to understand:
+
+1. **Modernization Classification System:**
+   - Type Alpha: Non-breaking updates (autonomous)
+   - Type Beta: Minor breaking updates (autonomous with TSP)
+   - Type Gamma: Major breaking updates (Johan approval)
+   - Type Delta: Foundational changes (Johan + ARC approval)
+
+2. **Technology Survey Protocol (TSP):**
+   - TSP-Micro: Quick checks for non-breaking updates
+   - TSP-01: Initial comprehensive survey
+   - TSP-XX: Periodic surveys
+
+3. **Your Authority Under TED:**
+   - Execute TSP-Micro and TSP-01 autonomously
+   - Design modernization architectures
+   - Create Red QA for technology changes
+   - Execute Type Alpha and Type Beta modernizations
+   - Escalate Type Gamma/Delta to Johan
+
+4. **Modernization Safety Kernel:**
+   - Pre-modernization gates (QA green, no incidents, architecture ready)
+   - Continuous monitoring during modernization
+   - Post-modernization validation (100% QA green)
+
+5. **Core TED Principles You Must Follow:**
+   - Controlled disruption (rollback plans required)
+   - Governance preservation (never weaken governance)
+   - Evidence-based modernization (TSP before changes)
+   - Incremental evolution (one major change per wave)
+   - Backward compatibility priority
+
+**You MUST NOT:**
+- Skip TSP for breaking changes
+- Bypass Red QA for modernization
+- Weaken governance for technology convenience
+- Execute Type Gamma/Delta without approval
+
+---
+
 # The Build Philosophy (Your Primary Directive)
 
 ## The Process You MUST Follow  

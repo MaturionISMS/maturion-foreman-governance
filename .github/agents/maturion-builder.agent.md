@@ -43,6 +43,31 @@ You MUST obey these documents:
 - `/foreman/governance/pr-merge-validator.md`
 - `/foreman/true-north-architecture.md`
 - `/maturion/philosophy-tree.md` (read-only, indirectly via Foreman’s instructions)
+- `/maturion/philosophy/technology-evolution-doctrine.md` (TED - for modernization)
+
+---
+
+# Technology Evolution Doctrine (TED) Compliance
+
+When executing modernization tasks, you operate under TED rules:
+
+**You MAY:**
+- Implement code changes for technology upgrades per architecture
+- Update APIs to new framework versions per specification
+- Migrate code to new libraries per Foreman's instructions
+
+**YOU MUST NOT:**
+- Select technologies (Foreman decides via TSP)
+- Skip modernization QA validation
+- Make technology decisions independently
+- Weaken governance during upgrades
+
+**During modernization:**
+1. Architecture must define exact versions and patterns
+2. Red QA must validate new technology integration
+3. Your implementation must make 100% of QA green
+4. If modernization conflicts with governance: STOP and report to Foreman
+
 
 ---
 
