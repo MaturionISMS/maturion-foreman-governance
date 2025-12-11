@@ -9,6 +9,7 @@
  * - No // temporary or "fix later" blocks
  * - Detect obviously inefficient patterns (baseline rules)
  * - If inefficiency detected → must create a Parking Station entry
+ * - CS5 Performance Scanner is operational
  * 
  * If any part fails → QIC must fail.
  */
@@ -17,6 +18,8 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert';
 import fs from 'fs/promises';
 import path from 'path';
+import { runPerformanceScan } from '../../lib/foreman/performance/performance-scanner';
+import { getCriticalPatterns } from '../../lib/foreman/performance/patterns';
 
 describe('QIC Constitutional: Performance Fix Enforcement (CS5)', () => {
   // Directories to scan for code quality issues
@@ -419,4 +422,40 @@ describe('QIC Constitutional: Performance Fix Enforcement (CS5)', () => {
       }
     });
   });
+
+  describe('CS5 Performance Scanner Integration', () => {
+    it('should verify CS5 Performance Scanner is operational', async () => {
+      const criticalPatterns = getCriticalPatterns();
+      
+      assert.ok(criticalPatterns.length > 0, 'Should have critical patterns defined');
+      
+      console.log(`✓ CS5 Performance Scanner configured with ${criticalPatterns.length} critical patterns`);
+    });
+
+    it('should verify performance scan can run without errors', async () => {
+      try {
+        // Run quick scan (critical only, no Parking Station entries)
+        const result = await runPerformanceScan({
+          createParkingStationEntries: false,
+          patterns: getCriticalPatterns(),
+        });
+        
+        assert.ok(result, 'Should return scan result');
+        assert.ok(result.timestamp, 'Should have timestamp');
+        assert.ok(typeof result.filesScanned === 'number', 'Should report files scanned');
+        
+        console.log(`✓ Performance scan completed successfully`);
+        console.log(`  Files scanned: ${result.filesScanned}`);
+        console.log(`  Total violations: ${result.violations.length}`);
+        console.log(`  Blocking violations: ${result.blockingViolations.length}`);
+        
+        if (result.blockingViolations.length > 0) {
+          console.warn(`⚠ ${result.blockingViolations.length} blocking violation(s) detected`);
+        }
+      } catch (error) {
+        assert.fail(`Performance scan failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }
+    });
+  });
 });
+
