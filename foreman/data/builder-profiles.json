@@ -1,8 +1,8 @@
 {
   "github-copilot": {
     "builderType": "github-copilot",
-    "totalBuilds": 0,
-    "successfulBuilds": 0,
+    "totalBuilds": 4,
+    "successfulBuilds": 4,
     "failedBuilds": 0,
     "successRate": 100,
     "averageBuildIterations": 1,
@@ -18,35 +18,97 @@
     "p95LatencyMs": 180000,
     "p99LatencyMs": 240000,
     "recentFailures": [],
-    "recentSuccesses": [],
+    "recentSuccesses": [
+      {
+        "timestamp": "2025-12-11T07:02:10.445Z",
+        "issueNumber": 123,
+        "durationMs": 120000,
+        "iterationsRequired": 1,
+        "qaPassed": true
+      },
+      {
+        "timestamp": "2025-12-11T07:02:44.642Z",
+        "issueNumber": 123,
+        "durationMs": 120000,
+        "iterationsRequired": 1,
+        "qaPassed": true
+      },
+      {
+        "timestamp": "2025-12-11T07:03:39.832Z",
+        "issueNumber": 123,
+        "durationMs": 120000,
+        "iterationsRequired": 1,
+        "qaPassed": true
+      },
+      {
+        "timestamp": "2025-12-11T07:04:25.078Z",
+        "issueNumber": 123,
+        "durationMs": 120000,
+        "iterationsRequired": 1,
+        "qaPassed": true
+      }
+    ],
     "isHealthy": true,
-    "lastHealthCheck": "2025-12-11T06:47:00.000Z",
+    "lastHealthCheck": "2025-12-11T07:04:25.078Z",
     "availability": 100,
-    "lastUpdated": "2025-12-11T06:47:00.000Z"
+    "lastUpdated": "2025-12-11T07:04:25.078Z"
   },
   "local-builder": {
     "builderType": "local-builder",
-    "totalBuilds": 0,
+    "totalBuilds": 4,
     "successfulBuilds": 0,
-    "failedBuilds": 0,
-    "successRate": 100,
+    "failedBuilds": 4,
+    "successRate": 0,
     "averageBuildIterations": 1,
     "maxIterationsObserved": 1,
-    "qicPassRate": 100,
+    "qicPassRate": 81.45062499999999,
     "qielPassRate": 100,
     "averageRecoveryTimeMs": 0,
     "recoverySuccessRate": 100,
     "driftFrequency": 0,
     "driftSeverity": "low",
     "securityIncidents": 0,
-    "averageLatencyMs": 180000,
+    "averageLatencyMs": 109152,
     "p95LatencyMs": 240000,
     "p99LatencyMs": 300000,
-    "recentFailures": [],
+    "recentFailures": [
+      {
+        "timestamp": "2025-12-11T07:02:10.446Z",
+        "issueNumber": 124,
+        "reason": "Complexity too high",
+        "errorType": "complexity-exceeded",
+        "recoverable": false,
+        "recoveryAttempted": false
+      },
+      {
+        "timestamp": "2025-12-11T07:02:44.643Z",
+        "issueNumber": 124,
+        "reason": "Complexity too high",
+        "errorType": "complexity-exceeded",
+        "recoverable": false,
+        "recoveryAttempted": false
+      },
+      {
+        "timestamp": "2025-12-11T07:03:39.832Z",
+        "issueNumber": 124,
+        "reason": "Complexity too high",
+        "errorType": "complexity-exceeded",
+        "recoverable": false,
+        "recoveryAttempted": false
+      },
+      {
+        "timestamp": "2025-12-11T07:04:25.079Z",
+        "issueNumber": 124,
+        "reason": "Complexity too high",
+        "errorType": "complexity-exceeded",
+        "recoverable": false,
+        "recoveryAttempted": false
+      }
+    ],
     "recentSuccesses": [],
-    "isHealthy": true,
-    "lastHealthCheck": "2025-12-11T06:47:00.000Z",
-    "availability": 100,
-    "lastUpdated": "2025-12-11T06:47:00.000Z"
+    "isHealthy": false,
+    "lastHealthCheck": "2025-12-11T07:04:25.079Z",
+    "availability": 0,
+    "lastUpdated": "2025-12-11T07:04:25.079Z"
   }
 }
