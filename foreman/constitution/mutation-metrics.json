@@ -1,15 +1,54 @@
 {
   "dailyStats": {
     "date": "2025-12-11",
-    "totalMutations": 0,
+    "totalMutations": 2,
     "blockedMutations": 0,
     "recoveredMutations": 0,
-    "averageImpactRadius": 0,
+    "averageImpactRadius": 5,
     "mutationsByType": {
       "safe": 0,
-      "regulated": 0,
+      "regulated": 2,
       "forbidden": 0
     }
   },
-  "history": []
+  "history": [
+    {
+      "id": "e1dff959-235e-4e8e-a6e5-d186259608ba",
+      "timestamp": "2025-12-11T11:12:22.230Z",
+      "mutationType": "regulated",
+      "filesAffected": [
+        "lib/test.ts"
+      ],
+      "impactRadius": 5,
+      "verdict": "approved",
+      "sequenceId": "seq-001",
+      "context": {
+        "prNumber": 999,
+        "taskDescription": "Test mutation",
+        "existingMutationsInPR": 0,
+        "existingMutationsInWave": 0,
+        "isRecoveryAttempt": false
+      },
+      "outcome": "completed"
+    },
+    {
+      "id": "65368355-68de-44bd-88f8-a9b19fbcb801",
+      "timestamp": "2025-12-11T11:11:33.530Z",
+      "mutationType": "regulated",
+      "filesAffected": [
+        "lib/test.ts"
+      ],
+      "impactRadius": 5,
+      "verdict": "approved",
+      "sequenceId": "seq-001",
+      "context": {
+        "prNumber": 999,
+        "taskDescription": "Test mutation",
+        "existingMutationsInPR": 0,
+        "existingMutationsInWave": 0,
+        "isRecoveryAttempt": false
+      },
+      "outcome": "completed"
+    }
+  ]
 }

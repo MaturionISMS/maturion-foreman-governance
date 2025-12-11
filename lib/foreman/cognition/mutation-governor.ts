@@ -119,27 +119,46 @@ export function classifyMutation(files: string[]): MutationClassification {
     if (file.includes('.github/workflows/') ||
         file.includes('/constitution/') ||
         file.includes('/governance/') ||
-        file === 'BUILD_PHILOSOPHY.md') {
+        file === 'BUILD_PHILOSOPHY.md' ||
+        file.endsWith('BUILD_PHILOSOPHY.md')) {
       type = 'forbidden';
       reasoning = `Modifying protected governance file: ${file}`;
       protectedPathsViolated.push(file);
       break;
     }
     
-    // Regulated patterns
-    if (file.includes('/lib/') && file.endsWith('.ts') && !file.endsWith('.test.ts')) {
-      type = 'regulated';
-      reasoning = 'Source code modification requires governance validation';
-    } else if (file.includes('/app/') || file.includes('/components/')) {
-      type = 'regulated';
-      reasoning = 'UI component change requires validation';
-    } else if (file.includes('package.json') || file.includes('tsconfig.json')) {
-      type = 'regulated';
-      reasoning = 'Configuration change requires validation';
-    } else if (file.includes('/types/') && !file.endsWith('.test.ts')) {
-      if (type !== 'regulated') {
+    // Regulated patterns - check if already regulated to avoid overwriting
+    if (type === 'safe') {
+      // Source code changes
+      if ((file.includes('/lib/') || file.includes('lib/')) && 
+          file.endsWith('.ts') && 
+          !file.endsWith('.test.ts')) {
+        type = 'regulated';
+        reasoning = 'Source code modification requires governance validation';
+        continue;
+      }
+      
+      // UI component changes
+      if (file.includes('/app/') || file.includes('app/') || 
+          file.includes('/components/') || file.includes('components/')) {
+        type = 'regulated';
+        reasoning = 'UI component change requires validation';
+        continue;
+      }
+      
+      // Configuration changes
+      if (file.includes('package.json') || file.includes('tsconfig.json')) {
+        type = 'regulated';
+        reasoning = 'Configuration change requires validation';
+        continue;
+      }
+      
+      // Type definition changes
+      if ((file.includes('/types/') || file.includes('types/')) && 
+          !file.endsWith('.test.ts')) {
         type = 'regulated';
         reasoning = 'Type definition change may have breaking impact';
+        continue;
       }
     }
   }
