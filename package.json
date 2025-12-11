@@ -26,6 +26,7 @@
     "test:performance": "tsx tests/qic/performance-integrity.test.ts",
     "test:cs5": "tsx tests/performance/*.test.ts",
     "test:zero-warning-governance": "tsx tests/qic/zero-warning-governance.test.ts",
+    "test:runtime": "tsx tests/runtime/*.test.ts",
     "typecheck": "tsc --noEmit",
     "typecheck:production": "tsc --project tsconfig.production.json --noEmit",
     "validate:github-token": "tsx scripts/validate-github-token.ts",
