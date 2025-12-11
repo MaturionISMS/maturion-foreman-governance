@@ -622,10 +622,13 @@ function analyzeMessageComplexity(message: string, history: ChatMessage[]): {
 function calculateDynamicMaxTokens(contextTokens: number, model: ModelTier): number {
   // Model-specific context limits
   const MODEL_LIMITS: Record<ModelTier, number> = {
-    'gpt-4': 8192,
-    'gpt-4-turbo': 128000,
-    'gpt-5.1': 128000, // Placeholder - adjust when actual limits are known
-    'local-builder': 8192 // Conservative default for local models
+    'gpt-4': 8192,           // Legacy
+    'gpt-4-turbo': 128000,   // Legacy
+    'gpt-4o-mini': 128000,   // PHASE_09: Default model
+    'gpt-4o': 128000,        // PHASE_09: Medium tasks
+    'gpt-4.1': 128000,       // PHASE_09: Heavy tasks
+    'gpt-5.1': 128000,       // PHASE_09: Constitutional reasoning
+    'local-builder': 8192    // Fallback
   };
   
   // Get limit for selected model
