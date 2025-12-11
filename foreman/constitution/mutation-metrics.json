@@ -1,17 +1,36 @@
 {
   "dailyStats": {
     "date": "2025-12-11",
-    "totalMutations": 2,
+    "totalMutations": 3,
     "blockedMutations": 0,
     "recoveredMutations": 0,
     "averageImpactRadius": 5,
     "mutationsByType": {
       "safe": 0,
-      "regulated": 2,
+      "regulated": 3,
       "forbidden": 0
     }
   },
   "history": [
+    {
+      "id": "fe748de5-899f-42cf-9d1b-ea31dbea7d39",
+      "timestamp": "2025-12-11T11:15:56.505Z",
+      "mutationType": "regulated",
+      "filesAffected": [
+        "lib/test.ts"
+      ],
+      "impactRadius": 5,
+      "verdict": "approved",
+      "sequenceId": "seq-001",
+      "context": {
+        "prNumber": 999,
+        "taskDescription": "Test mutation",
+        "existingMutationsInPR": 0,
+        "existingMutationsInWave": 0,
+        "isRecoveryAttempt": false
+      },
+      "outcome": "completed"
+    },
     {
       "id": "e1dff959-235e-4e8e-a6e5-d186259608ba",
       "timestamp": "2025-12-11T11:12:22.230Z",
