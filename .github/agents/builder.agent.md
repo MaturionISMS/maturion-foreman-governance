@@ -1,3 +1,4 @@
+---
 name: Internal Builder
 description: >
   Internal builder agent for the Foreman repository. Subordinate to Foreman,
