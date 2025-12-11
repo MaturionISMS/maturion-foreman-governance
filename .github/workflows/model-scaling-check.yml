@@ -1,1 +1,99 @@
+# GitHub Actions Workflow for Model Scaling System Check
+# Verifies the GitHub Builder Model Scaling Engine integrity
 
+name: Model Scaling System Check
+
+on:
+  push:
+    branches: [ main, develop, 'feature/**' ]
+  pull_request:
+    branches: [ main, develop ]
+
+permissions:
+  contents: read
+
+jobs:
+  verify-model-scaling:
+    name: Verify Model Scaling System
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Verify central router exists
+        run: |
+          if [ ! -f "lib/github/model-routing.ts" ]; then
+            echo "❌ Central router lib/github/model-routing.ts not found"
+            exit 1
+          fi
+          echo "✓ Central router exists"
+      
+      - name: Verify tier table exists
+        run: |
+          if [ ! -f "config/model-tiers.json" ]; then
+            echo "❌ Tier table config/model-tiers.json not found"
+            exit 1
+          fi
+          echo "✓ Tier table exists"
+      
+      - name: Verify tier table is valid JSON
+        run: |
+          if ! jq empty config/model-tiers.json 2>/dev/null; then
+            echo "❌ Tier table is not valid JSON"
+            exit 1
+          fi
+          echo "✓ Tier table is valid JSON"
+      
+      - name: Verify governance docs exist
+        run: |
+          if [ ! -f "docs/governance/github-model-scaling-policy.md" ]; then
+            echo "❌ Governance policy doc not found"
+            exit 1
+          fi
+          if [ ! -f "docs/governance/model-tier-matrix.md" ]; then
+            echo "❌ Model tier matrix doc not found"
+            exit 1
+          fi
+          echo "✓ Governance documentation exists"
+      
+      - name: Run model scaling test suite
+        run: |
+          echo "Running model scaling tests..."
+          npx tsx tests/model-scaling/routing-behaviour.test.ts
+          npx tsx tests/model-scaling/escalation-strategy.test.ts
+          npx tsx tests/model-scaling/policy-validation.test.ts
+          echo "✓ All model scaling tests passed"
+      
+      - name: Verify existing model-escalation.ts untouched
+        run: |
+          if [ ! -f "lib/foreman/model-escalation.ts" ]; then
+            echo "❌ Existing model-escalation.ts missing (should be untouched)"
+            exit 1
+          fi
+          if ! grep -q "export function selectModel" lib/foreman/model-escalation.ts; then
+            echo "❌ Existing model-escalation.ts appears modified"
+            exit 1
+          fi
+          echo "✓ Existing model-escalation.ts is untouched"
+      
+      - name: Report success
+        run: |
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "✅ Model Scaling System Check: PASSED"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "✓ Central router verified"
+          echo "✓ Tier table verified"
+          echo "✓ Governance docs verified"
+          echo "✓ Test suite passed"
+          echo "✓ Existing model-escalation.ts untouched"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

@@ -1,0 +1,55 @@
+{
+  "tiers": {
+    "T1": {
+      "name": "Tier 1 - Lightweight Tasks",
+      "models": ["gpt-4o-mini", "claude-haiku"],
+      "taskTypes": ["docs", "simple-ui", "config-update"],
+      "maxRetries": 3,
+      "costMultiplier": 1
+    },
+    "T2": {
+      "name": "Tier 2 - Standard Tasks",
+      "models": ["gpt-4o", "claude-sonnet-lite"],
+      "taskTypes": ["crud", "api-endpoint", "component", "integration"],
+      "maxRetries": 3,
+      "costMultiplier": 5
+    },
+    "T3": {
+      "name": "Tier 3 - Complex Tasks",
+      "models": ["claude-3.5-sonnet"],
+      "taskTypes": ["architecture", "red-qa", "refactor", "multi-module"],
+      "maxRetries": 3,
+      "costMultiplier": 20
+    }
+  },
+  "escalationRules": {
+    "repeatedErrors": {
+      "threshold": 2,
+      "action": "escalate"
+    },
+    "invalidCodeGeneration": {
+      "threshold": 1,
+      "action": "escalate"
+    },
+    "missingImports": {
+      "threshold": 2,
+      "action": "escalate"
+    },
+    "partialFileRewrites": {
+      "threshold": 1,
+      "action": "escalate"
+    },
+    "qicFailures": {
+      "threshold": 1,
+      "action": "escalate"
+    },
+    "tokenOverflow": {
+      "threshold": 1,
+      "action": "escalate"
+    },
+    "ambiguityDetected": {
+      "threshold": 2,
+      "action": "escalate"
+    }
+  }
+}
