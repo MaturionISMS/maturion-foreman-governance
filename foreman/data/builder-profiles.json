@@ -1,0 +1,129 @@
+{
+  "github-copilot": {
+    "builderType": "github-copilot",
+    "totalBuilds": 5,
+    "successfulBuilds": 5,
+    "failedBuilds": 0,
+    "successRate": 100,
+    "averageBuildIterations": 1,
+    "maxIterationsObserved": 1,
+    "qicPassRate": 100,
+    "qielPassRate": 100,
+    "averageRecoveryTimeMs": 0,
+    "recoverySuccessRate": 100,
+    "driftFrequency": 0,
+    "driftSeverity": "low",
+    "securityIncidents": 0,
+    "averageLatencyMs": 120000,
+    "p95LatencyMs": 180000,
+    "p99LatencyMs": 240000,
+    "recentFailures": [],
+    "recentSuccesses": [
+      {
+        "timestamp": "2025-12-11T07:02:10.445Z",
+        "issueNumber": 123,
+        "durationMs": 120000,
+        "iterationsRequired": 1,
+        "qaPassed": true
+      },
+      {
+        "timestamp": "2025-12-11T07:02:44.642Z",
+        "issueNumber": 123,
+        "durationMs": 120000,
+        "iterationsRequired": 1,
+        "qaPassed": true
+      },
+      {
+        "timestamp": "2025-12-11T07:03:39.832Z",
+        "issueNumber": 123,
+        "durationMs": 120000,
+        "iterationsRequired": 1,
+        "qaPassed": true
+      },
+      {
+        "timestamp": "2025-12-11T07:04:25.078Z",
+        "issueNumber": 123,
+        "durationMs": 120000,
+        "iterationsRequired": 1,
+        "qaPassed": true
+      },
+      {
+        "timestamp": "2025-12-11T07:05:31.699Z",
+        "issueNumber": 123,
+        "durationMs": 120000,
+        "iterationsRequired": 1,
+        "qaPassed": true
+      }
+    ],
+    "isHealthy": true,
+    "lastHealthCheck": "2025-12-11T07:05:31.699Z",
+    "availability": 100,
+    "lastUpdated": "2025-12-11T07:05:31.699Z"
+  },
+  "local-builder": {
+    "builderType": "local-builder",
+    "totalBuilds": 5,
+    "successfulBuilds": 0,
+    "failedBuilds": 5,
+    "successRate": 0,
+    "averageBuildIterations": 1,
+    "maxIterationsObserved": 1,
+    "qicPassRate": 77.37809374999999,
+    "qielPassRate": 100,
+    "averageRecoveryTimeMs": 0,
+    "recoverySuccessRate": 100,
+    "driftFrequency": 0,
+    "driftSeverity": "low",
+    "securityIncidents": 0,
+    "averageLatencyMs": 99321.6,
+    "p95LatencyMs": 240000,
+    "p99LatencyMs": 300000,
+    "recentFailures": [
+      {
+        "timestamp": "2025-12-11T07:02:10.446Z",
+        "issueNumber": 124,
+        "reason": "Complexity too high",
+        "errorType": "complexity-exceeded",
+        "recoverable": false,
+        "recoveryAttempted": false
+      },
+      {
+        "timestamp": "2025-12-11T07:02:44.643Z",
+        "issueNumber": 124,
+        "reason": "Complexity too high",
+        "errorType": "complexity-exceeded",
+        "recoverable": false,
+        "recoveryAttempted": false
+      },
+      {
+        "timestamp": "2025-12-11T07:03:39.832Z",
+        "issueNumber": 124,
+        "reason": "Complexity too high",
+        "errorType": "complexity-exceeded",
+        "recoverable": false,
+        "recoveryAttempted": false
+      },
+      {
+        "timestamp": "2025-12-11T07:04:25.079Z",
+        "issueNumber": 124,
+        "reason": "Complexity too high",
+        "errorType": "complexity-exceeded",
+        "recoverable": false,
+        "recoveryAttempted": false
+      },
+      {
+        "timestamp": "2025-12-11T07:05:31.700Z",
+        "issueNumber": 124,
+        "reason": "Complexity too high",
+        "errorType": "complexity-exceeded",
+        "recoverable": false,
+        "recoveryAttempted": false
+      }
+    ],
+    "recentSuccesses": [],
+    "isHealthy": false,
+    "lastHealthCheck": "2025-12-11T07:05:31.700Z",
+    "availability": 0,
+    "lastUpdated": "2025-12-11T07:05:31.700Z"
+  }
+}
