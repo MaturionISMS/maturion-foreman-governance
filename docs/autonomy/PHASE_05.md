@@ -228,7 +228,7 @@ function validateArchitecturalBoundaries(
 
 #### Wave Summary Document
 
-**Location:** `/docs/autonomy/waves/WAVE_[n]_SUMMARY.md`
+**Location:** `docs/autonomy/waves/WAVE_[N]_SUMMARY.md`
 
 **Format:**
 ```markdown
