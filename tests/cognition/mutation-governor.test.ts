@@ -25,18 +25,18 @@ import { clearGovernanceEvents } from '../../lib/foreman/memory/governance-memor
 import * as crypto from 'crypto'
 
 describe('Mutation Governor Kernel', () => {
-  before(() => {
+  before(async () => {
     // Clear governance events and reset counters before tests
     clearGovernanceEvents()
-    resetMutationCounters('pr')
-    resetMutationCounters('wave')
+    await resetMutationCounters('pr')
+    await resetMutationCounters('wave')
   })
 
-  after(() => {
+  after(async () => {
     // Clean up after tests
     clearGovernanceEvents()
-    resetMutationCounters('pr')
-    resetMutationCounters('wave')
+    await resetMutationCounters('pr')
+    await resetMutationCounters('wave')
   })
 
   describe('Mutation Classification', () => {
@@ -234,15 +234,15 @@ describe('Mutation Governor Kernel', () => {
       assert.strictEqual(throttled, false, 'Should not be throttled initially')
     })
 
-    it('should reset PR counters', () => {
-      resetMutationCounters('pr')
+    it('should reset PR counters', async () => {
+      await resetMutationCounters('pr')
       const stats = getMutationStats()
       
       assert.strictEqual(stats.pr.count, 0, 'PR count should be reset')
     })
 
-    it('should reset wave counters', () => {
-      resetMutationCounters('wave')
+    it('should reset wave counters', async () => {
+      await resetMutationCounters('wave')
       const stats = getMutationStats()
       
       assert.strictEqual(stats.wave.count, 0, 'Wave count should be reset')

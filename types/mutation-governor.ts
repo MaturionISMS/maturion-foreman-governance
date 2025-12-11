@@ -249,8 +249,8 @@ export interface RollbackStep {
 export const PROTECTED_PATHS = [
   '.github/workflows/',
   '.github/foreman/agent-contract.md',
-  '/BUILD_PHILOSOPHY.md',
-  '/foreman/architecture-design-checklist.md',
+  'BUILD_PHILOSOPHY.md',
+  'foreman/architecture-design-checklist.md',
   'foreman/constitution/',
   'docs/governance/',
 ] as const;

@@ -115,12 +115,13 @@ export function classifyMutation(files: string[]): MutationClassification {
   
   // Classify based on file patterns
   for (const file of files) {
-    // Forbidden patterns
+    // Forbidden patterns - check additional governance files not in isProtectedPath
     if (file.includes('.github/workflows/') ||
-        file.includes('/constitution/') ||
-        file.includes('/governance/') ||
+        file.includes('constitution/') ||
+        file.includes('governance/') ||
         file === 'BUILD_PHILOSOPHY.md' ||
-        file.endsWith('BUILD_PHILOSOPHY.md')) {
+        file.endsWith('BUILD_PHILOSOPHY.md') ||
+        file.includes('architecture-design-checklist.md')) {
       type = 'forbidden';
       reasoning = `Modifying protected governance file: ${file}`;
       protectedPathsViolated.push(file);
@@ -473,12 +474,12 @@ export function getMutationStats(): MutationStats {
 /**
  * Reset mutation counters
  */
-export function resetMutationCounters(scope: 'pr' | 'wave'): void {
+export async function resetMutationCounters(scope: 'pr' | 'wave'): Promise<void> {
   const metrics = loadMetrics();
   
   if (scope === 'pr') {
     metrics.currentPR = undefined;
-    logGovernanceEvent({
+    await logGovernanceEvent({
       type: 'mutation_counters_reset',
       severity: 'info',
       description: 'PR mutation counters reset',
@@ -486,7 +487,7 @@ export function resetMutationCounters(scope: 'pr' | 'wave'): void {
     });
   } else if (scope === 'wave') {
     metrics.currentWave = undefined;
-    logGovernanceEvent({
+    await logGovernanceEvent({
       type: 'mutation_counters_reset',
       severity: 'info',
       description: 'Wave mutation counters reset',
@@ -500,9 +501,9 @@ export function resetMutationCounters(scope: 'pr' | 'wave'): void {
 /**
  * Update throttle configuration
  */
-export function updateThrottleConfig(newConfig: Partial<MutationThrottleConfig>): void {
+export async function updateThrottleConfig(newConfig: Partial<MutationThrottleConfig>): Promise<void> {
   throttleConfig = { ...throttleConfig, ...newConfig };
-  logGovernanceEvent({
+  await logGovernanceEvent({
     type: 'throttle_config_updated',
     severity: 'info',
     description: 'Mutation throttle configuration updated',
