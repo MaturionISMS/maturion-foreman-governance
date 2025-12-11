@@ -40,6 +40,7 @@ import {
   filterProtectedFiles,
   validateArchitectureChangeApproval,
 } from './architecture';
+import { enforcePerformanceStandards, type PerformanceEnforcementResult } from './performance';
 
 /**
  * PR Gatekeeper Result
@@ -53,6 +54,7 @@ export interface PRGatekeeperResult {
   timestamp: string;
   architectureApprovalRequired?: boolean;
   requiredACR?: string;
+  performanceResult?: PerformanceEnforcementResult;
 }
 
 /**
@@ -160,6 +162,89 @@ export async function enforcePRGatekeeper(options?: {
           console.log(`  Approved ACR: ${approvalCheck.existingACR.id}`);
         }
       }
+    }
+  }
+
+  // PERFORMANCE ENFORCEMENT CHECK (CS5)
+  // This checks for performance violations before running expensive QIEL
+  console.log('[PR Gatekeeper] Running performance enforcement check...');
+  
+  let performanceResult: PerformanceEnforcementResult | undefined;
+  
+  try {
+    performanceResult = await enforcePerformanceStandards({
+      changedFiles,
+      buildId,
+      sequenceId,
+    });
+
+    if (!performanceResult.allowed) {
+      blockingIssues.push('Performance violations detected');
+      blockingIssues.push(...performanceResult.blockingIssues);
+      governanceViolations.push('PERFORMANCE_VIOLATIONS');
+
+      // Log critical governance event
+      await logGovernanceEvent({
+        type: 'pr_blocked_performance_violations',
+        severity: 'critical',
+        description: `PR creation blocked: ${performanceResult.scanResult.blockingViolations.length} performance violation(s)`,
+        metadata: {
+          blockingViolations: performanceResult.scanResult.blockingViolations.length,
+          totalViolations: performanceResult.scanResult.violations.length,
+          criticalCount: performanceResult.scanResult.criticalCount,
+          buildId,
+          sequenceId,
+          timestamp,
+        },
+      });
+
+      console.error('[PR Gatekeeper] ❌ Performance enforcement check FAILED');
+      console.error(`  Blocking violations: ${performanceResult.scanResult.blockingViolations.length}`);
+      performanceResult.blockingIssues.slice(0, 5).forEach(issue => {
+        console.error(`  - ${issue}`);
+      });
+    } else {
+      console.log('[PR Gatekeeper] ✅ Performance enforcement check PASSED');
+      console.log(`  Total violations: ${performanceResult.scanResult.violations.length}`);
+      console.log(`  Blocking violations: ${performanceResult.scanResult.blockingViolations.length}`);
+    }
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('[PR Gatekeeper] ⚠️ Performance enforcement check error:', errorMessage);
+    
+    // Performance check failure is critical - log and add as blocker
+    blockingIssues.push('Performance enforcement check failed');
+    governanceViolations.push('PERFORMANCE_CHECK_FAILURE');
+    
+    // Log as critical governance event
+    await logGovernanceEvent({
+      type: 'performance_enforcement_error',
+      severity: 'critical',
+      description: 'Performance enforcement check encountered an error - treating as blocker',
+      metadata: {
+        error: errorMessage,
+        buildId,
+        sequenceId,
+        timestamp,
+      },
+    });
+    
+    // Raise critical alert
+    try {
+      const { raiseCriticalAlert } = await import('./alerts/alert-engine');
+      await raiseCriticalAlert({
+        category: 'qa',
+        message: 'Performance Enforcement System Failure',
+        details: `Performance enforcement check failed: ${errorMessage}. This is treated as a blocker to prevent bypassing performance standards.`,
+        metadata: {
+          error: errorMessage,
+          buildId,
+          sequenceId,
+          timestamp,
+        },
+      });
+    } catch (alertError) {
+      console.error('[PR Gatekeeper] Failed to raise alert for performance check failure:', alertError);
     }
   }
 
@@ -414,6 +499,7 @@ export async function enforcePRGatekeeper(options?: {
     timestamp,
     architectureApprovalRequired,
     requiredACR,
+    performanceResult,
   };
 }
 

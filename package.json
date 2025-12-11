@@ -24,6 +24,7 @@
     "test:ui-wiring": "tsx tests/qic/ui-wiring.test.ts",
     "test:incident": "tsx tests/qic/incident-feedback.test.ts",
     "test:performance": "tsx tests/qic/performance-integrity.test.ts",
+    "test:cs5": "tsx tests/performance/*.test.ts",
     "test:zero-warning-governance": "tsx tests/qic/zero-warning-governance.test.ts",
     "typecheck": "tsc --noEmit",
     "typecheck:production": "tsc --project tsconfig.production.json --noEmit",
@@ -43,7 +44,10 @@
     "wave2": "tsx scripts/run-wave2-execution.ts",
     "wave2:dry-run": "tsx scripts/run-wave2-execution.ts --dry-run",
     "wave2:validate": "tsx scripts/validate-wave2-execution.ts",
-    "verify:cs3": "tsx scripts/verify-cs3-functional.ts"
+    "verify:cs3": "tsx scripts/verify-cs3-functional.ts",
+    "perf:scan": "tsx scripts/run-performance-scan.ts",
+    "perf:quick": "tsx scripts/run-performance-scan.ts --quick",
+    "perf:enforce": "tsx scripts/run-performance-scan.ts --enforce"
   },
   "dependencies": {
     "ajv": "^8.17.1",
