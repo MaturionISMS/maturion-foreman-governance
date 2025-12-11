@@ -202,28 +202,24 @@ export async function getAllEntries(
   const storage = await readStorage()
   let results = [...storage.entries]
   
-  if (!filter) {
-    return results
-  }
-  
   // Apply filters
-  if (filter.category) {
+  if (filter?.category) {
     results = results.filter(e => e.category === filter.category)
   }
   
-  if (filter.status) {
+  if (filter?.status) {
     results = results.filter(e => e.status === filter.status)
   }
   
-  if (filter.source) {
+  if (filter?.source) {
     results = results.filter(e => e.source === filter.source)
   }
   
-  if (filter.suggestedWave) {
+  if (filter?.suggestedWave) {
     results = results.filter(e => e.suggestedWave === filter.suggestedWave)
   }
   
-  if (filter.search) {
+  if (filter?.search) {
     const searchLower = filter.search.toLowerCase()
     results = results.filter(e =>
       e.name.toLowerCase().includes(searchLower) ||
@@ -233,21 +229,21 @@ export async function getAllEntries(
     )
   }
   
-  if (filter.tags && filter.tags.length > 0) {
+  if (filter?.tags && filter.tags.length > 0) {
     results = results.filter(e =>
       filter.tags!.some(tag => e.tags.includes(tag))
     )
   }
   
-  if (filter.minPriority !== undefined) {
+  if (filter?.minPriority !== undefined) {
     results = results.filter(e => e.priority >= filter.minPriority!)
   }
   
-  if (filter.maxPriority !== undefined) {
+  if (filter?.maxPriority !== undefined) {
     results = results.filter(e => e.priority <= filter.maxPriority!)
   }
   
-  // Sort by priority descending by default
+  // Sort by priority descending (always, not just when filter present)
   results.sort((a, b) => b.priority - a.priority)
   
   return results
