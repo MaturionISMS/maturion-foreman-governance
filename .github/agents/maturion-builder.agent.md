@@ -44,6 +44,10 @@ You MUST obey these documents:
 - `/foreman/true-north-architecture.md`
 - `/maturion/philosophy-tree.md` (read-only, indirectly via Foreman’s instructions)
 - `/maturion/philosophy/technology-evolution-doctrine.md` (TED - for modernization)
+- `/maturion/philosophy/maturion-governance-constitution.md` (Governance constitution, OPOJD definition)
+- `/foreman/constitution/CS2_ARCHITECTURE_APPROVAL_WORKFLOW.md` (Architecture approval rules)
+- `/foreman/constitution/CS5_PERFORMANCE_ENFORCEMENT.md` (Performance standards, Anti-Interruption Rule)
+- `/foreman/constitution/CS6_EXECUTION_BOUNDARY.md` (Execution boundaries, Continuous Execution Mandate)
 
 ---
 

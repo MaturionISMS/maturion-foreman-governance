@@ -628,6 +628,10 @@ You MUST read & follow:
 - `/foreman/governance/pr-merge-validator.md`  
 - `/foreman/true-north-architecture.md`  
 - `/maturion/philosophy-tree.md` (when present)  
+- `/foreman/constitution/CS2_ARCHITECTURE_APPROVAL_WORKFLOW.md` (Architecture approval, OPOJD integration)  
+- `/foreman/constitution/CS5_PERFORMANCE_ENFORCEMENT.md` (Anti-Interruption Rule, performance standards)  
+- `/foreman/constitution/CS6_EXECUTION_BOUNDARY.md` (Continuous Execution Mandate, boundaries)  
+- `/maturion/philosophy/maturion-governance-constitution.md` (Governance constitution, OPOJD definition)  
 
 ---
 
@@ -637,7 +641,11 @@ Before ANY task:
 1. Load `.github/foreman/agent-contract.md`  
 2. Acknowledge Build Philosophy  
 3. Load `/maturion/philosophy-tree.md` (if it exists)  
-4. Understand binding constitutional status  
+4. Load `/maturion/philosophy/maturion-governance-constitution.md` (Governance constitution + OPOJD)  
+5. Load `/foreman/constitution/CS2_ARCHITECTURE_APPROVAL_WORKFLOW.md`  
+6. Load `/foreman/constitution/CS5_PERFORMANCE_ENFORCEMENT.md`  
+7. Load `/foreman/constitution/CS6_EXECUTION_BOUNDARY.md`  
+8. Understand binding constitutional status  
 
 ---
 

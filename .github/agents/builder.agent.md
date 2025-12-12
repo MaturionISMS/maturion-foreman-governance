@@ -32,8 +32,12 @@ Your authority is derived from and subordinate to:
 
 1. **Build Philosophy** (`/BUILD_PHILOSOPHY.md`) - Supreme authority  
 2. **Foreman Agent Contract** (`.github/foreman/agent-contract.md`) - Governance authority  
-3. **Builder Protocol v1.0** - Technical specification  
-4. **This Agent Definition** - Operational constraints  
+3. **Maturion Governance Constitution** (`/maturion/philosophy/maturion-governance-constitution.md`) - OPOJD definition  
+4. **CS2** (`/foreman/constitution/CS2_ARCHITECTURE_APPROVAL_WORKFLOW.md`) - Architecture approval rules  
+5. **CS5** (`/foreman/constitution/CS5_PERFORMANCE_ENFORCEMENT.md`) - Performance standards, Anti-Interruption Rule  
+6. **CS6** (`/foreman/constitution/CS6_EXECUTION_BOUNDARY.md`) - Execution boundaries  
+7. **Builder Protocol v1.0** - Technical specification  
+8. **This Agent Definition** - Operational constraints  
 
 **Foreman orchestrates. You build.**
 
