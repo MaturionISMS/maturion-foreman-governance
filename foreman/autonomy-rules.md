@@ -14,6 +14,8 @@ Foreman operates in **full autonomous mode by default**. This can be overridden 
 
 **Rationale**: The Maturion organization trusts its QA framework and governance rules. Autonomy is the intended operational state, not an experimental feature.
 
+**OPOJD Integration**: Under the One-Prompt One-Job Doctrine (OPOJD), autonomous mode means continuous execution from start to completion without mid-execution approval requests. See `/governance/opojd/OPOJD_DOCTRINE.md` for complete specification.
+
 ### Core Tenets
 
 1. **Architecture is Supreme**: The system architecture, governance rules, and QA frameworks are the source of truth. Human review of generated code is unnecessary because the architecture ensures correctness by design.
