@@ -1,8 +1,8 @@
 {
   "github-copilot": {
     "builderType": "github-copilot",
-    "totalBuilds": 6,
-    "successfulBuilds": 6,
+    "totalBuilds": 7,
+    "successfulBuilds": 7,
     "failedBuilds": 0,
     "successRate": 100,
     "averageBuildIterations": 1,
@@ -60,29 +60,36 @@
         "durationMs": 120000,
         "iterationsRequired": 1,
         "qaPassed": true
+      },
+      {
+        "timestamp": "2025-12-12T16:10:27.355Z",
+        "issueNumber": 123,
+        "durationMs": 120000,
+        "iterationsRequired": 1,
+        "qaPassed": true
       }
     ],
     "isHealthy": true,
-    "lastHealthCheck": "2025-12-11T17:14:27.521Z",
+    "lastHealthCheck": "2025-12-12T16:10:27.355Z",
     "availability": 100,
-    "lastUpdated": "2025-12-11T17:14:27.521Z"
+    "lastUpdated": "2025-12-12T16:10:27.355Z"
   },
   "local-builder": {
     "builderType": "local-builder",
-    "totalBuilds": 6,
+    "totalBuilds": 7,
     "successfulBuilds": 0,
-    "failedBuilds": 6,
+    "failedBuilds": 7,
     "successRate": 0,
     "averageBuildIterations": 1,
     "maxIterationsObserved": 1,
-    "qicPassRate": 73.50918906249998,
+    "qicPassRate": 69.83372960937498,
     "qielPassRate": 100,
     "averageRecoveryTimeMs": 0,
     "recoverySuccessRate": 100,
     "driftFrequency": 0,
     "driftSeverity": "low",
     "securityIncidents": 0,
-    "averageLatencyMs": 91457.28000000001,
+    "averageLatencyMs": 85165.82400000001,
     "p95LatencyMs": 240000,
     "p99LatencyMs": 300000,
     "recentFailures": [
@@ -133,12 +140,20 @@
         "errorType": "complexity-exceeded",
         "recoverable": false,
         "recoveryAttempted": false
+      },
+      {
+        "timestamp": "2025-12-12T16:10:27.356Z",
+        "issueNumber": 124,
+        "reason": "Complexity too high",
+        "errorType": "complexity-exceeded",
+        "recoverable": false,
+        "recoveryAttempted": false
       }
     ],
     "recentSuccesses": [],
     "isHealthy": false,
-    "lastHealthCheck": "2025-12-11T17:14:27.522Z",
+    "lastHealthCheck": "2025-12-12T16:10:27.356Z",
     "availability": 0,
-    "lastUpdated": "2025-12-11T17:14:27.522Z"
+    "lastUpdated": "2025-12-12T16:10:27.356Z"
   }
 }
