@@ -77,7 +77,24 @@ const DEFAULT_CONFIG: RetirementConfig = {
 function isProtectedMemory(entry: MemoryEntry): boolean {
   if (!entry.tags) return false
   
-  return entry.tags.some(tag => PROTECTED_MEMORY_TAGS.includes(tag))
+  // Check for simple protected tags
+  const hasProtectedTag = entry.tags.some(tag => PROTECTED_MEMORY_TAGS.includes(tag))
+  if (hasProtectedTag) return true
+  
+  // Check for compound protected conditions
+  // Active architecture: must have BOTH 'architecture' AND 'active' tags
+  const hasActiveArchitecture = entry.tags.includes('architecture') && entry.tags.includes('active')
+  if (hasActiveArchitecture) return true
+  
+  // Builder config: must have BOTH 'builder' AND 'config' tags
+  const hasBuilderConfig = entry.tags.includes('builder') && entry.tags.includes('config')
+  if (hasBuilderConfig) return true
+  
+  // Runtime active: must have BOTH 'runtime' AND 'active' tags
+  const hasRuntimeActive = entry.tags.includes('runtime') && entry.tags.includes('active')
+  if (hasRuntimeActive) return true
+  
+  return false
 }
 
 /**
