@@ -631,6 +631,204 @@ If builder accepts invalid request:
 
 ---
 
+## Interface Integrity Requirements (QIC-7)
+
+**Added**: 2025-12-12 (Issue #546 - Philosophy Re-Alignment)  
+**Reason**: Prevent interface alignment failures that block 100% GREEN builds
+
+### Pre-Green Validation
+
+Before marking a build as GREEN and reporting completion, builders MUST validate interface integrity:
+
+#### 1. TypeScript Compilation Validation
+
+```typescript
+async function validateTypeScriptCompilation(): Promise<void> {
+  console.log("[Interface Integrity] Running TypeScript compilation check...")
+  
+  const result = await runCommand("npx tsc --noEmit")
+  
+  if (result.exitCode !== 0) {
+    throw new BuildPhilosophyViolation(
+      "TypeScript compilation failed",
+      {
+        reason: "Type errors prevent 100% GREEN build",
+        output: result.stderr,
+        action: "Fix type errors before marking build as GREEN",
+        qic_reference: "QIC-7: Interface Integrity Requirements"
+      }
+    )
+  }
+  
+  console.log("[Interface Integrity] ✅ TypeScript compilation passed")
+}
+```
+
+#### 2. Type Completeness Validation
+
+```typescript
+async function validateTypeCompleteness(): Promise<void> {
+  console.log("[Interface Integrity] Checking type completeness...")
+  
+  // Validate Record<UnionType, T> objects have all union values
+  const result = await runCommand("npx tsx tests/qa/type-completeness.test.ts")
+  
+  if (result.exitCode !== 0) {
+    throw new BuildPhilosophyViolation(
+      "Type completeness validation failed",
+      {
+        reason: "Incomplete Record<UnionType, T> definitions detected",
+        output: result.stderr,
+        action: "Ensure all Record types have all union values as keys",
+        qic_reference: "QIC-7: Interface Integrity Requirements"
+      }
+    )
+  }
+  
+  console.log("[Interface Integrity] ✅ Type completeness validated")
+}
+```
+
+#### 3. Import/Export Consistency Validation
+
+```typescript
+async function validateImportExportConsistency(): Promise<void> {
+  console.log("[Interface Integrity] Checking import/export consistency...")
+  
+  // Validate all imports reference exported members
+  const result = await runCommand("npx tsx tests/qa/import-export-consistency.test.ts")
+  
+  if (result.exitCode !== 0) {
+    throw new BuildPhilosophyViolation(
+      "Import/export consistency validation failed",
+      {
+        reason: "Imports reference non-existent exports",
+        output: result.stderr,
+        action: "Fix imports to reference existing exported members",
+        qic_reference: "QIC-7: Interface Integrity Requirements"
+      }
+    )
+  }
+  
+  console.log("[Interface Integrity] ✅ Import/export consistency validated")
+}
+```
+
+### Updated Build-to-Green Completion Check
+
+```typescript
+async function buildToGreen(request: BuildRequest) {
+  let iteration = 0
+  const maxIterations = 100
+  
+  while (iteration < maxIterations) {
+    iteration++
+    
+    // Run QA to get current status
+    const qaResult = await runQA(request.qa_suite.location)
+    
+    console.log(`[Iteration ${iteration}] QA: ${qaResult.passing}/${qaResult.total} passing`)
+    
+    // Check if all tests pass
+    if (qaResult.passing === qaResult.total) {
+      console.log(`[Build to Green] All QA tests passing. Running interface integrity checks...`)
+      
+      // QIC-7: Interface Integrity Validation (NEW)
+      try {
+        await validateTypeScriptCompilation()
+        await validateTypeCompleteness()
+        await validateImportExportConsistency()
+      } catch (error) {
+        // Interface integrity failed - NOT GREEN yet
+        console.log(`[Build to Green] Interface integrity check failed. Fixing...`)
+        
+        // Attempt to fix interface issues
+        await fixInterfaceIssues(error)
+        
+        // Continue iteration - not green yet
+        continue
+      }
+      
+      // All QA + Interface Integrity passed = TRUE GREEN
+      console.log(`[Build to Green] SUCCESS ✓ 100% GREEN after ${iteration} iterations`)
+      console.log(`[Build to Green] - All tests passing: ${qaResult.total}/${qaResult.total}`)
+      console.log(`[Build to Green] - TypeScript compilation: PASS`)
+      console.log(`[Build to Green] - Type completeness: PASS`)
+      console.log(`[Build to Green] - Import/export consistency: PASS`)
+      
+      return {
+        success: true,
+        iterations: iteration,
+        qa_status: "GREEN",
+        interface_integrity: "PASS",
+        tests_passing: qaResult.passing,
+        tests_total: qaResult.total
+      }
+    }
+    
+    // Get next failing test and implement
+    const failingTest = qaResult.failures[0]
+    await implementForTest(failingTest, request.architecture)
+  }
+  
+  throw new Error(
+    `Build to Green failed: Could not achieve 100% GREEN within ${maxIterations} iterations`
+  )
+}
+```
+
+### Builder Checklist: Before Reporting GREEN
+
+**Builders MUST validate the following before reporting GREEN status:**
+
+- [ ] ✅ All QA tests passing (100%)
+- [ ] ✅ TypeScript compilation passes (`npx tsc --noEmit`)
+- [ ] ✅ All Record<UnionType, T> objects have all union values
+- [ ] ✅ All imports reference exported members
+- [ ] ✅ No breaking interface changes without CS2 approval
+- [ ] ✅ Pre-build validation script passes (`./scripts/pre-build-validation.sh`)
+
+**If ANY check fails → Build is NOT GREEN → Continue iteration**
+
+### Governance Integration
+
+Interface integrity failures are recorded as Quality Integrity Incidents:
+
+```typescript
+async function recordInterfaceIntegrityIncident(error: BuildPhilosophyViolation): Promise<void> {
+  await writeMemory({
+    scope: 'foreman',
+    key: `qi-incident-interface-${Date.now()}`,
+    value: {
+      id: generateIncidentId(),
+      timestamp: new Date().toISOString(),
+      incidentType: 'interface_integrity_violation',
+      severity: 'high',
+      source: 'builder-interface-validation',
+      description: error.message,
+      details: error.details,
+      qic_reference: 'QIC-7',
+    },
+    tags: ['quality-integrity', 'incident', 'interface-integrity', 'qic-7'],
+    createdBy: 'builder',
+  })
+}
+```
+
+### Learning Propagation
+
+When interface integrity issues are discovered and fixed:
+
+1. ✅ Document the issue type
+2. ✅ Add to architecture checklist if architectural
+3. ✅ Add to QIC if governance-level
+4. ✅ Update builder validation to prevent recurrence
+5. ✅ Propagate to all builders
+
+**This ensures the same interface gap cannot recur.**
+
+---
+
 ## Summary
 
 **The Rule**: Builders ONLY accept "Build to Green" instructions with Red QA
@@ -647,9 +845,11 @@ If builder accepts invalid request:
 
 **This rule is ABSOLUTE and applies to ALL builders without exception.**
 
+**Interface Integrity (QIC-7) is mandatory for achieving 100% GREEN builds.**
+
 ---
 
-*Version*: 1.0  
-*Authority*: Build Philosophy  
+*Version*: 1.1 (Added QIC-7 Interface Integrity Requirements)  
+*Authority*: Build Philosophy + Quality Integrity Contract  
 *Status*: Active and Enforced  
-*Last Updated*: 2025-12-10
+*Last Updated*: 2025-12-12
