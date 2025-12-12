@@ -31,22 +31,26 @@ export type {
   ArchitectureMismatch
 } from './architecture-manager';
 
+// Import singletons for use in functions
+import { workspaceManager as wsManager } from './workspace';
+import { architectureManager as archManager } from './architecture-manager';
+
 /**
  * Initialize the multi-repo autonomy layer
  */
 export async function initializeMultiRepoLayer(): Promise<void> {
   // Discover repositories
-  await workspaceManager.discoverRepositories();
+  await wsManager.discoverRepositories();
   
   // Perform initial health checks
-  const repos = workspaceManager.getAllRepositories();
+  const repos = wsManager.getAllRepositories();
   for (const repo of repos) {
-    await workspaceManager.healthCheck(repo.id);
+    await wsManager.healthCheck(repo.id);
   }
   
   // Fetch architecture signatures
   for (const repo of repos) {
-    await architectureManager.fetchArchitecture(repo.id);
+    await archManager.fetchArchitecture(repo.id);
   }
 }
 
@@ -55,8 +59,8 @@ export async function initializeMultiRepoLayer(): Promise<void> {
  */
 export function getMultiRepoStatus() {
   return {
-    workspaceHealth: workspaceManager.getWorkspaceHealth(),
-    repositories: workspaceManager.getAllRepositories(),
+    workspaceHealth: wsManager.getWorkspaceHealth(),
+    repositories: wsManager.getAllRepositories(),
     initialized: true
   };
 }
