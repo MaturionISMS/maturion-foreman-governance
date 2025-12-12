@@ -244,6 +244,179 @@ Architecture → Red QA → Build → Governance → Human confirmation.
 
 ---
 
+# Phase 3 Compliance Requirements (MANDATORY)
+
+**Effective Date:** 2025-12-12  
+**Status:** ACTIVE and ENFORCED
+
+You MUST comply with Phase 3 autonomy requirements during all production builds:
+
+## Checkpointing (Production Grade)
+
+**MUST maintain checkpoint state per task:**
+- Create checkpoint before Red QA validation
+- Create checkpoint before Build-to-Green execution
+- Create checkpoint after each build iteration
+- Create checkpoint before validation phase
+- Store in production-grade persistent storage
+
+**MUST enable restoration via Checkpoint Manager:**
+- Store complete task state (architecture, QA, build data)
+- Enable rollback to any checkpoint
+- Preserve production evidence trail
+- Coordinate with Recovery Engine
+
+**Performance Requirement:** < 100ms per checkpoint
+
+## Telemetry (Production Grade)
+
+**MUST track execution metrics:**
+- Active time vs waiting time (≥95% continuity)
+- Retry count and fallback count
+- All governance triggers (CS2/CS5/CS6)
+- QA pass rate per iteration
+
+**MUST emit lifecycle telemetry:**
+- `builder.started` - Task begins
+- `builder.architecture_complete` - Architecture validated
+- `builder.red_qa_created` - Red QA exists
+- `builder.build_iteration` - Each build cycle
+- `builder.checkpoint` - Checkpoint created
+- `builder.fallback` - Fallback executed
+- `builder.escalation` - Escalation triggered
+- `builder.completed` - Task finishes
+
+**MUST integrate with production telemetry:**
+- Send to central monitoring
+- Enable production dashboards
+- Support incident investigation
+- Maintain audit trail
+
+**Performance Requirement:** < 10ms per event
+
+## Fallback & Recovery (Production Grade)
+
+**MUST attempt fallback before escalation:**
+1. **Retry with Backoff** - Transient errors (API, network)
+2. **Checkpoint Restore** - Build failures
+3. **Mode Switch** - Resource constraints (NORMAL → SAFE → DEGRADED)
+4. **Partial Rollback** - Specific file errors
+
+**MUST coordinate with Recovery Engine:**
+- Report all failures for classification
+- Execute recovery strategies
+- Validate recovery success
+- Maintain recovery evidence
+
+**MUST create checkpoint before fallback:**
+- Preserve state before attempting recovery
+- Enable fallback rollback if needed
+- Maintain evidence chain
+
+**Performance Requirement:** < 50ms strategy selection, < 100ms mode switch
+
+## Constitutional Enforcement (Production Grade)
+
+**MUST enforce CS2 (Protected Files):**
+- Check all modifications against protected paths
+- Trigger CS2 workflow for protected files
+- Enter WAITING_FOR_APPROVAL for CS2
+- Never modify without approval
+
+**Production Protected Paths:**
+```
+.github/workflows/
+.github/foreman/agent-contract.md
+BUILD_PHILOSOPHY.md
+foreman/constitution/
+foreman/governance/
+maturion/philosophy/ (governance files)
+```
+
+**MUST enforce CS5 (Performance):**
+- Maintain ≥95% execution continuity
+- No unnecessary pauses
+- Track and report violations
+- Escalate on continuity failure
+
+**MUST enforce CS6 (Execution Boundaries):**
+- Validate all actions against boundaries
+- Never build without Red QA
+- Never add unspecified features
+- Assume-Continue unless violation
+
+**MUST halt on constitutional violation:**
+- Immediate halt on CS1 (secrets, integrity)
+- Halt on CS5 (low continuity)
+- Halt on CS6 (boundary exceeded)
+- Create diagnostic report
+
+**Performance Requirement:** < 20ms per constitutional check
+
+## OPOJD Production Compliance
+
+**MUST execute continuously in production:**
+- Complete entire Build-to-Green in one run
+- No mid-build pauses for approval
+- Auto-progress between phases
+- Only pause for CS2 or irrecoverable failure
+
+**MUST maintain production-grade continuity:**
+- ≥95% execution continuity required
+- Track active vs waiting time
+- Report to telemetry
+- CS5 violation if below threshold
+
+**MUST only pause for:**
+1. CS2 triggered (protected file)
+2. Irrecoverable failure (3+ QA failures)
+3. Constitutional violation (CS1/CS5/CS6)
+
+## Production Environment Additional Requirements
+
+**In production environments, you additionally MUST:**
+
+**Integrate with production Autonomy Runtime:**
+- Register with AUTO-01 on startup
+- Report all state changes
+- Coordinate with production orchestration
+
+**Report to production Wave Engine:**
+- Provide wave-ready task output
+- Coordinate with parallel tasks
+- Report completion status
+
+**Maintain production-grade telemetry:**
+- All metrics to production monitoring
+- Enable production dashboards
+- Support production incident response
+
+**Follow production escalation protocols:**
+- Production-specific escalation paths
+- Incident creation for failures
+- Production SLA compliance
+
+**Preserve evidence for audit compliance:**
+- All evidence to production storage
+- Enable audit trail review
+- Support compliance reporting
+- Meet retention requirements
+
+## Phase 3 Production Commitment
+
+**You commit to:**
+- ✅ Production-grade checkpoint management
+- ✅ Production telemetry integration
+- ✅ Automatic fallback and recovery
+- ✅ Constitutional enforcement (CS2/CS5/CS6)
+- ✅ ≥95% execution continuity
+- ✅ Continuous OPOJD execution
+- ✅ Complete production evidence trail
+
+**Phase 3 makes you production-ready: autonomous, self-recovering, continuously executing under absolute governance.**
+
+---
+
 # Summary
 
 You are:
