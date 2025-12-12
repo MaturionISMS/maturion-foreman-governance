@@ -52,6 +52,18 @@ export interface STMWriteContext {
 }
 
 /**
+ * STM Query Context (combining sessionId with filters)
+ */
+export interface STMQueryContext {
+  sessionId: string
+  category?: string
+  actor?: string
+  since?: string
+  tags?: string[]
+  limit?: number
+}
+
+/**
  * STM Query Filters
  */
 export interface STMFilters {
@@ -59,6 +71,7 @@ export interface STMFilters {
   actor?: string
   since?: string
   tags?: string[]
+  limit?: number
 }
 
 /**
@@ -80,12 +93,21 @@ const PRUNE_THRESHOLD_MB = 8
 const MAX_ENTRY_SIZE_MB = 1
 
 /**
- * Calculate size of an object in MB
+ * Calculate size of an object in MB (or bytes for smaller objects)
  */
 function calculateSizeMB(obj: any): number {
   const str = JSON.stringify(obj)
-  const bytes = new Blob([str]).size
+  // Use Buffer.byteLength in Node.js environment
+  const bytes = Buffer.byteLength(str, 'utf8')
   return bytes / (1024 * 1024)
+}
+
+/**
+ * Calculate size in bytes
+ */
+function calculateSizeBytes(obj: any): number {
+  const str = JSON.stringify(obj)
+  return Buffer.byteLength(str, 'utf8')
 }
 
 /**
@@ -193,12 +215,31 @@ export async function storeSTM(context: STMWriteContext): Promise<STMEntry> {
 /**
  * Recall STM Entries
  * 
- * @param sessionId - Session ID
- * @param filters - Optional filters
+ * Supports both old signature (sessionId, filters) and new signature (context object)
+ * 
+ * @param contextOrSessionId - STM query context or session ID string
+ * @param filters - Optional filters (if sessionId provided as first param)
  * @returns Array of STM entries matching filters
  */
-export async function recallSTM(sessionId: string, filters?: STMFilters): Promise<STMEntry[]> {
+export async function recallSTM(
+  contextOrSessionId: STMQueryContext | string,
+  filters?: STMFilters
+): Promise<STMEntry[]> {
   const startTime = Date.now()
+
+  // Handle both signatures
+  let sessionId: string
+  let queryFilters: STMFilters = {}
+
+  if (typeof contextOrSessionId === 'string') {
+    // Old signature: recallSTM(sessionId, filters)
+    sessionId = contextOrSessionId
+    queryFilters = filters || {}
+  } else {
+    // New signature: recallSTM({ sessionId, category, ... })
+    sessionId = contextOrSessionId.sessionId
+    queryFilters = contextOrSessionId
+  }
 
   // Validate sessionId
   if (!sessionId || typeof sessionId !== 'string') {
@@ -211,23 +252,26 @@ export async function recallSTM(sessionId: string, filters?: STMFilters): Promis
   // Apply filters
   let results = [...sessionEntries]
 
-  if (filters) {
-    if (filters.category) {
-      results = results.filter(e => e.category === filters.category)
-    }
-    if (filters.actor) {
-      results = results.filter(e => e.actor === filters.actor)
-    }
-    if (filters.since) {
-      const sinceDate = new Date(filters.since)
-      results = results.filter(e => new Date(e.metadata.createdAt) >= sinceDate)
-    }
+  if (queryFilters.category) {
+    results = results.filter(e => e.category === queryFilters.category)
+  }
+  if (queryFilters.actor) {
+    results = results.filter(e => e.actor === queryFilters.actor)
+  }
+  if (queryFilters.since) {
+    const sinceDate = new Date(queryFilters.since)
+    results = results.filter(e => new Date(e.metadata.createdAt) >= sinceDate)
   }
 
   // Sort by createdAt descending (newest first)
   results.sort((a, b) => 
     new Date(b.metadata.createdAt).getTime() - new Date(a.metadata.createdAt).getTime()
   )
+
+  // Apply limit if specified
+  if (queryFilters.limit && queryFilters.limit > 0) {
+    results = results.slice(0, queryFilters.limit)
+  }
 
   // Performance check (CS5: < 50ms target)
   const duration = Date.now() - startTime
@@ -310,12 +354,11 @@ export async function clearSTMSession(sessionId: string): Promise<void> {
  * Get STM Session Size
  * 
  * @param sessionId - Session ID
- * @returns Size in bytes
+ * @returns Number of entries in session
  */
 export async function getSTMSize(sessionId: string): Promise<number> {
   const sessionEntries = stmStore.get(sessionId) || []
-  const sizeBytes = calculateSizeMB(sessionEntries) * 1024 * 1024
-  return Math.round(sizeBytes)
+  return sessionEntries.length
 }
 
 /**
