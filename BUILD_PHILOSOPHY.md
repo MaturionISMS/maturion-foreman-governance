@@ -551,9 +551,68 @@ This build philosophy aligns with and extends:
 
 ---
 
+## Feedback Loop (FL) and Continuous Improvement (CI)
+
+### The Learning System
+
+**Core Principle**: Every failure is a learning opportunity that permanently improves the system.
+
+The Build Philosophy now includes a **Feedback Loop (FL)** that activates when failures occur, ensuring the system learns and never repeats the same error.
+
+### FL Activation Triggers
+
+1. **PR Merge Failure**: Build/CI/compilation errors during merge
+2. **UI Functional Failure**: Deployed UI doesn't perform expected behavior
+
+### FL Process
+
+```
+Failure Detected → FL Activation → Root Cause Analysis (RCA) → 
+Corrective Action → Build to Green (Again) → Lock In Learning → CI Achieved
+```
+
+**FL gives rise to CI**: Every failure makes the system permanently better.
+
+### RCA Categories
+
+When FL activates, determine the gap:
+- **Architecture Gap**: Requirement not defined → Update architecture
+- **QA Gap**: Test didn't catch this → Add test to suite
+- **Implementation Gap**: Code doesn't match architecture → Fix code
+- **Type Safety Gap**: TypeScript errors not caught → Add type validation
+
+### Lock In Learning
+
+After fixing:
+1. ✅ Add new test to permanent QA suite
+2. ✅ Update architecture checklist if needed
+3. ✅ Document in FL learning log
+4. ✅ Future builds NEVER fail on this error again
+
+### Updated Build Flow
+
+```
+Architecture → Red QA → Build to Green → Validation → Merge
+                ↑                                        ↓
+                └────────────── FL ACTIVATION ──────────┘
+                              (Learn & Improve)
+```
+
+**Foreman's FL Authority** (Autonomous):
+- ✅ Activate FL on failure
+- ✅ Perform RCA
+- ✅ Implement fixes
+- ✅ Update QA suite
+- ✅ Lock in learning
+
+**Documentation**: `/foreman/feedback-loop/FL_CI_SYSTEM.md`  
+**Learning Log**: `/foreman/feedback-loop/fl-learning-log.json`
+
+---
+
 *This is the Maturion Build Philosophy. All agents, builders, and processes must align with this philosophy. This document is the canonical source of truth for how we build software.*
 
-**Version**: 1.0  
+**Version**: 1.1 (FL/CI Integration)  
 **Authority**: Johan (Maturion Leadership)  
 **Status**: Active and Enforced  
-**Last Updated**: 2025-12-10
+**Last Updated**: 2025-12-13
