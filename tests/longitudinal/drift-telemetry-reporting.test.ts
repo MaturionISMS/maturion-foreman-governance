@@ -930,8 +930,73 @@ async function createTestSignaturesWithTrend(
   trend: 'improving' | 'degrading' | 'oscillating' | 'stable',
   count: number
 ): Promise<PersistedSignature[]> {
-  // Implementation would create signatures with increasing/decreasing drift patterns
-  return createTestSignatures(count);
+  const signatures: PersistedSignature[] = [];
+  
+  for (let i = 0; i < count; i++) {
+    let moduleCount = 2;
+    let moduleHash = `hash-${i}`;
+    let constraints: string[] = ['CS1_PROTECTED_PATHS'];
+    
+    // Vary the signature based on the trend
+    if (trend === 'improving') {
+      // Decreasing complexity over time
+      moduleCount = Math.max(2, 5 - i);
+      constraints = i > count / 2 ? [] : ['CS1_PROTECTED_PATHS'];
+    } else if (trend === 'degrading') {
+      // Increasing complexity over time
+      moduleCount = 2 + i;
+      constraints = i > count / 2 ? ['CS1_PROTECTED_PATHS', 'CS2_ARCHITECTURE'] : ['CS1_PROTECTED_PATHS'];
+    } else if (trend === 'oscillating') {
+      // Alternating complexity
+      moduleCount = i % 2 === 0 ? 2 : 5;
+      constraints = i % 2 === 0 ? [] : ['CS1_PROTECTED_PATHS'];
+    }
+    // stable: use defaults
+    
+    const modules = [];
+    for (let j = 0; j < moduleCount; j++) {
+      modules.push({ name: `module-${j}`, hash: `${moduleHash}-${j}`, type: 'core' as const });
+    }
+    
+    const signature: ArchitectureSignature = {
+      version: '1.0.0',
+      structure: {
+        modules,
+        dependencies: {
+          edges: modules.length > 1 
+            ? [{ from: modules[0].name, to: modules[1].name, type: 'import' }]
+            : [],
+        },
+      },
+      contracts: {
+        apis: [{ name: 'getSignature', signature: 'string', module: modules[0]?.name || 'core' }],
+        types: [{ name: 'Signature', definition: 'interface', module: 'types' }],
+        events: [],
+      },
+      governance: {
+        constraints,
+        protectedPaths: ['.github/workflows/'],
+      },
+    };
+
+    const result = await persistSignature({
+      signature,
+      sourceType: 'commit',
+      sourceId: `commit-trend-${trend}-${i}`,
+      metadata: { commitMessage: `Test commit ${trend} ${i}` },
+    });
+
+    const { getHistoricalSignatures } = await import('@/lib/foreman/longitudinal/signature-persistence');
+    const persisted = await getHistoricalSignatures({ sourceId: `commit-trend-${trend}-${i}` });
+    if (persisted[0]) {
+      signatures.push(persisted[0]);
+    }
+  }
+  
+  // Create observations for these signatures
+  await createTestObservations(signatures);
+  
+  return signatures;
 }
 
 /**
@@ -941,8 +1006,60 @@ async function createTestSignaturesWithSubsystemChurn(
   level: 'high' | 'low',
   count: number
 ): Promise<PersistedSignature[]> {
-  // Implementation would create signatures with varying subsystem changes
-  return createTestSignatures(count);
+  const signatures: PersistedSignature[] = [];
+  
+  for (let i = 0; i < count; i++) {
+    const churnFactor = level === 'high' ? 3 + i : 1;
+    const modules = [];
+    
+    // High churn: many changing modules, Low churn: few stable modules
+    for (let j = 0; j < churnFactor; j++) {
+      modules.push({ 
+        name: `subsystem-${j}-module-${i}`, 
+        hash: `hash-${i}-${j}`, 
+        type: 'core' as const 
+      });
+    }
+    
+    const signature: ArchitectureSignature = {
+      version: '1.0.0',
+      structure: {
+        modules,
+        dependencies: {
+          edges: modules.length > 1
+            ? [{ from: modules[0].name, to: modules[1].name, type: 'import' }]
+            : [],
+        },
+      },
+      contracts: {
+        apis: [{ name: 'getApi', signature: 'string', module: modules[0]?.name || 'core' }],
+        types: [{ name: 'Type', definition: 'interface', module: 'types' }],
+        events: [],
+      },
+      governance: {
+        constraints: level === 'high' ? ['CS1_PROTECTED_PATHS'] : [],
+        protectedPaths: ['.github/workflows/'],
+      },
+    };
+
+    await persistSignature({
+      signature,
+      sourceType: 'commit',
+      sourceId: `commit-churn-${level}-${i}`,
+      metadata: { commitMessage: `Test churn ${level} ${i}` },
+    });
+
+    const { getHistoricalSignatures } = await import('@/lib/foreman/longitudinal/signature-persistence');
+    const persisted = await getHistoricalSignatures({ sourceId: `commit-churn-${level}-${i}` });
+    if (persisted[0]) {
+      signatures.push(persisted[0]);
+    }
+  }
+  
+  // Create observations for these signatures
+  await createTestObservations(signatures);
+  
+  return signatures;
 }
 
 /**
@@ -952,15 +1069,119 @@ async function createTestSignaturesWithConstraintViolations(
   trend: 'increasing' | 'stable' | 'decreasing',
   count: number
 ): Promise<PersistedSignature[]> {
-  // Implementation would create signatures with constraint violation patterns
-  return createTestSignatures(count);
+  const signatures: PersistedSignature[] = [];
+  
+  for (let i = 0; i < count; i++) {
+    let constraints: string[] = [];
+    
+    if (trend === 'increasing') {
+      // Add more constraints over time
+      const constraintCount = Math.min(i + 1, 3);
+      for (let j = 0; j < constraintCount; j++) {
+        constraints.push(`CONSTRAINT_${j}`);
+      }
+    } else if (trend === 'decreasing') {
+      // Remove constraints over time
+      const constraintCount = Math.max(3 - i, 0);
+      for (let j = 0; j < constraintCount; j++) {
+        constraints.push(`CONSTRAINT_${j}`);
+      }
+    } else {
+      // stable: same constraints
+      constraints = ['CONSTRAINT_0'];
+    }
+    
+    const signature: ArchitectureSignature = {
+      version: '1.0.0',
+      structure: {
+        modules: [
+          { name: 'core', hash: `hash-${i}`, type: 'core' },
+        ],
+        dependencies: {
+          edges: [],
+        },
+      },
+      contracts: {
+        apis: [{ name: 'getApi', signature: 'string', module: 'core' }],
+        types: [{ name: 'Type', definition: 'interface', module: 'types' }],
+        events: [],
+      },
+      governance: {
+        constraints,
+        protectedPaths: ['.github/workflows/'],
+      },
+    };
+
+    await persistSignature({
+      signature,
+      sourceType: 'commit',
+      sourceId: `commit-constraint-${trend}-${i}`,
+      metadata: { commitMessage: `Test constraint ${trend} ${i}` },
+    });
+
+    const { getHistoricalSignatures } = await import('@/lib/foreman/longitudinal/signature-persistence');
+    const persisted = await getHistoricalSignatures({ sourceId: `commit-constraint-${trend}-${i}` });
+    if (persisted[0]) {
+      signatures.push(persisted[0]);
+    }
+  }
+  
+  // Create observations for these signatures
+  await createTestObservations(signatures);
+  
+  return signatures;
 }
 
 /**
  * Create telemetry with spike pattern
  */
 async function createTelemetryWithSpikes(): Promise<TimeSeriesTelemetry> {
-  const signatures = await createTestSignatures(5);
+  const signatures: PersistedSignature[] = [];
+  
+  // Create signatures with one spike
+  for (let i = 0; i < 5; i++) {
+    const moduleCount = i === 2 ? 10 : 2; // Spike at index 2
+    const modules = [];
+    for (let j = 0; j < moduleCount; j++) {
+      modules.push({ name: `module-spike-${j}`, hash: `hash-${i}-${j}`, type: 'core' as const });
+    }
+    
+    const signature: ArchitectureSignature = {
+      version: '1.0.0',
+      structure: {
+        modules,
+        dependencies: {
+          edges: modules.length > 1
+            ? [{ from: modules[0].name, to: modules[1].name, type: 'import' }]
+            : [],
+        },
+      },
+      contracts: {
+        apis: [{ name: 'api', signature: 'string', module: 'core' }],
+        types: [{ name: 'Type', definition: 'interface', module: 'types' }],
+        events: [],
+      },
+      governance: {
+        constraints: [],
+        protectedPaths: ['.github/workflows/'],
+      },
+    };
+
+    await persistSignature({
+      signature,
+      sourceType: 'commit',
+      sourceId: `commit-spike-${i}`,
+      metadata: { commitMessage: `Test spike ${i}` },
+    });
+
+    const { getHistoricalSignatures } = await import('@/lib/foreman/longitudinal/signature-persistence');
+    const persisted = await getHistoricalSignatures({ sourceId: `commit-spike-${i}` });
+    if (persisted[0]) {
+      signatures.push(persisted[0]);
+    }
+  }
+  
+  await createTestObservations(signatures);
   return getTimeSeriesTelemetry({ window: { type: 'commits', value: 5 } });
 }
 
@@ -992,6 +1213,49 @@ async function createTestSignaturesWithAmbiguousDrift(): Promise<PersistedSignat
  * Create signatures with spike pattern
  */
 async function createTestSignaturesWithSpike(): Promise<PersistedSignature[]> {
-  // Implementation would create one signature with large drift
-  return createTestSignatures(5);
+  const signatures: PersistedSignature[] = [];
+  
+  for (let i = 0; i < 5; i++) {
+    const moduleCount = i === 2 ? 15 : 2; // Large spike at index 2
+    const modules = [];
+    for (let j = 0; j < moduleCount; j++) {
+      modules.push({ name: `spike-module-${j}`, hash: `hash-${i}-${j}`, type: 'core' as const });
+    }
+    
+    const signature: ArchitectureSignature = {
+      version: '1.0.0',
+      structure: {
+        modules,
+        dependencies: {
+          edges: modules.length > 1
+            ? [{ from: modules[0].name, to: modules[1].name, type: 'import' }]
+            : [],
+        },
+      },
+      contracts: {
+        apis: [{ name: 'api', signature: 'string', module: 'core' }],
+        types: [{ name: 'Type', definition: 'interface', module: 'types' }],
+        events: [],
+      },
+      governance: {
+        constraints: [],
+        protectedPaths: ['.github/workflows/'],
+      },
+    };
+
+    await persistSignature({
+      signature,
+      sourceType: 'commit',
+      sourceId: `commit-spikefn-${i}`,
+      metadata: { commitMessage: `Test spike fn ${i}` },
+    });
+
+    const { getHistoricalSignatures } = await import('@/lib/foreman/longitudinal/signature-persistence');
+    const persisted = await getHistoricalSignatures({ sourceId: `commit-spikefn-${i}` });
+    if (persisted[0]) {
+      signatures.push(persisted[0]);
+    }
+  }
+  
+  return signatures;
 }
