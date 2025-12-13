@@ -935,27 +935,32 @@ async function createTestSignaturesWithTrend(
   for (let i = 0; i < count; i++) {
     let moduleCount = 2;
     let moduleHash = `hash-${i}`;
-    let constraints: string[] = ['CS1_PROTECTED_PATHS'];
+    let constraints: string[] = [];
     
-    // Vary the signature based on the trend
+    // Vary the signature based on the trend - make changes more dramatic
     if (trend === 'improving') {
-      // Decreasing complexity over time
-      moduleCount = Math.max(2, 5 - i);
-      constraints = i > count / 2 ? [] : ['CS1_PROTECTED_PATHS'];
+      // Dramatically decreasing complexity over time
+      moduleCount = Math.max(2, 15 - (i * 3));
+      constraints = i > count / 2 ? [] : ['CS1_PROTECTED_PATHS', 'CS2_ARCH', 'CS3_DATA'];
     } else if (trend === 'degrading') {
-      // Increasing complexity over time
-      moduleCount = 2 + i;
-      constraints = i > count / 2 ? ['CS1_PROTECTED_PATHS', 'CS2_ARCHITECTURE'] : ['CS1_PROTECTED_PATHS'];
+      // Dramatically increasing complexity over time
+      moduleCount = 2 + (i * 3);
+      constraints = i > count / 2 
+        ? ['CS1_PROTECTED_PATHS', 'CS2_ARCH', 'CS3_DATA', 'CS4_MORE'] 
+        : ['CS1_PROTECTED_PATHS'];
     } else if (trend === 'oscillating') {
-      // Alternating complexity
-      moduleCount = i % 2 === 0 ? 2 : 5;
-      constraints = i % 2 === 0 ? [] : ['CS1_PROTECTED_PATHS'];
+      // Strong alternating complexity
+      moduleCount = i % 2 === 0 ? 2 : 15;
+      constraints = i % 2 === 0 ? [] : ['CS1_PROTECTED_PATHS', 'CS2_ARCH', 'CS3_DATA'];
+    } else {
+      // stable: minimal variation
+      moduleCount = 2;
+      constraints = ['CS1_PROTECTED_PATHS'];
     }
-    // stable: use defaults
     
     const modules = [];
     for (let j = 0; j < moduleCount; j++) {
-      modules.push({ name: `module-${j}`, hash: `${moduleHash}-${j}`, type: 'core' as const });
+      modules.push({ name: `module-trend-${trend}-${j}`, hash: `${moduleHash}-${j}`, type: 'core' as const });
     }
     
     const signature: ArchitectureSignature = {
@@ -969,7 +974,11 @@ async function createTestSignaturesWithTrend(
         },
       },
       contracts: {
-        apis: [{ name: 'getSignature', signature: 'string', module: modules[0]?.name || 'core' }],
+        apis: Array.from({ length: Math.min(moduleCount, 5) }, (_, j) => ({
+          name: `getApi${j}`, 
+          signature: 'string', 
+          module: modules[0]?.name || 'core'
+        })),
         types: [{ name: 'Signature', definition: 'interface', module: 'types' }],
         events: [],
       },
