@@ -101,13 +101,13 @@ export async function detectStructuralViolations(
 
   for (const constraint of constraints) {
     // Detect circular dependencies
-    if (constraint.category === 'dependency_direction' || constraint.id.includes('circular')) {
+    if (constraint.category === 'dependency_direction') {
       const circularViolations = detectCircularDependencies(signature, constraint);
       violations.push(...circularViolations);
     }
 
     // Detect layer violations
-    if (constraint.category === 'layer_violation' || constraint.id.includes('layer')) {
+    if (constraint.category === 'layer_violation') {
       const layerViolations = detectLayerViolations(signature, constraint);
       violations.push(...layerViolations);
     }
@@ -253,7 +253,7 @@ export async function detectContractViolations(
 
   for (const constraint of constraints) {
     // Detect API contract violations
-    if (constraint.category === 'api_stability' || constraint.id.includes('api')) {
+    if (constraint.category === 'api_stability') {
       const apiViolations = detectAPIContractViolations(oldSignature, newSignature, constraint);
       violations.push(...apiViolations);
     }
@@ -322,7 +322,7 @@ export async function detectGovernanceViolations(
 
   for (const constraint of constraints) {
     // Detect protected path modifications
-    if (constraint.category === 'protected_path' || constraint.id.includes('protected')) {
+    if (constraint.category === 'protected_path') {
       const protectedPathViolations = detectProtectedPathViolations(signature, constraint);
       violations.push(...protectedPathViolations);
     }

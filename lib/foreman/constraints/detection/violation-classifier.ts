@@ -32,7 +32,7 @@ export function classifyViolation(
   constraint: ConstraintDeclaration
 ): ClassifiedViolation {
   // Generate unique ID
-  const id = `${constraint.id}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  const id = `${constraint.id}-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
 
   // Determine severity (with governance elevation rule)
   const severity = determineSeverity(violation, constraint);
@@ -125,7 +125,7 @@ export function classifyViolationReport(
       // If constraint not found, use default classification
       return {
         ...violation,
-        id: `unknown-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        id: `unknown-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
         severity: 'medium' as ViolationSeverity,
         category: 'module_boundary' as ViolationCategory,
         nature: determineNature(violation.type),
