@@ -198,7 +198,11 @@ async function executeMergePR(params: {
       params.repo,
       params.prNumber,
       params.mergeMethod,
-      { approvedBy: 'foreman', timestamp: new Date().toISOString() }
+      { 
+        approvedBy: 'foreman', 
+        reason: 'Autonomous merge - all safety checks passed',
+        timestamp: new Date().toISOString() 
+      }
     )
 
     const audit = await createAuditLog('merge_pr', target, 'success', safetyResult)
