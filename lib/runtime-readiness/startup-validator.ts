@@ -24,7 +24,7 @@ const MIN_GITHUB_TOKEN_LENGTH = 20; // Minimum valid GitHub token length
  */
 function checkEnvironmentVariables(): CheckResult {
   // Check for critical environment variables
-  const requiredVars = [];
+  const requiredVars: string[] = [];
   const optionalVars = ['GITHUB_TOKEN', 'OPENAI_API_KEY', 'MCP_SERVER_URL'];
   
   const missingRequired = requiredVars.filter(v => !process.env[v]);
