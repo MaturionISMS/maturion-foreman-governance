@@ -19,7 +19,7 @@ export async function emitEnforcementEvent(
 ): Promise<void> {
   try {
     const event: EnforcementEvent = {
-      eventId: `enforcement-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      eventId: `enforcement-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
       timestamp: new Date().toISOString(),
       version: '1.0.0',
       enforcement: {

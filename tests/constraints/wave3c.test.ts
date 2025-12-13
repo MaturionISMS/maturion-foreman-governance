@@ -943,7 +943,7 @@ describe('Wave 3C: Enforcement Actions', () => {
 
       try {
         await executeBlocking(action);
-        fail('Should have thrown BlockingError');
+        throw new Error('Should have thrown BlockingError');
       } catch (error) {
         if (error instanceof BlockingError) {
           expect(error.remediation).toBeDefined();
@@ -985,7 +985,7 @@ describe('Wave 3C: Enforcement Actions', () => {
 
       try {
         await executeBlocking(action);
-        fail('Should have thrown BlockingError');
+        throw new Error('Should have thrown BlockingError');
       } catch (error) {
         if (error instanceof BlockingError) {
           expect(error.overrideInstructions).toBeDefined();
@@ -1028,7 +1028,7 @@ describe('Wave 3C: Enforcement Actions', () => {
 
       try {
         await executeBlocking(action);
-        fail('Should have thrown BlockingError');
+        throw new Error('Should have thrown BlockingError');
       } catch (error) {
         if (error instanceof BlockingError) {
           expect(error.overrideInstructions).toBeUndefined();
@@ -1871,7 +1871,7 @@ describe('Wave 3C: Safe Failure Modes', () => {
 
       try {
         await executeBlocking(action);
-        fail('Should have thrown BlockingError');
+        throw new Error('Should have thrown BlockingError');
       } catch (error) {
         if (error instanceof BlockingError) {
           expect(error.message).toBeDefined();
@@ -1957,7 +1957,7 @@ describe('Wave 3C: Safe Failure Modes', () => {
 
       try {
         await executeBlocking(action);
-        fail('Should have thrown');
+        throw new Error('Should have thrown');
       } catch (error) {
         if (error instanceof BlockingError) {
           expect(error.overrideInstructions).toBeDefined();
@@ -2002,7 +2002,7 @@ describe('Wave 3C: Safe Failure Modes', () => {
 
       try {
         await executeBlocking(action);
-        fail('Should have thrown');
+        throw new Error('Should have thrown');
       } catch (error) {
         if (error instanceof BlockingError) {
           expect(error.overrideInstructions).toBeUndefined();
