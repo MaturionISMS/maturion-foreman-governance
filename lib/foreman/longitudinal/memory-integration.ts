@@ -18,6 +18,20 @@ import {
 import { writeMemory, readMemory } from '@/lib/foreman/memory/storage';
 
 /**
+ * Convert trend string to numeric value for storage
+ */
+function trendToValue(trend: 'increasing' | 'stable' | 'decreasing'): number {
+  return trend === 'increasing' ? 1 : trend === 'decreasing' ? -1 : 0;
+}
+
+/**
+ * Convert stability trend to numeric value for storage
+ */
+function stabilityTrendToValue(trend: 'improving' | 'stable' | 'degrading'): number {
+  return trend === 'improving' ? 1 : trend === 'degrading' ? -1 : 0;
+}
+
+/**
  * Store drift observation in Memory Fabric
  */
 export async function storeDriftObservation(observation: {
@@ -36,10 +50,8 @@ export async function storeDriftObservation(observation: {
     classificationConfidence: observation.classification.confidence,
     supportingMetrics: {
       averageChurnRate: observation.classification.supportingMetrics.averageChurnRate,
-      violationTrendValue: observation.classification.supportingMetrics.violationTrend === 'increasing' ? 1 :
-        observation.classification.supportingMetrics.violationTrend === 'decreasing' ? -1 : 0,
-      stabilityTrendValue: observation.classification.supportingMetrics.stabilityTrend === 'improving' ? 1 :
-        observation.classification.supportingMetrics.stabilityTrend === 'degrading' ? -1 : 0,
+      violationTrendValue: trendToValue(observation.classification.supportingMetrics.violationTrend),
+      stabilityTrendValue: stabilityTrendToValue(observation.classification.supportingMetrics.stabilityTrend),
     },
     context: observation.context,
   };

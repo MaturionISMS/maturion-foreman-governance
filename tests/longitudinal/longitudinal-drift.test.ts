@@ -39,11 +39,13 @@ const TEST_SIGNATURES_DIR = path.join(process.cwd(), 'memory', 'foreman', 'longi
 
 /**
  * Create a mock architecture signature for testing
+ * Note: This creates a minimal signature structure for testing drift computation
  */
 function createMockSignature(params: {
   modules?: number;
   dependencies?: number;
   timestamp?: string;
+  constraints?: string[]; // Allow constraints to be specified
 }): ArchitectureSignature {
   const moduleCount = params.modules || 10;
   const modules = Array.from({ length: moduleCount }, (_, i) => ({
@@ -89,7 +91,7 @@ function createMockSignature(params: {
     },
     governance: {
       protectedPaths: ['.github/foreman/', 'BUILD_PHILOSOPHY.md'],
-      constraints: [],
+      constraints: params.constraints || [],
       version: '1.0.0',
     },
     hash: 'test-signature-hash',
@@ -357,12 +359,11 @@ describe('Wave 4A.1 - Drift Computation', () => {
   it('should classify drift as Regressive for increasing violations', async () => {
     // Create signatures with increasing constraint violations
     const signatures: PersistedSignature[] = Array.from({ length: 5 }, (_, i) => {
-      const sig = createMockSignature({ modules: 10 });
-      sig.governance.constraints = Array.from({ length: i * 2 }, (_, j) => `constraint-${j}`);
+      const constraints = Array.from({ length: i * 2 }, (_, j) => `constraint-${j}`);
       return {
         id: `sig-${i}`,
         signatureHash: `hash-${i}`,
-        signature: sig,
+        signature: createMockSignature({ modules: 10, constraints }),
         sourceType: 'commit' as SignatureSourceType,
         sourceId: `commit-${i}`,
         timestamp: new Date(Date.now() + i * 1000).toISOString(),

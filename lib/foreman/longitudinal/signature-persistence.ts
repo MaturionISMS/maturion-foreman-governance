@@ -57,7 +57,8 @@ export async function persistSignature(params: {
     await fs.mkdir(signaturesDir, { recursive: true });
 
     // Generate unique filename (append-only, never overwrite)
-    const filename = `signature-${params.sourceType}-${params.sourceId}-${timestamp.replace(/[:.]/g, '-')}.json`;
+    // Include UUID to ensure uniqueness even for same sourceType/sourceId/timestamp
+    const filename = `signature-${params.sourceType}-${params.sourceId}-${timestamp.replace(/[:.]/g, '-')}-${signatureId}.json`;
     const filepath = path.join(signaturesDir, filename);
 
     // Write signature to file
