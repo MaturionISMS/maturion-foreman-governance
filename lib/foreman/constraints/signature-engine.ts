@@ -271,6 +271,11 @@ function buildDependencyGraph(modules: ModuleSignature[]): DependencyGraph {
 
 /**
  * Resolve import path to module name
+ * 
+ * Note: This is a simplified resolution for Wave 3A foundation.
+ * Future waves (Wave 3B+) will implement proper Node.js module resolution.
+ * Current implementation may produce false positives but is sufficient
+ * for initial architecture signatures.
  */
 function resolveImportToModule(importPath: string, modules: ModuleSignature[]): string | null {
   // This is simplified - would need more sophisticated resolution in production

@@ -86,6 +86,9 @@ export function validateConstraint(constraint: any): ValidationResult {
 
 /**
  * Check if string is valid semver
+ * 
+ * Note: Wave 3A uses simplified semver (X.Y.Z only).
+ * Future waves may support pre-release identifiers and build metadata.
  */
 function isSemver(version: string): boolean {
   return /^\d+\.\d+\.\d+$/.test(version);

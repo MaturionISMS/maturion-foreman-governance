@@ -21,6 +21,9 @@ export function sha256(content: string): string {
  * 
  * Keys are sorted recursively to ensure determinism.
  * The 'excludeHashField' parameter controls whether to exclude 'hash' fields.
+ * 
+ * Note: Uses 'any' type for maximum flexibility in Wave 3A.
+ * Future waves may add stricter type constraints.
  */
 export function hashObject(obj: any, excludeHashField: boolean = false): string {
   const normalized = normalizeForHashing(obj, excludeHashField);
