@@ -41,11 +41,18 @@ export async function getTimeSeriesTelemetry(params: {
     });
 
     // Query signatures for the window
-    const signatures = await getHistoricalSignatures({
-      limit: params.window.type === 'commits' && typeof params.window.value === 'number' 
-        ? params.window.value 
-        : 100,
-    });
+    let signatureQuery: any = {};
+    
+    if (params.window.type === 'commits' && typeof params.window.value === 'number') {
+      signatureQuery.limit = params.window.value;
+    } else if (params.window.type === 'custom' && typeof params.window.value === 'object') {
+      signatureQuery.since = new Date(params.window.value.start);
+      signatureQuery.until = new Date(params.window.value.end);
+    } else {
+      signatureQuery.limit = 100;
+    }
+    
+    const signatures = await getHistoricalSignatures(signatureQuery);
 
     // Build time-series data points
     const series = observations.map(obs => {
