@@ -415,7 +415,7 @@ describe('Runtime Readiness Check - Red QA Suite', () => {
       expect(result).toBeDefined();
       expect(result.status).toBe('PASS' as CheckStatus);
       expect(result.duration).toBeGreaterThanOrEqual(30000);
-    });
+    }, 60000); // 60 second timeout
 
     it('should execute multiple execution phases', async () => {
       expect(runStabilityProbe).toBeDefined();
@@ -427,7 +427,7 @@ describe('Runtime Readiness Check - Red QA Suite', () => {
       });
       
       expect(result.metrics.phaseTransitions).toBeGreaterThan(0);
-    });
+    }, 60000); // 60 second timeout
 
     it('should not detect memory leaks', async () => {
       expect(runStabilityProbe).toBeDefined();
@@ -443,7 +443,7 @@ describe('Runtime Readiness Check - Red QA Suite', () => {
       expect(result.metrics.memoryUsage.end).toBeLessThanOrEqual(
         result.metrics.memoryUsage.start * 1.1 // Max 10% growth
       );
-    });
+    }, 60000); // 60 second timeout
 
     it('should not detect deadlocks', async () => {
       expect(runStabilityProbe).toBeDefined();
@@ -455,7 +455,7 @@ describe('Runtime Readiness Check - Red QA Suite', () => {
       });
       
       expect(result.metrics.deadlocksDetected).toBe(0);
-    });
+    }, 60000); // 60 second timeout
 
     it('should not leave orphaned processes', async () => {
       expect(runStabilityProbe).toBeDefined();
@@ -467,7 +467,7 @@ describe('Runtime Readiness Check - Red QA Suite', () => {
       });
       
       expect(result.metrics.processCount.orphaned).toBe(0);
-    });
+    }, 60000); // 60 second timeout
 
     it('should emit runtime events', async () => {
       expect(runStabilityProbe).toBeDefined();
@@ -489,7 +489,7 @@ describe('Runtime Readiness Check - Red QA Suite', () => {
         expect(event.severity).toBeDefined();
         expect(event.message).toBeDefined();
       });
-    });
+    }, 60000); // 60 second timeout
   });
 
   describe('4. State Persistence & Recovery Module', () => {
