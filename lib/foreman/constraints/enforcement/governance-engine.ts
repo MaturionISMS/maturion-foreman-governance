@@ -67,8 +67,9 @@ export async function determineEnforcementAction(
   }
 
   // Critical violations -> Block
+  // Filter out 'info' severity as it's not enforceable
   if (
-    hook.config.blockOnSeverity?.includes(violation.severity) ||
+    (violation.severity !== 'info' && hook.config.blockOnSeverity?.includes(violation.severity as 'critical' | 'high' | 'medium' | 'low')) ||
     hook.config.blockOnNature?.includes(violation.nature)
   ) {
     return {
@@ -88,7 +89,8 @@ export async function determineEnforcementAction(
   }
 
   // Medium violations -> Warn
-  if (hook.config.warnOnSeverity?.includes(violation.severity)) {
+  // Filter out 'info' severity as it's not enforceable
+  if (violation.severity !== 'info' && hook.config.warnOnSeverity?.includes(violation.severity as 'critical' | 'high' | 'medium' | 'low')) {
     return {
       type: 'warn',
       violation,
