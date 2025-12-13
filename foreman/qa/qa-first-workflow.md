@@ -145,7 +145,35 @@ This document defines the **operational workflow** for the QA-First, Architectur
    - Create QA report showing all failing tests
    - Document why each test is failing (expected - no implementation yet)
 
-8. **Red QA Completeness Validation**
+8. **Test Helper Validation** (NEW - Constitutional Amendment 2025-12-13)
+   ```
+   BEFORE documenting Red QA as complete:
+   
+   1. Review all test helper functions
+   2. Verify each helper is FULLY implemented (no stubs, no TODOs)
+   3. Verify each helper generates VARIED data (not uniform)
+   4. Verify each helper handles edge cases
+   5. Confirm test isolation works (cleanup between tests)
+   6. Run helper validation tests if available
+   
+   Test Helper Quality Gate:
+   - [ ] All helpers fully implemented
+   - [ ] Helpers generate appropriate varied data
+   - [ ] Helpers match their function names/documentation
+   - [ ] No "TODO" or placeholder implementations
+   - [ ] Test setup/teardown is complete
+   - [ ] Test isolation is guaranteed
+   
+   IF any item fails:
+     → Red QA is INCOMPLETE
+     → Fix test helpers IMMEDIATELY
+     → Re-validate
+     → Do NOT proceed to Phase 3
+   
+   See: /foreman/governance/test-helper-functions-governance.md
+   ```
+
+9. **Red QA Completeness Validation**
    ```
    Checklist:
    - [ ] Every architectural component has tests
@@ -156,13 +184,15 @@ This document defines the **operational workflow** for the QA-First, Architectur
    - [ ] All tests are currently RED (failing)
    - [ ] Test failures are EXPECTED (no implementation)
    - [ ] Each test has clear acceptance criteria
+   - [ ] All test helper functions are COMPLETE (NEW)
+   - [ ] Test helpers generate VARIED data (NEW)
    
    IF all items checked:
      → Red QA COMPLETE ✅
      → Proceed to Phase 3
    ELSE:
      → Red QA INCOMPLETE ❌
-     → Add missing tests
+     → Add missing tests OR complete test helpers
      → Re-validate
      → Do NOT proceed to Phase 3
    ```

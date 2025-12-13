@@ -21,14 +21,33 @@ This is the **primary obligation**, and all rules, QA checks, and governance mec
 - ✅ All QA checks passing
 - ✅ All governance gates passing
 - ✅ Full functionality verified
+- ✅ **All test infrastructure complete** (helpers, fixtures, mocks)
 
 **NOT 100% GREEN**:
 - ❌ 99% passing (301/303 tests = TOTAL FAILURE)
 - ❌ "Mostly working" (missing features = NOT GREEN)
 - ❌ "Works for me" (untested edge cases = NOT GREEN)
 - ❌ "Will fix later" (incomplete = NOT GREEN)
+- ❌ **Incomplete test helpers** (stub implementations = NOT GREEN)
 
 **Rule**: If the build is not 100% GREEN, it is not complete. Period.
+
+### Test Infrastructure Is Production Code
+
+**Constitutional Amendment** (2025-12-13):
+
+Test helper functions, fixtures, utilities, and mocks ARE production code for tests.
+
+See: `/foreman/governance/test-helper-functions-governance.md`
+
+**Key Principle**: Test infrastructure MUST be held to the SAME quality standards as production implementation code. Test helpers are NOT exempt from 100% GREEN requirements.
+
+**What This Means**:
+- ✅ Test helpers must be fully implemented (no stubs)
+- ✅ Test helpers must generate varied, realistic data
+- ✅ Test helpers must handle edge cases
+- ✅ Test helpers must be validated before Red QA completion
+- ❌ "// TODO: implement later" in test helpers = GOVERNANCE VIOLATION
 
 ### Governance Gaps Are Environmental Defects
 
