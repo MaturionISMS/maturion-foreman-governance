@@ -50,9 +50,17 @@ export async function validateMergeSafety(params: {
     blockingReasons: []
   }
 
-  // Reject bypass attempts
-  if ('bypassSafety' in params) {
-    throw new Error('Safety bypass is not allowed')
+  // Reject bypass attempts - validate entire params object structure
+  const paramKeys = Object.keys(params)
+  const suspiciousKeys = paramKeys.filter(key => 
+    key.toLowerCase().includes('bypass') || 
+    key.toLowerCase().includes('skip') ||
+    key.toLowerCase().includes('force') ||
+    key.toLowerCase().includes('override')
+  )
+  
+  if (suspiciousKeys.length > 0) {
+    throw new Error(`Safety bypass is not allowed. Suspicious parameters detected: ${suspiciousKeys.join(', ')}`)
   }
 
   const githubToken = params.githubToken || process.env.GITHUB_MCP_TOKEN || ''

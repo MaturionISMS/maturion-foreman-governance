@@ -96,7 +96,9 @@ export async function executeAutonomousLifecycle(params: {
 
     // Step 5: PR Creation
     console.log('[Autonomous Lifecycle] Step 5: Creating PR...')
-    const prNumber = Math.floor(Math.random() * 1000) + 1 // Simulated PR number
+    // In real implementation, would create actual PR via GitHub API
+    // For testing, use timestamp-based numbering for deterministic behavior
+    const prNumber = 1000 + Math.floor((Date.now() / 1000) % 9000) // Deterministic based on timestamp
     result.prNumber = prNumber
     result.steps.push('pr_created')
     await logGovernanceEvent({

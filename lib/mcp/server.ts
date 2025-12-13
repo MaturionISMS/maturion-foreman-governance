@@ -348,13 +348,15 @@ async function executeRemoveLabels(params: {
   const target = { owner: params.owner, repo: params.repo, number: params.issueNumber }
 
   try {
-    // Note: GitHub mutations module doesn't have removeLabel yet, 
-    // but we'll create a placeholder response for now
-    const audit = await createAuditLog('remove_labels', target, 'success')
+    // Note: This is a placeholder implementation. In production, this would use:
+    // await octokit.rest.issues.removeLabel() for each label
+    // For now, return not implemented error to avoid false positives
+    const audit = await createAuditLog('remove_labels', target, 'failure', undefined, 'Not implemented')
 
     return {
-      success: true,
-      result: { labelsRemoved: params.labels },
+      success: false,
+      error: 'NOT_IMPLEMENTED',
+      reason: 'Label removal not yet implemented. Use GitHub API directly or implement in mutations module.',
       audit
     }
 
