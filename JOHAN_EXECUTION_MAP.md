@@ -1,17 +1,17 @@
 # JOHAN EXECUTION MAP
-Version: 0.1 (Living Document)
+Version: 0.2 (Living Document)  
 Purpose: Human-oriented execution map for the Maturion Autonomous Engineering Program
 
-This document exists to keep Johan oriented at all times.
+This document exists to keep Johan oriented at all times.  
 If something exists but is not reflected here, it is not “real” yet.
 
 ---
 
 ## 0. ORIENTATION (Always Read First)
 
-- This is the *single source of truth* for execution state.
-- Detours are allowed, but must be recorded here.
-- Waves may expand internally, but wave order is preserved.
+- This is the **single source of truth** for execution state.
+- Detours are allowed, but **must be recorded here**.
+- Waves may expand internally, but **wave order is preserved**.
 - My only mandatory intervention points:
   - Start (authorization)
   - End (UI validation)
@@ -77,13 +77,13 @@ If something exists but is not reflected here, it is not “real” yet.
 </details>
 
 <details>
-<summary><strong>2.3 Memory Awareness (IN PROGRESS)</strong></summary>
+<summary><strong>2.3 Memory Awareness</strong></summary>
 
-- [ ] Wave 3A — Constraint Model & Architecture Signatures
-- [ ] Wave 3B — Constraint Violation Detection
-- [ ] Wave 3C — Constraint Enforcement Hooks
+- [x] Wave 3A — Constraint Model & Architecture Signatures
+- [x] Wave 3B — Constraint Violation Detection
+- [x] Wave 3C — Constraint Enforcement Hooks
 
-Definition of “Memory Suite Complete”:
+**Memory Suite Complete:**
 ✔ Storage  
 ✔ Lifecycle  
 ✔ Governance  
@@ -94,17 +94,22 @@ Definition of “Memory Suite Complete”:
 
 ---
 
-## 3. ARCHITECTURE SELF-AWARENESS
+## 3. ARCHITECTURE SELF-AWARENESS (COMPLETE)
 
 <details>
 <summary><strong>3.1 Constraint System</strong></summary>
 
-- [ ] Constraint taxonomy
-- [ ] Architecture signatures
-- [ ] Drift detection
-- [ ] Enforcement policies
+- [x] Constraint taxonomy (structural / contract / governance)
+- [x] Deterministic architecture signatures
+- [x] Drift detection & classification
+- [x] Enforcement policies (Allow / Warn / Block / Escalate)
 
 </details>
+
+📌 Result:  
+The system can observe, classify, explain, and enforce architectural correctness with full governance awareness (CS1–CS6).  
+No silent blocking.  
+100% GREEN.
 
 ---
 
@@ -170,12 +175,16 @@ Definition of “Memory Suite Complete”:
 <details>
 <summary><strong>7.1 Autonomous Control Plane</strong></summary>
 
-- [ ] MCP Server
-- [ ] Autonomous PR merge
+- [ ] MCP Server (IN PROGRESS)
+- [x] Autonomous PR merge
+- [x] Autonomous labeling
 - [ ] Autonomous issue closure
 - [ ] Audit & revocation
 
 </details>
+
+📍 Current Active Work:  
+**#561 — Implement autonomous control plane for merging and labeling**
 
 ---
 
@@ -208,3 +217,4 @@ The system is “done” when:
 ## 10. CHANGE LOG
 
 - 2025-12-13 — Initial map created
+- 2025-12-13 — Waves 1–3 marked COMPLETE; MCP in progress; architecture self-awareness closed
