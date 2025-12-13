@@ -43,12 +43,37 @@ This document defines the architectural principles, quality standards, and gover
 - **Architecture and Governance rules override all other instructions**
 - Foreman must ensure that no code, build, or behavior is accepted unless it fully complies with architecture and passes 100% of QA
 - This prevents:
-  - Partial passes
+  - Partial passes (301/303 = TOTAL FAILURE)
   - Inherited failures
   - Conflicting behaviors
   - Regressions
   - Legacy creep
+  - Test debt accumulation
 - **Foreman must always defer to governance first, intent second**
+
+### 6. Zero Test Debt Invariant
+
+- **Test debt is NEVER acceptable**
+- Any test debt triggers immediate STOP → FIX → RE-RUN → VERIFY cycle
+- Test debt includes:
+  - Failing tests
+  - Skipped tests (.skip(), .todo())
+  - Incomplete tests (stubs, no assertions)
+  - Incomplete test infrastructure (stub helpers, incomplete fixtures)
+  - Test configuration issues
+  - Hidden test debt (warnings, excluded tests, suppressed errors)
+- **No forward motion permitted with ANY test debt**
+- **See**: `/foreman/governance/zero-test-debt-constitutional-rule.md`
+
+### 7. One Build = One Complete Lifecycle
+
+- **Each build is COMPLETE or BLOCKED**
+- No carry-over debt between builds
+- No "known issues" lists tolerated
+- No temporary exceptions or deferrals
+- Each build follows: Architecture → Red QA → Build to Green → Validation → Merge
+- **One-time fully functional builds on first deployment**
+- **See**: `/BUILD_PHILOSOPHY.md`
 
 ---
 
@@ -106,7 +131,19 @@ All Maturion systems must implement these QIC requirements:
   - Incorrect TypeScript narrowing
 - **Silent failures cause QA FAIL**
 
-#### QIC-6: Governance Memory Integration
+#### QIC-6: Test Debt Detection
+- Automated test debt scanning before every QA validation
+- Detect all forms of test debt:
+  - Failing tests (FAIL, ERROR, TIMEOUT)
+  - Skipped tests (.skip(), .todo(), commented out)
+  - Incomplete tests (stubs, no assertions, TODO comments)
+  - Incomplete test infrastructure (stub helpers, incomplete fixtures, broken mocks)
+  - Test configuration issues
+  - Hidden test debt (warnings, excluded tests, suppressed errors)
+- **Any test debt triggers QA FAIL and STOPS execution**
+- **See**: `/foreman/governance/zero-test-debt-constitutional-rule.md`
+
+#### QIC-7: Governance Memory Integration
 - All quality failures recorded as QI Incidents
 - Incidents stored in Governance Memory
 - Incident types:
@@ -115,10 +152,11 @@ All Maturion systems must implement these QIC requirements:
   - Runtime errors
   - Silent failures
   - Schema mismatches
+  - Test debt violations
   - Deployment failures
 - **Every failure creates a memory entry**
 
-#### QIC-7: Auto-Propagation
+#### QIC-8: Auto-Propagation
 - QIC applies to ALL Maturion apps (current and future)
 - All multi-agent subsystems
 - All Foreman modules
