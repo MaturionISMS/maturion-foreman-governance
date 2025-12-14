@@ -10,6 +10,15 @@ These files are **protected by QIC (Quality Integrity Contract)** and cannot be 
 
 ## Constitutional Files
 
+### Architectural Decision Records (ADRs)
+
+**Purpose**: Document constitutional architectural decisions with binding authority
+
+**ADRs in this directory**:
+- `ADR-0000-HYBRID-GITHUB-CONTROL-PLANE.md` - Decision to operate hybrid GitHub control plane (GitHub App + MCP Service)
+
+**Status**: Constitutional decision records - immutable without new ADR and constitutional review
+
 ### `guardrails.json`
 
 **Purpose**: Defines immutable paths, required checks, and protected files
