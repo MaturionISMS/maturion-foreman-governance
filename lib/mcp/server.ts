@@ -54,7 +54,11 @@ export interface AuditLogEntry {
 }
 
 /**
- * MCP Server State (Enhanced with auth method tracking)
+ * MCP Server State (Enhanced with auth method tracking and READ-ONLY mode)
+ * 
+ * ARCHITECTURAL PRINCIPLE (2025-12-14):
+ * - Supports 'read-only' auth method when GitHub credentials absent
+ * - Server can initialize and operate in degraded mode
  */
 interface MCPServerState {
   initialized: boolean
@@ -62,7 +66,7 @@ interface MCPServerState {
   tools: string[]
   activeOperations: number
   lastOperationTimestamp: string
-  authMethod?: 'github-app' | 'legacy-token'
+  authMethod?: 'github-app' | 'legacy-token' | 'read-only'
   authenticationTested?: boolean
   githubAppClient?: GitHubAppClient
 }
@@ -77,16 +81,28 @@ let serverState: MCPServerState = {
 
 /**
  * Initialize MCP Server
+ * 
+ * ARCHITECTURAL PRINCIPLE (2025-12-14):
+ * - MCP can initialize without GitHub credentials (READ-ONLY mode)
+ * - Validation warnings are logged but don't block initialization
+ * - Allows graceful degradation when credentials absent
  */
 export async function initializeMCPServer(config: MCPConfig): Promise<MCPServerState> {
   // Validate config
   const validation = validateMCPConfig(config)
+  
+  // Log warnings but don't fail
+  if (validation.warnings && validation.warnings.length > 0) {
+    console.warn('[MCP Server] Warnings during initialization:')
+    validation.warnings.forEach(warning => console.warn(`  - ${warning}`))
+  }
+  
   if (!validation.valid) {
     throw new Error(`MCP initialization failed: ${validation.errors.join(', ')}`)
   }
 
   // Determine auth method
-  let authMethod: 'github-app' | 'legacy-token'
+  let authMethod: 'github-app' | 'legacy-token' | 'read-only' = 'read-only'
   let githubAppClient: GitHubAppClient | undefined
   let authenticationTested = false
 
@@ -104,7 +120,11 @@ export async function initializeMCPServer(config: MCPConfig): Promise<MCPServerS
       console.log('[MCP Server] Initialized with GitHub App authentication')
       console.log(`[MCP Server] App ID: ${config.githubApp.appId}, Installation ID: ${config.githubApp.installationId}`)
     } catch (error: any) {
-      throw new Error(`Failed to authenticate with GitHub App: ${error.message}`)
+      // Downgrade to read-only instead of failing
+      console.warn('[MCP Server] Failed to authenticate with GitHub App:', error.message)
+      console.warn('[MCP Server] Operating in READ-ONLY mode')
+      authMethod = 'read-only'
+      githubAppClient = undefined
     }
   } else if (config.githubToken) {
     // Fall back to legacy token (with deprecation warning)
@@ -112,7 +132,9 @@ export async function initializeMCPServer(config: MCPConfig): Promise<MCPServerS
     console.warn('[MCP Server] Using legacy token auth (deprecated)')
     console.warn('[MCP Server] Please migrate to GitHub App authentication')
   } else {
-    throw new Error('Either GitHub App or GitHub token is required')
+    // No authentication - READ-ONLY mode
+    console.log('[MCP Server] No GitHub authentication configured')
+    console.log('[MCP Server] Operating in READ-ONLY mode - GitHub mutations unavailable')
   }
 
   serverState = {
@@ -134,6 +156,9 @@ export async function initializeMCPServer(config: MCPConfig): Promise<MCPServerS
   }
 
   console.log('[MCP Server] Initialized with', serverState.tools.length, 'tools')
+  if (authMethod === 'read-only') {
+    console.warn('[MCP Server] Tools available but mutations will fail without authentication')
+  }
 
   return serverState
 }

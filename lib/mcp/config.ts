@@ -87,34 +87,37 @@ export function getMCPConfig(): MCPConfig {
 
 /**
  * Validate MCP configuration
+ * 
+ * ARCHITECTURAL PRINCIPLE (2025-12-14):
+ * - MCP can be enabled without GitHub credentials (READ-ONLY mode)
+ * - Validation should warn, not fail, when credentials missing
+ * - Allows Foreman to start and operate in degraded mode
  */
-export function validateMCPConfig(config: MCPConfig): { valid: boolean; errors: string[] } {
+export function validateMCPConfig(config: MCPConfig): { valid: boolean; errors: string[]; warnings: string[] } {
   const errors: string[] = []
+  const warnings: string[] = []
 
   // Check for GitHub App authentication (preferred)
   if (config.githubApp) {
     if (!config.githubApp.appId || config.githubApp.appId.trim() === '') {
-      errors.push('GitHub App ID is required')
+      warnings.push('GitHub App ID is missing - MCP will operate in READ-ONLY mode')
     }
     if (!config.githubApp.privateKey || config.githubApp.privateKey.trim() === '') {
-      errors.push('GitHub App private key is required')
+      warnings.push('GitHub App private key is missing - MCP will operate in READ-ONLY mode')
     }
     if (!config.githubApp.installationId || config.githubApp.installationId.trim() === '') {
-      errors.push('GitHub App installation ID is required')
+      warnings.push('GitHub App installation ID is missing - MCP will operate in READ-ONLY mode')
     }
   } else if (config.githubToken) {
     // Legacy token validation
     if (config.githubToken.trim() === '') {
-      errors.push('GitHub token cannot be empty')
+      warnings.push('GitHub token is empty - MCP will operate in READ-ONLY mode')
     }
   } else {
-    // No authentication configured
-    errors.push('Either GitHub App or GitHub token is required')
+    // No authentication configured - READ-ONLY mode
+    warnings.push('No GitHub authentication configured - MCP will operate in READ-ONLY mode')
   }
 
-  if (config.enabled && errors.length > 0) {
-    return { valid: false, errors }
-  }
-
-  return { valid: true, errors: [] }
+  // MCP is valid even without credentials (degrades gracefully)
+  return { valid: true, errors, warnings }
 }

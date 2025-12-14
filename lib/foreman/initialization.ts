@@ -29,6 +29,11 @@ export interface InitializationStatus {
 
 /**
  * Check if GitHub App is properly configured
+ * 
+ * ARCHITECTURAL PRINCIPLE (2025-12-14):
+ * - Foreman App must start in READ-ONLY mode without GitHub credentials
+ * - GitHub mutation authority belongs EXCLUSIVELY to MCP Control Plane
+ * - This check is informational only - NOT required for startup
  */
 function checkGitHubConfiguration(): InitializationCheckResult {
   const appId = process.env.GITHUB_APP_ID
@@ -45,17 +50,17 @@ function checkGitHubConfiguration(): InitializationCheckResult {
 
     return {
       name: 'GitHub App Configuration',
-      status: 'not_configured',
-      message: `Missing required environment variables: ${missing.join(', ')}`,
-      required: true
+      status: 'warning',
+      message: `GitHub App not configured (READ-ONLY mode). Missing: ${missing.join(', ')}. All GitHub mutations will route through MCP Control Plane.`,
+      required: false
     }
   }
 
   return {
     name: 'GitHub App Configuration',
     status: 'ready',
-    message: 'GitHub App credentials configured',
-    required: true
+    message: 'GitHub App credentials configured (legacy mode - should migrate to MCP-only)',
+    required: false
   }
 }
 
@@ -84,6 +89,11 @@ function checkOpenAIConfiguration(): InitializationCheckResult {
 
 /**
  * Check if GitHub Token is configured (for loading behavior files)
+ * 
+ * ARCHITECTURAL PRINCIPLE (2025-12-14):
+ * - Foreman should prefer LOCAL behavior files
+ * - External repo loading is optional, not required
+ * - Graceful degradation: use local files if token absent
  */
 function checkGitHubTokenConfiguration(): InitializationCheckResult {
   const token = process.env.GITHUB_MCP_TOKEN
@@ -96,16 +106,16 @@ function checkGitHubTokenConfiguration(): InitializationCheckResult {
     if (!token) {
       return {
         name: 'GitHub Token Configuration',
-        status: 'error',
-        message: 'GITHUB_MCP_TOKEN required when using external behavior repository',
-        required: true
+        status: 'warning',
+        message: 'External behavior repo configured but GITHUB_MCP_TOKEN missing. Falling back to local behavior files.',
+        required: false
       }
     }
     return {
       name: 'GitHub Token Configuration',
       status: 'ready',
       message: 'GitHub token configured for external behavior files',
-      required: true
+      required: false
     }
   }
 
@@ -315,25 +325,43 @@ function checkMemorySystem(): InitializationCheckResult {
 
 /**
  * Check if MCP (Model Context Protocol) is configured
- * MCP provides GitHub access for autonomous operations via the Model Context Protocol server
+ * 
+ * ARCHITECTURAL PRINCIPLE (2025-12-14):
+ * - MCP Control Plane holds ALL GitHub mutation authority
+ * - Foreman App queries MCP status but does NOT require direct GitHub access
+ * - MCP credentials belong to MCP Control Plane, not Foreman App
+ * - Foreman can operate in READ-ONLY mode without MCP (degraded but functional)
  */
 function checkMCPConfiguration(): InitializationCheckResult {
+  const mcpServerUrl = process.env.MCP_SERVER_URL || process.env.MCP_CONTROL_PLANE_URL
   const mcpToken = process.env.GITHUB_MCP_TOKEN
 
-  if (!mcpToken) {
+  // Check if MCP Control Plane is configured (preferred architecture)
+  if (mcpServerUrl) {
     return {
       name: 'MCP Configuration',
-      status: 'error',
-      message: 'GITHUB_MCP_TOKEN not set - MCP server cannot authenticate. Autonomy disabled.',
-      required: true
+      status: 'ready',
+      message: `MCP Control Plane configured at ${mcpServerUrl}. All GitHub mutations will route through MCP.`,
+      required: false
     }
   }
 
+  // Fallback: legacy direct token (deprecated architecture)
+  if (mcpToken) {
+    return {
+      name: 'MCP Configuration',
+      status: 'warning',
+      message: 'GITHUB_MCP_TOKEN configured (legacy mode). Should migrate to MCP Control Plane for separation of concerns.',
+      required: false
+    }
+  }
+
+  // No MCP configuration - READ-ONLY mode
   return {
     name: 'MCP Configuration',
-    status: 'ready',
-    message: 'MCP token configured and ready',
-    required: true
+    status: 'warning',
+    message: 'MCP not configured. Foreman operating in READ-ONLY mode. GitHub mutations unavailable.',
+    required: false
   }
 }
 

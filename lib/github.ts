@@ -55,13 +55,33 @@ export class GitHubAppClient {
 
   /**
    * Create instance from environment variables
+   * 
+   * ARCHITECTURAL PRINCIPLE (2025-12-14):
+   * - Returns null if GitHub App not configured (graceful degradation)
+   * - Foreman App should not fail startup if GitHub credentials absent
+   * - All GitHub mutations should route through MCP Control Plane
    */
-  static fromEnvironment(): GitHubAppClient {
-    return new GitHubAppClient({
-      appId: process.env.GITHUB_APP_ID || '',
-      privateKey: process.env.GITHUB_APP_PRIVATE_KEY || '',
-      installationId: process.env.GITHUB_APP_INSTALLATION_ID || ''
-    })
+  static fromEnvironment(): GitHubAppClient | null {
+    const appId = process.env.GITHUB_APP_ID || ''
+    const privateKey = process.env.GITHUB_APP_PRIVATE_KEY || ''
+    const installationId = process.env.GITHUB_APP_INSTALLATION_ID || ''
+
+    // Return null if not configured (READ-ONLY mode)
+    if (!appId || !privateKey || !installationId) {
+      return null
+    }
+
+    try {
+      return new GitHubAppClient({
+        appId,
+        privateKey,
+        installationId
+      })
+    } catch (error) {
+      // Graceful degradation: log error but don't fail startup
+      console.warn('[GitHub] Failed to initialize GitHub App client:', error instanceof Error ? error.message : 'Unknown error')
+      return null
+    }
   }
 
   /**
