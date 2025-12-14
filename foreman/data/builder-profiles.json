@@ -1,8 +1,8 @@
 {
   "github-copilot": {
     "builderType": "github-copilot",
-    "totalBuilds": 8,
-    "successfulBuilds": 8,
+    "totalBuilds": 10,
+    "successfulBuilds": 10,
     "failedBuilds": 0,
     "successRate": 100,
     "averageBuildIterations": 1,
@@ -74,29 +74,43 @@
         "durationMs": 120000,
         "iterationsRequired": 1,
         "qaPassed": true
+      },
+      {
+        "timestamp": "2025-12-14T07:01:08.440Z",
+        "issueNumber": 123,
+        "durationMs": 120000,
+        "iterationsRequired": 1,
+        "qaPassed": true
+      },
+      {
+        "timestamp": "2025-12-14T07:04:39.730Z",
+        "issueNumber": 123,
+        "durationMs": 120000,
+        "iterationsRequired": 1,
+        "qaPassed": true
       }
     ],
     "isHealthy": true,
-    "lastHealthCheck": "2025-12-13T17:17:33.632Z",
+    "lastHealthCheck": "2025-12-14T07:04:39.730Z",
     "availability": 100,
-    "lastUpdated": "2025-12-13T17:17:33.632Z"
+    "lastUpdated": "2025-12-14T07:04:39.730Z"
   },
   "local-builder": {
     "builderType": "local-builder",
-    "totalBuilds": 8,
+    "totalBuilds": 10,
     "successfulBuilds": 0,
-    "failedBuilds": 8,
+    "failedBuilds": 10,
     "successRate": 0,
     "averageBuildIterations": 1,
     "maxIterationsObserved": 1,
-    "qicPassRate": 66.34204312890623,
+    "qicPassRate": 59.87369392383786,
     "qielPassRate": 100,
     "averageRecoveryTimeMs": 0,
     "recoverySuccessRate": 100,
     "driftFrequency": 0,
     "driftSeverity": "low",
     "securityIncidents": 0,
-    "averageLatencyMs": 80132.65920000001,
+    "averageLatencyMs": 72884.90188800002,
     "p95LatencyMs": 240000,
     "p99LatencyMs": 300000,
     "recentFailures": [
@@ -163,12 +177,28 @@
         "errorType": "complexity-exceeded",
         "recoverable": false,
         "recoveryAttempted": false
+      },
+      {
+        "timestamp": "2025-12-14T07:01:08.442Z",
+        "issueNumber": 124,
+        "reason": "Complexity too high",
+        "errorType": "complexity-exceeded",
+        "recoverable": false,
+        "recoveryAttempted": false
+      },
+      {
+        "timestamp": "2025-12-14T07:04:39.731Z",
+        "issueNumber": 124,
+        "reason": "Complexity too high",
+        "errorType": "complexity-exceeded",
+        "recoverable": false,
+        "recoveryAttempted": false
       }
     ],
     "recentSuccesses": [],
     "isHealthy": false,
-    "lastHealthCheck": "2025-12-13T17:17:33.634Z",
+    "lastHealthCheck": "2025-12-14T07:04:39.731Z",
     "availability": 0,
-    "lastUpdated": "2025-12-13T17:17:33.634Z"
+    "lastUpdated": "2025-12-14T07:04:39.731Z"
   }
 }
