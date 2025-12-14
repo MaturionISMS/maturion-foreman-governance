@@ -244,7 +244,7 @@ export async function registerReactivationIncident(match: TriggerMatch): Promise
     const { logGovernanceEvent } = await import('@/lib/foreman/memory/governance-memory');
     await logGovernanceEvent({
       type: 'qa_reactivation_incident',
-      severity: 'warning',
+      severity: 'info',
       description: `Test Reactivation Incident: ${match.entryName}`,
       metadata: {
         incidentId: incident.incidentId,
