@@ -32,9 +32,9 @@ COPY package.json ./
 # Expose service port
 EXPOSE 3100
 
-# Health check
+# Health check (use node to check health instead of wget)
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-  CMD wget --quiet --tries=1 --spider http://localhost:3100/health || exit 1
+  CMD node -e "require('http').get('http://localhost:3100/health', (res) => { process.exit(res.statusCode === 200 || res.statusCode === 503 ? 0 : 1); }).on('error', () => process.exit(1));"
 
 # Set environment defaults
 ENV MCP_PORT=3100

@@ -11,6 +11,8 @@
 
 import { describe, it } from 'node:test'
 import assert from 'node:assert'
+import { readFileSync, existsSync } from 'fs'
+import { join } from 'path'
 
 describe('MCP Service Contract - Module Existence', () => {
   it('should have standalone-server module', async () => {
@@ -119,34 +121,28 @@ describe('MCP Service Contract - Execute Endpoint', () => {
 
 describe('MCP Service Contract - Documentation', () => {
   it('should have MCP service guide documentation', () => {
-    const fs = require('fs')
-    const path = require('path')
-    const docPath = path.join(__dirname, '../../docs/mcp-service-guide.md')
+    const docPath = join(__dirname, '../../docs/mcp-service-guide.md')
     
     try {
-      assert.ok(fs.existsSync(docPath), 'MCP service guide should exist')
+      assert.ok(existsSync(docPath), 'MCP service guide should exist')
     } catch (error: any) {
       assert.fail(`Documentation missing: ${error.message}`)
     }
   })
 
   it('should have Dockerfile for containerization', () => {
-    const fs = require('fs')
-    const path = require('path')
-    const dockerfilePath = path.join(__dirname, '../../Dockerfile.mcp')
+    const dockerfilePath = join(__dirname, '../../Dockerfile.mcp')
     
     try {
-      assert.ok(fs.existsSync(dockerfilePath), 'Dockerfile.mcp should exist')
+      assert.ok(existsSync(dockerfilePath), 'Dockerfile.mcp should exist')
     } catch (error: any) {
       assert.fail(`Dockerfile missing: ${error.message}`)
     }
   })
 
   it('should have npm script for running MCP service', () => {
-    const fs = require('fs')
-    const path = require('path')
-    const packageJsonPath = path.join(__dirname, '../../package.json')
-    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'))
+    const packageJsonPath = join(__dirname, '../../package.json')
+    const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'))
     
     assert.ok('mcp:serve' in packageJson.scripts, 'Should have mcp:serve script')
   })

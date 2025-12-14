@@ -16,7 +16,6 @@ import { createServer, IncomingMessage, ServerResponse } from 'http'
 import { parse } from 'url'
 import { getMCPConfig, validateMCPConfig, MCPConfig } from './config'
 import { initializeMCPServer, executeTool, listTools, getMCPStatus, AuditLogEntry } from './server'
-import { validateMergeSafety } from './safety'
 
 // Get version from package.json
 const version = '0.1.0'
