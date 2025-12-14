@@ -106,9 +106,9 @@ export async function checkExportsExist(modulePath: string, exportNames: string[
   
   for (const exportName of exportNames) {
     // Check for: export function exportName, export const exportName, export { exportName }
+    // Note: No 'g' flag to avoid lastIndex issues with multiple test() calls
     const exportRegex = new RegExp(
-      `export\\s+(?:async\\s+)?(?:function|const|let|class)\\s+${exportName}\\b|export\\s*{[^}]*\\b${exportName}\\b`,
-      'g'
+      `export\\s+(?:async\\s+)?(?:function|const|let|class)\\s+${exportName}\\b|export\\s*{[^}]*\\b${exportName}\\b`
     );
     
     if (exportRegex.test(content)) {
@@ -129,12 +129,16 @@ export async function checkExportsExist(modulePath: string, exportNames: string[
  * Parse trigger condition and extract module/exports
  */
 export function parseTriggerCondition(triggerCondition: string): ParsedTriggerCondition {
+  // Regex patterns as constants for maintainability
+  const MODULE_PATH_PATTERN = /@\/[a-zA-Z0-9/_-]+/;
+  const FUNCTIONS_PATTERN = /with functions:\s*([^.]+)/;
+  
   // Extract module path: "Implementation of @/lib/memory/governance-memory module..."
-  const moduleMatch = triggerCondition.match(/@\/[a-zA-Z0-9/_-]+/);
+  const moduleMatch = triggerCondition.match(MODULE_PATH_PATTERN);
   const modulePath = moduleMatch ? moduleMatch[0] : undefined;
   
   // Extract function names: "with functions: writeGovernanceMemory, updateGovernanceMemory"
-  const functionsMatch = triggerCondition.match(/with functions:\s*([^.]+)/);
+  const functionsMatch = triggerCondition.match(FUNCTIONS_PATTERN);
   const exportNames: string[] = [];
   
   if (functionsMatch) {
