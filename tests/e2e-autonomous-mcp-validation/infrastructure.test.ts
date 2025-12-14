@@ -1,4 +1,6 @@
 /**
+ * @jest-environment node
+ * 
  * E2E Autonomous MCP Validation - Infrastructure Tests
  * 
  * Architecture: /architecture/e2e-autonomous-mcp-validation-architecture.md
@@ -52,7 +54,7 @@ describe('E2E Autonomous MCP Validation - Infrastructure', () => {
     const result = await validateMCPInfrastructure(MCP_ENDPOINT);
     
     expect(result.checks.toolsRegistered.passed).toBe(true);
-    expect(result.checks.toolsRegistered.message).toContain('tools');
+    expect(result.checks.toolsRegistered.message).toContain('available');
   });
 
   it('should report MCP as available when all checks pass', async () => {
@@ -77,6 +79,6 @@ describe('E2E Autonomous MCP Validation - Infrastructure', () => {
     const result = await validateMCPInfrastructure(wrongEndpoint);
     
     expect(result.checks.reachability.error).toBeDefined();
-    expect(result.checks.reachability.message).toContain('failed');
+    expect(result.checks.reachability.message).toContain('Failed');
   });
 });

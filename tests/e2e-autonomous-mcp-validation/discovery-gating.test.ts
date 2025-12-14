@@ -1,4 +1,6 @@
 /**
+ * @jest-environment node
+ * 
  * E2E Autonomous MCP Validation - Discovery & Gating Tests
  * 
  * Architecture: /architecture/e2e-autonomous-mcp-validation-architecture.md

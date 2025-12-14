@@ -1,4 +1,6 @@
 /**
+ * @jest-environment node
+ * 
  * E2E Autonomous MCP Validation - Evidence Collection Tests
  * 
  * Architecture: /architecture/e2e-autonomous-mcp-validation-architecture.md
@@ -15,6 +17,7 @@ import {
   collectValidationEvidence,
   type ValidationEvidence
 } from '@/lib/validation/evidence-collector';
+import { executeAutonomousLifecycle } from '@/lib/validation/autonomous-lifecycle-executor';
 
 describe('E2E Autonomous MCP Validation - Evidence Collection', () => {
   const EVIDENCE_DIR = path.join(process.cwd(), 'memory', 'validation', 'e2e-autonomous-mcp');
@@ -40,8 +43,11 @@ describe('E2E Autonomous MCP Validation - Evidence Collection', () => {
   });
 
   it('should include discovery results in evidence', async () => {
-    const executionId = 'test-execution-' + Date.now();
-    const evidence = await collectValidationEvidence(executionId);
+    // First execute a lifecycle to create the necessary state
+    const result = await executeAutonomousLifecycle('https://maturion-mcp-control-plane.onrender.com');
+    
+    // Now collect evidence from that execution
+    const evidence = await collectValidationEvidence(result.lifecycleId);
     
     expect(evidence.discovery).toBeDefined();
     expect(evidence.discovery.discovered).toBeDefined();
@@ -67,8 +73,11 @@ describe('E2E Autonomous MCP Validation - Evidence Collection', () => {
   });
 
   it('should include QA results in evidence', async () => {
-    const executionId = 'test-execution-' + Date.now();
-    const evidence = await collectValidationEvidence(executionId);
+    // First execute a lifecycle to create the necessary state
+    const result = await executeAutonomousLifecycle('https://maturion-mcp-control-plane.onrender.com');
+    
+    // Now collect evidence from that execution
+    const evidence = await collectValidationEvidence(result.lifecycleId);
     
     expect(evidence.qaResults).toBeDefined();
     expect(evidence.qaResults.totalTests).toBeGreaterThan(0);
@@ -115,8 +124,11 @@ describe('E2E Autonomous MCP Validation - Evidence Collection', () => {
   });
 
   it('should update latest execution pointer', async () => {
-    const executionId = 'test-execution-' + Date.now();
-    await collectValidationEvidence(executionId);
+    // First execute a lifecycle to create the necessary state
+    const result = await executeAutonomousLifecycle('https://maturion-mcp-control-plane.onrender.com');
+    
+    // Now collect evidence which should update latest pointer
+    await collectValidationEvidence(result.lifecycleId);
     
     const latestPath = path.join(EVIDENCE_DIR, 'latest-execution.json');
     const fileExists = await fs.access(latestPath).then(() => true).catch(() => false);
@@ -126,6 +138,6 @@ describe('E2E Autonomous MCP Validation - Evidence Collection', () => {
     const latestContent = await fs.readFile(latestPath, 'utf-8');
     const latestData = JSON.parse(latestContent);
     
-    expect(latestData.executionId).toBe(executionId);
+    expect(latestData.executionId).toBe(result.lifecycleId);
   });
 });
