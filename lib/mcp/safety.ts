@@ -13,6 +13,7 @@
 import { Octokit } from 'octokit'
 import { MCPConfig } from './config'
 import { detectSecrets } from '@/lib/foreman/governance/github-governance'
+import { GitHubAppClient } from '@/lib/github'
 
 export interface SafetyCheckResult {
   passed: boolean
@@ -28,10 +29,21 @@ export interface SafetyCheckResult {
 }
 
 /**
- * Get GitHub client
+ * Get GitHub client (with GitHub App support)
  */
-function getGitHubClient(githubToken: string): Octokit {
-  return new Octokit({ auth: githubToken })
+async function getGitHubClient(githubToken?: string, githubAppClient?: GitHubAppClient): Promise<Octokit> {
+  // Prefer GitHub App if available
+  if (githubAppClient) {
+    return await githubAppClient.getOctokit()
+  }
+  
+  // Fall back to token
+  const token = githubToken || process.env.GITHUB_MCP_TOKEN || ''
+  if (!token) {
+    throw new Error('GitHub authentication is required (token or GitHub App)')
+  }
+  
+  return new Octokit({ auth: token })
 }
 
 /**
@@ -43,6 +55,7 @@ export async function validateMergeSafety(params: {
   prNumber: number
   config: MCPConfig['safetyChecks']
   githubToken?: string
+  githubAppClient?: GitHubAppClient
 }): Promise<SafetyCheckResult> {
   const result: SafetyCheckResult = {
     passed: false,
@@ -63,12 +76,7 @@ export async function validateMergeSafety(params: {
     throw new Error(`Safety bypass is not allowed. Suspicious parameters detected: ${suspiciousKeys.join(', ')}`)
   }
 
-  const githubToken = params.githubToken || process.env.GITHUB_MCP_TOKEN || ''
-  if (!githubToken) {
-    throw new Error('GitHub token is required')
-  }
-
-  const octokit = getGitHubClient(githubToken)
+  const octokit = await getGitHubClient(params.githubToken, params.githubAppClient)
 
   try {
     // Get PR details

@@ -42,22 +42,36 @@ import { logGovernanceEvent } from '@/lib/foreman/memory/governance-memory'
  * service (e.g., AWS Secrets Manager, HashiCorp Vault, Azure Key Vault)
  * instead of directly accessing environment variables.
  * 
- * For GitHub App installations, this should:
- * 1. Generate a JWT from the app's private key
- * 2. Exchange JWT for an installation token
- * 3. Use the installation token for API calls
- * 4. Cache tokens until they expire
+ * For GitHub App installations, this:
+ * 1. Generates a JWT from the app's private key
+ * 2. Exchanges JWT for an installation token
+ * 3. Uses the installation token for API calls
+ * 4. Caches tokens until they expire
  */
 async function getGitHubClient(): Promise<Octokit> {
-  // TODO: Implement proper GitHub App authentication with JWT
-  // TODO: Add secrets management service integration
-  const token = process.env.GITHUB_MCP_TOKEN || process.env.GITHUB_APP_INSTALLATION_TOKEN
-  
-  if (!token) {
-    throw new Error('GitHub authentication token not configured')
+  // Prefer GitHub App authentication
+  if (process.env.GITHUB_APP_ID && process.env.GITHUB_APP_PRIVATE_KEY && process.env.GITHUB_APP_INSTALLATION_ID) {
+    const { GitHubAppClient } = await import('@/lib/github')
+    
+    const client = new GitHubAppClient({
+      appId: process.env.GITHUB_APP_ID,
+      privateKey: process.env.GITHUB_APP_PRIVATE_KEY,
+      installationId: process.env.GITHUB_APP_INSTALLATION_ID
+    })
+    
+    return await client.getOctokit()
   }
   
-  return new Octokit({ auth: token })
+  // Fall back to legacy token (with warning)
+  const token = process.env.GITHUB_MCP_TOKEN || process.env.GITHUB_APP_INSTALLATION_TOKEN
+  
+  if (token) {
+    console.warn('[GitHub Mutations] Using legacy token authentication (deprecated)')
+    console.warn('[GitHub Mutations] Please configure GitHub App authentication')
+    return new Octokit({ auth: token })
+  }
+  
+  throw new Error('GitHub authentication not configured')
 }
 
 /**

@@ -15,6 +15,7 @@ import { MCPConfig, validateMCPConfig, getMCPConfig } from './config'
 import { validateMergeSafety, validateIssueCloseSafety, validateCommentSafety, SafetyCheckResult } from './safety'
 import { mergePR, closeIssue, labelIssue, commentOnIssue } from '@/lib/github/mutations'
 import { logGovernanceEvent } from '@/lib/foreman/memory/governance-memory'
+import { GitHubAppClient } from '@/lib/github'
 
 /**
  * MCP Tool Response
@@ -29,11 +30,18 @@ export interface MCPToolResponse {
 }
 
 /**
- * Audit Log Entry
+ * Audit Log Entry (Enhanced with GitHub App context)
  */
 export interface AuditLogEntry {
   operation: string
   actor: string
+  
+  // GitHub App context
+  githubApp?: {
+    appId: string
+    installationId: string
+  }
+  
   target: {
     owner: string
     repo: string
@@ -46,7 +54,7 @@ export interface AuditLogEntry {
 }
 
 /**
- * MCP Server State
+ * MCP Server State (Enhanced with auth method tracking)
  */
 interface MCPServerState {
   initialized: boolean
@@ -54,6 +62,9 @@ interface MCPServerState {
   tools: string[]
   activeOperations: number
   lastOperationTimestamp: string
+  authMethod?: 'github-app' | 'legacy-token'
+  authenticationTested?: boolean
+  githubAppClient?: GitHubAppClient
 }
 
 let serverState: MCPServerState = {
@@ -74,6 +85,36 @@ export async function initializeMCPServer(config: MCPConfig): Promise<MCPServerS
     throw new Error(`MCP initialization failed: ${validation.errors.join(', ')}`)
   }
 
+  // Determine auth method
+  let authMethod: 'github-app' | 'legacy-token'
+  let githubAppClient: GitHubAppClient | undefined
+  let authenticationTested = false
+
+  if (config.githubApp) {
+    // Prefer GitHub App authentication
+    authMethod = 'github-app'
+    
+    try {
+      githubAppClient = new GitHubAppClient(config.githubApp)
+      
+      // Test authentication by fetching a token
+      await githubAppClient.getInstallationToken()
+      authenticationTested = true
+      
+      console.log('[MCP Server] Initialized with GitHub App authentication')
+      console.log(`[MCP Server] App ID: ${config.githubApp.appId}, Installation ID: ${config.githubApp.installationId}`)
+    } catch (error: any) {
+      throw new Error(`Failed to authenticate with GitHub App: ${error.message}`)
+    }
+  } else if (config.githubToken) {
+    // Fall back to legacy token (with deprecation warning)
+    authMethod = 'legacy-token'
+    console.warn('[MCP Server] Using legacy token auth (deprecated)')
+    console.warn('[MCP Server] Please migrate to GitHub App authentication')
+  } else {
+    throw new Error('Either GitHub App or GitHub token is required')
+  }
+
   serverState = {
     initialized: true,
     config,
@@ -86,7 +127,10 @@ export async function initializeMCPServer(config: MCPConfig): Promise<MCPServerS
       'mcp_github_comment'
     ],
     activeOperations: 0,
-    lastOperationTimestamp: ''
+    lastOperationTimestamp: '',
+    authMethod,
+    authenticationTested,
+    githubAppClient
   }
 
   console.log('[MCP Server] Initialized with', serverState.tools.length, 'tools')
@@ -121,7 +165,7 @@ export async function getMCPStatus(): Promise<{
 }
 
 /**
- * Create audit log entry
+ * Create audit log entry (Enhanced with GitHub App context)
  */
 async function createAuditLog(
   operation: string,
@@ -138,6 +182,14 @@ async function createAuditLog(
     result,
     safetyChecks,
     errorDetails
+  }
+
+  // Add GitHub App context if using app-based auth
+  if (serverState.authMethod === 'github-app' && serverState.config.githubApp) {
+    audit.githubApp = {
+      appId: serverState.config.githubApp.appId,
+      installationId: serverState.config.githubApp.installationId
+    }
   }
 
   // Log to Governance Memory if enabled
@@ -177,7 +229,8 @@ async function executeMergePR(params: {
       repo: params.repo,
       prNumber: params.prNumber,
       config: serverState.config.safetyChecks,
-      githubToken: serverState.config.githubToken
+      githubToken: serverState.config.githubToken,
+      githubAppClient: serverState.githubAppClient
     })
 
     if (!safetyResult.passed) {
