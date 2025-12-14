@@ -1,25 +1,67 @@
 # Canonical Backlog Sequence
-**Generated**: 2025-12-12T10:51:20.608Z
+**Generated**: 2025-12-12T10:51:20.608Z  
+**Last Updated**: 2025-12-14T08:44:00.000Z  
 **Total Open Issues**: 190
-**Status**: Post-Cleanup Analysis
+**Status**: Post-Cleanup Analysis - Updated with New Builder Constitutional Systems
 
 ## Overview
 
 This document represents the normalized, categorized backlog for the Maturion Foreman App after systematic analysis per Issue #1.
+
+**UPDATED (2025-12-14)**: Added 18 new Builder Constitutional Systems issues (#240-#253) as highest priority Wave 0, along with additional governance and safety systems.
 
 The backlog has been analyzed and categorized to enable:
 - Autonomous multi-issue execution
 - Wave-based systematic rollout  
 - Dependency-aware sequencing
 - Clear priority ordering
+- **NEW**: Builder constitutional governance as foundational prerequisite
 
 ---
 
-## Issue Categories
+## Issue Categories (UPDATED)
 
-### Critical Infrastructure (Must Complete First)
+### Wave 0: Builder Constitutional Systems (NEW - HIGHEST PRIORITY)
 
-These issues form the foundation for all autonomous operations:
+These issues MUST be completed BEFORE any builder operations at scale:
+
+#### Foundation Layer (Complete First)
+- **#240**: Governance-Aligned Builder Reasoning Blueprint
+- **#241**: Strict Builder Handover Contract (SBHC)
+- **#251**: Builder Protocol-Level Safety Kernel (BPSK)
+
+#### Safety & Protection Layer
+- **#242**: Builder Memory Constitutional Protection (BMCP)
+- **#249**: Builder Constitutional Robotics Layer (BCRL)
+- **#252**: Builder Failure Recovery Kernel (BFRK)
+- **#253**: Builder Constitutional Checkpointing System (BCCS)
+
+#### Cognitive Governance Layer
+- **#244**: Builder Cognitive Discipline Engine (BCDE)
+- **#247**: Builder Cognitive Constraint Engine (BCCE)
+- **#248**: Builder Emotional Neutrality & Bias Guard (BENBG)
+- **#250**: Builder Cognitive Energy Budgeting (BCEB)
+
+#### Monitoring & Analytics Layer
+- **#243**: Governance-Aligned Builder Simulation Sandbox (GABSS)
+- **#245**: Builder Memory Audit Dashboard
+- **#246**: Builder Handover & Discipline Analytics
+
+**Wave 0 Rationale**: These systems ensure all builder operations maintain constitutional compliance, prevent cognitive drift, and enforce governance supremacy. They form the constitutional foundation for safe autonomous builder execution.
+
+---
+
+### Additional Critical Governance Systems (Wave 0.5)
+
+- **#236**: Constitutional Hash Verification Layer (CHVL)
+- **#235**: Foreman Self-Governance Drift Detector
+- **#225**: Remove QIEL Whitelisting & Enforce Strict Zero-Tolerance QA
+
+---
+
+### Critical Infrastructure (Wave 1 - Must Complete After Wave 0)
+
+These issues form the foundation for all autonomous operations (after builder constitutional systems are in place):
 
 #### Governance & Constitution
 - **#62**: ISSUE #11 — Knowledge Retirement Mechanism (Long-Term Memory Lifecycle Governance)
@@ -250,10 +292,12 @@ Deployment and operational capabilities:
 
 The following issues are CI-generated Quality Integrity Incidents that should be closed:
 
-**Total Count**: ~50-60 issues
+**Total Count**: ~92 issues (UPDATED from ~50-60)
 
 ### Identified QII Issues:
 - #180, #182, #183, #184, #186, #191, #192, #195, #197, #198, #199, #200
+- #202, #203, #206, #207, #218-#224, #227, #230-#231, #234, #237, #239
+- Plus approximately 70+ additional QII issues
 
 These issues share common characteristics:
 - Title pattern: "🚨 Quality Integrity Incident"
@@ -262,6 +306,8 @@ These issues share common characteristics:
 - Body contains: workflow run links, QIEL enforcement messages
 
 **Action Required**: Systematic closure with documentation explaining transition to improved QIEL workflows.
+
+**Note**: Updated count based on ISSUES_REPORT.md dated 2025-12-08.
 
 ---
 
@@ -287,33 +333,48 @@ These issues share common characteristics:
 
 ---
 
-## Execution Priority
+## Execution Priority (UPDATED)
 
 ### Immediate (Week 1-2)
-1. Close all Quality Integrity Incidents
-2. Close identified duplicates
-3. Complete foundational memory system (#57, #62)
+1. Close all Quality Integrity Incidents (~92 issues) **UPDATED**
+2. Close identified duplicates (6 issues)
+3. **NEW**: Begin Wave 0 - Builder Constitutional Systems (#240-#253)
+   - Start with Foundation Layer (#240, #241, #251)
+   - Then Safety & Protection Layer (#242, #249, #252, #253)
 
 ### Short-term (Month 1)
-1. Multi-agent coordination (#69-#71)
-2. Architecture systems (#72-#74)
-3. Intelligence foundations (#75-#78)
+1. **Complete Wave 0**: All Builder Constitutional Systems (#240-#253)
+2. **Complete Wave 0.5**: Additional governance systems (#235, #236, #225)
+3. **Begin Wave 1**: Complete foundational memory system (#57, #62)
+4. Multi-agent coordination (#69-#71)
 
 ### Medium-term (Months 2-3)
-1. Meta-governance & safety (Wave 5)
-2. Advanced cognitive systems (Wave 6)
-3. Strategic systems (Wave 7)
+1. Architecture systems (#72-#74)
+2. Intelligence foundations (#75-#78)
+3. Meta-governance & safety (Wave 5)
+4. Advanced cognitive systems (Wave 6)
 
 ### Long-term (Months 4-6)
-1. Meta-cognition evolution (Waves 14-17)
+1. Strategic systems (Wave 7)
 2. Deep safety frameworks (Wave 16)
-3. Advanced memory enhancement (Wave 18)
+3. Meta-cognition evolution (Waves 14-17)
+4. Advanced memory enhancement (Wave 18)
 
 ---
 
-## Dependencies
+## Dependencies (UPDATED)
 
 ```
+Wave 0: Builder Constitutional Systems (#240-#253)
+    → Ensures all builders operate under governance
+    → Prevents cognitive drift
+    → Maintains constitutional compliance
+    ↓
+Wave 0.5: Additional Governance (#235, #236, #225)
+    → Constitutional hash verification
+    → Self-governance drift detection
+    → QIEL strict enforcement
+    ↓
 Memory Fabric (#57) 
     → Memory-Aware Reasoning (#7)
     → Drift Monitor (#8)
@@ -328,15 +389,20 @@ Memory Fabric (#57)
 
 ---
 
-## Notes
+## Notes (UPDATED)
 
+- **NEW**: Wave 0 (Builder Constitutional Systems) is the HIGHEST PRIORITY and must be completed before any other substantive builder work
 - All waves must respect OPOJD (One-Prompt One-Job Doctrine)
 - Each issue must follow Build Philosophy: Architecture → Red QA → Build to Green
 - Constitutional compliance (CS1-CS6) must be maintained
 - TED (Technology Evolution Doctrine) must guide all tech changes
 - GSR (Governance Supremacy Rule) is absolute
+- Builder operations must maintain constitutional compliance through systems in Wave 0
+- **NEW**: This sequence was updated on 2025-12-14 to include 18 new Builder Constitutional Systems issues and revised QII count
 
 ---
 
-**Status**: Ready for Autonomous Execution
-**Next Action**: Begin with closing Quality Integrity Incidents and duplicates
+**Status**: Ready for Autonomous Execution (UPDATED)  
+**Last Updated**: 2025-12-14T08:44:00.000Z  
+**Original Date**: 2025-12-12T10:51:20.608Z  
+**Next Action**: Begin with closing Quality Integrity Incidents and duplicates, then proceed to Wave 0 (Builder Constitutional Systems)
