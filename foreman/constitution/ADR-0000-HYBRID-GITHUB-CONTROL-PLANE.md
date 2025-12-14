@@ -10,6 +10,16 @@
 
 ---
 
+## Glossary
+
+- **MCP**: Model Context Protocol - A protocol for exposing tools and capabilities to AI agents in a standardized, discoverable way
+- **GitHub App**: GitHub's authorization mechanism for applications to access repositories with scoped permissions
+- **GSR**: Governance Supremacy Rule - Constitutional requirement that governance rules override all other considerations
+- **QIC**: Quality Integrity Contract - Constitutional requirement for quality standards enforcement
+- **QIEL**: QA Integration and Environment Lock-in - Testing framework ensuring 100% QA compliance
+
+---
+
 ## Context
 
 Foreman requires autonomous GitHub operations to complete full lifecycle execution without human intervention:
@@ -462,10 +472,11 @@ This ADR is **ACCEPTED** when:
 
 **This ADR establishes the foundation for autonomous GitHub control.**
 
-Future ADRs may extend this decision:
-- ADR-XXXX: Multi-Repository MCP Control Plane
-- ADR-XXXX: Enhanced Safety Validation Rules
-- ADR-XXXX: MCP Tool Extensibility Framework
+Future ADRs may extend this decision to address topics such as:
+- Multi-repository MCP control plane support
+- Enhanced safety validation rules and metrics
+- MCP tool extensibility framework
+- Advanced audit and anomaly detection capabilities
 
 **This ADR remains the constitutional anchor for all GitHub control plane decisions.**
 
