@@ -50,7 +50,9 @@
     "perf:scan": "tsx scripts/run-performance-scan.ts",
     "perf:quick": "tsx scripts/run-performance-scan.ts --quick",
     "perf:enforce": "tsx scripts/run-performance-scan.ts --enforce",
-    "readiness:check": "tsx scripts/run-runtime-readiness-check.ts"
+    "readiness:check": "tsx scripts/run-runtime-readiness-check.ts",
+    "mcp:serve": "node lib/mcp/standalone-server.js",
+    "test:mcp": "npx tsx tests/mcp/service-contract.test.ts"
   },
   "dependencies": {
     "ajv": "^8.17.1",

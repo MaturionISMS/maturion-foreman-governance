@@ -1,0 +1,44 @@
+# MCP Service Dockerfile
+# 
+# Build standalone MCP service container
+# 
+# Build: docker build -f Dockerfile.mcp -t mcp-service:latest .
+# Run:   docker run -d -p 3100:3100 \
+#          -e MCP_API_KEY=your-api-key \
+#          -e GITHUB_MCP_TOKEN=your-github-token \
+#          --name mcp-service \
+#          mcp-service:latest
+
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies (production only)
+RUN npm ci --only=production
+
+# Copy TypeScript config and source
+COPY tsconfig.json ./
+COPY lib/ ./lib/
+
+# Build TypeScript
+RUN npx tsc --project tsconfig.json
+
+# Copy package.json for version info
+COPY package.json ./
+
+# Expose service port
+EXPOSE 3100
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD wget --quiet --tries=1 --spider http://localhost:3100/health || exit 1
+
+# Set environment defaults
+ENV MCP_PORT=3100
+ENV MCP_HOST=0.0.0.0
+
+# Run service
+CMD ["node", "lib/mcp/standalone-server.js"]
