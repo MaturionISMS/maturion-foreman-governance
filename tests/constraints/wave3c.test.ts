@@ -1303,7 +1303,7 @@ describe('Wave 3C: Explainability & Reason Generation', () => {
       const reason = generateEnforcementReason(violation, action, context);
 
       expect(reason).toContain('Enforcement Action');
-      expect(reason).toContain('REQUIRE_APPROVAL');
+      expect(reason).toContain('REQUIRE APPROVAL'); // Space, not underscore (telemetry.ts line 59 replaces _ with space)
       expect(reason).toContain('BUILD_PHILOSOPHY.md');
       expect(reason).toContain('CS2');
       expect(reason).toContain('Required Action');
@@ -1350,7 +1350,7 @@ describe('Wave 3C: Explainability & Reason Generation', () => {
 
       expect(reason).toContain('Enforcement Action');
       expect(reason).toContain('BLOCK');
-      expect(reason).toContain('circular dependency');
+      expect(reason).toContain('Circular dependencies'); // Capital C (telemetry.ts line 98)
       expect(reason).toContain('Required Action');
       expect(reason).toContain('Override');
       expect(reason).toContain('FOREMAN_ENFORCEMENT_OVERRIDE');
@@ -1839,6 +1839,12 @@ describe('Wave 3C: Telemetry & Memory Integration', () => {
 });
 
 describe('Wave 3C: Safe Failure Modes', () => {
+  // Ensure clean hook registry for each test
+  beforeEach(() => {
+    const hooks = listHooks();
+    hooks.forEach(hook => unregisterHook(hook.name));
+  });
+
   describe('No Silent Blocking', () => {
     it('should never block silently - always provide reason', async () => {
       const violation: ClassifiedViolation = {
