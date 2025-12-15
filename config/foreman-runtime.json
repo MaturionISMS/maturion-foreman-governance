@@ -1,0 +1,17 @@
+{
+  "heartbeat": {
+    "enabled": true,
+    "interval_minutes": 30,
+    "report_to_mcp": true,
+    "report_to_dashboard": true
+  },
+  "issue_tracking": {
+    "auto_close_on_completion": true,
+    "require_evidence": true
+  },
+  "local_builder_fallback": {
+    "enabled": true,
+    "health_check_on_start": true,
+    "auto_deploy_if_unavailable": false
+  }
+}
