@@ -1,0 +1,126 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Build Iteration Evidence",
+  "description": "Evidence for a single build iteration",
+  "type": "object",
+  "required": [
+    "taskId",
+    "iterationNumber",
+    "timestamp",
+    "qaStatusBefore",
+    "targetTest",
+    "codeChanges",
+    "qaStatusAfter"
+  ],
+  "properties": {
+    "taskId": {
+      "type": "string",
+      "description": "Task ID this iteration belongs to"
+    },
+    "iterationNumber": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Sequential iteration number"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this iteration started"
+    },
+    "qaStatusBefore": {
+      "type": "object",
+      "required": ["total", "passing", "failing"],
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "passing": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "failing": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "targetTest": {
+      "type": "object",
+      "required": ["name", "description"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of test being targeted"
+        },
+        "description": {
+          "type": "string",
+          "description": "What this test validates"
+        },
+        "filePath": {
+          "type": "string",
+          "description": "Path to test file"
+        }
+      }
+    },
+    "codeChanges": {
+      "type": "object",
+      "required": ["summary", "filesModified"],
+      "properties": {
+        "summary": {
+          "type": "string",
+          "description": "Brief summary of code changes made"
+        },
+        "filesModified": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of files that were modified"
+        },
+        "linesAdded": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of lines added"
+        },
+        "linesRemoved": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of lines removed"
+        }
+      }
+    },
+    "qaStatusAfter": {
+      "type": "object",
+      "required": ["total", "passing", "failing", "result"],
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "passing": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "failing": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "result": {
+          "type": "string",
+          "enum": ["IMPROVED", "NO_CHANGE", "REGRESSED"],
+          "description": "Result compared to before"
+        }
+      }
+    },
+    "duration": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Duration of this iteration in seconds"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes about this iteration"
+    }
+  }
+}

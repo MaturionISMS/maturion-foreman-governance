@@ -1,0 +1,44 @@
+{
+  "taskId": "example-task-001",
+  "timestamp": "2025-12-15T10:00:30Z",
+  "validations": {
+    "instructionFormat": {
+      "status": "PASS",
+      "message": "Instruction format is 'Build to Green' - correct format",
+      "details": {
+        "received": "Build to Green",
+        "expected": "Build to Green"
+      }
+    },
+    "architectureExists": {
+      "status": "PASS",
+      "message": "Architecture document exists and is accessible",
+      "details": {
+        "location": "foreman/architecture/dashboard-architecture.md",
+        "fileSize": "15234 bytes",
+        "lastModified": "2025-12-15T09:30:00Z"
+      }
+    },
+    "qaSuiteExists": {
+      "status": "PASS",
+      "message": "QA suite exists and status is RED (failing)",
+      "details": {
+        "location": "tests/qa/dashboard/",
+        "status": "RED",
+        "totalTests": 10,
+        "failing": 10,
+        "lastRun": "2025-12-15T09:45:00Z"
+      }
+    },
+    "acceptanceCriteriaDefined": {
+      "status": "PASS",
+      "message": "Acceptance criteria is clearly defined",
+      "details": {
+        "criteriaCount": 7,
+        "primaryCriterion": "All 10 tests must pass (100% green)"
+      }
+    }
+  },
+  "overallResult": "PASS",
+  "decision": "PROCEED"
+}

@@ -1,0 +1,55 @@
+{
+  "taskId": "example-task-001",
+  "timestamp": "2025-12-15T10:00:00Z",
+  "instruction": {
+    "type": "Build to Green",
+    "fullText": "Build to Green\n\nArchitecture Reference: foreman/architecture/dashboard-architecture.md\nQA Suite Location: tests/qa/dashboard/\nQA Current Status: RED (10 tests failing)\nAcceptance Criteria: All 10 tests must pass (100% green)"
+  },
+  "architecture": {
+    "location": "foreman/architecture/dashboard-architecture.md",
+    "exists": true,
+    "summary": "Dashboard component showing project health metrics with real-time updates",
+    "components": [
+      "Dashboard container component",
+      "MetricCard component",
+      "RefreshButton component",
+      "LoadingSpinner component",
+      "ErrorBoundary component"
+    ]
+  },
+  "qaSuite": {
+    "location": "tests/qa/dashboard/",
+    "exists": true,
+    "status": "RED",
+    "totalTests": 10,
+    "passing": 0,
+    "failing": 10,
+    "criticalTests": [
+      "Dashboard renders without errors",
+      "MetricCard displays health score",
+      "RefreshButton triggers data reload",
+      "LoadingSpinner shows during fetch",
+      "ErrorBoundary catches API errors"
+    ]
+  },
+  "acceptanceCriteria": [
+    "All 10 tests must pass (100% green)",
+    "Zero test failures",
+    "Zero test errors",
+    "Zero skipped tests",
+    "TypeScript compilation passes",
+    "Lint passes with zero errors and zero warnings",
+    "Build succeeds"
+  ],
+  "builder": {
+    "name": "Internal Foreman Builder",
+    "type": "internal",
+    "version": "Builder Protocol v1.0"
+  },
+  "context": {
+    "repository": "maturion-foreman-app",
+    "branch": "feature/dashboard",
+    "prNumber": 123,
+    "relatedIssues": ["#45", "#67"]
+  }
+}

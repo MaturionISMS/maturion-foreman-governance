@@ -1,0 +1,80 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Validation Results",
+  "description": "Evidence of pre-build validation checks",
+  "type": "object",
+  "required": [
+    "taskId",
+    "timestamp",
+    "validations",
+    "overallResult"
+  ],
+  "properties": {
+    "taskId": {
+      "type": "string",
+      "description": "Task ID this validation is for"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When validation was performed"
+    },
+    "validations": {
+      "type": "object",
+      "required": [
+        "instructionFormat",
+        "architectureExists",
+        "qaSuiteExists",
+        "acceptanceCriteriaDefined"
+      ],
+      "properties": {
+        "instructionFormat": {
+          "$ref": "#/definitions/validationCheck"
+        },
+        "architectureExists": {
+          "$ref": "#/definitions/validationCheck"
+        },
+        "qaSuiteExists": {
+          "$ref": "#/definitions/validationCheck"
+        },
+        "acceptanceCriteriaDefined": {
+          "$ref": "#/definitions/validationCheck"
+        }
+      }
+    },
+    "overallResult": {
+      "type": "string",
+      "enum": ["PASS", "FAIL"],
+      "description": "Overall validation result"
+    },
+    "decision": {
+      "type": "string",
+      "enum": ["PROCEED", "REJECT"],
+      "description": "Decision based on validation"
+    },
+    "rejectionReason": {
+      "type": "string",
+      "description": "Reason for rejection (if decision is REJECT)"
+    }
+  },
+  "definitions": {
+    "validationCheck": {
+      "type": "object",
+      "required": ["status", "message"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["PASS", "FAIL"]
+        },
+        "message": {
+          "type": "string",
+          "description": "Detailed message about this check"
+        },
+        "details": {
+          "type": "object",
+          "description": "Additional details about the check"
+        }
+      }
+    }
+  }
+}

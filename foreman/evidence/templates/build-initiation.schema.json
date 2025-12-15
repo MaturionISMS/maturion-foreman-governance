@@ -1,0 +1,163 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Build Initiation Evidence",
+  "description": "Evidence document created at the start of a Build to Green task",
+  "type": "object",
+  "required": [
+    "taskId",
+    "timestamp",
+    "instruction",
+    "architecture",
+    "qaSuite",
+    "acceptanceCriteria",
+    "builder"
+  ],
+  "properties": {
+    "taskId": {
+      "type": "string",
+      "description": "Unique identifier for this build task",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when build task started"
+    },
+    "instruction": {
+      "type": "object",
+      "required": ["type", "fullText"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "Build to Green",
+          "description": "Must be exactly 'Build to Green'"
+        },
+        "fullText": {
+          "type": "string",
+          "description": "Complete instruction text received"
+        }
+      }
+    },
+    "architecture": {
+      "type": "object",
+      "required": ["location", "exists", "summary"],
+      "properties": {
+        "location": {
+          "type": "string",
+          "description": "Path to architecture document"
+        },
+        "exists": {
+          "type": "boolean",
+          "description": "Whether architecture document exists and is accessible"
+        },
+        "summary": {
+          "type": "string",
+          "description": "Brief summary of what architecture defines"
+        },
+        "components": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of key components defined in architecture"
+        }
+      }
+    },
+    "qaSuite": {
+      "type": "object",
+      "required": ["location", "exists", "status", "totalTests", "passing", "failing"],
+      "properties": {
+        "location": {
+          "type": "string",
+          "description": "Path to QA test suite"
+        },
+        "exists": {
+          "type": "boolean",
+          "description": "Whether QA suite exists and is accessible"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["RED", "GREEN", "UNKNOWN"],
+          "description": "Current status of QA suite"
+        },
+        "totalTests": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total number of tests in suite"
+        },
+        "passing": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of tests currently passing"
+        },
+        "failing": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of tests currently failing"
+        },
+        "criticalTests": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Names of critical failing tests"
+        }
+      }
+    },
+    "acceptanceCriteria": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "description": "List of acceptance criteria for task completion"
+    },
+    "builder": {
+      "type": "object",
+      "required": ["name", "type", "version"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of builder executing this task"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["internal", "external", "human"],
+          "description": "Type of builder"
+        },
+        "version": {
+          "type": "string",
+          "description": "Builder protocol version"
+        },
+        "operator": {
+          "type": "string",
+          "description": "Name of human operator (if type is 'human')"
+        }
+      }
+    },
+    "context": {
+      "type": "object",
+      "properties": {
+        "repository": {
+          "type": "string",
+          "description": "Repository where build is happening"
+        },
+        "branch": {
+          "type": "string",
+          "description": "Git branch for this build"
+        },
+        "prNumber": {
+          "type": "integer",
+          "description": "Pull request number (if applicable)"
+        },
+        "relatedIssues": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Related issue numbers or IDs"
+        }
+      }
+    }
+  }
+}
