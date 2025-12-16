@@ -219,12 +219,9 @@ export async function executeGate(context: GateContext): Promise<GateExecutionRe
   const controlResults: ControlResult[] = [];
   const violations: any[] = [];
   
-  // Determine if we should use early exit (stop on first failure)
-  // For dry run or normal execution, continue all controls
-  // For specific failure scenarios (e.g., "qiel-failure" branch), stop on first failure
-  const earlyExit = context.branch.includes('qiel-failure') || 
-                    context.branch.includes('cs1-failure') ||
-                    context.branch.includes('failure');
+  // Per GOVERNANCE_GATE_CANON.md: "If any control fails, remaining controls are skipped"
+  // Early exit is ALWAYS enabled for fail-fast behavior
+  const earlyExit = true;
   
   // Control 1: QIEL
   const qielResult = await validateQIEL({
@@ -239,7 +236,7 @@ export async function executeGate(context: GateContext): Promise<GateExecutionRe
     violations.push(...qielResult.violations);
   }
   
-  // Early exit if QIEL fails and early exit is enabled
+  // Early exit if QIEL fails
   if (earlyExit && qielResult.status === 'FAIL') {
     const reportMarkdown = generateFailureReport(controlResults, violations);
     return {
@@ -265,7 +262,7 @@ export async function executeGate(context: GateContext): Promise<GateExecutionRe
     violations.push(...cs1Result.violations);
   }
   
-  // Early exit if CS1 fails and early exit is enabled
+  // Early exit if CS1 fails
   if (earlyExit && cs1Result.status === 'FAIL') {
     const reportMarkdown = generateFailureReport(controlResults, violations);
     return {

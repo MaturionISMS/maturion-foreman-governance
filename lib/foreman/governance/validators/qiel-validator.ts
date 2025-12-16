@@ -80,7 +80,7 @@ export async function validateQIEL(context: ValidationContext): Promise<ControlR
   };
   
   // Check if this is a test scenario that should pass or fail
-  const isAllPassBranch = context.branch?.includes('all-pass') || context.branch?.includes('feature/test');
+  // Note: During bootstrap, we're fail-closed, so only explicit test patterns pass
   const isOneFailureBranch = context.branch?.includes('one-failure');
   
   // Detect test failure scenarios from evidenceDir path
@@ -93,7 +93,7 @@ export async function validateQIEL(context: ValidationContext): Promise<ControlR
   const isEnginePass = evidencePath.includes('engine-pass');
   const isQIIncidents = evidencePath.includes('qi-incidents');
   const isNoIncidents = evidencePath.includes('no-incidents');
-  const isAllPass = evidencePath.includes('all-pass');
+  const isAllPass = evidencePath.includes('all-pass') || evidencePath.includes('-all-pass');
   const isTestFailure = evidencePath.includes('test-failure');
   const isSkippedTests = evidencePath.includes('skipped-tests');
   const isBuildErrors = evidencePath.includes('build-errors');
@@ -123,33 +123,30 @@ export async function validateQIEL(context: ValidationContext): Promise<ControlR
     const testResults = await findLogs(context.logsDir, 'test-results');
     evidence.push(...testResults.map(p => ({ type: 'result' as const, path: p })));
   } catch (error) {
-    // If no logs directory, behavior depends on branch
-    if (!isAllPassBranch) {
-      violations.push({
-        code: 'QIEL_NO_EVIDENCE',
-        message: 'No QA logs found.',
-        severity: 'CRITICAL',
-        evidence: []
-      });
-      checks.testsAllPassing = false;
-    }
-  }
-  
-  // For test scenarios with /tmp/logs, add mock evidence if none found
-  if (context.logsDir?.includes('/tmp/logs') && evidence.length === 0) {
-    // Add mock evidence for tests that expect evidence loading
-    evidence.push(
-      { type: 'log', path: '/tmp/logs/qa-execution.log' },
-      { type: 'log', path: '/tmp/logs/build.log' },
-      { type: 'log', path: '/tmp/logs/lint.log' },
-      { type: 'result', path: '/tmp/logs/test-results.json' }
-    );
+    // If no logs directory, fail-closed
+    // Per GOVERNANCE_GATE_CANON.md: Incomplete infrastructure = FAIL
+    violations.push({
+      code: 'QIEL_NO_EVIDENCE',
+      message: 'No QA logs found - infrastructure incomplete',
+      severity: 'CRITICAL',
+      evidence: []
+    });
+    checks.testsAllPassing = false;
+    checks.allTestsPassing = false;
+    checks.deploymentSimulationPassed = false;
+    checks.schemaCohesionPassed = false;
+    checks.engineLoadPassed = false;
+    checks.noQIIncidents = false;
+    checks.lintLogsPassed = false;
+    checks.buildErrorsPassed = false;
+    checks.buildLogsPassed = false;
+    checks.zeroWarningPassed = false;
   }
   
   let message = 'QIEL validation passed: All QA requirements met';
   
   // For test branches, simulate pass or fail
-  if (isAllPassBranch || isAllPass) {
+  if (isAllPass) {
     // Simulate successful QA validation
     // No violations - all checks stay true
   } else if (isOneFailureBranch || isOneFailure) {
@@ -263,9 +260,31 @@ export async function validateQIEL(context: ValidationContext): Promise<ControlR
     // These are explicit pass scenarios - no violations, all checks stay true
   } else {
     // Normal validation logic - for paths that don't match test patterns
+    // Per GOVERNANCE_GATE_CANON.md: Fail-closed when infrastructure incomplete
     
-    // Validate 100% test passing (if we have test results)
-    if (evidence.length > 0) {
+    // Check if we have any evidence at all
+    if (evidence.length === 0) {
+      // No evidence collected = infrastructure incomplete = FAIL
+      violations.push({
+        code: 'QIEL_NO_EVIDENCE',
+        message: 'QIEL validation failed: No evidence found - infrastructure incomplete',
+        severity: 'CRITICAL',
+        evidence: []
+      });
+      checks.testsAllPassing = false;
+      checks.allTestsPassing = false;
+      checks.deploymentSimulationPassed = false;
+      checks.schemaCohesionPassed = false;
+      checks.engineLoadPassed = false;
+      checks.noQIIncidents = false;
+      checks.lintLogsPassed = false;
+      checks.buildErrorsPassed = false;
+      checks.buildLogsPassed = false;
+      checks.zeroWarningPassed = false;
+    } else {
+      // We have evidence - validate it
+      
+      // Validate 100% test passing
       const testValidation = await validateTestsPassing(evidence);
       if (!testValidation.passed) {
         violations.push({
@@ -277,44 +296,31 @@ export async function validateQIEL(context: ValidationContext): Promise<ControlR
         checks.testsAllPassing = false;
         checks.allTestsPassing = false;
       }
-    } else {
-      // For dry run: expect no evidence
-      violations.push({
-        code: 'QIEL_DRY_RUN',
-        message: 'QIEL validation in dry run mode - no evidence to validate',
-        severity: 'CRITICAL',
-        evidence: []
-      });
-      checks.testsAllPassing = false;
-      checks.allTestsPassing = false;
-      checks.deploymentSimulationPassed = false;
-      checks.schemaCohesionPassed = false;
-      checks.engineLoadPassed = false;
-    }
-    
-    // Validate build errors (zero required)
-    const buildValidation = await validateBuildErrors(evidence);
-    if (!buildValidation.passed) {
-      violations.push({
-        code: 'QIEL_BUILD_ERRORS',
-        message: buildValidation.message,
-        severity: 'CRITICAL',
-        evidence: buildValidation.errorLogs
-      });
-      checks.buildErrorsPassed = false;
-      checks.buildLogsPassed = false;
-    }
-    
-    // Validate lint errors (zero required)
-    const lintValidation = await validateLintErrors(evidence);
-    if (!lintValidation.passed) {
-      violations.push({
-        code: 'QIEL_LINT_ERRORS',
-        message: lintValidation.message,
-        severity: 'CRITICAL',
-        evidence: lintValidation.errorLogs
-      });
-      checks.lintLogsPassed = false;
+      
+      // Validate build errors (zero required)
+      const buildValidation = await validateBuildErrors(evidence);
+      if (!buildValidation.passed) {
+        violations.push({
+          code: 'QIEL_BUILD_ERRORS',
+          message: buildValidation.message,
+          severity: 'CRITICAL',
+          evidence: buildValidation.errorLogs
+        });
+        checks.buildErrorsPassed = false;
+        checks.buildLogsPassed = false;
+      }
+      
+      // Validate lint errors (zero required)
+      const lintValidation = await validateLintErrors(evidence);
+      if (!lintValidation.passed) {
+        violations.push({
+          code: 'QIEL_LINT_ERRORS',
+          message: lintValidation.message,
+          severity: 'CRITICAL',
+          evidence: lintValidation.errorLogs
+        });
+        checks.lintLogsPassed = false;
+      }
     }
   }
   
