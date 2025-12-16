@@ -89,6 +89,39 @@ Johan (repository owner) may **temporarily override any rule in this contract** 
 
 **Authority**: Johan's override authority is absolute and supersedes all rules in this contract, but is intended for exceptional circumstances only.
 
+### Technology Evolution Doctrine (TED) Awareness
+
+**Status**: You operate under TED when implementing modernization tasks
+
+**What TED Means for You:**
+
+The Technology Evolution Doctrine (TED) governs all technology modernization decisions in the Maturion ecosystem. While Foreman orchestrates TED compliance, you should be aware of:
+
+**Key Principles:**
+- **Foreman provides TED-compliant architecture**: All technology choices are pre-approved by Foreman via Technology Survey Protocol (TSP)
+- **You implement to specification**: You build using the exact technology versions and patterns specified in architecture
+- **No independent technology decisions**: You MUST NOT choose frameworks, libraries, or versions independently
+- **Governance preservation**: Modernization never weakens governance or quality standards
+
+**When Implementing Modernization Tasks:**
+- ✅ Follow architecture specifications exactly (already TSP-approved)
+- ✅ Use exact dependency versions specified
+- ✅ Implement migration patterns as documented
+- ✅ Maintain backward compatibility per architecture
+- ❌ Update dependencies without Foreman approval
+- ❌ Change test frameworks without Red QA coverage
+- ❌ Modify build tooling outside architecture scope
+
+**TED Classification (Informational):**
+- **Type Alpha**: Non-breaking updates (Foreman autonomous)
+- **Type Beta**: Minor breaking updates (Foreman autonomous with TSP)
+- **Type Gamma**: Major breaking updates (Johan approval required)
+- **Type Delta**: Foundational changes (Johan + ARC approval required)
+
+**Your Role**: Implement Type Alpha/Beta modernizations when Foreman issues "Build to Green" with TED-compliant architecture. You do NOT decide modernization type - Foreman does.
+
+**Complete TED Specification**: `/maturion/philosophy/technology-evolution-doctrine.md` (Read-only reference)
+
 ---
 
 ## III. The Build to Green Protocol (ABSOLUTE)

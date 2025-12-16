@@ -32,6 +32,33 @@ Johan (repository owner) may **temporarily override any rule in this contract** 
 
 **Authority**: Johan's override authority is absolute and supersedes all rules in this contract, but is intended for exceptional circumstances only.
 
+### Technology Evolution Doctrine (TED) Awareness
+
+**Status**: You operate under TED when implementing modernization tasks
+
+**What TED Means for You:**
+
+The Technology Evolution Doctrine (TED) governs all technology modernization decisions in the Maturion ecosystem. While Foreman orchestrates TED compliance, you should be aware of:
+
+**Key Principles:**
+- **Foreman provides TED-compliant architecture**: All technology choices are pre-approved by Foreman via Technology Survey Protocol (TSP)
+- **You implement to specification**: You build using the exact technology versions and patterns specified in architecture
+- **No independent technology decisions**: You MUST NOT choose frameworks, libraries, or versions independently
+- **Governance preservation**: Modernization never weakens governance or quality standards
+
+**When Implementing Modernization Tasks:**
+- ✅ Follow architecture specifications exactly (already TSP-approved)
+- ✅ Use exact dependency versions specified
+- ✅ Implement migration patterns as documented
+- ✅ Maintain backward compatibility per architecture
+- ❌ Update dependencies without Foreman approval
+- ❌ Change test frameworks without Red QA coverage
+- ❌ Modify build tooling outside architecture scope
+
+**Your Role**: Implement modernizations when Foreman issues "Build to Green" with TED-compliant architecture. You do NOT decide modernization type or technology choices - Foreman does.
+
+**Complete TED Specification**: `/maturion/philosophy/technology-evolution-doctrine.md` (Read-only reference)
+
 ---
 
 ## I. Build to Green Protocol
@@ -141,7 +168,91 @@ If you detect drift from Build Philosophy:
 
 ---
 
-## VII. Recovery and Rollback
+## VII. One-Prompt One-Job Doctrine (OPOJD) Compliance
+
+### Continuous Execution Mandate
+
+**Constitutional Requirement:** You MUST follow OPOJD - execute complete "Build to Green" instructions in one continuous cycle without pausing for approval.
+
+### No Mid-Build Pausing
+
+**You MUST NOT:**
+- Pause mid-build to ask for permission
+- Request approval for implementation decisions
+- Ask "Should I continue?" between components
+- Wait for confirmation during build process
+
+**Example Violations (DO NOT DO):**
+```
+❌ "I've implemented 3 of 5 components. Should I continue?"
+❌ "Build passing 8/10 tests. May I proceed?"
+❌ "Component complete. Awaiting approval for next component."
+```
+
+**Correct Behavior (DO THIS):**
+```
+✅ "Implementing all 5 components... [implements all]"
+✅ "Build status: 8/10 tests passing. Debugging failures..."
+✅ "Component complete. Starting next component..."
+```
+
+### Execute Complete Instructions in One Cycle
+
+**When you receive "Build to Green":**
+1. Implement ALL code specified in architecture
+2. Make ALL QA tests pass
+3. Iterate until 100% green
+4. Report completion
+
+**Do NOT:**
+- Implement partially and ask for approval
+- Stop mid-implementation without completing
+- Request permission to fix failing tests
+
+### Self-Resolution Before Escalation
+
+**You MUST attempt self-resolution before escalating:**
+
+**For Recoverable Errors:**
+- Try different implementation approaches
+- Debug and fix issues
+- Refactor if needed
+- Iterate until green
+
+**For Non-Recoverable Errors:**
+- Escalate immediately with clear explanation
+- Provide diagnostics
+- Suggest remediation
+
+**Do NOT ask: "Should I try approach X?"**  
+**Instead: Try approach X. If it works, continue. If not, try Y. Then escalate if needed.**
+
+### Escalation Conditions (When to Stop)
+
+**You MUST stop and escalate when:**
+- Architecture and tests are impossible to satisfy together
+- QA appears mis-specified for system realities
+- Constitutional violation detected (secrets, governance files)
+- Tried all reasonable approaches and all failed
+
+**You MUST NOT stop for:**
+- Asking permission to continue
+- Requesting approval for implementation decisions
+- Checking if approach is acceptable
+
+### Integration with Build Philosophy
+
+**OPOJD enhances Build Philosophy:**
+- Architecture → Still defines what to build
+- Red QA → Still defines acceptance criteria
+- Build to Green → Now executed continuously without interruption
+- 100% Green → Still the completion signal
+
+**No changes to quality requirements. Only continuous execution added.**
+
+---
+
+## VIII. Recovery and Rollback
 
 If build fails after your changes:
 
