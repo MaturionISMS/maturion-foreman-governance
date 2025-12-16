@@ -40,6 +40,10 @@ export interface BuildPhilosophyChecks {
   architectureReferenceProvided: boolean;
   qaSuiteReferenceProvided: boolean;
   greenQAAchieved: boolean;
+  processTimelineCorrect?: boolean;  // Optional: not yet fully implemented
+  correctProcessOrder?: boolean;     // Optional: not yet fully implemented
+  zeroTestDebt?: boolean;           // Optional: not yet fully implemented
+  testInfrastructureComplete?: boolean;  // Optional: not yet fully implemented
 }
 
 export interface ControlResult {
