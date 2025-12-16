@@ -298,10 +298,13 @@ export async function validateBuildPhilosophy(context: ValidationContext): Promi
     );
     
     if (architectureDocs.length > 0) {
-      evidence.push(...architectureDocs.map(p => ({
-        type: (p.includes('checklist-validation') ? 'report' : 'document') as const,
-        path: p
-      })));
+      evidence.push(...architectureDocs.map(p => {
+        const type: 'report' | 'document' = p.includes('checklist-validation') ? 'report' : 'document';
+        return {
+          type,
+          path: p
+        };
+      }));
     } else {
       status = 'FAIL';  // Latch to FAIL
       violations.push({
@@ -322,7 +325,7 @@ export async function validateBuildPhilosophy(context: ValidationContext): Promi
     
     if (redQaDocs.length > 0) {
       evidence.push(...redQaDocs.map(p => ({
-        type: 'document' as const,
+        type: 'document' as 'document',
         path: p
       })));
     } else {
