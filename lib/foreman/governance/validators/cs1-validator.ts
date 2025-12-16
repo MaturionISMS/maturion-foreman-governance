@@ -115,14 +115,10 @@ export async function validateCS1(context: ValidationContext): Promise<ControlRe
   }
   
   // Check protected paths exist
-  // Skip for test workspace as test files may not exist
-  const skipPathCheck = context.workspaceRoot.includes('/workspace');
-  if (!skipPathCheck) {
-    const pathViolations = await checkProtectedPathsExist(context.workspaceRoot);
-    if (pathViolations.length > 0) {
-      checks.protectedPathsIntact = false;
-      violations.push(...pathViolations);
-    }
+  const pathViolations = await checkProtectedPathsExist(context.workspaceRoot);
+  if (pathViolations.length > 0) {
+    checks.protectedPathsIntact = false;
+    violations.push(...pathViolations);
   }
   
   // Load baseline hashes if available
@@ -407,12 +403,6 @@ async function checkBypassAttempts(
 async function checkProtectedPathsExist(workspaceRoot: string): Promise<Violation[]> {
   const violations: Violation[] = [];
   
-  // Only check if files exist in real workspace (not test workspace)
-  // For test workspace (/workspace), skip this check as test files may not exist
-  if (workspaceRoot.includes('/workspace')) {
-    return violations;
-  }
-  
   // Critical protected files that must exist
   const criticalFiles = [
     'BUILD_PHILOSOPHY.md',
@@ -420,24 +410,23 @@ async function checkProtectedPathsExist(workspaceRoot: string): Promise<Violatio
     '.github/foreman/agent-contract.md'
   ];
   
+  // For test scenarios with /workspace, use process.cwd() as the actual workspace
+  const isTestWorkspace = workspaceRoot.includes('/workspace');
+  const actualWorkspace = isTestWorkspace ? process.cwd() : workspaceRoot;
+  
   for (const file of criticalFiles) {
-    const fullPath = path.join(workspaceRoot, file);
+    const fullPath = path.join(actualWorkspace, file);
     
     try {
       await fs.access(fullPath);
     } catch (error) {
-      // Try with process.cwd() as fallback
-      const altPath = path.join(process.cwd(), file);
-      try {
-        await fs.access(altPath);
-      } catch (e) {
-        violations.push({
-          type: 'PROTECTED_FILE_DELETED',
-          description: `Critical protected file missing: ${file}`,
-          severity: 'CRITICAL',
-          evidence: []
-        });
-      }
+      // Fail closed: If file doesn't exist, it's a violation
+      violations.push({
+        type: 'PROTECTED_FILE_DELETED',
+        description: `Critical protected file missing: ${file}`,
+        severity: 'CRITICAL',
+        evidence: []
+      });
     }
   }
   
