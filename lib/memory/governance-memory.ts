@@ -99,6 +99,37 @@ export async function writeGovernanceMemory(event: GovernanceEventInput): Promis
       immutable: true,
       embodiment: 'foreman',
       version: 1,
+      ...event.metadata,
+    },
+  }
+
+  governanceStore.push(governanceEvent)
+  return governanceEvent
+}
+
+/**
+ * Simple governance event logger (backward compatible with existing tests)
+ */
+export async function logGovernanceEvent(event: {
+  type: string
+  severity: string
+  description: string
+  metadata?: Record<string, any>
+}): Promise<void> {
+  await writeGovernanceMemory({
+    category: 'audit_event',
+    actor: 'foreman',
+    content: {
+      type: event.type,
+      description: event.description,
+      severity: event.severity,
+      ...event.metadata,
+    },
+    tags: [event.type, event.severity],
+    metadata: event.metadata,
+  })
+}
+      version: 1,
       ...(event.metadata || {})
     }
   }
@@ -320,4 +351,138 @@ export async function attemptRedaction(params: {
  */
 export function clearGovernanceMemory(): void {
   governanceStore.length = 0
+}
+
+/**
+ * Log governance gate failure
+ * Extension for Issue A3 — FL/CI Feedback Loop
+ */
+export async function logGovernanceGateFailure(artifact: {
+  id: string
+  failureType: string
+  correctiveDomain: string
+  prNumber: number
+  learningSignal: { rcaCategory: string }
+  severity: string
+  failureDescription: string
+}): Promise<void> {
+  await logGovernanceEvent({
+    type: 'governance_gate_failure',
+    severity: artifact.severity,
+    description: `Governance gate failure: ${artifact.failureType} - ${artifact.failureDescription}`,
+    metadata: {
+      artifactId: artifact.id,
+      failureType: artifact.failureType,
+      correctiveDomain: artifact.correctiveDomain,
+      prNumber: artifact.prNumber,
+      rcaCategory: artifact.learningSignal.rcaCategory,
+    },
+  })
+}
+
+/**
+ * Query governance failures
+ * Extension for Issue A3 — FL/CI Feedback Loop
+ */
+export async function queryGovernanceFailures(filters: {
+  artifactId?: string
+  failureType?: string
+  correctiveDomain?: string
+  since?: string
+  until?: string
+  resolved?: boolean
+}): Promise<any[]> {
+  // Query governance memory store
+  let results = governanceStore.filter(event => {
+    if (event.content.type !== 'governance_gate_failure') return false
+    
+    if (filters.artifactId && event.metadata.artifactId !== filters.artifactId) {
+      return false
+    }
+    if (filters.failureType && event.metadata.failureType !== filters.failureType) {
+      return false
+    }
+    if (filters.correctiveDomain && event.metadata.correctiveDomain !== filters.correctiveDomain) {
+      return false
+    }
+    if (filters.since && event.timestamp < filters.since) {
+      return false
+    }
+    if (filters.until && event.timestamp > filters.until) {
+      return false
+    }
+    return true
+  })
+
+  // Map to artifact structure for compatibility with tests
+  return results.map(event => ({
+    id: event.metadata.artifactId || event.id,
+    failureType: event.metadata.failureType,
+    correctiveDomain: event.metadata.correctiveDomain,
+    prNumber: event.metadata.prNumber,
+    timestamp: event.timestamp,
+    learningSignal: {
+      rcaCategory: event.metadata.rcaCategory,
+    },
+    resolution: event.resolution ? {
+      status: 'resolved',
+      resolvedAt: event.resolvedAt,
+    } : undefined,
+    flciEntry: event.metadata.flciEntryId ? {
+      entryId: event.metadata.flciEntryId,
+    } : undefined,
+  }))
+}
+
+/**
+ * Get failure statistics
+ * Extension for Issue A3 — FL/CI Feedback Loop
+ */
+export async function getFailureStatistics(timeRange?: {
+  since: string
+  until: string
+}): Promise<{
+  total: number
+  byType: Record<string, number>
+  byDomain: Record<string, number>
+  resolved: number
+  pending: number
+}> {
+  let failures = governanceStore.filter(event => 
+    event.content.type === 'governance_gate_failure'
+  )
+
+  if (timeRange) {
+    failures = failures.filter(event => 
+      event.timestamp >= timeRange.since &&
+      event.timestamp <= timeRange.until
+    )
+  }
+
+  const byType: Record<string, number> = {}
+  const byDomain: Record<string, number> = {}
+  let resolved = 0
+  let pending = 0
+
+  failures.forEach(event => {
+    const type = event.metadata.failureType || 'unknown'
+    const domain = event.metadata.correctiveDomain || 'unknown'
+    
+    byType[type] = (byType[type] || 0) + 1
+    byDomain[domain] = (byDomain[domain] || 0) + 1
+    
+    if (event.resolution) {
+      resolved++
+    } else {
+      pending++
+    }
+  })
+
+  return {
+    total: failures.length,
+    byType,
+    byDomain,
+    resolved,
+    pending,
+  }
 }
