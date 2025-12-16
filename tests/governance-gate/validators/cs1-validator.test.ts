@@ -213,22 +213,40 @@ describe('CS1 Validator (Constitutional Integrity)', () => {
 
     it('should fail if protected file deleted', async () => {
       const { validateCS1 } = await import('@/lib/foreman/governance/validators/cs1-validator');
+      const fs = await import('fs/promises');
+      const path = await import('path');
       
-      const context = {
-        prNumber: 123,
-        commitSha: 'abc123',
-        workspaceRoot: '/workspace',
-        changedFiles: [], // BUILD_PHILOSOPHY.md deleted (will be detected by validator)
-      };
+      // Temporarily rename BUILD_PHILOSOPHY.md to simulate deletion
+      const buildPhilFile = path.join(process.cwd(), 'BUILD_PHILOSOPHY.md');
+      const backupFile = path.join(process.cwd(), 'BUILD_PHILOSOPHY.md.backup');
       
-      const result = await validateCS1(context);
-      
-      expect(result.status).toBe('FAIL');
-      expect(result.severity).toBe('CRITICAL');
-      expect(result.violations).toContainEqual(expect.objectContaining({
-        type: 'PROTECTED_FILE_DELETED',
-        description: expect.stringContaining('BUILD_PHILOSOPHY.md')
-      }));
+      try {
+        // Backup the file
+        await fs.rename(buildPhilFile, backupFile);
+        
+        const context = {
+          prNumber: 123,
+          commitSha: 'abc123',
+          workspaceRoot: '/workspace',
+          changedFiles: [], // BUILD_PHILOSOPHY.md deleted (will be detected by validator)
+        };
+        
+        const result = await validateCS1(context);
+        
+        expect(result.status).toBe('FAIL');
+        expect(result.severity).toBe('CRITICAL');
+        expect(result.violations).toContainEqual(expect.objectContaining({
+          type: 'PROTECTED_FILE_DELETED',
+          description: expect.stringContaining('BUILD_PHILOSOPHY.md')
+        }));
+      } finally {
+        // Restore the file
+        try {
+          await fs.rename(backupFile, buildPhilFile);
+        } catch (e) {
+          // File might not have been backed up if test failed early
+        }
+      }
     });
   });
 
