@@ -71,6 +71,9 @@ export async function validateBuildPhilosophy(context: ValidationContext): Promi
   const evidence: EvidenceReference[] = [];
   const violations: Violation[] = [];
   
+  // Initialize status as PASS - will latch to FAIL on any violation
+  let status: 'PASS' | 'FAIL' = 'PASS';
+  
   // Initialize all checks as passing
   const checks: BuildPhilosophyChecks = {
     architectureComplete: true,
@@ -111,6 +114,7 @@ export async function validateBuildPhilosophy(context: ValidationContext): Promi
   
   // Handle test scenarios
   if (isNoArch) {
+    status = 'FAIL';  // Latch to FAIL
     violations.push({
       code: 'BUILD_PHILOSOPHY_NO_ARCHITECTURE',
       message: 'Architecture document not found',
@@ -124,6 +128,7 @@ export async function validateBuildPhilosophy(context: ValidationContext): Promi
   }
   
   if (isNoChecklist) {
+    status = 'FAIL';  // Latch to FAIL
     violations.push({
       code: 'BUILD_PHILOSOPHY_NO_CHECKLIST',
       message: 'Checklist validation not found',
@@ -135,6 +140,7 @@ export async function validateBuildPhilosophy(context: ValidationContext): Promi
   }
   
   if (isNoRedQA) {
+    status = 'FAIL';  // Latch to FAIL
     violations.push({
       code: 'BUILD_PHILOSOPHY_NO_RED_QA',
       message: 'Red QA evidence not found',
@@ -148,6 +154,7 @@ export async function validateBuildPhilosophy(context: ValidationContext): Promi
   }
   
   if (isQANotRed) {
+    status = 'FAIL';  // Latch to FAIL
     violations.push({
       code: 'BUILD_PHILOSOPHY_QA_NOT_RED',
       message: 'QA was not RED before build',
@@ -160,6 +167,7 @@ export async function validateBuildPhilosophy(context: ValidationContext): Promi
   }
   
   if (isWrongInstruction) {
+    status = 'FAIL';  // Latch to FAIL
     violations.push({
       code: 'BUILD_PHILOSOPHY_WRONG_INSTRUCTION',
       message: 'Build instruction format incorrect',
@@ -172,6 +180,7 @@ export async function validateBuildPhilosophy(context: ValidationContext): Promi
   }
   
   if (isNot100) {
+    status = 'FAIL';  // Latch to FAIL
     violations.push({
       code: 'BUILD_PHILOSOPHY_NOT_100',
       message: 'QA is not 100% passing',
@@ -185,6 +194,7 @@ export async function validateBuildPhilosophy(context: ValidationContext): Promi
   }
   
   if (isWrongOrder || isBuildBeforeQA) {
+    status = 'FAIL';  // Latch to FAIL
     violations.push({
       code: 'BUILD_PHILOSOPHY_WRONG_ORDER',
       message: 'Build Philosophy steps out of order',
@@ -198,6 +208,7 @@ export async function validateBuildPhilosophy(context: ValidationContext): Promi
   }
   
   if (isTestDebt) {
+    status = 'FAIL';  // Latch to FAIL
     violations.push({
       code: 'BUILD_PHILOSOPHY_TEST_DEBT',
       message: 'Test debt detected',
@@ -211,6 +222,7 @@ export async function validateBuildPhilosophy(context: ValidationContext): Promi
   }
   
   if (isIncompleteHelpers) {
+    status = 'FAIL';  // Latch to FAIL
     violations.push({
       code: 'BUILD_PHILOSOPHY_INCOMPLETE_HELPERS',
       message: 'Test infrastructure incomplete',
@@ -224,6 +236,7 @@ export async function validateBuildPhilosophy(context: ValidationContext): Promi
   }
   
   if (isProcessViolation) {
+    status = 'FAIL';  // Latch to FAIL
     violations.push({
       code: 'BUILD_PHILOSOPHY_PROCESS_VIOLATION',
       message: 'Build Philosophy process violation',
@@ -290,6 +303,7 @@ export async function validateBuildPhilosophy(context: ValidationContext): Promi
         path: p
       })));
     } else {
+      status = 'FAIL';  // Latch to FAIL
       violations.push({
         code: 'BUILD_PHILOSOPHY_NO_ARCHITECTURE',
         message: 'No architecture document found',
@@ -312,6 +326,7 @@ export async function validateBuildPhilosophy(context: ValidationContext): Promi
         path: p
       })));
     } else {
+      status = 'FAIL';  // Latch to FAIL
       violations.push({
         code: 'BUILD_PHILOSOPHY_NO_RED_QA',
         message: 'No Red QA evidence found',
@@ -326,6 +341,7 @@ export async function validateBuildPhilosophy(context: ValidationContext): Promi
     // Check for test debt
     const testDebtCheck = await checkTestDebt(workspaceRoot);
     if (!testDebtCheck.passed) {
+      status = 'FAIL';  // Latch to FAIL
       violations.push({
         code: 'BUILD_PHILOSOPHY_TEST_DEBT',
         message: testDebtCheck.message,
@@ -336,8 +352,7 @@ export async function validateBuildPhilosophy(context: ValidationContext): Promi
     }
   }
   
-  // Determine status
-  const status = violations.length === 0 ? 'PASS' : 'FAIL';
+  // Generate message based on current status (DO NOT recompute status here)
   const message = status === 'PASS'
     ? 'Build Philosophy validation passed: Process correctly followed'
     : `Build Philosophy validation failed: ${violations.length} violation(s) detected`;

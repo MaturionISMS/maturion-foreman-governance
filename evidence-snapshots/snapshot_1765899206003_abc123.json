@@ -1,0 +1,120 @@
+{
+  "snapshotId": "snapshot_1765899206003_abc123",
+  "timestamp": "2025-12-16T15:33:26.003Z",
+  "prNumber": 123,
+  "commitSha": "abc123",
+  "evidence": {
+    "QIEL": {
+      "files": [
+        {
+          "path": "/tmp/evidence/qiel-validation.log",
+          "hash": "42a09abe28d9e7025e021458b3b8ec70b531be5585b343259cdca0830361ac4f",
+          "size": 1024,
+          "timestamp": "2025-12-16T15:33:26.004Z",
+          "type": "log"
+        }
+      ],
+      "hashes": {
+        "/tmp/evidence/qiel-validation.log": "42a09abe28d9e7025e021458b3b8ec70b531be5585b343259cdca0830361ac4f"
+      },
+      "metadata": {
+        "collectionTime": "2025-12-16T15:33:26.003Z",
+        "fileCount": 1
+      }
+    },
+    "CS1": {
+      "files": [
+        {
+          "path": "/tmp/evidence/cs1-constitutional-check.log",
+          "hash": "502c2313a9fe0433d30b5c6be18e8a57c1f6f5d7e2a23352b1f06600ff951f2e",
+          "size": 512,
+          "timestamp": "2025-12-16T15:33:26.004Z",
+          "type": "log"
+        }
+      ],
+      "hashes": {
+        "/tmp/evidence/cs1-constitutional-check.log": "502c2313a9fe0433d30b5c6be18e8a57c1f6f5d7e2a23352b1f06600ff951f2e"
+      },
+      "metadata": {
+        "collectionTime": "2025-12-16T15:33:26.003Z",
+        "fileCount": 1
+      }
+    },
+    "CS2": {
+      "files": [],
+      "hashes": {},
+      "metadata": {
+        "collectionTime": "2025-12-16T15:33:26.003Z",
+        "fileCount": 0
+      }
+    },
+    "CS3": {
+      "files": [],
+      "hashes": {},
+      "metadata": {
+        "collectionTime": "2025-12-16T15:33:26.003Z",
+        "fileCount": 0
+      }
+    },
+    "CS4": {
+      "files": [],
+      "hashes": {},
+      "metadata": {
+        "collectionTime": "2025-12-16T15:33:26.003Z",
+        "fileCount": 0
+      }
+    },
+    "CS5": {
+      "files": [],
+      "hashes": {},
+      "metadata": {
+        "collectionTime": "2025-12-16T15:33:26.003Z",
+        "fileCount": 0
+      }
+    },
+    "CS6": {
+      "files": [],
+      "hashes": {},
+      "metadata": {
+        "collectionTime": "2025-12-16T15:33:26.003Z",
+        "fileCount": 0
+      }
+    },
+    "GSR": {
+      "files": [],
+      "hashes": {},
+      "metadata": {
+        "collectionTime": "2025-12-16T15:33:26.003Z",
+        "fileCount": 0
+      }
+    },
+    "BuildPhilosophy": {
+      "files": [
+        {
+          "path": "/tmp/evidence/build-philosophy-validation.md",
+          "hash": "f09a12673cf09ccf900645db7a242829ee35f1991164ed4bb14cd7f0b6f9692e",
+          "size": 2048,
+          "timestamp": "2025-12-16T15:33:26.004Z",
+          "type": "document"
+        }
+      ],
+      "hashes": {
+        "/tmp/evidence/build-philosophy-validation.md": "f09a12673cf09ccf900645db7a242829ee35f1991164ed4bb14cd7f0b6f9692e"
+      },
+      "metadata": {
+        "collectionTime": "2025-12-16T15:33:26.003Z",
+        "fileCount": 1
+      }
+    }
+  },
+  "immutable": true,
+  "hash": "725399987fa9653c4d227cd779f55d5e510dd44ff0abd6c4c1af81aee4628e64",
+  "metadata": {
+    "statistics": {
+      "totalFiles": 3,
+      "totalSize": 3584,
+      "controlsIncluded": 9
+    },
+    "branch": "feature/test"
+  }
+}

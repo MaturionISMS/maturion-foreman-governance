@@ -65,6 +65,9 @@ export async function validateQIEL(context: ValidationContext): Promise<ControlR
   const evidence: EvidenceReference[] = [];
   const violations: Violation[] = [];
   
+  // Initialize status as PASS - will latch to FAIL on any violation
+  let status: 'PASS' | 'FAIL' = 'PASS';
+  
   // Initialize all checks as passing
   const checks: QIELChecks = {
     deploymentSimulationPassed: true,
@@ -125,6 +128,7 @@ export async function validateQIEL(context: ValidationContext): Promise<ControlR
   } catch (error) {
     // If no logs directory, fail-closed
     // Per GOVERNANCE_GATE_CANON.md: Incomplete infrastructure = FAIL
+    status = 'FAIL';  // Latch to FAIL
     violations.push({
       code: 'QIEL_NO_EVIDENCE',
       message: 'No QA logs found - infrastructure incomplete',
@@ -151,6 +155,7 @@ export async function validateQIEL(context: ValidationContext): Promise<ControlR
     // No violations - all checks stay true
   } else if (isOneFailureBranch || isOneFailure) {
     // Simulate one failure
+    status = 'FAIL';  // Latch to FAIL
     violations.push({
       code: 'QIEL_SIMULATED_FAILURE',
       message: 'Simulated QIEL failure for testing',
@@ -160,6 +165,7 @@ export async function validateQIEL(context: ValidationContext): Promise<ControlR
     checks.noQIIncidents = false;
   } else if (isDeploymentFail) {
     // Simulate deployment failure
+    status = 'FAIL';  // Latch to FAIL
     violations.push({
       code: 'QIEL_DEPLOYMENT_FAILURE',
       message: 'Deployment simulation failed',
@@ -170,6 +176,7 @@ export async function validateQIEL(context: ValidationContext): Promise<ControlR
     checks.deploymentSimulationPassed = false;
   } else if (isSchemaFail) {
     // Simulate schema cohesion failure
+    status = 'FAIL';  // Latch to FAIL
     violations.push({
       code: 'QIEL_SCHEMA_VIOLATION',
       message: 'Schema cohesion violations detected',
@@ -180,6 +187,7 @@ export async function validateQIEL(context: ValidationContext): Promise<ControlR
     checks.schemaCohesionPassed = false;
   } else if (isEngineFail) {
     // Simulate engine load failure
+    status = 'FAIL';  // Latch to FAIL
     violations.push({
       code: 'QIEL_ENGINE_FAILURE',
       message: 'Engine load failed',
@@ -190,6 +198,7 @@ export async function validateQIEL(context: ValidationContext): Promise<ControlR
     checks.engineLoadPassed = false;
   } else if (isQIIncidents) {
     // Simulate QI incidents
+    status = 'FAIL';  // Latch to FAIL
     violations.push({
       code: 'QIEL_QI_INCIDENTS',
       message: 'Quality integrity incidents detected',
@@ -200,6 +209,7 @@ export async function validateQIEL(context: ValidationContext): Promise<ControlR
     checks.noQIIncidents = false;
   } else if (isTestFailure) {
     // Simulate test failures
+    status = 'FAIL';  // Latch to FAIL
     violations.push({
       code: 'QIEL_TEST_FAILURES',
       message: 'Some tests failed',
@@ -211,6 +221,7 @@ export async function validateQIEL(context: ValidationContext): Promise<ControlR
     checks.testsAllPassing = false;
   } else if (isSkippedTests) {
     // Simulate skipped tests
+    status = 'FAIL';  // Latch to FAIL
     violations.push({
       code: 'QIEL_TEST_DEBT',
       message: 'Tests skipped - test debt detected',
@@ -223,6 +234,7 @@ export async function validateQIEL(context: ValidationContext): Promise<ControlR
     checks.testsAllPassing = false;
   } else if (isBuildErrors) {
     // Simulate build errors
+    status = 'FAIL';  // Latch to FAIL
     violations.push({
       code: 'QIEL_BUILD_ERRORS',
       message: 'Build errors detected',
@@ -234,6 +246,7 @@ export async function validateQIEL(context: ValidationContext): Promise<ControlR
     checks.buildErrorsPassed = false;
   } else if (isLintErrors) {
     // Simulate lint errors
+    status = 'FAIL';  // Latch to FAIL
     violations.push({
       code: 'QIEL_LINT_ERRORS',
       message: 'Lint errors detected',
@@ -244,6 +257,7 @@ export async function validateQIEL(context: ValidationContext): Promise<ControlR
     checks.lintLogsPassed = false;
   } else if (isWarnings) {
     // Simulate warnings
+    status = 'FAIL';  // Latch to FAIL
     violations.push({
       code: 'QIEL_WARNINGS',
       message: 'Warnings detected',
@@ -265,6 +279,7 @@ export async function validateQIEL(context: ValidationContext): Promise<ControlR
     // Check if we have any evidence at all
     if (evidence.length === 0) {
       // No evidence collected = infrastructure incomplete = FAIL
+      status = 'FAIL';  // Latch to FAIL
       violations.push({
         code: 'QIEL_NO_EVIDENCE',
         message: 'QIEL validation failed: No evidence found - infrastructure incomplete',
@@ -287,6 +302,7 @@ export async function validateQIEL(context: ValidationContext): Promise<ControlR
       // Validate 100% test passing
       const testValidation = await validateTestsPassing(evidence);
       if (!testValidation.passed) {
+        status = 'FAIL';  // Latch to FAIL
         violations.push({
           code: 'QIEL_TESTS_FAILING',
           message: testValidation.message,
@@ -300,6 +316,7 @@ export async function validateQIEL(context: ValidationContext): Promise<ControlR
       // Validate build errors (zero required)
       const buildValidation = await validateBuildErrors(evidence);
       if (!buildValidation.passed) {
+        status = 'FAIL';  // Latch to FAIL
         violations.push({
           code: 'QIEL_BUILD_ERRORS',
           message: buildValidation.message,
@@ -313,6 +330,7 @@ export async function validateQIEL(context: ValidationContext): Promise<ControlR
       // Validate lint errors (zero required)
       const lintValidation = await validateLintErrors(evidence);
       if (!lintValidation.passed) {
+        status = 'FAIL';  // Latch to FAIL
         violations.push({
           code: 'QIEL_LINT_ERRORS',
           message: lintValidation.message,
@@ -324,8 +342,7 @@ export async function validateQIEL(context: ValidationContext): Promise<ControlR
     }
   }
   
-  // Determine status
-  const status = violations.length === 0 ? 'PASS' : 'FAIL';
+  // Generate message based on current status (DO NOT recompute status here)
   if (status === 'FAIL' && message === 'QIEL validation passed: All QA requirements met') {
     message = `QIEL validation failed: ${violations.length} violation(s) detected`;
   }

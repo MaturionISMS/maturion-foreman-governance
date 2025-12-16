@@ -78,6 +78,9 @@ export async function validateCS1(context: ValidationContext): Promise<ControlRe
   const evidence: EvidenceReference[] = [];
   const violations: Violation[] = [];
   
+  // Initialize status as PASS - will latch to FAIL on any violation
+  let status: 'PASS' | 'FAIL' = 'PASS';
+  
   // Initialize checks
   const checks: CS1Checks = {
     protectedFilesIntact: true,
@@ -90,6 +93,7 @@ export async function validateCS1(context: ValidationContext): Promise<ControlRe
   // Check for protected file modifications
   const protectedFileViolations = checkProtectedFiles(context.changedFiles);
   if (protectedFileViolations.length > 0) {
+    status = 'FAIL';  // Latch to FAIL
     checks.protectedFilesIntact = false;
     violations.push(...protectedFileViolations);
   }
@@ -100,6 +104,7 @@ export async function validateCS1(context: ValidationContext): Promise<ControlRe
     context.changedFiles
   );
   if (suppressionViolations.length > 0) {
+    status = 'FAIL';  // Latch to FAIL
     checks.noSuppressions = false;
     violations.push(...suppressionViolations);
   }
@@ -110,6 +115,7 @@ export async function validateCS1(context: ValidationContext): Promise<ControlRe
     context.changedFiles
   );
   if (bypassViolations.length > 0) {
+    status = 'FAIL';  // Latch to FAIL
     checks.noBypassAttempts = false;
     violations.push(...bypassViolations);
   }
@@ -120,6 +126,7 @@ export async function validateCS1(context: ValidationContext): Promise<ControlRe
   if (!skipPathCheck) {
     const pathViolations = await checkProtectedPathsExist(context.workspaceRoot);
     if (pathViolations.length > 0) {
+      status = 'FAIL';  // Latch to FAIL
       checks.protectedPathsIntact = false;
       violations.push(...pathViolations);
     }
@@ -145,6 +152,7 @@ export async function validateCS1(context: ValidationContext): Promise<ControlRe
       context.changedFiles
     );
     if (hashViolations.length > 0) {
+      status = 'FAIL';  // Latch to FAIL
       checks.constitutionalFilesIntact = false;
       violations.push(...hashViolations);
     }
@@ -185,8 +193,7 @@ export async function validateCS1(context: ValidationContext): Promise<ControlRe
     }
   }
   
-  // Determine status
-  const status = violations.length === 0 ? 'PASS' : 'FAIL';
+  // Generate message based on current status (DO NOT recompute status here)
   const message = status === 'PASS'
     ? 'CS1 validation passed: Constitutional integrity maintained'
     : `CS1 validation failed: ${violations.length} violation(s) detected`;
