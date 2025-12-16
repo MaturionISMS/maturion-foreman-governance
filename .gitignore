@@ -81,3 +81,4 @@ qiel-*.md
 /memory/governance/runtime-readiness/state/
 /memory/governance/runtime-readiness/telemetry/
 /memory/governance/runtime-readiness/evidence/
+evidence-snapshots/
