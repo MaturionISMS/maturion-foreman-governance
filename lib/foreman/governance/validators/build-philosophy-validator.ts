@@ -255,10 +255,10 @@ export async function validateBuildPhilosophy(context: ValidationContext): Promi
     );
     
     if (architectureDocs.length > 0) {
-      evidence.push(...architectureDocs.map(p => ({
-        type: (p.includes('checklist-validation') ? 'report' : 'document') as const,
-        path: p
-      })));
+      evidence.push(...architectureDocs.map(p => {
+        const type: 'report' | 'document' = p.includes('checklist-validation') ? 'report' : 'document';
+        return { type, path: p };
+      }));
     } else {
       violations.push({
         code: 'BUILD_PHILOSOPHY_NO_ARCHITECTURE',
@@ -283,14 +283,14 @@ export async function validateBuildPhilosophy(context: ValidationContext): Promi
     );
     
     if (redQaDocs.length > 0 || preBuildQaDocs.length > 0) {
-      evidence.push(...redQaDocs.map(p => ({
-        type: (p.includes('red-qa') ? 'log' : 'document') as const,
-        path: p
-      })));
-      evidence.push(...preBuildQaDocs.map(p => ({
-        type: 'log' as const,
-        path: p
-      })));
+      evidence.push(...redQaDocs.map(p => {
+        const type: 'log' | 'document' = p.includes('red-qa') ? 'log' : 'document';
+        return { type, path: p };
+      }));
+      evidence.push(...preBuildQaDocs.map(p => {
+        const type: 'log' = 'log';
+        return { type, path: p };
+      }));
     } else {
       violations.push({
         code: 'BUILD_PHILOSOPHY_NO_RED_QA',
