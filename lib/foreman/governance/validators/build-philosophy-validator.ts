@@ -30,12 +30,23 @@ export interface Violation {
   evidence?: EvidenceReference[];
 }
 
+export interface BuildPhilosophyChecks {
+  architectureComplete: boolean;
+  redQACreated: boolean;
+  qaWasRed: boolean;
+  buildToGreenInstruction: boolean;
+  architectureReferenceProvided: boolean;
+  qaSuiteReferenceProvided: boolean;
+  greenQAAchieved: boolean;
+}
+
 export interface ControlResult {
   controlName: string;
   status: 'PASS' | 'FAIL';
   severity: 'CRITICAL' | 'HIGH' | 'MEDIUM';
   evidence: EvidenceReference[];
   violations?: Violation[];
+  checks: BuildPhilosophyChecks;
   message: string;
   timestamp: string;
 }
@@ -47,6 +58,17 @@ export async function validateBuildPhilosophy(context: ValidationContext): Promi
   const timestamp = new Date().toISOString();
   const evidence: EvidenceReference[] = [];
   const violations: Violation[] = [];
+  
+  // Initialize all checks as passing
+  const checks: BuildPhilosophyChecks = {
+    architectureComplete: true,
+    redQACreated: true,
+    qaWasRed: true,
+    buildToGreenInstruction: true,
+    architectureReferenceProvided: true,
+    qaSuiteReferenceProvided: true,
+    greenQAAchieved: true
+  };
   
   // Determine actual workspace root (handle test scenarios)
   let workspaceRoot = context.workspaceRoot;
@@ -75,6 +97,8 @@ export async function validateBuildPhilosophy(context: ValidationContext): Promi
       severity: 'HIGH',
       evidence: []
     });
+    checks.architectureComplete = false;
+    checks.architectureReferenceProvided = false;
   }
   
   // Look for Red QA evidence
@@ -95,6 +119,9 @@ export async function validateBuildPhilosophy(context: ValidationContext): Promi
       severity: 'HIGH',
       evidence: []
     });
+    checks.redQACreated = false;
+    checks.qaWasRed = false;
+    checks.qaSuiteReferenceProvided = false;
   }
   
   // Check for test debt
@@ -106,6 +133,7 @@ export async function validateBuildPhilosophy(context: ValidationContext): Promi
       severity: 'CRITICAL',
       evidence: testDebtCheck.debtFiles
     });
+    checks.greenQAAchieved = false;
   }
   
   // Determine status
@@ -120,6 +148,7 @@ export async function validateBuildPhilosophy(context: ValidationContext): Promi
     severity: 'CRITICAL',
     evidence,
     violations: violations.length > 0 ? violations : undefined,
+    checks,
     message,
     timestamp
   };
