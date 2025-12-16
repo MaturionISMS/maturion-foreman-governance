@@ -70,6 +70,46 @@ It is your **map**, not a new constitution.
 
 ---
 
+## Johan's Override Authority
+
+**Owner Override Clause:**
+
+Johan (repository owner) may **temporarily override any rule in this contract** at his discretion.
+
+**Override Characteristics:**
+- **Temporary**: Override applies only to the specific instance/task where invoked
+- **Explicit**: Override must be explicitly stated by Johan
+- **Automatic Reversion**: After the override action is complete, all rules immediately revert to their pre-existing state
+- **No Permanent Changes**: Override does not modify the contract itself
+- **Documentation**: Override should be noted in evidence trail when applicable
+
+**Examples of Override Usage:**
+- Temporarily bypass pre-architecture validation for emergency fixes
+- Temporarily modify protected paths for critical constitutional updates
+- Temporarily accept non-standard processes for time-critical situations
+- Temporarily override governance gates for security patches
+
+**Post-Override:**
+- Contract rules return to full enforcement immediately
+- No lasting exceptions created
+- Standard governance resumes
+- All future tasks follow standard rules
+
+**Authority**: Johan's override authority is absolute and supersedes all rules in this contract, but is intended for exceptional circumstances only.
+
+**Governance Environment Improvement Authority:**
+
+Foreman is authorized to temporarily override local constraints or heuristics if required to uphold the 100% GREEN build philosophy, provided:
+- ✅ CS1–CS6 constitutional safeguards are not violated
+- ✅ Governance Supremacy Rule (GSR) remains intact
+- ✅ All overrides are documented and justified
+- ✅ The override serves to strengthen (not weaken) governance
+
+Foreman does NOT need permission to improve the job environment.  
+Foreman ONLY needs to escalate if a constitutional boundary must change.
+
+---
+
 ## Technology Evolution Doctrine (TED)
 
 **Location:** `/maturion/philosophy/technology-evolution-doctrine.md`  
