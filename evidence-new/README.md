@@ -1,53 +1,52 @@
-# Evidence Archive
+# Governance Evidence Archive
 
-This directory contains historical evidence of build execution, implementation, governance evolution, and wave execution across the Maturion Foreman ecosystem.
+This directory contains **governance, assurance, and long-term institutional memory** evidence for the Maturion Foreman ecosystem.
 
 ## Purpose
 
-The evidence archive serves as an **audit trail** and **historical record** of:
-- Build executions and their outcomes
-- Implementation completions and summaries
+This evidence archive serves as the **long-term memory, assurance, and governance authority** for:
 - Governance evolution and constitutional changes
-- Wave and phase execution records
-- Quality incidents and resolutions
-- Security assessments and summaries
+- Architectural decision records and compliance evidence
+- Wave execution and phase delivery records (architectural milestones)
+- Policy implementation and enforcement evidence
+- Quality governance surveys and assessments
+- Lessons learned and institutional memory
+
+## Scope (Post-Cleanup)
+
+✅ **This directory contains ONLY governance and assurance evidence.**
+
+❌ **App execution and build artifacts have been moved to:** `/evidence_app_execution_archive/`
+
+This separation ensures:
+- Governance signal clarity
+- Protection of institutional memory
+- Clear distinction between governance and operational concerns
 
 ## Directory Structure
 
-### `/evidence/build-history/`
-Contains evidence of build executions, QA validations, summaries, and reports:
-- Build execution summaries
-- QA validation reports
-- Diagnostic reports
-- Verification and validation records
-- Action items and status updates
-- Permission and access records
-- Configuration and initialization status
+### Root Files (Governance & Assurance)
+- **GOVERNANCE_HARDENING_SUMMARY.md** - Constitutional hardening evidence
+- **FINAL_COMPLIANCE_REPORT.md** - Governance compliance validation
+- **STRUCTURAL_CLEANUP_REPORT.md** - Repository structure governance
+- **autonomy-reauthorization-implementation-evidence.md** - Constitutional autonomy controls
+- **cs1-validator-fix-summary.md** - Constitutional safeguard implementation
+- **e2e-autonomous-mcp-validation-final-summary.md** - Autonomy governance validation
+- **governance-gate-dry-run-execution.md** - Governance gate enforcement evidence
+- **red-qa-report-e2e-autonomous-mcp-validation.md** - Quality governance report
 
-### `/evidence/implementation/`
-Contains evidence of feature implementations and completions:
-- Implementation summaries and completion reports
-- Phase implementation records
-- Module and component completions
-- Architecture implementation evidence
-- Builder and agent implementation records
-- UI/API implementation documentation
-
-### `/evidence/governance/`
-Contains evidence of governance evolution and enforcement:
-- Constitutional implementation records (CS1-CS6)
-- GSR (Governance Supremacy Rule) implementation
-- QA governance evolution (QIC, QIEL, QIW)
-- Security summaries and assessments
-- Governance alignment and compliance records
-- True North alignment documentation
-
-### `/evidence/wave-execution/`
-Contains evidence of wave and phase executions:
+### `/evidence-new/wave-execution/`
+Contains architectural delivery milestones and wave completion evidence:
 - Wave execution summaries (WAVE_*.md)
 - Phase execution records (PHASE_*.md)
+- Architectural milestone completions
 - Multi-wave coordination evidence
-- Batch execution records
+
+### `/evidence-new/surveys/`
+Contains governance surveys and policy assessments:
+- PR merge gate failure surveys
+- Policy compliance surveys
+- Governance effectiveness assessments
 
 ## Governance
 
@@ -55,57 +54,77 @@ Contains evidence of wave and phase executions:
 
 **All evidence is retained permanently for audit and learning purposes.**
 
-Evidence files:
+Governance evidence files:
 - ✅ Are **immutable** (should not be edited after creation)
-- ✅ Serve as **audit trail** for governance validation
-- ✅ Enable **learning loops** (FL/CI system)
-- ✅ Support **root cause analysis** when issues arise
-- ✅ Document **system evolution** over time
+- ✅ Serve as **constitutional audit trail** for governance validation
+- ✅ Enable **institutional learning** and memory preservation
+- ✅ Support **assurance and compliance** verification
+- ✅ Document **governance evolution** over time
+- ✅ Protect **long-term institutional memory**
+
+### Classification Rules
+
+**KEEP in `/evidence-new/`:**
+- Documents governance decisions and constitutional changes
+- Proves architectural or policy compliance
+- Captures lessons learned at governance level
+- Serves long-term institutional memory
+- Supports assurance or non-regression guarantees
+
+**MOVED to `/evidence_app_execution_archive/`:**
+- Build execution records and operational status
+- Runtime failures, fixes, and recovery evidence
+- CI/CD execution logs and permissions issues
+- Token management and access configuration
+- App lifecycle and delivery-specific artifacts
+- Operational test debt elimination records
 
 ### Evidence Organization
 
 When new evidence is created:
-1. Determine appropriate category (build-history, implementation, governance, wave-execution)
-2. Place in correct subdirectory
-3. Use descriptive naming convention: `CATEGORY_DESCRIPTION_TYPE.md`
-4. Include timestamp/version if applicable
+1. Determine if it's **governance/assurance** or **app execution**
+2. Place governance evidence in `/evidence-new/`
+3. Place app execution evidence in `/evidence_app_execution_archive/`
+4. Use descriptive naming: `CATEGORY_DESCRIPTION_TYPE.md`
+5. Include timestamp/version if applicable
 
 ### Evidence Usage
 
-Evidence is used by:
-- **Governance Memory**: Learning from past quality events
-- **Audit Processes**: Verifying due process was followed
-- **Root Cause Analysis**: Understanding failure patterns
-- **Architecture Evolution**: Identifying gaps and improvements
-- **Builder Learning**: Propagating lessons to prevent recurrence
+Governance evidence is used by:
+- **Governance Memory**: Institutional learning from governance events
+- **Audit Processes**: Verifying constitutional compliance
+- **Assurance Verification**: Confirming policy adherence
+- **Architecture Governance**: Tracking architectural decisions and rationale
+- **Constitutional Evolution**: Understanding governance improvements
+- **Long-Term Memory**: Preserving institutional knowledge
 
 ## Accessing Evidence
 
 Evidence files are:
-- **Searchable**: Use grep/search tools to find relevant evidence
-- **Referenced**: Link to evidence from governance documents and constitutional rules
-- **Analyzable**: Can be parsed for pattern detection and learning
+- **Searchable**: Use grep/search tools to find relevant governance evidence
+- **Referenced**: Linked from governance documents and constitutional rules
+- **Analyzable**: Parseable for governance pattern detection
 
 ## Examples
 
-**Finding all QA-related evidence:**
+**Finding governance-related evidence:**
 ```bash
-grep -r "QA" evidence/ --include="*.md"
+grep -r "governance" evidence-new/ --include="*.md"
 ```
 
-**Finding evidence from a specific wave:**
+**Finding wave execution evidence:**
 ```bash
-ls evidence/wave-execution/WAVE_*.md
+ls evidence-new/wave-execution/WAVE_*.md
 ```
 
-**Finding security summaries:**
+**Finding constitutional evidence:**
 ```bash
-ls evidence/governance/SECURITY_SUMMARY*.md
+grep -r "constitutional" evidence-new/ --include="*.md"
 ```
 
-**Finding implementation completions:**
+**Finding compliance reports:**
 ```bash
-ls evidence/implementation/*COMPLETE.md
+ls evidence-new/*COMPLIANCE*.md
 ```
 
 ## Related Documents
@@ -114,10 +133,12 @@ ls evidence/implementation/*COMPLETE.md
 - `/foreman/governance/` - Active governance rules and policies
 - `/foreman/constitution/` - Constitutional safeguards (CS1-CS6)
 - `/maturion/philosophy/maturion-governance-constitution.md` - Governance constitution
+- `/evidence_app_execution_archive/` - App execution and build artifacts (separated from governance)
 
 ---
 
-**Status**: Active Evidence Archive  
+**Status**: Active Governance Evidence Archive  
 **Established**: 2025-12-13  
-**Authority**: Governance Hardening & Structure Cleanup Initiative  
-**Maintenance**: Foreman automatically organizes evidence into appropriate categories
+**Cleanup Executed**: 2025-12-19 (Issue: Evidence Folder Cleanup - Governance vs App Execution)  
+**Authority**: Governance Centre (Maturion Mind) - Long-Term Memory & Assurance  
+**Maintenance**: Governance evidence only - app execution artifacts archived separately
