@@ -91,6 +91,22 @@ If any precondition is missing, the agent is not recruited.
 
 ## 6. Canonical Binding
 
+## 6.1 Agent Contract Minimalism Principle
+
+Recruited agents MUST reference canonical governance exactly once via the
+`governance.canon` binding in their `.agent` contract.
+
+`.agent` contracts MUST NOT enumerate individual doctrines, laws, or
+philosophy files (such as build philosophy, OPOJD, TED, or related
+governance artifacts).
+
+Resolution of specific doctrines and their application is the responsibility
+of the canonical governance source, not the `.agent` contract.
+
+Any `.agent` file that attempts to duplicate or locally reinterpret doctrine
+is considered over-specified and at risk of drift; canonical governance
+prevails in all such cases.
+
 Every recruited agent must be bound to a single canonical governance source defined by:
 - Repository
 - Path
