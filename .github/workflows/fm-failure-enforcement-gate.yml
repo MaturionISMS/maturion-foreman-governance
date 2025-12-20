@@ -1,0 +1,112 @@
+name: FM Failure Enforcement Gate (Learning → Failure)
+
+on:
+  pull_request:
+    paths:
+      - "architecture/**"
+      - ".github/workflows/**"
+  push:
+    branches:
+      - main
+
+jobs:
+  fm-failure-enforcement:
+    name: Enforce Failure Recording When Learning Indicates Failure
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Resolve active build
+        run: |
+          if [ ! -f "architecture/BUILD_ACTIVE" ]; then
+            echo "❌ FAILURE BLOCK: architecture/BUILD_ACTIVE missing."
+            exit 1
+          fi
+
+          BUILD_ID="$(cat architecture/BUILD_ACTIVE | tr -d '\r' | tr -d '\n')"
+          BUILD_DIR="architecture/builds/${BUILD_ID}"
+
+          if [ ! -d "$BUILD_DIR" ]; then
+            echo "❌ FAILURE BLOCK: build directory missing: $BUILD_DIR"
+            exit 1
+          fi
+
+          if [ ! -f "${BUILD_DIR}/learning.md" ]; then
+            echo "❌ FAILURE BLOCK: learning.md missing for active build."
+            exit 1
+          fi
+
+          echo "BUILD_ID=$BUILD_ID" >> $GITHUB_ENV
+          echo "BUILD_DIR=$BUILD_DIR" >> $GITHUB_ENV
+
+      - name: Determine if learning implies failure
+        run: |
+          LEARNING="${BUILD_DIR}/learning.md"
+
+          LEARNING_REQUIRED=$(grep "LEARNING_REQUIRED:" "$LEARNING" | awk '{print $2}')
+          AFTER=$(grep "SYSTEM_COMPLETENESS_AFTER:" "$LEARNING" | awk '{print $2}' | tr -d '%')
+          BEFORE=$(grep "SYSTEM_COMPLETENESS_BEFORE:" "$LEARNING" | awk '{print $2}' | tr -d '%')
+
+          if [ -z "$AFTER" ] || [ -z "$BEFORE" ]; then
+            echo "❌ FAILURE BLOCK: learning.md missing completeness fields."
+            exit 1
+          fi
+
+          echo "LEARNING_REQUIRED=$LEARNING_REQUIRED" >> $GITHUB_ENV
+          echo "BEFORE=$BEFORE" >> $GITHUB_ENV
+          echo "AFTER=$AFTER" >> $GITHUB_ENV
+
+          if [ "$LEARNING_REQUIRED" = "YES" ] && [ "$AFTER" -lt 100 ]; then
+            echo "FAILURE_REQUIRED=YES" >> $GITHUB_ENV
+            echo "Learning indicates failure: completeness after < 100%"
+          elif [ "$LEARNING_REQUIRED" = "YES" ] && [ "$AFTER" -lt "$BEFORE" ]; then
+            echo "FAILURE_REQUIRED=YES" >> $GITHUB_ENV
+            echo "Learning indicates failure: completeness decreased"
+          else
+            echo "FAILURE_REQUIRED=NO" >> $GITHUB_ENV
+            echo "Learning does not mandate failure recording"
+          fi
+
+      - name: Enforce presence of failure record(s) when required
+        run: |
+          if [ "$FAILURE_REQUIRED" != "YES" ]; then
+            echo "✅ Failure recording not required"
+            exit 0
+          fi
+
+          FAIL_DIR="${BUILD_DIR}/failures"
+          if [ ! -d "$FAIL_DIR" ]; then
+            echo "❌ FAILURE BLOCK: failures/ directory missing but failure recording is required."
+            echo "Agent state: FIX / ESCALATE / HALT. Never conclude."
+            exit 1
+          fi
+
+          COUNT=$(ls -1 "$FAIL_DIR"/failure-*.md 2>/dev/null | wc -l | tr -d ' ')
+          if [ "$COUNT" -lt 1 ]; then
+            echo "❌ FAILURE BLOCK: No failure-*.md records found but failure recording is required."
+            echo "Agent state: FIX / ESCALATE / HALT. Never conclude."
+            exit 1
+          fi
+
+          echo "✅ Found $COUNT failure record(s)"
+
+      - name: Enforce effectiveness report exists when failure required
+        run: |
+          if [ "$FAILURE_REQUIRED" != "YES" ]; then
+            echo "✅ Effectiveness report not required (no failure required)"
+            exit 0
+          fi
+
+          EFFECT="${BUILD_DIR}/effectiveness.md"
+          if [ ! -f "$EFFECT" ]; then
+            echo "❌ FAILURE BLOCK: effectiveness.md missing but failure recording is required."
+            exit 1
+          fi
+
+          echo "✅ effectiveness.md present"
+
+      - name: Failure Enforcement Gate Passed
+        run: |
+          echo "✅ FM FAILURE ENFORCEMENT GATE PASSED"
