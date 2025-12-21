@@ -85,8 +85,8 @@ Each Requirement Specification MUST include the following exact markers and sect
 **Required Markers:**
 - `REQUIREMENT_SPECIFICATION_SCHEMA_VERSION: v1`
 - `APPLICATION_NAME: <string>`
-- `VERSION: <semantic version>` (format: `vMAJOR.MINOR.PATCH`)
-- `REQUIREMENT_SPEC_ID: <string>` (format: `<app-name>-requirements-v<version>`)
+- `VERSION: <semantic version>` (format: `MAJOR.MINOR.PATCH` without v prefix)
+- `REQUIREMENT_SPEC_ID: <string>` (format: `<app-name>-requirements-vMAJOR.MINOR.PATCH`)
 - `CREATED_DATE_UTC: <YYYY-MM-DD>`
 - `CREATED_BY: Foreman`
 - `APPROVAL_STATUS: <PENDING|APPROVED|REJECTED>`
@@ -98,7 +98,7 @@ Each Requirement Specification MUST include the following exact markers and sect
 ```
 REQUIREMENT_SPECIFICATION_SCHEMA_VERSION: v1
 APPLICATION_NAME: Foreman Office
-VERSION: v1.2.0
+VERSION: 1.2.0
 REQUIREMENT_SPEC_ID: foreman-office-requirements-v1.2.0
 CREATED_DATE_UTC: 2023-12-15
 CREATED_BY: Foreman
@@ -321,12 +321,12 @@ Compliance artifacts (CONTROL_MAPPING.md) MUST reference:
 Below is the normative template structure.
 
 ```markdown
-# REQUIREMENT SPECIFICATION: <APPLICATION_NAME> <VERSION>
+# REQUIREMENT SPECIFICATION: <APPLICATION_NAME> v<VERSION>
 
 REQUIREMENT_SPECIFICATION_SCHEMA_VERSION: v1
 APPLICATION_NAME: <string>
-VERSION: <vMAJOR.MINOR.PATCH>
-REQUIREMENT_SPEC_ID: <app-name>-requirements-<version>
+VERSION: <MAJOR.MINOR.PATCH>
+REQUIREMENT_SPEC_ID: <app-name>-requirements-v<MAJOR.MINOR.PATCH>
 CREATED_DATE_UTC: <YYYY-MM-DD>
 CREATED_BY: Foreman
 APPROVAL_STATUS: PENDING

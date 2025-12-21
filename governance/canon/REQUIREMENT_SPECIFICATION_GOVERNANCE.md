@@ -181,7 +181,7 @@ Every Requirement Specification MUST contain the following sections.
 ### 8.1 Requirements vs. App Description
 
 | Aspect | App Description | Requirement Specification |
-|--------|----------------|---------------------------|
+|--------|-----------------|---------------------------|
 | **Formality** | Informal, conversational | Structured, canonical |
 | **Approval** | Not required | Mandatory (Johan) |
 | **Versioning** | Not versioned | Versioned |
