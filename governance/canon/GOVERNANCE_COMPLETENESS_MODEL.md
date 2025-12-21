@@ -152,7 +152,16 @@ These exist because the canonical build model requires requirement specification
 | QA_POLICY_MASTER | `governance/policy/QA_POLICY_MASTER.md` | Defines relationship of QA ↔ Governance Gate :contentReference[oaicite:7]{index=7} | CANON_PURPOSE_SCOPE |
 | GOVERNANCE_GATE_DEFINITION | (May live inside QA_POLICY_MASTER or separate canon) | Defines gate preconditions and evidence requirements :contentReference[oaicite:8]{index=8} | QA_POLICY_MASTER |
 
-### 5.8 Compliance Structural Readiness (Governance Repo Level)
+### 5.8 Escalation, Override, and Transition Policies
+| Component ID | Required Artifacts | Notes / Purpose | Dependencies |
+|---|---|---|---|
+| AGENT_NON_STALLING_POLICY | `governance/policy/AGENT_NON_STALLING_AND_ESCALATION_POLICY.md` | Prevents silent agent blocking, requires escalation | CANON_PURPOSE_SCOPE |
+| ESCALATION_OVERRIDE_PROTOCOL | `governance/policy/ESCALATION_AND_TEMPORARY_OVERRIDE_PROTOCOL.md` | Formal process for temporary governance overrides | AGENT_NON_STALLING_POLICY |
+| GOVERNANCE_FM_TRANSITION_POLICY | `governance/policy/GOVERNANCE_FM_TRANSITION_POLICY.md` | Prevents enforcement deadlocks during bootstrap | AGENT_NON_STALLING_POLICY, ESCALATION_OVERRIDE_PROTOCOL |
+| INCIDENTS_DIRECTORY | `governance/incidents/` | Storage for override incident records | ESCALATION_OVERRIDE_PROTOCOL |
+| BOOTSTRAP_DIRECTORY | `governance/.bootstrap/` | Storage for bootstrap marker files | GOVERNANCE_FM_TRANSITION_POLICY |
+
+### 5.9 Compliance Structural Readiness (Governance Repo Level)
 The compliance canon requires traceability and evidence readiness (architecture → QA → evidence), and mandates core artifacts per governed application. This model enforces the governance-repo side: schemas, mapping model, and evidence catalog structure exist, even if empty initially.
 
 | Component ID | Required Artifacts | Notes / Purpose | Dependencies |
