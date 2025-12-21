@@ -64,4 +64,19 @@ Only declared scope and actual diff are authoritative.
 
 ---
 
+ - name: Enforce domain lifecycle state
+        run: |
+          DOMAIN=$(grep "RESPONSIBILITY_DOMAIN:" governance/scope-declaration.md | cut -d':' -f2 | xargs)
+
+          REGISTRY="governance/canon/RESPONSIBILITY_DOMAIN_REGISTRY.md"
+
+          STATE=$(awk "/### DOMAIN: $DOMAIN/{flag=1} flag && /STATE:/{print \$2; exit}" "$REGISTRY")
+
+          if [ "$STATE" != "ACTIVE" ]; then
+            echo "❌ GOVERNANCE BLOCK: Domain '$DOMAIN' is in state '$STATE'. Only ACTIVE domains may be used."
+            exit 1
+          fi
+
+          echo "✅ Domain lifecycle state ACTIVE"
+
 End of SCOPE TO DIFF GOVERNANCE RULE
