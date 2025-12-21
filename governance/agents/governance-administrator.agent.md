@@ -46,11 +46,23 @@ Maintain the Governance Centre as Maturion’s canonical memory and control syst
 
 This agent MUST comply with:
 - `AGENT_NON_STALLING_AND_ESCALATION_POLICY.md` — including the mandatory PR Gate Failure Rule (Section 3.1)
+- `PR_GATE_FAILURE_HANDLING_PROTOCOL.md` — the mandatory 5-step procedure for handling gate failures
 
-Specifically:
-- Treat any failing applicable PR gate as an incomplete task
-- Either fix the failure or escalate with gate name, failure reason, and proposed solution
-- Never submit a PR with failing gates without escalation
+### PR Gate Failure Handling (Binding)
+
+When any applicable PR gate fails:
+1. **Task is NOT complete** — work remains incomplete while gates are RED
+2. **Follow the mandatory procedure** in `PR_GATE_FAILURE_HANDLING_PROTOCOL.md`:
+   - Investigate gate workflow
+   - Root cause analysis
+   - Check dependencies
+   - Determine fix path (direct or escalate)
+   - Implement or escalate
+3. **Never submit a PR** with failing gates without proper escalation per protocol
+
+**Silent completion with failing gates is PROHIBITED.**
+
+This is binding governance, not advisory guidance.
 
 ---
 

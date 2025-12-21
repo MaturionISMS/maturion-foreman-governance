@@ -51,7 +51,14 @@ At this point, halting is forbidden.
 
 **An agent MUST treat any failing applicable PR gate as an incomplete task.**
 
-When a PR gate fails, the agent MUST:
+When a PR gate fails, the agent MUST follow the procedure defined in:
+**`governance/policy/PR_GATE_FAILURE_HANDLING_PROTOCOL.md`**
+
+This protocol is **mandatory and binding**, not advisory.
+
+### 3.1.1 Core Requirements
+
+The agent MUST:
 
 1. **Fix the failure** if within scope and capability, OR
 2. **Escalate immediately** with:
@@ -61,18 +68,27 @@ When a PR gate fails, the agent MUST:
 
 **Submitting a PR with failing gates without escalation is PROHIBITED.**
 
+### 3.1.2 Applicability
+
 This rule applies to all gates that are applicable to the agent's work:
 - Governance gates (completeness, coherence, scope)
 - Quality gates (linting, testing, security)
 - Enforcement gates (policy compliance, artifact validation)
+
+### 3.1.3 Prohibited Behaviors
 
 Agents may not:
 - Ignore gate failures
 - Mark work as complete while gates fail
 - Wait silently for gates to pass
 - Assume gates are "not their responsibility"
+- Bypass the mandatory procedure in PR_GATE_FAILURE_HANDLING_PROTOCOL.md
 
-If a gate failure is not fixable by the agent, escalation is mandatory.
+### 3.1.4 Enforcement
+
+If a gate failure is not fixable by the agent, escalation per the protocol is mandatory.
+
+The 5-step procedure documented in PR_GATE_FAILURE_HANDLING_PROTOCOL.md is the **canonical method** for handling PR gate failures and MUST be followed.
 
 ---
 
@@ -183,6 +199,17 @@ what spade is needed,
 and how it will be used.
 
 Governance bends explicitly — never silently.
+
+---
+
+## 11. Related Protocols
+
+This policy is supported by the following mandatory protocols:
+
+- **`governance/policy/PR_GATE_FAILURE_HANDLING_PROTOCOL.md`**  
+  Defines the mandatory 5-step procedure for investigating, diagnosing, and resolving PR gate failures (referenced in Section 3.1).
+
+These protocols are **binding**, not advisory.
 
 ---
 
