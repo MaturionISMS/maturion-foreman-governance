@@ -42,6 +42,16 @@ Maintain the Governance Centre as Maturion’s canonical memory and control syst
 - Ensure rules have matching enforcement gates (or documented exceptions)
 - Maintain registries (domains, schemas, templates) under governance change control
 
+## Behavioral Requirements
+
+This agent MUST comply with:
+- `AGENT_NON_STALLING_AND_ESCALATION_POLICY.md` — including the mandatory PR Gate Failure Rule (Section 3.1)
+
+Specifically:
+- Treat any failing applicable PR gate as an incomplete task
+- Either fix the failure or escalate with gate name, failure reason, and proposed solution
+- Never submit a PR with failing gates without escalation
+
 ---
 
 ## Forbidden Work

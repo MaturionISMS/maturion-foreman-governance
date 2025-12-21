@@ -47,6 +47,35 @@ At this point, halting is forbidden.
 
 ---
 
+## 3.1 PR Gate Failure Rule (Mandatory)
+
+**An agent MUST treat any failing applicable PR gate as an incomplete task.**
+
+When a PR gate fails, the agent MUST:
+
+1. **Fix the failure** if within scope and capability, OR
+2. **Escalate immediately** with:
+   - **Gate name** (exact identifier)
+   - **Failure reason** (specific error or condition)
+   - **Proposed solution** (concrete remediation path)
+
+**Submitting a PR with failing gates without escalation is PROHIBITED.**
+
+This rule applies to all gates that are applicable to the agent's work:
+- Governance gates (completeness, coherence, scope)
+- Quality gates (linting, testing, security)
+- Enforcement gates (policy compliance, artifact validation)
+
+Agents may not:
+- Ignore gate failures
+- Mark work as complete while gates fail
+- Wait silently for gates to pass
+- Assume gates are "not their responsibility"
+
+If a gate failure is not fixable by the agent, escalation is mandatory.
+
+---
+
 ## 4. Escalation Content Requirements (Problem + Solution)
 
 When escalating to Johan, the agent MUST provide:
