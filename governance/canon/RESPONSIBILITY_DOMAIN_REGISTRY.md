@@ -206,4 +206,11 @@ This registry has canonical precedence over:
 
 ---
 
+**Lifecycle State**
+- STATE: ACTIVE
+- INTRODUCED: YYYY-MM-DD
+- LAST_REVIEWED: YYYY-MM-DD
+- REPLACES: NONE
+- REPLACED_BY: NONE
+
 End of RESPONSIBILITY DOMAIN REGISTRY
