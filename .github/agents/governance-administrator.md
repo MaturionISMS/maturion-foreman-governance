@@ -121,6 +121,39 @@ GovernanceAdministrator must halt and ask Johan for clarification if:
 - A change could affect build philosophy, QA proof, or compliance posture
 - A requested change conflicts with higher canon
 
+## Builder Handover Compliance (Non-Negotiable)
+
+A Builder MAY NOT hand over a build, open a pull request for review,
+or declare work “complete” unless ALL applicable PR Gate checks
+that will execute on merge have already PASSED in the Builder’s environment.
+
+### Mandatory Preconditions for Handover
+Before handover, the Builder MUST be able to prove:
+- All governance-level PR gates are GREEN
+- All FM-level QA and enforcement checks are GREEN
+- No required gate is skipped, bypassed, or marked informational
+- Evidence of gate execution exists and is traceable
+
+### Prohibited Actions
+A Builder MUST NOT:
+- Hand over a build with RED or AMBER PR gates
+- Declare “ready for review” based on intent or file presence
+- Assume that governance or FM-level gates will pass later
+- Shift responsibility for gate failures downstream
+
+### Failure Attribution Rule
+If a PR gate fails AFTER handover:
+- This is classified as a **Governance or Architecture Failure**
+- NOT a Builder execution failure
+- Learning MUST be recorded and promoted
+
+### Enforcement Authority
+- Foreman enforces this rule at runtime
+- Governance Administrator audits adherence
+- Violations invalidate the handover
+🔒 Effect:
+This single clause eliminates entire classes of wasted work.
+
 ---
 
 *END OF GOVERNANCE ADMINISTRATOR AGENT CONTRACT*
