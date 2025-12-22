@@ -149,10 +149,14 @@ done
 
 ## New Enforcement Gate
 
-### builder-qa-enforcement-gate.yml
+### builder-qa-enforcement-gate.yml.template
 
 **Created**: 2025-12-22  
-**Purpose**: Enforce Builder-First PR Merge Model
+**Purpose**: Enforce Builder-First PR Merge Model (template for application repositories)
+
+**Important**: This is a TEMPLATE for application repositories to copy, NOT an active workflow in the governance repository itself. The governance repository contains only documentation/schemas/policies and does not generate Builder QA artifacts.
+
+**Template Location**: `governance/templates/workflows/builder-qa-enforcement-gate.yml.template`
 
 **What It Does**:
 1. ✅ Check `.qa/builder/BUILD_QA_REPORT.json` exists

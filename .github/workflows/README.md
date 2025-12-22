@@ -30,42 +30,6 @@ See: `governance/canon/BUILDER_FIRST_PR_MERGE_MODEL.md` for complete documentati
 
 ## Active Workflows
 
-### Builder QA Enforcement Gate (`builder-qa-enforcement-gate.yml`)
-
-**Purpose**: Enforce Builder-First PR Merge Model
-
-**Status**: Active - Mandatory for all PRs
-
-**Enforces**:
-- ✅ Required `.qa/builder/*` artifacts exist
-- ✅ Artifacts are valid JSON/Markdown
-- ✅ `BUILD_QA_REPORT.json` shows `build_status: "PASS"`
-- ✅ `BUILD_QA_REPORT.json` shows `merge_readiness.ready: true`
-- ✅ `GOVERNANCE_COMPLIANCE_REPORT.json` shows `compliance_status: "COMPLIANT"`
-
-**Does NOT**:
-- ❌ Read PR comments
-- ❌ Read GitHub Issues  
-- ❌ Use `gh api` to infer state
-- ❌ Diagnose or debug failures
-- ❌ Interpret logs or CI output
-
-**Required Permissions**:
-```yaml
-permissions:
-  contents: read
-  pull-requests: write
-```
-
-**Triggers**: All PRs to `main` or `develop`
-
-**Schemas**:
-- `governance/schemas/BUILD_QA_REPORT.schema.json`
-- `governance/schemas/GOVERNANCE_COMPLIANCE_REPORT.schema.json`
-- `governance/schemas/BUILDER_QA_SUMMARY.structure.md`
-
----
-
 ### Governance Gate (`governance-gate.yml`)
 
 **Purpose**: Validate governance repository structure integrity
@@ -109,14 +73,50 @@ The following gates were **permanently removed** as of 2025-12-22:
 
 ---
 
-## For Application Repositories
+## Workflow Templates for Application Repositories
 
-Application repositories using Builder agents should:
+**IMPORTANT**: The governance repository itself does NOT use the Builder QA Enforcement Gate because it contains only documentation, schemas, and policies—no application code requiring Builder QA.
 
-1. **Generate Builder QA Artifacts**: Create `.qa/builder/*` files after build-to-green
-2. **Use Builder QA Enforcement Gate**: Copy `builder-qa-enforcement-gate.yml` to your workflows
+Application repositories with actual code builds should:
+
+1. **Copy Builder QA Enforcement Gate Template**:
+   - Template location: `governance/templates/workflows/builder-qa-enforcement-gate.yml.template`
+   - Copy to your repo's `.github/workflows/builder-qa-enforcement-gate.yml`
+   - This enforces the Builder-First PR Merge Model
+
+2. **Generate Builder QA Artifacts**: Create `.qa/builder/*` files after build-to-green:
+   - `.qa/builder/BUILD_QA_REPORT.json`
+   - `.qa/builder/GOVERNANCE_COMPLIANCE_REPORT.json`
+   - `.qa/builder/SUMMARY.md`
+
 3. **Follow Builder-First Model**: Let Builder QA artifacts be canonical truth
+
 4. **Remove Legacy Gates**: Remove any gates that use `gh api` for PR comments or infer state
+
+### Builder QA Enforcement Gate Template
+
+**Location**: `governance/templates/workflows/builder-qa-enforcement-gate.yml.template`
+
+**Purpose**: Enforce Builder-First PR Merge Model (for APPLICATION repositories only)
+
+**Enforces**:
+- ✅ Required `.qa/builder/*` artifacts exist
+- ✅ Artifacts are valid JSON/Markdown
+- ✅ `BUILD_QA_REPORT.json` shows `build_status: "PASS"`
+- ✅ `BUILD_QA_REPORT.json` shows `merge_readiness.ready: true`
+- ✅ `GOVERNANCE_COMPLIANCE_REPORT.json` shows `compliance_status: "COMPLIANT"`
+
+**Does NOT**:
+- ❌ Read PR comments
+- ❌ Read GitHub Issues
+- ❌ Use `gh api` to infer state
+- ❌ Diagnose or debug failures
+- ❌ Interpret logs or CI output
+
+**Schemas**:
+- `governance/schemas/BUILD_QA_REPORT.schema.json`
+- `governance/schemas/GOVERNANCE_COMPLIANCE_REPORT.schema.json`
+- `governance/schemas/BUILDER_QA_SUMMARY.structure.md`
 
 ---
 

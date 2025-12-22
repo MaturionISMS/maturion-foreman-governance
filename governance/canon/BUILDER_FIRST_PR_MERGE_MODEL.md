@@ -180,7 +180,27 @@ All Builder QA artifacts MUST be placed in:
 ## PR Enforcement Gate
 
 ### Gate Name
-`builder-qa-enforcement-gate.yml`
+`builder-qa-enforcement-gate.yml` (template for application repositories)
+
+### Important: Repository Type Distinction
+
+**This gate is for APPLICATION repositories only**, not for the governance repository itself.
+
+**Application Repositories** (need this gate):
+- Contain application code requiring builds, tests, compilation
+- Have Builder agents making code changes
+- Generate `.qa/builder/*` artifacts after build-to-green
+- Need deterministic merge decisions based on build quality
+
+**Governance Repository** (does NOT use this gate):
+- Contains only documentation, schemas, policies, templates
+- No application code to build or test
+- No Builder QA artifacts generated
+- Uses `governance-gate.yml` instead (validates governance structure)
+
+**Template Location**: `governance/templates/workflows/builder-qa-enforcement-gate.yml.template`
+
+Application repositories should copy this template to their `.github/workflows/` directory.
 
 ### Gate Purpose
 Enforce presence and validity of Builder QA artifacts.
