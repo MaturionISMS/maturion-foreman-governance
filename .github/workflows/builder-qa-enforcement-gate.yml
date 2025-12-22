@@ -85,13 +85,17 @@ jobs:
           INVALID=""
           
           # Validate BUILD_QA_REPORT.json
-          if ! jq empty .qa/builder/BUILD_QA_REPORT.json 2>/dev/null; then
-            INVALID="$INVALID\n- BUILD_QA_REPORT.json: Invalid JSON"
+          if [ ! -f ".qa/builder/BUILD_QA_REPORT.json" ]; then
+            INVALID="$INVALID\n- BUILD_QA_REPORT.json: File not found"
+          elif ! jq empty .qa/builder/BUILD_QA_REPORT.json 2>/dev/null; then
+            INVALID="$INVALID\n- BUILD_QA_REPORT.json: Invalid JSON syntax"
           fi
           
           # Validate GOVERNANCE_COMPLIANCE_REPORT.json
-          if ! jq empty .qa/builder/GOVERNANCE_COMPLIANCE_REPORT.json 2>/dev/null; then
-            INVALID="$INVALID\n- GOVERNANCE_COMPLIANCE_REPORT.json: Invalid JSON"
+          if [ ! -f ".qa/builder/GOVERNANCE_COMPLIANCE_REPORT.json" ]; then
+            INVALID="$INVALID\n- GOVERNANCE_COMPLIANCE_REPORT.json: File not found"
+          elif ! jq empty .qa/builder/GOVERNANCE_COMPLIANCE_REPORT.json 2>/dev/null; then
+            INVALID="$INVALID\n- GOVERNANCE_COMPLIANCE_REPORT.json: Invalid JSON syntax"
           fi
           
           if [ -n "$INVALID" ]; then
