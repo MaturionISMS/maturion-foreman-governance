@@ -149,8 +149,11 @@ These exist because the canonical build model requires requirement specification
 ### 5.7 QA Governance (Governance-Level)
 | Component ID | Required Artifacts | Notes / Purpose | Dependencies |
 |---|---|---|---|
-| QA_POLICY_MASTER | `governance/policy/QA_POLICY_MASTER.md` | Defines relationship of QA ↔ Governance Gate :contentReference[oaicite:7]{index=7} | CANON_PURPOSE_SCOPE |
-| GOVERNANCE_GATE_DEFINITION | (May live inside QA_POLICY_MASTER or separate canon) | Defines gate preconditions and evidence requirements :contentReference[oaicite:8]{index=8} | QA_POLICY_MASTER |
+| QA_POLICY_MASTER | `governance/policy/QA_POLICY_MASTER.md` | Defines relationship of QA ↔ Governance Gate | CANON_PURPOSE_SCOPE |
+| GOVERNANCE_GATE_DEFINITION | `GOVERNANCE_GATE_CANON.md` | Defines gate preconditions and evidence requirements | QA_POLICY_MASTER |
+| BUILDER_QA_HANDOVER_POLICY | `governance/policy/BUILDER_QA_HANDOVER_POLICY.md` | Defines Builder QA handover contract | QA_POLICY_MASTER, GOVERNANCE_GATE_DEFINITION |
+| BUILDER_QA_REPORT_SCHEMA | `governance/schemas/BUILDER_QA_REPORT.schema.md` | Normative structure for Builder QA reports | BUILDER_QA_HANDOVER_POLICY |
+| PR_GATE_FAILURE_PROTOCOL | `governance/policy/PR_GATE_FAILURE_HANDLING_PROTOCOL.md` | Defines PR gate failure classification and handling | GOVERNANCE_GATE_DEFINITION, BUILDER_QA_HANDOVER_POLICY |
 
 ### 5.8 Compliance Structural Readiness (Governance Repo Level)
 The compliance canon requires traceability and evidence readiness (architecture → QA → evidence), and mandates core artifacts per governed application. This model enforces the governance-repo side: schemas, mapping model, and evidence catalog structure exist, even if empty initially.
