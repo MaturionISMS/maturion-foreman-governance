@@ -154,8 +154,16 @@ These exist because the canonical build model requires requirement specification
 | BUILDER_QA_HANDOVER_POLICY | `governance/policy/BUILDER_QA_HANDOVER_POLICY.md` | Defines Builder QA handover contract | QA_POLICY_MASTER, GOVERNANCE_GATE_DEFINITION |
 | BUILDER_QA_REPORT_SCHEMA | `governance/schemas/BUILDER_QA_REPORT.schema.md` | Normative structure for Builder QA reports | BUILDER_QA_HANDOVER_POLICY |
 | PR_GATE_FAILURE_PROTOCOL | `governance/policy/PR_GATE_FAILURE_HANDLING_PROTOCOL.md` | Defines PR gate failure classification and handling | GOVERNANCE_GATE_DEFINITION, BUILDER_QA_HANDOVER_POLICY |
+| GPCA_POLICY | `governance/canon/GATE_PREDICTIVE_COMPLIANCE_ANALYSIS.md` | Defines Gate-Predictive Compliance Analysis model | GOVERNANCE_GATE_DEFINITION, BUILDER_QA_HANDOVER_POLICY |
+| GPCA_REPORT_SCHEMA | `governance/schemas/GPCA_PREDICTION_REPORT.schema.md` | Normative structure for GPCA prediction reports | GPCA_POLICY |
 
-### 5.8 Compliance Structural Readiness (Governance Repo Level)
+### 5.8 Governance Evolution
+| Component ID | Required Artifacts | Notes / Purpose | Dependencies |
+|---|---|---|---|
+| GOVERNANCE_RIPPLE_MODEL | `governance/canon/GOVERNANCE_RIPPLE_MODEL.md` | Defines bidirectional governance evolution framework | CANON_PURPOSE_SCOPE, LEARNING_SCHEMA, FAILURE_SCHEMA |
+| GOVERNANCE_CHANGE_PROPOSAL_SCHEMA | `governance/schemas/GOVERNANCE_CHANGE_PROPOSAL.schema.md` | Normative structure for governance change proposals | GOVERNANCE_RIPPLE_MODEL |
+
+### 5.9 Compliance Structural Readiness (Governance Repo Level)
 The compliance canon requires traceability and evidence readiness (architecture → QA → evidence), and mandates core artifacts per governed application. This model enforces the governance-repo side: schemas, mapping model, and evidence catalog structure exist, even if empty initially.
 
 | Component ID | Required Artifacts | Notes / Purpose | Dependencies |
