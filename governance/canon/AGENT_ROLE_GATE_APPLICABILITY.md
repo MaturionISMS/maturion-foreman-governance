@@ -454,7 +454,29 @@ If a gate blocks work due to incorrect agent role evaluation:
 
 ---
 
-## 10. Related Documents
+## 10. Operational Checklists
+
+This canonical clarification is operationalized through **PR Gate Release Checklists** that provide explicit, itemized requirements for each agent role:
+
+### Available Checklists
+- **Builder Agent**: `governance/templates/PR_GATE_RELEASE_CHECKLIST_BUILDER.md`
+- **Governance Administrator**: `governance/templates/PR_GATE_RELEASE_CHECKLIST_GOVERNANCE_ADMIN.md`
+- **FM Agent**: `governance/templates/PR_GATE_RELEASE_CHECKLIST_FM.md`
+
+### Checklist Overview
+**Reference**: `governance/templates/PR_GATE_RELEASE_CHECKLISTS_README.md`
+
+**Purpose**: Checklists provide complete, itemized requirements that enable:
+- Predictable gate outcomes (if all items satisfied → gate MUST pass)
+- Pre-flight validation (agents can self-check before handover)
+- Gate implementation guidance (authoritative requirements list)
+- GPCA (Gate-Predictive Compliance Analysis) support
+
+**Guarantee**: If all checklist items for a role are satisfied, the PR gate MUST pass. If a compliant PR fails, that is a governance defect, not an agent failure.
+
+---
+
+## 11. Related Documents
 
 This document integrates with and clarifies:
 - `GOVERNANCE_PURPOSE_AND_SCOPE.md` - Agent role definitions
@@ -467,7 +489,7 @@ This document integrates with and clarifies:
 
 ---
 
-## 11. Guiding Principle
+## 12. Guiding Principle
 
 > **Enforce strictly — but only where enforcement applies.**
 
@@ -478,7 +500,7 @@ Precision is a prerequisite for scale.
 
 ---
 
-## 12. Success Criteria
+## 13. Success Criteria
 
 This clarification is successful when:
 - ✅ Canonical governance explicitly defines gate applicability by agent role
@@ -491,7 +513,7 @@ This clarification is successful when:
 
 ---
 
-## 13. Version History
+## 14. Version History
 
 ### v1.0.0 (2025-12-22)
 - Initial canonical clarification
@@ -500,10 +522,11 @@ This clarification is successful when:
 - Sets non-negotiable invariants
 - Provides gate implementation requirements
 - Ensures no enforcement weakening
+- Includes operational PR Gate Release Checklists for all three agent roles
 
 ---
 
-## 14. Authority Statement
+## 15. Authority Statement
 
 **This document is constitutional and binding.**
 
