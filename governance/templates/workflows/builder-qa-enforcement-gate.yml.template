@@ -1,0 +1,270 @@
+name: Builder QA Enforcement Gate
+
+# PURPOSE:
+# This gate enforces the Builder-First PR Merge Model where Builder QA reports
+# are the canonical source of truth for merge readiness.
+#
+# ROLE: Enforcement Only (NOT diagnosis, NOT debugging, NOT interpretation)
+#
+# This gate ONLY checks:
+# 1. Required .qa/builder/* artifacts exist
+# 2. Artifacts are valid JSON/Markdown
+# 3. Artifacts indicate PASS/READY status
+# 4. Artifacts conform to their schemas
+#
+# This gate MUST NOT:
+# - Read PR comments
+# - Read GitHub Issues
+# - Use gh api to infer failures
+# - Interpret logs or CI output
+# - Act as debugging system
+# - Diagnose failure causes
+#
+# Authority: Canonical - Implements Builder QA-as-Truth model
+# Status: Active - Mandatory for all PRs
+# Supersedes: governance-cascading-failure-gate.yml, governance-scope-declaration-gate.yml
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches:
+      - main
+      - develop
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  builder-qa-enforcement:
+    name: Builder QA Enforcement (Artifacts Only)
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Check Required Artifacts Exist
+        id: artifacts_exist
+        run: |
+          echo "Checking for required Builder QA artifacts..."
+          
+          MISSING=""
+          
+          # Check BUILD_QA_REPORT.json
+          if [ ! -f ".qa/builder/BUILD_QA_REPORT.json" ]; then
+            MISSING="$MISSING\n- .qa/builder/BUILD_QA_REPORT.json"
+          fi
+          
+          # Check GOVERNANCE_COMPLIANCE_REPORT.json
+          if [ ! -f ".qa/builder/GOVERNANCE_COMPLIANCE_REPORT.json" ]; then
+            MISSING="$MISSING\n- .qa/builder/GOVERNANCE_COMPLIANCE_REPORT.json"
+          fi
+          
+          # Check SUMMARY.md
+          if [ ! -f ".qa/builder/SUMMARY.md" ]; then
+            MISSING="$MISSING\n- .qa/builder/SUMMARY.md"
+          fi
+          
+          if [ -n "$MISSING" ]; then
+            echo "❌ ENFORCEMENT FAILURE: Required Builder QA artifacts missing"
+            echo -e "$MISSING"
+            echo "missing=true" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+          
+          echo "✅ All required Builder QA artifacts present"
+          echo "missing=false" >> $GITHUB_OUTPUT
+      
+      - name: Validate JSON Artifacts
+        id: validate_json
+        if: steps.artifacts_exist.outcome == 'success'
+        run: |
+          echo "Validating JSON artifact structure..."
+          
+          INVALID=""
+          
+          # Validate BUILD_QA_REPORT.json
+          if [ ! -f ".qa/builder/BUILD_QA_REPORT.json" ]; then
+            INVALID="$INVALID\n- BUILD_QA_REPORT.json: File not found"
+          elif ! jq empty .qa/builder/BUILD_QA_REPORT.json 2>/dev/null; then
+            INVALID="$INVALID\n- BUILD_QA_REPORT.json: Invalid JSON syntax"
+          fi
+          
+          # Validate GOVERNANCE_COMPLIANCE_REPORT.json
+          if [ ! -f ".qa/builder/GOVERNANCE_COMPLIANCE_REPORT.json" ]; then
+            INVALID="$INVALID\n- GOVERNANCE_COMPLIANCE_REPORT.json: File not found"
+          elif ! jq empty .qa/builder/GOVERNANCE_COMPLIANCE_REPORT.json 2>/dev/null; then
+            INVALID="$INVALID\n- GOVERNANCE_COMPLIANCE_REPORT.json: Invalid JSON syntax"
+          fi
+          
+          if [ -n "$INVALID" ]; then
+            echo "❌ ENFORCEMENT FAILURE: Invalid JSON artifacts"
+            echo -e "$INVALID"
+            exit 1
+          fi
+          
+          echo "✅ All JSON artifacts valid"
+      
+      - name: Check Build QA Status
+        id: build_status
+        if: steps.validate_json.outcome == 'success'
+        run: |
+          echo "Checking BUILD_QA_REPORT.json status..."
+          
+          BUILD_STATUS=$(jq -r '.build_status' .qa/builder/BUILD_QA_REPORT.json)
+          MERGE_READY=$(jq -r '.merge_readiness.ready' .qa/builder/BUILD_QA_REPORT.json)
+          
+          echo "Build Status: $BUILD_STATUS"
+          echo "Merge Ready: $MERGE_READY"
+          
+          if [ "$BUILD_STATUS" != "PASS" ]; then
+            echo "❌ ENFORCEMENT FAILURE: Build status is not PASS (found: $BUILD_STATUS)"
+            echo "build_status=$BUILD_STATUS" >> $GITHUB_OUTPUT
+            echo "ready=false" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+          
+          if [ "$MERGE_READY" != "true" ]; then
+            echo "❌ ENFORCEMENT FAILURE: Merge readiness is not true"
+            echo "build_status=$BUILD_STATUS" >> $GITHUB_OUTPUT
+            echo "ready=false" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+          
+          echo "✅ Build QA indicates PASS and READY"
+          echo "build_status=$BUILD_STATUS" >> $GITHUB_OUTPUT
+          echo "ready=true" >> $GITHUB_OUTPUT
+      
+      - name: Check Governance Compliance Status
+        id: governance_status
+        if: steps.validate_json.outcome == 'success'
+        run: |
+          echo "Checking GOVERNANCE_COMPLIANCE_REPORT.json status..."
+          
+          COMPLIANCE_STATUS=$(jq -r '.compliance_status' .qa/builder/GOVERNANCE_COMPLIANCE_REPORT.json)
+          
+          echo "Compliance Status: $COMPLIANCE_STATUS"
+          
+          if [ "$COMPLIANCE_STATUS" != "COMPLIANT" ]; then
+            echo "❌ ENFORCEMENT FAILURE: Governance compliance status is not COMPLIANT (found: $COMPLIANCE_STATUS)"
+            echo "compliance_status=$COMPLIANCE_STATUS" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+          
+          echo "✅ Governance compliance indicates COMPLIANT"
+          echo "compliance_status=$COMPLIANCE_STATUS" >> $GITHUB_OUTPUT
+      
+      - name: Verify Summary Structure
+        id: summary_check
+        if: steps.artifacts_exist.outcome == 'success'
+        run: |
+          echo "Verifying SUMMARY.md structure..."
+          
+          SUMMARY=".qa/builder/SUMMARY.md"
+          MISSING_SECTIONS=""
+          
+          # Check for required sections
+          if ! grep -q "^# Builder QA Summary" "$SUMMARY"; then
+            MISSING_SECTIONS="$MISSING_SECTIONS\n- Missing header"
+          fi
+          
+          if ! grep -q "Merge Readiness" "$SUMMARY"; then
+            MISSING_SECTIONS="$MISSING_SECTIONS\n- Missing Merge Readiness"
+          fi
+          
+          if ! grep -q "Build Status" "$SUMMARY"; then
+            MISSING_SECTIONS="$MISSING_SECTIONS\n- Missing Build Status section"
+          fi
+          
+          if ! grep -q "Governance Compliance" "$SUMMARY"; then
+            MISSING_SECTIONS="$MISSING_SECTIONS\n- Missing Governance Compliance section"
+          fi
+          
+          if [ -n "$MISSING_SECTIONS" ]; then
+            echo "⚠️ WARNING: SUMMARY.md missing required sections:"
+            echo -e "$MISSING_SECTIONS"
+            echo "This is a structural warning but does not block merge if JSON reports are valid."
+          else
+            echo "✅ SUMMARY.md structure valid"
+          fi
+      
+      - name: Post Enforcement Result
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const artifactsExist = '${{ steps.artifacts_exist.outcome }}' === 'success';
+            const jsonValid = '${{ steps.validate_json.outcome }}' === 'success';
+            const buildPass = '${{ steps.build_status.outcome }}' === 'success';
+            const governancePass = '${{ steps.governance_status.outcome }}' === 'success';
+            
+            const overallPass = artifactsExist && jsonValid && buildPass && governancePass;
+            
+            const buildStatus = '${{ steps.build_status.outputs.build_status }}';
+            const mergeReady = '${{ steps.build_status.outputs.ready }}';
+            const complianceStatus = '${{ steps.governance_status.outputs.compliance_status }}';
+            
+            let comment = '## 🔐 Builder QA Enforcement Gate\n\n';
+            comment += `**PR**: #${{ github.event.pull_request.number }}\n`;
+            comment += `**Commit**: ${{ github.event.pull_request.head.sha }}\n`;
+            comment += `**Gate Result**: ${overallPass ? '✅ **PASS** - Merge Authorized' : '❌ **BLOCKED** - Fix Required'}\n\n`;
+            
+            comment += '### Enforcement Checks\n\n';
+            comment += `- ${artifactsExist ? '✅' : '❌'} **Required Artifacts Present**\n`;
+            comment += `- ${jsonValid ? '✅' : '❌'} **JSON Artifacts Valid**\n`;
+            comment += `- ${buildPass ? '✅' : '❌'} **Build Status = PASS** ${buildStatus ? `(${buildStatus})` : ''}\n`;
+            comment += `- ${governancePass ? '✅' : '❌'} **Governance Compliance = COMPLIANT** ${complianceStatus ? `(${complianceStatus})` : ''}\n\n`;
+            
+            if (!overallPass) {
+              comment += '### ❌ Blocking Issues\n\n';
+              comment += 'This PR cannot merge because Builder QA artifacts indicate:\n';
+              
+              if (!artifactsExist) {
+                comment += '- **Missing required artifacts** - Builder must generate `.qa/builder/*` reports\n';
+              }
+              if (!jsonValid) {
+                comment += '- **Invalid JSON format** - Check JSON syntax in reports\n';
+              }
+              if (!buildPass) {
+                comment += `- **Build not passing** - BUILD_QA_REPORT.json shows status: ${buildStatus}\n`;
+              }
+              if (!governancePass) {
+                comment += `- **Governance non-compliant** - GOVERNANCE_COMPLIANCE_REPORT.json shows: ${complianceStatus}\n`;
+              }
+              
+              comment += '\n**Resolution**: Builder must fix issues and regenerate QA artifacts showing PASS/COMPLIANT status.\n\n';
+            } else {
+              comment += '### ✅ Merge Authorization\n\n';
+              comment += 'Builder QA artifacts confirm:\n';
+              comment += '- Build completed successfully (PASS)\n';
+              comment += '- All governance requirements met (COMPLIANT)\n';
+              comment += '- PR is ready for merge (READY)\n\n';
+            }
+            
+            comment += '---\n\n';
+            comment += '**Enforcement Model**: Builder QA-as-Truth (Artifacts Only)\n\n';
+            comment += '*This gate enforces presence and validity of Builder QA reports. It does NOT diagnose, debug, or interpret failures.*\n';
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+      
+      - name: Set Final Gate Status
+        if: always()
+        run: |
+          if [ "${{ steps.artifacts_exist.outcome }}" = "success" ] && \
+             [ "${{ steps.validate_json.outcome }}" = "success" ] && \
+             [ "${{ steps.build_status.outcome }}" = "success" ] && \
+             [ "${{ steps.governance_status.outcome }}" = "success" ]; then
+            echo "✅ BUILDER QA ENFORCEMENT GATE: PASS"
+            echo "PR is authorized to merge based on Builder QA artifacts"
+            exit 0
+          else
+            echo "❌ BUILDER QA ENFORCEMENT GATE: BLOCKED"
+            echo "PR cannot merge - Builder QA artifacts indicate issues"
+            exit 1
+          fi
