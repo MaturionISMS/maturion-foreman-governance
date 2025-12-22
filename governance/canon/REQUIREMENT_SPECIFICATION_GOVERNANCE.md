@@ -388,6 +388,10 @@ Every requirement SHOULD define:
 This governance integrates with:
 - **BUILD_PHILOSOPHY.md**: Implements Requirements-First principle
 - **REQUIREMENT_SPECIFICATION.schema.md**: Defines requirement structure
+- **APP_DESCRIPTION_REQUIREMENT_POLICY.md**: App Description precedes and informs FRS
+- **ARCHITECTURE_COMPILATION_CONTRACT.md**: FRS is required input for architecture
+- **BUILD_AUTHORIZATION_GATE.md**: FRS validation is mandatory precondition
+- **app-description-frs-alignment-checklist.md**: Validates FRS derivation from App Description
 - **CONTROL_MAPPING.schema.md**: Links requirements to compliance controls
 - **EVIDENCE_CATALOG.schema.md**: Links requirements to verification evidence
 - **GOVERNANCE_COMPLETENESS_MODEL.md**: Requirements are completeness requirement

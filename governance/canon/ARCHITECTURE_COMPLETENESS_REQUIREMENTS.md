@@ -522,6 +522,9 @@ This standard integrates with:
 
 - **GOVERNANCE_PURPOSE_AND_SCOPE.md**: Defines role of architecture in build philosophy
 - **REQUIREMENT_SPECIFICATION.schema.md**: Architecture implements requirements
+- **APP_DESCRIPTION_REQUIREMENT_POLICY.md**: App Description as mandatory upstream authority
+- **ARCHITECTURE_COMPILATION_CONTRACT.md**: Defines architecture compilation process and inputs
+- **BUILD_AUTHORIZATION_GATE.md**: Validates architecture completeness before build
 - **QA_POLICY_MASTER.md**: QA validates architecture completeness
 - **LEARNING_INTAKE_AND_PROMOTION_MODEL.md**: Incompleteness triggers learning promotion
 - **BUILD_EFFECTIVENESS_STANDARD.md**: Incomplete architecture reduces effectiveness score
