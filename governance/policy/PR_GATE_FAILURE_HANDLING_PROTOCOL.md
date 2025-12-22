@@ -231,6 +231,33 @@ Every gate failure MUST be classified as one of these types:
 
 ---
 
+### 5.9 GPCA Misprediction (GOVERNANCE DEFECT)
+
+**Classification**: `GPCA_MISPREDICTION`  
+**Description**: Gate outcome differs from GPCA prediction, violating Predictability Invariant  
+**Examples**:
+- GPCA predicted PASS, gate FAILED (false positive)
+- GPCA predicted FAIL, gate PASSED (false negative)
+- GPCA and gate disagree on failure reason (reason mismatch)
+
+**Responsible Party**: Governance Administrator
+
+**Remediation**: 
+1. Record misprediction as governance incident
+2. Perform root cause analysis
+3. Update GPCA logic to align with gate behavior
+4. Update governance documentation if ambiguous
+5. Validate fix against historical cases
+6. Document in governance change log
+
+**Severity**: HIGH (governance defect, undermines predictability)
+
+**Note**: GPCA mispredictions are **always governance defects**, never builder failures
+
+**Reference**: `governance/canon/GATE_PREDICTIVE_COMPLIANCE_ANALYSIS.md` Section 8.2
+
+---
+
 ## 6. Responsibility Assignment
 
 ### 6.1 Builder Responsibility
@@ -256,6 +283,7 @@ Governance Administrator is responsible for gate failures classified as:
 - SCHEMA_VIOLATION (for schema files themselves)
 - GOVERNANCE_VIOLATION (for policy ambiguity or conflicts)
 - GATE_INFRASTRUCTURE_FAILURE (for governance repo issues)
+- **GPCA_MISPREDICTION** (predictability invariant violation)
 
 **Governance Administrator Actions**:
 1. Review gate failure
@@ -263,6 +291,14 @@ Governance Administrator is responsible for gate failures classified as:
 3. Create governance fix PR
 4. Update canonical governance
 5. Communicate fix to affected parties
+
+**Additional Actions for GPCA_MISPREDICTION**:
+1. Record misprediction incident
+2. Perform root cause analysis
+3. Update GPCA prediction logic
+4. Validate fix against historical cases
+5. Update governance documentation
+6. Document in governance change log
 
 ### 6.3 FM Responsibility
 FM is responsible for gate failures classified as:
@@ -493,6 +529,8 @@ When pattern detected:
 4. **Communication**: Notify affected parties
 5. **Preventive Action**: Implement measures to prevent recurrence
 
+**Pattern Promotion**: Systematic patterns should be promoted via **GOVERNANCE_RIPPLE_MODEL.md** upward ripple mechanism
+
 ### 11.3 Builder Performance Monitoring
 Persistent gate failures by a builder may indicate:
 - Inadequate builder contract
@@ -501,6 +539,14 @@ Persistent gate failures by a builder may indicate:
 - Systemic QA issues
 
 FM MUST review builder performance and update contracts if needed.
+
+### 11.4 GPCA Misprediction Pattern Monitoring
+Governance Administrator MUST specifically monitor for:
+- Repeated GPCA mispredictions (same failure type)
+- GPCA mispredictions across multiple repositories
+- Systematic predictability gaps in governance
+
+**Misprediction patterns indicate governance incompleteness and MUST trigger governance updates.**
 
 ---
 
@@ -512,6 +558,8 @@ This protocol integrates with:
 - **BUILDER_QA_REPORT.schema.md**: Defines report structure
 - **ESCALATION_POLICY.md**: General escalation procedures
 - **GOVERNANCE_COMPLETENESS_MODEL.md**: Completeness requirements
+- **GATE_PREDICTIVE_COMPLIANCE_ANALYSIS.md**: Defines GPCA and misprediction handling
+- **GOVERNANCE_RIPPLE_MODEL.md**: Defines learning promotion from failures
 
 ---
 

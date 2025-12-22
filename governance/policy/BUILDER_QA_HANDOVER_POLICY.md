@@ -203,7 +203,16 @@ Builder MUST provide these artifacts:
 6. Builder generates QA reports
 7. Builder verifies all pre-conditions met
 
-### 6.2 Handover Submission Phase
+### 6.2 Pre-Handover Validation Phase (Optional but Recommended)
+1. **Builder MAY run GPCA** (Gate-Predictive Compliance Analysis) before submission
+2. GPCA predicts whether PR gate will PASS or FAIL based on governance compliance
+3. If GPCA predicts FAIL, Builder remediates predicted issues
+4. If GPCA predicts PASS, Builder proceeds with confidence
+5. **Note**: GPCA is advisory only; Builder QA remains mandatory
+6. **Note**: GPCA does NOT replace or substitute for Builder QA
+7. **See**: `governance/canon/GATE_PREDICTIVE_COMPLIANCE_ANALYSIS.md`
+
+### 6.3 Handover Submission Phase
 1. Builder commits all implementation code
 2. Builder commits all QA reports to `.qa/builder/`
 3. Builder commits all evidence artifacts
@@ -212,7 +221,7 @@ Builder MUST provide these artifacts:
 6. Builder pushes to PR branch
 7. Builder signals handover complete (via PR comment or FM notification)
 
-### 6.3 Gate Validation Phase
+### 6.4 Gate Validation Phase
 1. PR merge attempted (manual or automated)
 2. Governance Gate activates
 3. Gate validates report presence
@@ -220,10 +229,12 @@ Builder MUST provide these artifacts:
 5. Gate validates compliance checks
 6. Gate makes PASS/FAIL decision
 7. Gate allows merge (PASS) or blocks merge (FAIL)
+8. **Note**: Gate decisions must be consistent with GPCA predictions (Predictability Invariant)
 
-### 6.4 Post-Handover Phase
+### 6.5 Post-Handover Phase
 - If gate PASSES: PR merges, work complete
 - If gate FAILS: Builder reviews gate failure, remediates governance issues, re-submits
+- If gate FAILS but GPCA predicted PASS: **Governance defect** (GPCA misprediction) - escalate to Governance Administrator
 
 ---
 
@@ -346,25 +357,74 @@ This policy integrates with:
 - **GOVERNANCE_GATE_CANON.md**: Defines gate enforcement model
 - **PR_GATE_FAILURE_HANDLING_PROTOCOL.md**: Defines failure handling
 - **GOVERNANCE_COMPLETENESS_MODEL.md**: Satisfies Builder QA canonicalization
+- **GATE_PREDICTIVE_COMPLIANCE_ANALYSIS.md**: Defines optional pre-submission GPCA
+- **GOVERNANCE_RIPPLE_MODEL.md**: Defines governance evolution framework
 
 ---
 
-## 12. Audit and Compliance
+## 12. GPCA Integration (Optional Pre-Submission Check)
 
-### 12.1 Audit Requirements
+### 12.1 GPCA Purpose in Handover Context
+
+Gate-Predictive Compliance Analysis (GPCA) is an **optional** tool that builders MAY use to:
+- Predict PR gate outcomes before submission
+- Identify potential compliance issues early
+- Reduce wasted debugging time
+- Improve handover confidence
+
+**Critical**: GPCA is **NOT** a substitute for Builder QA or handover requirements.
+
+### 12.2 When to Use GPCA
+
+**Recommended scenarios**:
+- Before first-time handover on a new repository
+- When uncertain about governance compliance
+- After governance updates
+- When previous gate failures occurred
+
+**Not recommended**:
+- As substitute for Builder QA
+- As substitute for QA report generation
+- During active development
+
+### 12.3 GPCA Limitations
+
+GPCA:
+- ✅ Predicts governance compliance
+- ✅ Validates artifact presence
+- ✅ Checks schema conformance
+- ❌ Does NOT validate implementation correctness
+- ❌ Does NOT run Builder QA
+- ❌ Is NOT authoritative (gates make final decisions)
+
+### 12.4 GPCA Misprediction Handling
+
+If GPCA predicts PASS but gate FAILS:
+- **This is a governance defect**, not a builder failure
+- Builder should escalate to Governance Administrator
+- Governance Administrator must investigate and update GPCA logic
+- This upholds the **Predictability Invariant**
+
+**See**: `governance/canon/GATE_PREDICTIVE_COMPLIANCE_ANALYSIS.md` for full details
+
+---
+
+## 13. Audit and Compliance
+
+### 13.1 Audit Requirements
 - All Builder QA Reports retained as audit evidence
 - Handover compliance auditable via report history
 - Gate decisions auditable via workflow logs
 - Builder attestations legally binding
 
-### 12.2 Compliance Verification
+### 13.2 Compliance Verification
 - Quarterly compliance audits of handover process
 - Builder QA effectiveness measured by post-merge failure rate
 - Gate effectiveness measured by false positive/negative rate
 
 ---
 
-## 13. Policy Change Control
+## 14. Policy Change Control
 
 This policy may only be changed by:
 1. Governance Administrator proposes change
@@ -377,7 +437,7 @@ This policy may only be changed by:
 
 ---
 
-## 14. Conclusion
+## 15. Conclusion
 
 This policy ensures:
 - Clear handover contracts
@@ -386,6 +446,7 @@ This policy ensures:
 - Accountability and traceability
 - Audit readiness
 - Governance integrity
+- Predictable gate outcomes (via optional GPCA)
 
 **Builders prove correctness. Governance verifies compliance. Gates enforce contracts.**
 
