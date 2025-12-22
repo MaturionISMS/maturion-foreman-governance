@@ -1,0 +1,191 @@
+name: Builder QA Enforcement Gate
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  enforce-builder-qa:
+    name: Enforce Builder QA Reports Exist and Pass
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Enforce Builder QA Artifacts
+        id: check
+        run: |
+          PR=${{ github.event.pull_request.number }}
+          COMMIT=${{ github.event.pull_request.head.sha }}
+          
+          echo "=== ENFORCEMENT-ONLY GATE ==="
+          echo "Verifying Builder QA artifacts exist and declare PASS"
+          
+          RESULT="PASS"
+          EXIT_CODE=0
+          
+          # Required Builder QA artifacts
+          REQUIRED_FILES=(
+            ".qa/builder/BUILD_QA_REPORT.json"
+            ".qa/builder/GOVERNANCE_COMPLIANCE_REPORT.json"
+            ".qa/builder/UI_VERIFICATION_REPORT.json"
+            ".qa/builder/SUMMARY.md"
+          )
+          
+          # Check 1: All required artifacts exist
+          MISSING=0
+          for artifact in "${REQUIRED_FILES[@]}"; do
+            if [ ! -f "$artifact" ]; then
+              echo "❌ Missing: $artifact"
+              MISSING=$((MISSING + 1))
+              RESULT="FAIL"
+              EXIT_CODE=1
+            else
+              echo "✅ Found: $artifact"
+            fi
+          done
+          
+          # Check 2: JSON artifacts are valid and declare PASS
+          INVALID=0
+          FAILED=0
+          for json_file in .qa/builder/*.json; do
+            if [ -f "$json_file" ]; then
+              if ! jq empty "$json_file" 2>/dev/null; then
+                echo "❌ Invalid JSON: $json_file"
+                INVALID=$((INVALID + 1))
+                RESULT="FAIL"
+                EXIT_CODE=1
+                continue
+              fi
+              
+              STATUS=$(jq -r '.status // "UNKNOWN"' "$json_file")
+              if [ "$STATUS" != "PASS" ]; then
+                echo "❌ Declares $STATUS: $json_file"
+                FAILED=$((FAILED + 1))
+                RESULT="FAIL"
+                EXIT_CODE=1
+              else
+                echo "✅ Declares PASS: $json_file"
+              fi
+            fi
+          done
+          
+          echo "RESULT=$RESULT" >> $GITHUB_OUTPUT
+          echo "EXIT_CODE=$EXIT_CODE" >> $GITHUB_OUTPUT
+          echo "MISSING=$MISSING" >> $GITHUB_OUTPUT
+          echo "INVALID=$INVALID" >> $GITHUB_OUTPUT
+          echo "FAILED=$FAILED" >> $GITHUB_OUTPUT
+          
+          if [ "$RESULT" = "PASS" ]; then
+            echo "✅ All Builder QA artifacts exist and declare PASS"
+          else
+            echo "❌ Builder QA enforcement failed"
+          fi
+
+      - name: Emit Gate Debug Report
+        if: always()
+        run: |
+          PR=${{ github.event.pull_request.number }}
+          COMMIT=${{ github.event.pull_request.head.sha }}
+          TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          RESULT="${{ steps.check.outputs.RESULT }}"
+          EXIT_CODE="${{ steps.check.outputs.EXIT_CODE }}"
+          MISSING="${{ steps.check.outputs.MISSING }}"
+          INVALID="${{ steps.check.outputs.INVALID }}"
+          FAILED="${{ steps.check.outputs.FAILED }}"
+          
+          REPORT_DIR=".github/gate-reports"
+          REPORT_FILE="$REPORT_DIR/builder-qa-enforcement-$PR.md"
+          
+          mkdir -p "$REPORT_DIR"
+          
+          # Build report
+          {
+            echo "# Gate Debug Report: Builder QA Enforcement Gate"
+            echo ""
+            echo "**PR Number:** $PR"
+            echo "**Commit SHA:** $COMMIT"
+            echo "**Execution Time:** $TIMESTAMP"
+            echo "**Gate Result:** $RESULT"
+            echo "**Exit Code:** $EXIT_CODE"
+            echo ""
+            echo "---"
+            echo ""
+            echo "## Gate Model: ENFORCEMENT-ONLY"
+            echo ""
+            echo "**This gate does NOT perform QA.**"
+            echo "**This gate ONLY enforces that Builder QA was performed and passed.**"
+            echo ""
+            echo "Per **PR GATES REDESIGN DIRECTIVE** (Johan Ras):"
+            echo "- QA produces truth"
+            echo "- PR gates enforce that truth was produced and respected"
+            echo ""
+            echo "---"
+            echo ""
+            echo "## Check Results"
+            echo ""
+            echo "### Artifact Existence"
+            echo "- **Status:**" $([ "$MISSING" -eq 0 ] && echo "✅ PASS" || echo "❌ FAIL")
+            echo "- **Missing:** $MISSING"
+            echo ""
+            echo "### Artifact Validity"
+            echo "- **Status:**" $([ "$INVALID" -eq 0 ] && echo "✅ PASS" || echo "❌ FAIL")
+            echo "- **Invalid:** $INVALID"
+            echo ""
+            echo "### Artifact Status"
+            echo "- **Status:**" $([ "$FAILED" -eq 0 ] && echo "✅ PASS" || echo "❌ FAIL")
+            echo "- **Failed:** $FAILED"
+            echo ""
+            echo "---"
+            echo ""
+            echo "## Machine-Readable Summary"
+            echo ""
+            echo '```json'
+            echo "{"
+            echo '  "gate_name": "Builder QA Enforcement Gate",'
+            echo '  "gate_id": "builder-qa-enforcement",'
+            echo "  \"pr_number\": $PR,"
+            echo "  \"status\": \"$RESULT\","
+            echo '  "failure_signatures": [],'
+            echo '  "failure_count": 0,'
+            echo "  \"summary\": \"Missing: $MISSING, Invalid: $INVALID, Failed: $FAILED\","
+            echo '  "required_action": [],'
+            echo "  \"timestamp_utc\": \"$TIMESTAMP\","
+            echo "  \"source_commit\": \"$COMMIT\","
+            echo "  \"exit_code\": $EXIT_CODE,"
+            echo '  "enforcement_model": "artifact-verification-only"'
+            echo "}"
+            echo '```'
+            echo ""
+            echo "---"
+            echo ""
+            echo "**Signature:** Gate: \`builder-qa-enforcement\` | Model: **ENFORCEMENT-ONLY**"
+          } > "$REPORT_FILE"
+          
+          echo "✅ Gate debug report emitted to $REPORT_FILE"
+
+      - name: Commit and Push Report
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .github/gate-reports/
+          git commit -m "Add Builder QA enforcement gate report for PR #${{ github.event.pull_request.number }}" || echo "No changes"
+          git push || echo "Nothing to push"
+
+      - name: Enforce Gate Result
+        run: |
+          if [ "${{ steps.check.outputs.EXIT_CODE }}" != "0" ]; then
+            echo "❌ Gate FAILED - Builder QA artifacts missing, invalid, or failed"
+            echo "See: .github/gate-reports/builder-qa-enforcement-${{ github.event.pull_request.number }}.md"
+            exit 1
+          fi
+          echo "✅ Gate PASSED - Builder QA artifacts exist and declare PASS"

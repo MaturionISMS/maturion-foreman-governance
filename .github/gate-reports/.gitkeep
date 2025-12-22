@@ -1,0 +1,5 @@
+# Gate Debug Reports
+
+This directory contains structured debug reports emitted by PR gates.
+
+See: `governance/policy/PR_GATE_DEBUG_REPORTS_POLICY.md`

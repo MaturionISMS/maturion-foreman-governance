@@ -1,0 +1,118 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/MaturionISMS/maturion-foreman-governance/schema/gate-debug-report.json",
+  "title": "PR Gate Debug Report Schema",
+  "description": "Normative schema for PR gate debug report machine-readable summaries",
+  "type": "object",
+  "required": [
+    "gate_name",
+    "gate_id",
+    "pr_number",
+    "status",
+    "failure_signatures",
+    "failure_count",
+    "summary",
+    "required_action",
+    "timestamp_utc",
+    "source_commit"
+  ],
+  "properties": {
+    "gate_name": {
+      "type": "string",
+      "description": "Human-readable gate name",
+      "examples": ["Cascading Failure Gate", "Scope Declaration Gate", "Governance Gate"]
+    },
+    "gate_id": {
+      "type": "string",
+      "description": "Machine-readable gate identifier (kebab-case)",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "examples": ["cascading-failure", "scope-declaration", "governance-gate"]
+    },
+    "pr_number": {
+      "type": "integer",
+      "description": "GitHub pull request number",
+      "minimum": 1
+    },
+    "status": {
+      "type": "string",
+      "description": "Gate execution result",
+      "enum": ["PASS", "FAIL"]
+    },
+    "failure_signatures": {
+      "type": "array",
+      "description": "Array of distinct failure signatures (empty if PASS)",
+      "items": {
+        "type": "string"
+      }
+    },
+    "failure_count": {
+      "type": "integer",
+      "description": "Total number of failures detected",
+      "minimum": 0
+    },
+    "summary": {
+      "type": "string",
+      "description": "Human-readable summary of gate execution and result"
+    },
+    "required_action": {
+      "type": "array",
+      "description": "List of required actions if gate failed (empty if PASS)",
+      "items": {
+        "type": "string"
+      }
+    },
+    "timestamp_utc": {
+      "type": "string",
+      "description": "ISO 8601 timestamp of gate execution (UTC)",
+      "format": "date-time",
+      "examples": ["2025-12-22T08:26:03Z"]
+    },
+    "source_commit": {
+      "type": "string",
+      "description": "Full SHA of the commit that triggered this gate execution",
+      "pattern": "^[a-f0-9]{40}$"
+    },
+    "exit_code": {
+      "type": "integer",
+      "description": "Workflow exit code (0 = success, non-zero = failure)"
+    },
+    "checks": {
+      "type": "array",
+      "description": "Individual check results within the gate",
+      "items": {
+        "type": "object",
+        "required": ["name", "status"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Check name"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["PASS", "FAIL"]
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "File paths, commands, or API calls that provided evidence"
+          },
+          "details": {
+            "type": "object",
+            "description": "Check-specific additional details"
+          }
+        }
+      }
+    },
+    "workflow_file": {
+      "type": "string",
+      "description": "Path to the workflow file that executed this gate"
+    },
+    "runner": {
+      "type": "string",
+      "description": "GitHub Actions runner OS"
+    }
+  },
+  "additionalProperties": false
+}

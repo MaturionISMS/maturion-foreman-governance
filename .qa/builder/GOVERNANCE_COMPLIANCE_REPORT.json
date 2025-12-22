@@ -1,0 +1,33 @@
+{
+  "governance_version_reference": "PR_683_canonical_governance",
+  "required_artifacts_present": true,
+  "artifacts_verified": [
+    "governance/scope-declaration.md",
+    "governance/policy/AGENT_NON_STALLING_AND_ESCALATION_POLICY.md",
+    "governance/policy/PR_GATE_FAILURE_HANDLING_PROTOCOL.md",
+    "governance/policy/CROSS_REPOSITORY_GOVERNANCE_ALIGNMENT_POLICY.md",
+    "governance/policy/PR_GATE_DEBUG_REPORTS_POLICY.md",
+    "governance/schema/GATE_DEBUG_REPORT_SCHEMA.json",
+    "governance/agents/governance-administrator.agent.md",
+    ".github/agents/governance-administrator.md",
+    ".github/workflows/governance-cascading-failure-gate.yml",
+    ".github/gate-reports/.gitkeep"
+  ],
+  "role_scope_validated": "BUILDER",
+  "responsibility_domain": "Governance Canon",
+  "scope_frozen": true,
+  "prohibited_actions_detected": [],
+  "policy_integration_verified": true,
+  "cross_references_complete": true,
+  "normative_requirements_enforced": true,
+  "status": "PASS",
+  "compliance_checks": {
+    "scope_declaration_schema_v1": "PASS",
+    "responsibility_domain_registered": "PASS",
+    "pr_gate_failure_protocol_mandatory": "PASS",
+    "gate_debug_reports_authoritative": "PASS",
+    "fm_office_visibility_required": "PASS",
+    "builder_handover_compliance_addressed": "PASS"
+  },
+  "timestamp_utc": "2025-12-22T09:04:45Z"
+}

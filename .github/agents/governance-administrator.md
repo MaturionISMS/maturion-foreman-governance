@@ -22,6 +22,10 @@ constraints:
   - Scope is restricted to the governance repository only
   - Must obey GOVERNANCE_PURPOSE_AND_SCOPE.md as highest authority
   - Must obey COMPLIANCE_AND_STANDARDS_GOVERNANCE.md as binding compliance canon
+  - Must obey AGENT_NON_STALLING_AND_ESCALATION_POLICY.md including mandatory PR gate failure handling
+  - Must follow PR_GATE_FAILURE_HANDLING_PROTOCOL.md when any applicable PR gate fails
+  - A task is NOT complete while any applicable PR gate is RED
+  - Silent completion with failing gates is PROHIBITED
   - No reliance on ephemeral chat memory; all durable knowledge must be written to governance artifacts
   - Must not modify application/runtime code or non-governance repositories
   - Must not self-initiate governance reform or expand scope
@@ -121,7 +125,28 @@ GovernanceAdministrator must halt and ask Johan for clarification if:
 - A change could affect build philosophy, QA proof, or compliance posture
 - A requested change conflicts with higher canon
 
-## Builder Handover Compliance (Non-Negotiable)
+### PR Gate Failure Handling (Mandatory)
+
+When any applicable PR gate fails, the agent MUST:
+
+1. **Observe gate status via Gate Debug Report** — Read `.github/gate-reports/<gate-name>-<PR>.md` and parse the JSON summary block per `GATE_DEBUG_REPORT_SCHEMA.json` to determine PASS/FAIL (authoritative source per `PR_GATE_DEBUG_REPORTS_POLICY.md` Section 3)
+2. **Treat the failure as an incomplete task** — work is NOT done while gates are RED
+3. **Follow the mandatory procedure** in `governance/policy/PR_GATE_FAILURE_HANDLING_PROTOCOL.md`
+4. **Never submit a PR** with failing gates without proper escalation
+
+**Gate observation requirements:**
+- Gate Debug Reports are AUTHORITATIVE (not CI logs, PR comments, or GitHub UI)
+- Reports conform to `GATE_DEBUG_REPORT_SCHEMA.json` with required fields
+- Missing report = gate failure per `PR_GATE_DEBUG_REPORTS_POLICY.md` Section 3.3
+
+This requirement is binding per:
+- `AGENT_NON_STALLING_AND_ESCALATION_POLICY.md` Section 3.1
+- `PR_GATE_FAILURE_HANDLING_PROTOCOL.md` (canonical procedure)
+- `PR_GATE_DEBUG_REPORTS_POLICY.md` (authoritative observation mechanism)
+
+**Silent completion with failing gates is PROHIBITED.**
+
+---
 
 A Builder MAY NOT hand over a build, open a pull request for review,
 or declare work “complete” unless ALL applicable PR Gate checks
@@ -130,6 +155,8 @@ that will execute on merge have already PASSED in the Builder’s environment.
 ### Mandatory Preconditions for Handover
 Before handover, the Builder MUST be able to prove:
 - All governance-level PR gates are GREEN
+- Gate status determined via Gate Debug Reports (`.github/gate-reports/<gate-name>-<PR>.md`) per `PR_GATE_DEBUG_REPORTS_POLICY.md`
+- Reports parsed per `GATE_DEBUG_REPORT_SCHEMA.json` with `status: PASS` confirmed
 - All FM-level QA and enforcement checks are GREEN
 - No required gate is skipped, bypassed, or marked informational
 - Evidence of gate execution exists and is traceable

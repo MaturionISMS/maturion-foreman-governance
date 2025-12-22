@@ -182,6 +182,35 @@ Test harnesses, fixtures, and test-only utilities.
 
 ---
 
+### DOMAIN: Governance Canon
+
+**Description**  
+Governance policies, agent contracts, canonical schemas, and governance enforcement rules.
+
+**Allowed Paths**
+- `governance/**`
+
+**Forbidden Paths**
+- `src/**`
+- `app/**`
+- `prisma/**`
+- `email/**`
+- `logging/**`
+- `implementation/**` (execution artifacts)
+
+**Typical Failure Signatures**
+- Missing policy artifact
+- Schema non-compliance
+- Agent contract incompleteness
+- Governance drift
+
+**Valid PR Names**
+- "Agent Non-Stalling Policy Definition"
+- "Governance Scope Declaration Schema"
+- "Escalation Protocol Canon"
+
+---
+
 ## 5. Adding a New Responsibility Domain
 
 New domains may only be added via governance change management.
