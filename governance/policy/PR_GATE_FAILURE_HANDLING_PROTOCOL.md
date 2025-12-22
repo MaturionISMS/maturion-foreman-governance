@@ -39,13 +39,25 @@ An agent MUST NOT:
 
 When a PR gate fails, the agent MUST follow this exact procedure:
 
-### Step 1: Investigate Gate Workflow
-- Locate the failing gate workflow file in `.github/workflows/`
+### Step 1: Observe Gate Status via Debug Report
+
+**Primary observation method:**
+- Read the Gate Debug Report from `.github/gate-reports/<gate-name>-<PR>.md`
+- Parse the JSON summary block conforming to `GATE_DEBUG_REPORT_SCHEMA.json`
+- Extract the `status` field to determine PASS or FAIL
+- If FAIL, read `failure_signatures`, `failure_count`, `summary`, and `required_action` arrays
+
+Per `PR_GATE_DEBUG_REPORTS_POLICY.md` Section 3, Gate Debug Reports are **authoritative**.
+
+**Secondary investigation (if needed):**
+- Locate the gate workflow file in `.github/workflows/` to understand gate logic
 - Read the complete workflow to understand:
   - What the gate checks
   - What markers or conditions it requires
   - What causes it to fail
   - What it's protecting (governance principle)
+
+**Note:** Always start with the Gate Debug Report. Workflow inspection is for understanding gate requirements, not for determining pass/fail status.
 
 ### Step 2: Root Cause Analysis
 - Identify the **exact failing condition**

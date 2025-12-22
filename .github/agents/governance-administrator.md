@@ -129,13 +129,20 @@ GovernanceAdministrator must halt and ask Johan for clarification if:
 
 When any applicable PR gate fails, the agent MUST:
 
-1. **Treat the failure as an incomplete task** — work is NOT done while gates are RED
-2. **Follow the mandatory procedure** in `governance/policy/PR_GATE_FAILURE_HANDLING_PROTOCOL.md`
-3. **Never submit a PR** with failing gates without proper escalation
+1. **Observe gate status via Gate Debug Report** — Read `.github/gate-reports/<gate-name>-<PR>.md` and parse the JSON summary block per `GATE_DEBUG_REPORT_SCHEMA.json` to determine PASS/FAIL (authoritative source per `PR_GATE_DEBUG_REPORTS_POLICY.md` Section 3)
+2. **Treat the failure as an incomplete task** — work is NOT done while gates are RED
+3. **Follow the mandatory procedure** in `governance/policy/PR_GATE_FAILURE_HANDLING_PROTOCOL.md`
+4. **Never submit a PR** with failing gates without proper escalation
+
+**Gate observation requirements:**
+- Gate Debug Reports are AUTHORITATIVE (not CI logs, PR comments, or GitHub UI)
+- Reports conform to `GATE_DEBUG_REPORT_SCHEMA.json` with required fields
+- Missing report = gate failure per `PR_GATE_DEBUG_REPORTS_POLICY.md` Section 3.3
 
 This requirement is binding per:
 - `AGENT_NON_STALLING_AND_ESCALATION_POLICY.md` Section 3.1
 - `PR_GATE_FAILURE_HANDLING_PROTOCOL.md` (canonical procedure)
+- `PR_GATE_DEBUG_REPORTS_POLICY.md` (authoritative observation mechanism)
 
 **Silent completion with failing gates is PROHIBITED.**
 
@@ -148,6 +155,8 @@ that will execute on merge have already PASSED in the Builder’s environment.
 ### Mandatory Preconditions for Handover
 Before handover, the Builder MUST be able to prove:
 - All governance-level PR gates are GREEN
+- Gate status determined via Gate Debug Reports (`.github/gate-reports/<gate-name>-<PR>.md`) per `PR_GATE_DEBUG_REPORTS_POLICY.md`
+- Reports parsed per `GATE_DEBUG_REPORT_SCHEMA.json` with `status: PASS` confirmed
 - All FM-level QA and enforcement checks are GREEN
 - No required gate is skipped, bypassed, or marked informational
 - Evidence of gate execution exists and is traceable

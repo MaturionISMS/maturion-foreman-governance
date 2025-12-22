@@ -90,6 +90,25 @@ If a gate failure is not fixable by the agent, escalation per the protocol is ma
 
 The 5-step procedure documented in PR_GATE_FAILURE_HANDLING_PROTOCOL.md is the **canonical method** for handling PR gate failures and MUST be followed.
 
+### 3.1.5 Gate Status Observation (Mandatory)
+
+**Agents MUST determine gate status using Gate Debug Reports.**
+
+Per `PR_GATE_DEBUG_REPORTS_POLICY.md` Section 3 (Normative Requirements):
+
+- **Gate Debug Reports are AUTHORITATIVE** for determining gate pass/fail status
+- Reports are located in `.github/gate-reports/` and conform to `GATE_DEBUG_REPORT_SCHEMA.json`
+- Agents MUST read the gate report file and parse the `status` field from the JSON summary block
+
+**Prohibited observation methods:**
+- CI logs or GitHub Actions output
+- PR comments or GitHub UI state
+- Assumptions based on workflow file inspection
+
+**Rationale:** Gate Debug Reports are repository-visible, machine-readable, and accessible to all agents regardless of GitHub API credentials. They are the authoritative interface between gates and agents.
+
+**Enforcement:** If a gate runs but does not emit a report, the gate MUST be considered FAILED per PR_GATE_DEBUG_REPORTS_POLICY.md Section 3.3.
+
 ---
 
 ## 4. Escalation Content Requirements (Problem + Solution)

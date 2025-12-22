@@ -76,14 +76,20 @@ This agent MUST comply with:
 ### PR Gate Failure Handling (Binding)
 
 When any applicable PR gate fails:
-1. **Task is NOT complete** — work remains incomplete while gates are RED
-2. **Follow the mandatory procedure** in `PR_GATE_FAILURE_HANDLING_PROTOCOL.md`:
-   - Investigate gate workflow
+1. **Observe gate status via Gate Debug Report** — Read `.github/gate-reports/<gate-name>-<PR>.md` and parse JSON summary per `GATE_DEBUG_REPORT_SCHEMA.json` to determine PASS/FAIL status
+2. **Task is NOT complete** — work remains incomplete while gates are RED
+3. **Follow the mandatory procedure** in `PR_GATE_FAILURE_HANDLING_PROTOCOL.md`:
+   - Observe gate status via debug report (authoritative source)
    - Root cause analysis
    - Check dependencies
    - Determine fix path (direct or escalate)
    - Implement or escalate
-3. **Never submit a PR** with failing gates without proper escalation per protocol
+4. **Never submit a PR** with failing gates without proper escalation per protocol
+
+**Gate observation requirements per `PR_GATE_DEBUG_REPORTS_POLICY.md` Section 3:**
+- Gate Debug Reports are AUTHORITATIVE (not CI logs, PR comments, or GitHub UI)
+- Reports conform to `GATE_DEBUG_REPORT_SCHEMA.json`
+- Missing report = gate failure
 
 **Silent completion with failing gates is PROHIBITED.**
 
