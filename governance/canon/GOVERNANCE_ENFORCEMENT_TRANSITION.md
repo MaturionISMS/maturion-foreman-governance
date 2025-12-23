@@ -109,8 +109,8 @@ The legacy gate served its purpose during early governance establishment. The mo
 - Specifies dependency closure rules
 - Defines audit-structure readiness
 
-**Canonical Principle**:
-> "The Governance Gate is the final merge authority and validates **process compliance and evidence completeness**, not code quality." — GOVERNANCE_COMPLETENESS_MODEL.md
+**Canonical Principle** (from GOVERNANCE_COMPLETENESS_MODEL.md):
+> The Governance Gate is the final merge authority and validates process compliance and evidence completeness, not code quality. (Tests passing is necessary but not sufficient.)
 
 ### 4.2 Gate-Predictive Compliance Analysis (GPCA) as Canonical Predictive Mechanism
 
