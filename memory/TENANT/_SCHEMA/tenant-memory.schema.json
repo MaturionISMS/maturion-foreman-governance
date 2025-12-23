@@ -1,0 +1,110 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://maturion.com/schemas/tenant-memory.schema.json",
+  "title": "Tenant Memory Schema",
+  "description": "Schema definition for tenant-specific memory entries. THIS IS A GOVERNANCE DEFINITION - NO RUNTIME ACTIVATION.",
+  "type": "object",
+  "required": ["id", "tenantId", "scope", "key", "value", "metadata"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for this memory entry",
+      "pattern": "^tenant_[a-z0-9_]+_[0-9]+$"
+    },
+    "tenantId": {
+      "type": "string",
+      "description": "Unique identifier for the tenant this memory belongs to",
+      "pattern": "^tenant_[a-z0-9_]+$"
+    },
+    "scope": {
+      "type": "string",
+      "const": "tenant",
+      "description": "Memory scope - must be 'tenant' for this schema"
+    },
+    "key": {
+      "type": "string",
+      "description": "Unique key for this memory entry within tenant scope",
+      "minLength": 1
+    },
+    "value": {
+      "type": "object",
+      "description": "The memory data payload",
+      "required": ["type", "description", "data"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Type of memory entry",
+          "enum": [
+            "isms_context",
+            "tenant_configuration",
+            "tenant_escalation",
+            "tenant_lesson_learned",
+            "tenant_governance_decision",
+            "tenant_incident",
+            "tenant_state_transition"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of this memory entry",
+          "minLength": 1
+        },
+        "data": {
+          "type": "object",
+          "description": "The actual memory data - structure varies by type"
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Metadata about this memory entry",
+      "required": ["createdAt", "updatedAt", "createdBy", "version"],
+      "properties": {
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 timestamp of creation"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 timestamp of last update"
+        },
+        "createdBy": {
+          "type": "string",
+          "description": "Identity that created this memory entry"
+        },
+        "version": {
+          "type": "integer",
+          "description": "Version number of this memory entry",
+          "minimum": 1
+        },
+        "tenantIsolation": {
+          "type": "boolean",
+          "description": "Whether this memory is isolated to this tenant only",
+          "default": true
+        }
+      }
+    },
+    "tags": {
+      "type": "array",
+      "description": "Tags for filtering and querying",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "_governance": {
+    "status": "DISABLED",
+    "purpose": "Schema definition only - no runtime activation",
+    "activation_required": true,
+    "activation_authority": "governance_repository_administrator",
+    "notes": [
+      "This schema defines the structure for tenant memory entries",
+      "Tenant memory is EXPLICITLY DISABLED until governance approval",
+      "Do not use this schema for active memory operations",
+      "See memory/TENANT/README.md for activation requirements"
+    ]
+  }
+}
