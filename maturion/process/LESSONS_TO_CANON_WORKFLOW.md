@@ -25,18 +25,23 @@ This is a **governance protocol definition only**.
 
 This workflow operates **downstream** from and in **full alignment** with:
 
-1. **Primary Canon**: `governance/canon/GOVERNANCE_PURPOSE_AND_SCOPE.md`  
+1. **Primary Canon**: `maturion/canon/BOOTSTRAP_CANON.md` (when created)  
+   - Defines bootstrap requirements and validator foundations  
+   - Establishes validator terminal state invariants  
+   - Defines validator convergence as a core governance requirement
+
+2. **Governance Canon**: `governance/canon/GOVERNANCE_PURPOSE_AND_SCOPE.md`  
    - Defines governance as canonical memory  
    - Establishes memory principles (no ephemeral memory, all learning promoted or discarded)  
    - Defines One-Time Build Law and Build-to-Green requirements
 
-2. **Learning Canon**: `governance/canon/LEARNING_INTAKE_AND_PROMOTION_MODEL.md`  
+3. **Learning Canon**: `governance/canon/LEARNING_INTAKE_AND_PROMOTION_MODEL.md`  
    - Defines learning intake triggers  
    - Defines promotion decision criteria  
    - Defines structural change requirements  
    - Defines validation questions for promotion completeness
 
-3. **This Document**: Maturion-scoped workflow implementation  
+4. **This Document**: Maturion-scoped workflow implementation  
    - Operationalizes canonical learning principles for Maturion platform  
    - Defines workflow stages and handoffs  
    - Does NOT redefine or override canonical governance
@@ -520,24 +525,27 @@ To verify enforceability, the following MUST be demonstrable:
 
 This workflow aligns with and references:
 
-1. **`governance/canon/GOVERNANCE_PURPOSE_AND_SCOPE.md`**  
+1. **`maturion/canon/BOOTSTRAP_CANON.md`** (when created)  
+   - Validator foundations and terminal state requirements
+
+2. **`governance/canon/GOVERNANCE_PURPOSE_AND_SCOPE.md`**  
    - Section 2: Governance as Canonical Memory  
    - Section 7: Learning and Continuous Improvement  
    - Section 3: Build Philosophy (One-Time Build Law)
 
-2. **`governance/canon/LEARNING_INTAKE_AND_PROMOTION_MODEL.md`**  
+3. **`governance/canon/LEARNING_INTAKE_AND_PROMOTION_MODEL.md`**  
    - Section 2: Learning Intake Triggers  
    - Section 4: Promotion Decision  
    - Section 6.1: Learning Promotion Enforcement  
    - Section 6.2: Promotion Completeness Validation
 
-3. **`governance/canon/ARCHITECTURE_COMPLETENESS_REQUIREMENTS.md`**  
+4. **`governance/canon/ARCHITECTURE_COMPLETENESS_REQUIREMENTS.md`**  
    - All sections (architecture lessons promoted here)
 
-4. **`governance/policy/QA_POLICY_MASTER.md`**  
+5. **`governance/policy/QA_POLICY_MASTER.md`**  
    - QA domains and coverage (QA lessons promoted here)
 
-5. **Agent Contracts** (`.github/agents/**`)  
+6. **Agent Contracts** (`.github/agents/**`)  
    - Builder contracts (execution responsibility)  
    - Foreman contract (orchestration responsibility)  
    - Governance Administrator contract (governance maintenance responsibility)
