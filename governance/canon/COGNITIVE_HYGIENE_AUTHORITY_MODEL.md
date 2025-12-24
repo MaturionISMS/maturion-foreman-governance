@@ -1088,6 +1088,7 @@ CHP Escalation (Signal) → Decision Authority Evaluates → Decision Authority 
 - Watchdog observes CHP independently
 - Watchdog does not instruct or control CHP
 - Watchdog escalates CHP violations, not CHP findings
+- **Critical Distinction**: CHP signals to Watchdog are informational; Watchdog retains independent decision authority to escalate violations or issue hard stops based on its own observation and governance mandate, not based on CHP recommendations
 
 ---
 
@@ -1142,7 +1143,7 @@ CHP Escalation (Signal) → Decision Authority Evaluates → Decision Authority 
 | Escalation Path | Type | Decision Authority | Automatic Action | Audit Required |
 |----------------|------|-------------------|------------------|----------------|
 | CHP → Foreman | Advisory, non-blocking | Foreman decides | ❌ No | ✅ Yes |
-| CHP → Watchdog | Observational signal | Watchdog observes (no decision) | ❌ No | ✅ Yes |
+| CHP → Watchdog | Observational signal | Watchdog observes (independent authority for violations) | ❌ No | ✅ Yes |
 | CHP → Human | Informational escalation | Human decides | ❌ No | ✅ Yes |
 
 **Key Invariants**:
@@ -1261,7 +1262,7 @@ Watchdog (Independent Observer)
 
 1. **Escalation ≠ Decision** ✅
    - Section 8.0.1 explicitly defines escalation as signal, not decision
-   - Decision authority remains with designated role (Foreman, Watchdog, Human)
+   - Decision authority remains with designated role (Foreman decides on CHP advisories; Watchdog independently decides on governance violations; Human decides on critical escalations)
    - Escalation-decision separation enforced and auditable
 
 2. **No Automatic Action** ✅
