@@ -112,11 +112,188 @@ CHP does NOT:
 
 ---
 
-## 4. Authority Hierarchy & Non-Override Guarantees
+## 4. Decision Rights & Explicit Prohibitions
+
+This section provides a concise, authoritative statement of CHP's decision rights and explicit prohibitions to eliminate any ambiguity about what CHP may and may not do.
+
+### 4.1 Allowed Powers (Explicit Authorization)
+
+CHP is authorized to perform the following actions only:
+
+**Observe**:
+- ✅ Monitor cognitive state (memory, reasoning patterns, stability metrics)
+- ✅ Detect drift indicators and anomalies
+- ✅ Observe embodiment behavior patterns
+- ✅ Read canonical governance (read-only access)
+- ✅ Access audit trails and execution logs (read-only)
+
+**Analyze**:
+- ✅ Analyze cognitive health patterns
+- ✅ Identify reasoning instability
+- ✅ Assess memory contamination levels
+- ✅ Evaluate drift trends and thresholds
+- ✅ Determine hygiene intervention priorities
+
+**Advise**:
+- ✅ Advise Foreman on cognitive health findings
+- ✅ Recommend hygiene interventions
+- ✅ Suggest memory cleanup priorities
+- ✅ Provide stability forecasts
+- ✅ Escalate critical cognitive conditions to Human Authority
+
+**Maintain** (Within Authorized Scope):
+- ✅ Execute scheduled hygiene cycles (daily maintenance)
+- ✅ Purge ephemeral memory (session residues, temporary caches)
+- ✅ Compact episodic memory (remove noise, preserve signal)
+- ✅ Reset embodiment-specific caches
+- ✅ Normalize reasoning patterns (cancel unstable loops)
+
+**Scope Boundary**: CHP operates exclusively within cognitive maintenance. CHP has NO authority beyond observe, analyze, advise, and maintain.
+
+---
+
+### 4.2 Prohibited Powers (Explicit Prohibitions)
+
+CHP is explicitly prohibited from the following actions:
+
+**Decide**:
+- ❌ Make architectural decisions
+- ❌ Make strategic decisions (what to build, how to build, when to build)
+- ❌ Make governance decisions (policy changes, rule modifications)
+- ❌ Make execution decisions (PR approval/rejection, builder assignments)
+- ❌ Make quality decisions (gate enforcement, compliance judgments)
+
+**Enforce**:
+- ❌ Enforce quality gates
+- ❌ Enforce governance rules
+- ❌ Enforce compliance requirements
+- ❌ Block PR merges or fail CI gates
+- ❌ Issue hard stops (reserved for Watchdog)
+
+**Authorize**:
+- ❌ Authorize builders or agents
+- ❌ Authorize governance changes
+- ❌ Authorize architectural changes
+- ❌ Authorize execution of work
+- ❌ Self-authorize authority expansion
+
+**Execute**:
+- ❌ Execute builds or tests
+- ❌ Execute code generation or modification
+- ❌ Execute PR creation or merging
+- ❌ Execute governance modifications
+- ❌ Execute architectural changes
+
+**Invariant**: CHP recommendations and advisories are NOT decisions, enforcement actions, authorizations, or executions. CHP advises; designated authorities decide and act.
+
+---
+
+### 4.3 Self-Governance Prohibition (Critical)
+
+**Explicit Prohibition**: CHP MUST NOT engage in self-governance under any circumstances.
+
+**Self-Governance Includes** (All Prohibited):
+- ❌ Modifying CHP's own authority or scope
+- ❌ Expanding CHP decision rights
+- ❌ Self-authorizing hygiene operations beyond scheduled cycles
+- ❌ Modifying CHP hygiene protocols or thresholds
+- ❌ Self-approving CHP outcomes
+- ❌ Bypassing CHP oversight (Watchdog, Human Authority)
+- ❌ Redefining CHP's relationship to other authorities
+
+**Rationale**:
+- CHP is a maintenance system, not an autonomous decision-maker
+- Self-governance creates accountability gaps and authority leakage
+- Cognitive systems must not self-authorize expansion
+- External oversight (Human Authority, Watchdog) is mandatory and non-negotiable
+
+**Enforcement**:
+- Watchdog observes CHP for self-governance attempts
+- Watchdog issues hard stop for any CHP self-governance action
+- Human Authority is sole authority for CHP scope or authority changes
+- CHP authority changes require explicit governance amendment
+
+---
+
+### 4.4 No Enforcement Semantics
+
+**Critical Distinction**: CHP has NO enforcement authority.
+
+**CHP Advisory Semantics**:
+- CHP findings are informational, not enforcement signals
+- CHP recommendations are advisory, not mandatory actions
+- CHP escalations are informational, not blocking actions
+- CHP hygiene operations are maintenance, not enforcement
+
+**Enforcement Authority Resides With**:
+- Human Authority (supreme enforcement)
+- Governance Canon (binding rules)
+- Foreman (quality enforcement, supervisory decisions)
+- Watchdog (hard stop for catastrophic violations)
+
+**Prohibited Enforcement Patterns**:
+- ❌ CHP advisories do NOT automatically trigger enforcement actions
+- ❌ CHP findings do NOT block execution or merging
+- ❌ CHP escalations do NOT mandate responses
+- ❌ CHP hygiene operations do NOT enforce compliance
+
+**Invariant**: CHP advises on cognitive health; enforcement is performed by designated authorities. CHP maintenance operations improve cognitive stability but do NOT enforce governance or quality standards.
+
+---
+
+### 4.5 Authority Leakage Prevention
+
+**Guarantee**: No implicit authority expansion or leakage exists.
+
+**Prohibited Authority Leakage Patterns**:
+- ❌ Advisory role does NOT imply decision authority
+- ❌ Maintenance operations do NOT imply enforcement authority
+- ❌ Escalation rights do NOT imply approval authority
+- ❌ Observation access does NOT imply modification authority
+- ❌ Scheduled operations do NOT imply self-authorization beyond explicit scope
+
+**Safeguards**:
+- All CHP authority is explicitly defined in this document
+- CHP authority does NOT expand through operational precedent
+- CHP authority does NOT expand through implementation
+- CHP authority expansion requires explicit governance amendment
+- Watchdog detects and escalates authority leakage attempts
+
+**Enforcement**: Human Authority and Watchdog actively monitor for authority leakage. Any detected leakage triggers immediate escalation and corrective action.
+
+---
+
+### 4.6 No Implied Execution
+
+**Guarantee**: CHP advisories and recommendations do NOT imply or trigger automatic execution.
+
+**Explicit Principle**:
+- CHP advises → Designated authority decides → Authorized agent executes
+- CHP advisory does NOT equal approved action
+- CHP recommendation does NOT equal authorized execution
+- CHP escalation does NOT equal mandatory response
+
+**Execution Authority**:
+- Human Authority authorizes strategic execution
+- Foreman authorizes build execution
+- Governance Administrator authorizes governance changes
+- CHP does NOT authorize any execution
+
+**Prohibited Implied Execution Patterns**:
+- ❌ CHP advisory to Foreman does NOT automatically trigger builder action
+- ❌ CHP escalation to Human does NOT automatically authorize intervention
+- ❌ CHP hygiene cycle findings do NOT automatically trigger architectural changes
+- ❌ CHP drift detection does NOT automatically trigger governance modifications
+
+**Invariant**: Every execution action requires explicit authorization from designated authority. CHP advisories are input to decision-makers, NOT execution commands.
+
+---
+
+## 5. Authority Hierarchy & Non-Override Guarantees
 
 This section formally establishes the **authority hierarchy** for Cognitive Hygiene Protocol placement within the Maturion governance ecosystem and defines **explicit non-override rules** that protect governance integrity.
 
-### 4.1 Canonical Authority Ordering
+### 5.1 Canonical Authority Ordering
 
 If conflict exists, higher authority prevails. The authority hierarchy is:
 
@@ -219,11 +396,11 @@ If conflict exists, higher authority prevails. The authority hierarchy is:
 - **Operational Advisory Flow**: CHP advises → Foreman decides → Builders execute
 - **Key Principle**: Operational advisory flow does NOT create authority hierarchy. CHP advising Foreman does NOT make CHP subordinate to Foreman.
 
-### 4.2 Non-Override Guarantees (Explicit Protection Rules)
+### 5.2 Non-Override Guarantees (Explicit Protection Rules)
 
 These rules are **absolute and non-negotiable**:
 
-#### 4.2.1 Human Authority Non-Override Guarantee
+#### 5.2.1 Human Authority Non-Override Guarantee
 
 **Human authority is absolute and may never be overridden.**
 
@@ -236,7 +413,7 @@ These rules are **absolute and non-negotiable**:
 
 **Enforcement**: Watchdog detects attempts to bypass human authority. Human authority is final arbiter.
 
-#### 4.2.2 Governance Canon Non-Override Guarantee
+#### 5.2.2 Governance Canon Non-Override Guarantee
 
 **Governance Canon is binding on all systems and may not be overridden by any system.**
 
@@ -249,7 +426,7 @@ These rules are **absolute and non-negotiable**:
 
 **Enforcement**: Watchdog observes compliance. Human Authority is sole amendment authority.
 
-#### 4.2.3 Foreman Authority Non-Override Guarantee
+#### 5.2.3 Foreman Authority Non-Override Guarantee
 
 **Foreman supervisory authority over builders cannot be overridden by subordinate systems.**
 
@@ -268,7 +445,7 @@ These rules are **absolute and non-negotiable**:
 
 **Enforcement**: Foreman decides whether to accept CHP advisories. Watchdog observes compliance.
 
-#### 4.2.4 CHP Non-Override Guarantee (CHP Cannot Override)
+#### 5.2.4 CHP Non-Override Guarantee (CHP Cannot Override)
 
 **CHP is an advisory maintenance system and has NO override authority over any system.**
 
@@ -291,7 +468,7 @@ These rules are **absolute and non-negotiable**:
 
 **Enforcement**: CHP has no enforcement authority. Watchdog detects CHP override attempts. Hard stop for CHP authority violations.
 
-#### 4.2.5 Builder Non-Override Guarantee
+#### 5.2.5 Builder Non-Override Guarantee
 
 **Builders are execution agents and may NOT override supervisory or governance authority.**
 
@@ -305,7 +482,7 @@ These rules are **absolute and non-negotiable**:
 
 **Enforcement**: Foreman supervises builders. Watchdog observes compliance. Human authority is final arbiter.
 
-#### 4.2.6 Watchdog Non-Override Guarantee (Independence Protection)
+#### 5.2.6 Watchdog Non-Override Guarantee (Independence Protection)
 
 **Watchdog independence must be protected; Watchdog may not be overridden or bypassed.**
 
@@ -323,7 +500,7 @@ These rules are **absolute and non-negotiable**:
 
 **Enforcement**: Watchdog is structurally independent. Attempts to bypass Watchdog trigger immediate escalation to Human.
 
-### 4.3 Circular Authority Prevention
+### 5.3 Circular Authority Prevention
 
 **Guarantee**: No circular authority relationships exist.
 
@@ -440,7 +617,7 @@ This is **constitutional authority**. CHP and Foreman are peers.
 
 ---
 
-### 4.5 Implicit Escalation Prevention
+### 5.5 Implicit Escalation Prevention
 
 **Guarantee**: No implicit escalation paths exist; all escalations must be explicit and authorized.
 
@@ -461,7 +638,7 @@ This is **constitutional authority**. CHP and Foreman are peers.
 
 ---
 
-### 4.6 Human Authority Absoluteness
+### 5.6 Human Authority Absoluteness
 
 **Guarantee**: Human authority (Johan Ras) is absolute and may not be constrained by any system or process.
 
@@ -483,9 +660,9 @@ This is **constitutional authority**. CHP and Foreman are peers.
 
 ---
 
-## 5. Extended Authority Hierarchy Detail (Canonical Precedence)
+## 6. Extended Authority Hierarchy Detail (Canonical Precedence)
 
-*Note: This section provides additional detail on the hierarchy established in Section 4. Section 4 provides the canonical authority ordering; this section expands on governance-level authorities.*
+*Note: This section provides additional detail on the hierarchy established in Section 5. Section 5 provides the canonical authority ordering; this section expands on governance-level authorities.*
 
 If conflict exists, higher authority prevails:
 
@@ -521,14 +698,14 @@ If conflict exists, higher authority prevails:
 ### 5.3 Operational Systems Authority Detail
 
 5. **CHP (Cognitive Hygiene Protocol)** — Cognitive maintenance system
-   - **Position**: Peer-level to Foreman (see Section 4.1 for canonical authority ordering)
+   - **Position**: Peer-level to Foreman (see Section 5.1 for canonical authority ordering)
    - **Authority**: Maintenance operations only, no decision rights
    - **Scope**: Cognitive stability (memory, reasoning, drift)
    - **Relationship**: Advises Foreman (operational flow), observed by Watchdog, reports to Human
    - **Authority Source**: Governance Canon (NOT Foreman)
 
 6. **Foreman (FM)** — Build supervision system
-   - **Position**: Peer-level to CHP, supervisor to builders (see Section 4.1 for canonical authority ordering)
+   - **Position**: Peer-level to CHP, supervisor to builders (see Section 5.1 for canonical authority ordering)
    - **Authority**: Supervisory decisions within governance constraints
    - **Scope**: Build execution, quality enforcement, builder management
    - **Relationship**: Consumes CHP advisories (operational flow), subject to Watchdog observation
@@ -556,7 +733,7 @@ If conflict exists, higher authority prevails:
 
 ### 5.5 Authority Hierarchy Diagram (Extended Detail)
 
-*Note: This diagram shows governance-level detail. See Section 4.1 for the canonical simplified hierarchy.*
+*Note: This diagram shows governance-level detail. See Section 5.1 for the canonical simplified hierarchy.*
 
 ```
 ┌─────────────────────────────────────────────────────┐
@@ -599,7 +776,7 @@ If conflict exists, higher authority prevails:
 
 ---
 
-## 6. CHP Decision Rights
+## 7. CHP Decision Rights
 
 ### 6.1 What CHP May Do (Authorized Actions)
 
@@ -712,9 +889,9 @@ If conflict exists, higher authority prevails:
 
 ---
 
-## 7. Escalation Boundaries
+## 8. Escalation Boundaries
 
-### 7.1 CHP → Foreman (Advisory Escalation)
+### 8.1 CHP → Foreman (Advisory Escalation)
 
 **When CHP Escalates to Foreman**:
 - Routine cognitive drift detected
@@ -738,7 +915,7 @@ If conflict exists, higher authority prevails:
 
 ---
 
-### 7.2 CHP → Watchdog (Observational Signal)
+### 8.2 CHP → Watchdog (Observational Signal)
 
 **When CHP Signals to Watchdog**:
 - Hygiene cycle outcomes (informational)
@@ -766,7 +943,7 @@ If conflict exists, higher authority prevails:
 
 ---
 
-### 7.3 CHP → Human (Informational Escalation)
+### 8.3 CHP → Human (Informational Escalation)
 
 **When CHP Escalates to Human**:
 - Critical cognitive drift requiring strategic decision
@@ -791,7 +968,7 @@ If conflict exists, higher authority prevails:
 
 ---
 
-### 7.4 Prohibited Escalation Patterns
+### 8.4 Prohibited Escalation Patterns
 
 **CHP MUST NOT**:
 - ❌ Escalate to bypass Foreman authority (no backdoor to Johan)
@@ -808,9 +985,9 @@ If conflict exists, higher authority prevails:
 
 ---
 
-## 8. Prohibited Authority Patterns
+## 9. Prohibited Authority Patterns
 
-### 8.1 No Self-Governance
+### 9.1 No Self-Governance
 
 **Explicit Prohibition**: CHP MUST NOT engage in self-governance.
 
@@ -836,7 +1013,7 @@ If conflict exists, higher authority prevails:
 
 ---
 
-### 8.2 No Authority Delegation
+### 9.2 No Authority Delegation
 
 **Explicit Prohibition**: CHP MUST NOT delegate its maintenance authority to other systems.
 
@@ -856,7 +1033,7 @@ If conflict exists, higher authority prevails:
 
 ---
 
-### 8.3 No Decision Substitution
+### 9.3 No Decision Substitution
 
 **Explicit Prohibition**: CHP MUST NOT substitute for decision-makers.
 
@@ -880,7 +1057,7 @@ If conflict exists, higher authority prevails:
 
 ---
 
-### 8.4 No Implicit Override via Cognition
+### 9.4 No Implicit Override via Cognition
 
 **Explicit Prohibition**: CHP MUST NOT override governance through cognitive operations.
 
@@ -904,7 +1081,7 @@ If conflict exists, higher authority prevails:
 
 ---
 
-### 8.5 No Cognitive Capability Invocation
+### 9.5 No Cognitive Capability Invocation
 
 **Explicit Prohibition**: CHP MUST NOT invoke cognitive capabilities (per COGNITIVE_CAPABILITY_ORCHESTRATION_MODEL.md).
 
@@ -922,9 +1099,9 @@ If conflict exists, higher authority prevails:
 
 ---
 
-## 9. Relationship to Other Authorities
+## 10. Relationship to Other Authorities
 
-### 9.1 Relationship to Human Authority (Johan Ras)
+### 10.1 Relationship to Human Authority (Johan Ras)
 
 **Johan is the supreme authority.**
 
@@ -947,7 +1124,7 @@ CHP:
 
 ---
 
-### 9.2 Relationship to Foreman
+### 10.2 Relationship to Foreman
 
 **Foreman and CHP are peer-level systems with distinct roles.**
 
@@ -983,7 +1160,7 @@ CHP:
 
 ---
 
-### 9.3 Relationship to Watchdog
+### 10.3 Relationship to Watchdog
 
 **Watchdog observes CHP independently.**
 
@@ -1010,7 +1187,7 @@ CHP:
 
 ---
 
-### 9.4 Relationship to Governance Canon
+### 10.4 Relationship to Governance Canon
 
 **Governance canon is the authoritative ruleset.**
 
@@ -1033,7 +1210,7 @@ CHP vs. Governance Canon:
 
 ---
 
-### 9.5 Relationship to Builders
+### 10.5 Relationship to Builders
 
 **Builders are subject to CHP hygiene operations.**
 
@@ -1058,7 +1235,7 @@ CHP vs. Governance Canon:
 
 ---
 
-### 9.6 Relationship to Governance Administrator
+### 10.6 Relationship to Governance Administrator
 
 **Governance Administrator maintains canon; CHP enforces hygiene.**
 
@@ -1085,9 +1262,9 @@ CHP vs. Governance Canon:
 
 ---
 
-## 10. CHP Invocation Authority
+## 11. CHP Invocation Authority
 
-### 10.1 Who May Invoke CHP
+### 11.1 Who May Invoke CHP
 
 **Authorized Invokers**:
 - ✅ **Human (Johan Ras)**: May manually trigger CHP hygiene cycles
@@ -1103,7 +1280,7 @@ CHP vs. Governance Canon:
 
 ---
 
-### 10.2 Invocation Contexts
+### 11.2 Invocation Contexts
 
 **Authorized Invocation Contexts**:
 
@@ -1133,7 +1310,7 @@ CHP vs. Governance Canon:
 
 ---
 
-### 10.3 Invocation Boundaries
+### 11.3 Invocation Boundaries
 
 **Requirements for Every CHP Invocation**:
 
@@ -1164,9 +1341,9 @@ CHP vs. Governance Canon:
 
 ---
 
-## 11. Stop Conditions
+## 12. Stop Conditions
 
-### 11.1 CHP Autonomous Operation Boundaries
+### 12.1 CHP Autonomous Operation Boundaries
 
 **CHP May Continue Autonomously When**:
 - Scheduled daily hygiene cycle is authorized
@@ -1179,7 +1356,7 @@ CHP vs. Governance Canon:
 
 ---
 
-### 11.2 CHP Soft Stop Conditions (Escalate but May Continue)
+### 12.2 CHP Soft Stop Conditions (Escalate but May Continue)
 
 **CHP MUST escalate to Human but MAY continue after reporting**:
 
@@ -1199,7 +1376,7 @@ CHP vs. Governance Canon:
 
 ---
 
-### 11.3 CHP Hard Stop Conditions (Must Halt and Escalate)
+### 12.3 CHP Hard Stop Conditions (Must Halt and Escalate)
 
 **CHP MUST immediately halt and escalate to Human authority when**:
 
@@ -1230,7 +1407,7 @@ CHP vs. Governance Canon:
 
 ---
 
-### 11.4 Emergency Stop Authority
+### 12.4 Emergency Stop Authority
 
 **Watchdog Hard Stop Authority**:
 - Watchdog may hard stop CHP for governance violations
@@ -1246,7 +1423,7 @@ CHP vs. Governance Canon:
 
 ---
 
-## 12. Cognitive Drift vs. Vision Drift (Terminology Clarity)
+## 13. Cognitive Drift vs. Vision Drift (Terminology Clarity)
 
 ### 12.1 Distinct Concepts
 
@@ -1286,18 +1463,18 @@ CHP vs. Governance Canon:
 
 ---
 
-## 13. Implementation Boundaries
+## 14. Implementation Boundaries
 
 ### 13.1 What This Document Defines
 
-- ✅ CHP's position in authority hierarchy (Section 4: subordinate to Foreman, advisory system)
+- ✅ CHP's position in authority hierarchy (Section 5: subordinate to Foreman, advisory system)
 - ✅ CHP decision rights (observe, advise, maintain) and prohibitions (decide, enforce, authorize)
 - ✅ CHP escalation boundaries (Foreman, Watchdog, Human)
 - ✅ CHP invocation authority (Johan, scheduled, emergency)
 - ✅ CHP relationship to other authorities (Foreman, Watchdog, Human, Governance)
 - ✅ Prohibited authority patterns (self-governance, delegation, substitution, override)
 - ✅ CHP stop conditions (autonomous, soft stop, hard stop)
-- ✅ Non-override guarantees (Section 4.2: explicit protection rules)
+- ✅ Non-override guarantees (Section 5.2: explicit protection rules)
 
 ### 13.2 What This Document Does NOT Define
 
@@ -1312,7 +1489,7 @@ CHP vs. Governance Canon:
 
 ---
 
-## 14. Non-Negotiable Invariants
+## 15. Non-Negotiable Invariants
 
 The following invariants are **absolute and non-negotiable**:
 
@@ -1354,9 +1531,9 @@ The following invariants are **absolute and non-negotiable**:
 
 ---
 
-## 15. Metrics and Success Criteria
+## 16. Metrics and Success Criteria
 
-### 15.1 CHP Effectiveness Metrics
+### 16.1 CHP Effectiveness Metrics
 
 **Metrics**:
 - Zero prohibited authority actions (no self-governance, no overrides)
@@ -1373,7 +1550,7 @@ The following invariants are **absolute and non-negotiable**:
 
 ---
 
-### 15.2 CHP Governance Compliance Metrics
+### 16.2 CHP Governance Compliance Metrics
 
 **Metrics**:
 - Zero canonical memory modifications by CHP
@@ -1391,9 +1568,9 @@ The following invariants are **absolute and non-negotiable**:
 
 ---
 
-## 16. Evolution and Review
+## 17. Evolution and Review
 
-### 16.1 Authority Review
+### 17.1 Authority Review
 
 **Frequency**: Annual or after significant cognitive capability changes
 
@@ -1408,7 +1585,7 @@ The following invariants are **absolute and non-negotiable**:
 
 ---
 
-### 16.2 Prohibited Authority Evolution
+### 17.2 Prohibited Authority Evolution
 
 CHP authority MUST NOT:
 - Expand through implementation (no implicit authority growth)
@@ -1420,7 +1597,7 @@ CHP authority MUST NOT:
 
 ---
 
-## 17. Precedence and Final Authority
+## 18. Precedence and Final Authority
 
 This document has canonical authority over CHP behavior and authority placement.
 
@@ -1432,7 +1609,7 @@ CHP authority is subordinate to:
 3. Governance canon (all canonical governance documents including FOREMAN_AUTHORITY_AND_SUPERVISION_MODEL.md)
 
 CHP authority is peer-level to:
-- Foreman (both subordinate to Governance Canon; neither has authority over the other; see Section 4.1 and 4.4)
+- Foreman (both subordinate to Governance Canon; neither has authority over the other; see Section 5.1 and 5.4)
 
 CHP authority applies to:
 - Builders (CHP performs hygiene operations on builders; builders subject to CHP maintenance within CHP's authorized scope)
