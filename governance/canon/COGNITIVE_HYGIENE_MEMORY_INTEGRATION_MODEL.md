@@ -545,14 +545,6 @@ This policy derives authority from and implements:
 
 ---
 
-**Read Scope Boundaries**:
-- CHP reads memory within authorized scope only (no scope expansion)
-- CHP does NOT infer additional read permissions from operational needs
-- CHP escalates if authorized read scope is insufficient
-- Human authority may expand CHP read scope through governance amendment
-
----
-
 ## 5. Write Prohibition and Side-Effect Prevention
 
 ### 5.1 Explicit Write Prohibition
