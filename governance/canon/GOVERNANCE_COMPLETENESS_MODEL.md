@@ -164,7 +164,15 @@ These exist because the canonical build model requires requirement specification
 | GOVERNANCE_CHANGE_PROPOSAL_SCHEMA | `governance/schemas/GOVERNANCE_CHANGE_PROPOSAL.schema.md` | Normative structure for governance change proposals | GOVERNANCE_RIPPLE_MODEL |
 | GOVERNANCE_CHANGELOG | `governance/CHANGELOG.md` | Auditable record of all governance changes | GOVERNANCE_RIPPLE_MODEL |
 
-### 5.9 Compliance Structural Readiness (Governance Repo Level)
+### 5.9 Repository Initialization and Lifecycle
+| Component ID | Required Artifacts | Notes / Purpose | Dependencies |
+|---|---|---|---|
+| REPOSITORY_INIT_PROTOCOL | `governance/canon/REPOSITORY_INITIALIZATION_AND_GOVERNANCE_SEEDING_PROTOCOL.md` | Defines repository initialization phases and requirements | CANON_PURPOSE_SCOPE |
+| REPO_SEEDING_ROLE_SEPARATION | `governance/canon/REPOSITORY_SEEDING_AND_ENFORCEMENT_ROLE_SEPARATION.md` | Separates repository seeding from enforcement authority | AGENT_RECRUITMENT, REPOSITORY_INIT_PROTOCOL |
+| INITIALIZATION_GATE | `governance/canon/INITIALIZATION_COMPLETENESS_GATE.md` | Validates repository initialization completeness | REPOSITORY_INIT_PROTOCOL, REPO_SEEDING_ROLE_SEPARATION |
+| INIT_EVIDENCE_SCHEMA | `governance/schemas/REPOSITORY_INITIALIZATION_EVIDENCE.schema.md` | Normative structure for initialization evidence | INITIALIZATION_GATE |
+
+### 5.10 Compliance Structural Readiness (Governance Repo Level)
 The compliance canon requires traceability and evidence readiness (architecture → QA → evidence), and mandates core artifacts per governed application. This model enforces the governance-repo side: schemas, mapping model, and evidence catalog structure exist, even if empty initially.
 
 | Component ID | Required Artifacts | Notes / Purpose | Dependencies |
