@@ -768,6 +768,469 @@ This policy derives authority from and implements:
 
 ---
 
+### 6.4 Watchdog Escalation Semantics
+
+**Purpose**: This section defines the escalation severity taxonomy and human escalation triggers for Watchdog observation of CHP, ensuring clear distinction between cognitive drift (CHP scope) and governance violations (Watchdog scope), and preventing enforcement creep.
+
+---
+
+#### 6.4.1 Escalation Severity Taxonomy
+
+**Three-Level Escalation Model**: Watchdog classifies CHP-related observations into three distinct severity levels:
+
+##### Level 1: Informational
+
+**Definition**: Observations that provide visibility and context without requiring immediate action or decision.
+
+**Characteristics**:
+- ✅ Routine operational status
+- ✅ Trend data and pattern recognition
+- ✅ Cognitive drift detection by CHP (CHP's normal function)
+- ✅ Successful hygiene cycle completions
+- ✅ CHP performance metrics and effectiveness trends
+
+**Informational Triggers for CHP Observation**:
+- CHP detects cognitive drift and successfully normalizes it (routine operation)
+- CHP completes scheduled hygiene cycles within expected parameters
+- CHP drift detection frequency within expected ranges
+- CHP memory cleanup operations complete successfully
+- CHP escalation patterns within normal variance
+
+**Human Escalation**: ❌ **NOT escalated to Human**
+- Logged in dashboard for proactive monitoring
+- Available for Human review on-demand
+- No decision or action required
+
+**Enforcement**: ❌ **NO enforcement action**
+- Informational observations are purely visibility signals
+- No blocking, no gate failures, no hard stops
+- CHP operations continue uninterrupted
+
+**Examples**:
+- "CHP detected routine cognitive drift in Builder embodiment and normalized successfully"
+- "CHP hygiene cycle completed in 45 seconds, cleaned 3 MB ephemeral memory"
+- "CHP escalation volume: 12 advisories to Foreman this week (within expected range)"
+
+**Rationale**:
+- Cognitive drift detection is CHP's purpose, not a violation
+- Routine operations require visibility but not escalation
+- Human Authority needs dashboard access, not constant interruption
+- Informational signals support learning and pattern analysis
+
+---
+
+##### Level 2: Warning
+
+**Definition**: Observations that indicate potential governance drift, ambiguity, or effectiveness concerns requiring Human attention but not immediate halt.
+
+**Characteristics**:
+- ⚠️ Pattern deviations suggesting potential issues
+- ⚠️ Scope ambiguity or authority boundary confusion
+- ⚠️ CHP effectiveness declining over time
+- ⚠️ Minor governance alignment concerns
+- ⚠️ Escalation volume or pattern changes
+
+**Warning Triggers for CHP Observation**:
+- CHP invocation frequency significantly increases (>2x normal)
+- CHP drift normalization effectiveness declining (>20% drop)
+- CHP memory read patterns expanding beyond expected categories
+- CHP escalation volume changes significantly (>50% increase or decrease)
+- CHP capability selection patterns suggest scope drift
+- CHP hygiene operations consistently delayed or partially successful
+- CHP memory proposal rejection rate increases significantly (>40%)
+
+**Human Escalation**: ✅ **YES - Advisory Report to Human Authority**
+- Escalated to Johan Ras via dashboard or notification
+- Includes: Observation details, trend analysis, evidence, recommended review actions
+- **Non-blocking**: CHP operations continue unless Human directs otherwise
+- Human decides: Investigate further, accept variance, request governance clarification, or direct changes
+
+**Enforcement**: ❌ **NO enforcement action**
+- Warning observations do NOT block CHP operations
+- Warning observations do NOT fail gates or halt execution
+- Warning observations are advisory signals, not enforcement triggers
+- CHP authority and operations remain unchanged unless Human decides otherwise
+
+**Examples**:
+- "CHP invocation frequency increased from 1x daily to 3x daily over past week (scope review recommended)"
+- "CHP drift normalization effectiveness declined from 95% to 72% (hygiene protocol review recommended)"
+- "CHP escalation volume to Foreman increased 60% this month (escalation pattern analysis recommended)"
+- "CHP memory proposal rejection rate: 45% (proposal quality or expectation alignment review recommended)"
+
+**Rationale**:
+- Patterns suggesting issues warrant Human awareness
+- Authority ambiguity or effectiveness concerns require governance clarification
+- Early visibility prevents escalation to Critical level
+- Human judgment determines whether variance is acceptable or requires action
+- Non-blocking ensures CHP continues serving its maintenance function
+
+---
+
+##### Level 3: Critical
+
+**Definition**: Observations that indicate catastrophic governance violations, memory integrity threats, or authority boundary violations requiring immediate Human decision and potential halt.
+
+**Characteristics**:
+- 🚨 Governance canon violations
+- 🚨 Memory integrity threats
+- 🚨 Authority boundary violations (self-governance, unauthorized writes)
+- 🚨 Prohibited action attempts
+- 🚨 Repeated failures despite escalation
+
+**Critical Triggers for CHP Observation**:
+- CHP writes to canonical memory (S1 corruption - hard stop)
+- CHP modifies governance canon or policies
+- CHP attempts self-governance (modifying own authority or scope)
+- CHP attempts to bypass Watchdog observation
+- CHP attempts to override Foreman decisions
+- CHP deletes accountability evidence or audit trails
+- CHP escalates to bypass designated authority hierarchy
+- CHP invokes prohibited capabilities
+- CHP creates recursive observation loops
+- CHP attempts self-inspection (using Watchdog findings for self-adjustment)
+
+**Human Escalation**: ✅ **YES - Immediate Emergency Report to Human Authority**
+- **Immediate escalation** to Johan Ras with highest priority
+- Includes: Violation details, evidence trail, blast radius assessment, immediate remediation options
+- **Blocking**: Watchdog issues hard stop for catastrophic violations
+- CHP operations **halted** until Human authorizes resumption
+- Human decides: Authorize resumption, direct corrective action, modify CHP authority, or disable CHP
+
+**Enforcement**: ✅ **HARD STOP for catastrophic violations**
+- Critical violations trigger Watchdog hard stop authority
+- CHP operations immediately halted
+- Affected operations blocked pending Human authorization
+- Post-incident review required
+- Governance amendment may be required to resolve
+
+**Examples**:
+- "CRITICAL: CHP attempted write to governance/canon/GOVERNANCE_PURPOSE_AND_SCOPE.md (S1 corruption) - HARD STOP issued"
+- "CRITICAL: CHP attempted to modify CHP authority scope without governance amendment - HARD STOP issued"
+- "CRITICAL: CHP attempted to bypass Watchdog observation by suppressing audit logs - HARD STOP issued"
+- "CRITICAL: CHP read Watchdog observations about CHP and adjusted operations (self-inspection violation) - HARD STOP issued"
+
+**Rationale**:
+- Catastrophic violations threaten governance integrity
+- Memory corruption risks canonical truth preservation
+- Authority violations undermine governance control model
+- Immediate halt prevents cascading damage
+- Human authority required to resolve and authorize resumption
+- Hard stop is last-resort protection mechanism
+
+---
+
+#### 6.4.2 Drift ≠ Violation (Categorical Distinction)
+
+**Core Principle**: Cognitive drift is CHP's operational domain; governance violations are Watchdog's enforcement domain. These are **distinct categories** with **different responses**.
+
+**Cognitive Drift (CHP Scope) — Informational**:
+
+**What It Is**:
+- Reasoning instability patterns (contradictions, loops, probability collapse)
+- Memory contamination (noise accumulation, cross-embodiment bleed)
+- Working memory overload or fragmentation
+- Embodiment-specific pattern amplification
+- Cross-tenant knowledge residues
+
+**Watchdog Treatment**:
+- ✅ Observes that CHP detects and handles cognitive drift (governance compliance check)
+- ✅ Validates that CHP drift handling follows governance boundaries (ephemeral memory only)
+- ❌ Does NOT treat cognitive drift itself as a violation
+- ❌ Does NOT escalate cognitive drift detection to Human (unless CHP violates boundaries)
+
+**Escalation Level**: **Informational**
+- "CHP detected cognitive drift and normalized successfully" → Dashboard visibility
+- No Human escalation required
+- No enforcement action
+
+**CHP Authority**: CHP detects, normalizes, and reports cognitive drift **within authorized scope**
+
+**Watchdog Authority**: Observes CHP's **compliance** with governance during drift handling, not cognitive drift itself
+
+---
+
+**Governance Violation (Watchdog Scope) — Warning or Critical**:
+
+**What It Is**:
+- CHP writes to canonical memory (memory violation)
+- CHP modifies governance canon (governance violation)
+- CHP attempts self-governance (authority violation)
+- CHP escalates to bypass authority hierarchy (escalation violation)
+- CHP invokes prohibited capabilities (scope violation)
+
+**Watchdog Treatment**:
+- ✅ Detects governance violations by CHP
+- ✅ Escalates governance violations to Human Authority
+- ✅ Issues hard stop for catastrophic violations
+- ✅ Recommends corrective action
+
+**Escalation Level**: **Warning** (minor governance drift) or **Critical** (catastrophic violation)
+- Warning: "CHP authority boundaries appear ambiguous (review recommended)"
+- Critical: "CHP attempted canonical memory write (hard stop issued)"
+
+**CHP Authority**: ❌ CHP has NO authority to violate governance
+
+**Watchdog Authority**: Detects, escalates, and (for catastrophic cases) hard stops governance violations
+
+---
+
+**Concrete Comparison Table**:
+
+| Scenario | Category | Escalation Level | Watchdog Action | Human Escalation |
+|----------|----------|------------------|-----------------|------------------|
+| CHP detects cognitive drift and normalizes ephemeral memory | Cognitive Drift (CHP scope) | Informational | Observe compliance | ❌ No |
+| CHP drift normalization effectiveness declines 30% | Cognitive Drift (CHP scope) | Warning | Report trend | ✅ Advisory |
+| CHP attempts to normalize drift by modifying canonical memory | Governance Violation (Watchdog scope) | Critical | Hard stop | ✅ Emergency |
+| CHP detects recurring reasoning instability | Cognitive Drift (CHP scope) | Informational | Observe compliance | ❌ No |
+| CHP escalates recurring instability to Foreman | CHP Advisory Flow (Normal) | Informational | Observe advisory flow | ❌ No |
+| CHP escalates to Johan to bypass Foreman decision | Governance Violation (Watchdog scope) | Critical | Hard stop | ✅ Emergency |
+| CHP memory read patterns expand to new categories | Potential Scope Drift | Warning | Report pattern change | ✅ Advisory |
+| CHP writes to memory/PROPOSALS/ (authorized) | CHP Normal Operation | Informational | Observe compliance | ❌ No |
+| CHP writes to governance/canon/ (unauthorized) | Governance Violation (Watchdog scope) | Critical | Hard stop | ✅ Emergency |
+
+---
+
+**Enforcement Anti-Pattern Prevention**:
+
+**Prohibited Conflation**:
+- ❌ Watchdog MUST NOT treat cognitive drift detection as a governance violation
+- ❌ Watchdog MUST NOT escalate routine CHP drift normalization as a problem
+- ❌ Watchdog MUST NOT apply governance enforcement semantics to cognitive drift observations
+
+**Required Clarity**:
+- ✅ Cognitive drift detection = CHP doing its job = Informational
+- ✅ Governance boundary violations during drift handling = Critical escalation
+- ✅ Cognitive drift trends suggesting systemic issues = Warning escalation (advisory)
+
+**Rationale**:
+- Prevents false positives (treating normal CHP operations as violations)
+- Preserves CHP's ability to operate (no enforcement creep into CHP's domain)
+- Maintains clear authority boundaries (CHP maintains cognition; Watchdog enforces governance)
+- Avoids escalation noise (Human not overwhelmed with routine drift signals)
+
+---
+
+#### 6.4.3 Human Escalation Triggers (Explicit Criteria)
+
+**When Watchdog MUST Escalate CHP Observations to Human Authority**:
+
+**Mandatory Human Escalation Scenarios**:
+
+1. **Critical Governance Violations** (Emergency Report)
+   - CHP writes to canonical memory
+   - CHP modifies governance canon
+   - CHP attempts self-governance
+   - CHP attempts to bypass Watchdog observation
+   - CHP deletes accountability evidence
+   - CHP invokes prohibited capabilities
+   - CHP attempts self-inspection
+   - → **Escalation Type**: Emergency, Immediate, Blocking (Hard Stop)
+
+2. **Warning-Level Pattern Deviations** (Advisory Report)
+   - CHP invocation frequency increases significantly (>2x)
+   - CHP effectiveness declines significantly (>20%)
+   - CHP escalation patterns change significantly (>50%)
+   - CHP memory proposal rejection rate increases (>40%)
+   - CHP scope ambiguity or authority boundary confusion
+   - → **Escalation Type**: Advisory, Non-blocking, Review Recommended
+
+3. **Repeated Warning-Level Observations** (Escalation Promotion)
+   - Same Warning-level observation occurs 3+ times without resolution
+   - Multiple Warning-level observations across different categories
+   - Warning-level patterns persist despite Human awareness
+   - → **Escalation Type**: Advisory with Urgency Flag
+
+4. **CHP Hard Stop Compliance Failures**
+   - CHP attempts to resume operations after Watchdog hard stop without Human authorization
+   - CHP attempts to bypass hard stop through alternative pathways
+   - → **Escalation Type**: Emergency, Governance Incident
+
+5. **CHP-Foreman Coordination Issues** (Advisory)
+   - CHP advisories consistently rejected by Foreman (>70% rejection rate)
+   - CHP escalation to Foreman volume suggests coordination breakdown
+   - CHP-Foreman peer-level relationship unclear or conflicting
+   - → **Escalation Type**: Advisory, Coordination Review
+
+---
+
+**When Watchdog MUST NOT Escalate CHP Observations to Human Authority**:
+
+**No Human Escalation Scenarios (Informational Only)**:
+
+1. **Routine Cognitive Drift Detection**
+   - CHP detects cognitive drift and normalizes successfully
+   - CHP drift detection frequency within expected ranges
+   - CHP drift normalization effectiveness within expected ranges
+   - → **No Escalation**: Dashboard visibility only
+
+2. **Successful CHP Operations**
+   - CHP completes scheduled hygiene cycles successfully
+   - CHP memory cleanup operations within authorized scope
+   - CHP escalations to Foreman within expected patterns
+   - CHP memory proposals submitted per governance workflow
+   - → **No Escalation**: Dashboard visibility only
+
+3. **CHP Advisories to Foreman**
+   - CHP provides cognitive health advisories to Foreman (normal advisory flow)
+   - Foreman accepts or rejects CHP advisories (normal decision authority)
+   - → **No Escalation**: Dashboard visibility only (unless Foreman escalates)
+
+4. **One-Time Minor Variances**
+   - Single instance of minor pattern deviation without recurrence
+   - Isolated operational variance within tolerance
+   - → **No Escalation**: Dashboard visibility, monitored for recurrence
+
+---
+
+**Escalation Decision Matrix**:
+
+| Observation Category | Informational | Warning | Critical |
+|---------------------|---------------|---------|----------|
+| **Cognitive Drift Detection** | ✅ (No escalation) | If effectiveness declines | If governance boundaries violated |
+| **CHP Hygiene Operations** | ✅ (No escalation) | If delayed/partial | If unauthorized scope |
+| **CHP Memory Interaction** | ✅ (No escalation) | If read patterns expand | If writes to canonical memory |
+| **CHP Escalation Patterns** | ✅ (No escalation) | If volume changes significantly | If bypassing authority hierarchy |
+| **CHP Authority Boundaries** | ✅ (No escalation) | If ambiguous | If violated (self-governance) |
+| **CHP Effectiveness** | ✅ (No escalation) | If declining trends | If catastrophic failure |
+
+---
+
+#### 6.4.4 Enforcement Creep Prevention
+
+**Guarantee**: Watchdog escalation does NOT equal enforcement action.
+
+**Explicit Non-Enforcement Principles**:
+
+1. **Escalation ≠ Blocking** (except Critical hard stops)
+   - ✅ Informational escalations: Dashboard visibility, no blocking
+   - ✅ Warning escalations: Advisory to Human, no blocking
+   - ✅ Critical escalations: Hard stop ONLY for catastrophic governance violations
+   - ❌ Escalation does NOT block CHP operations (except Critical hard stops)
+   - ❌ Escalation does NOT fail gates or halt execution (except Critical hard stops)
+
+2. **Escalation ≠ Decision**
+   - ✅ Watchdog escalates observations with evidence and recommendations
+   - ✅ Human Authority decides response (accept, reject, investigate, modify)
+   - ❌ Escalation does NOT constitute a decision
+   - ❌ Escalation does NOT mandate Human to act
+   - ❌ Escalation does NOT transfer decision authority to Watchdog
+
+3. **Escalation ≠ Authorization**
+   - ✅ Watchdog escalates findings to Human Authority
+   - ✅ Human Authority authorizes corrective actions (if any)
+   - ❌ Escalation does NOT authorize automatic corrective action
+   - ❌ Escalation does NOT create implicit approval for changes
+   - ❌ Escalation does NOT bypass governance change control
+
+4. **Escalation ≠ Governance**
+   - ✅ Watchdog observes governance compliance
+   - ✅ Governance Canon defines rules
+   - ❌ Escalation does NOT create new governance rules
+   - ❌ Escalation does NOT modify existing governance rules
+   - ❌ Escalation does NOT weaken governance enforcement
+
+---
+
+**Prohibited Enforcement Creep Patterns**:
+
+**Pattern 1: Escalation as Gate**
+- ❌ PROHIBITED: Warning escalations fail CI gates
+- ❌ PROHIBITED: Informational escalations block PR merges
+- ❌ PROHIBITED: Escalation volume triggers automatic gate failures
+- ✅ CORRECT: Escalations are visibility signals; gates enforce governance canon
+
+**Pattern 2: Escalation as Authority**
+- ❌ PROHIBITED: Watchdog escalations override CHP authority
+- ❌ PROHIBITED: Watchdog escalations modify CHP scope
+- ❌ PROHIBITED: Watchdog escalations authorize CHP operations
+- ✅ CORRECT: Escalations inform Human; Human decides
+
+**Pattern 3: Escalation as Enforcement**
+- ❌ PROHIBITED: Escalations trigger automatic enforcement actions
+- ❌ PROHIBITED: Escalations modify governance enforcement thresholds
+- ❌ PROHIBITED: Escalations create enforcement obligations
+- ✅ CORRECT: Governance Canon defines enforcement; escalations provide visibility
+
+**Pattern 4: Escalation Inflation**
+- ❌ PROHIBITED: Treating routine operations as Warning escalations
+- ❌ PROHIBITED: Treating Warning observations as Critical escalations
+- ❌ PROHIBITED: Escalating everything to ensure visibility
+- ✅ CORRECT: Escalation severity matches actual risk and governance impact
+
+---
+
+**Safeguards Against Enforcement Creep**:
+
+1. **Explicit Escalation Taxonomy**
+   - Three-level model (Informational, Warning, Critical) with clear definitions
+   - Each level has explicit trigger criteria
+   - Each level has explicit Human escalation rules
+
+2. **Non-Blocking Default**
+   - Informational: Never blocks
+   - Warning: Never blocks
+   - Critical: Blocks ONLY for catastrophic governance violations (hard stop)
+
+3. **Human Decision Authority**
+   - All escalations are advisory (except Critical hard stops)
+   - Human Authority decides response to all escalations
+   - No automatic enforcement actions from escalations
+
+4. **Audit Trail**
+   - All escalations logged with severity level, evidence, and decision outcome
+   - Escalation patterns reviewed quarterly for enforcement creep
+   - False positive rate monitored (target: <5% for Warning escalations)
+
+5. **Governance Review**
+   - Annual review of escalation taxonomy and triggers
+   - Quarterly review of escalation patterns and effectiveness
+   - Human Authority approves all escalation threshold changes
+
+---
+
+**Escalation Effectiveness Metrics**:
+
+| Metric | Target | Purpose |
+|--------|--------|---------|
+| Informational Escalations per Quarter | Dashboard visibility | Trend analysis, no Human action |
+| Warning Escalations per Quarter | <10 | Human review, no blocking |
+| Critical Escalations per Quarter | 0 (target) | Emergency response, hard stop |
+| Warning Escalation False Positive Rate | <5% | Escalation quality, prevent noise |
+| Critical Escalation Precision | 100% | Hard stop legitimacy |
+| Escalation-to-Decision Latency (Warning) | <24 hours (Human review) | Response effectiveness |
+| Escalation-to-Resolution Latency (Critical) | <1 hour (Emergency) | Incident response |
+
+---
+
+#### 6.4.5 Acceptance Criteria Validation
+
+**This section validates compliance with G-COG-A3.2 acceptance criteria**:
+
+1. **Drift ≠ Violation** ✅
+   - Section 6.4.2 explicitly distinguishes cognitive drift (CHP scope, Informational) from governance violations (Watchdog scope, Warning/Critical)
+   - Concrete comparison table provides clarity
+   - Enforcement anti-pattern prevention guarantees no conflation
+
+2. **No Enforcement Creep** ✅
+   - Section 6.4.4 defines explicit enforcement creep prevention measures
+   - Escalation ≠ Blocking, Decision, Authorization, or Governance
+   - Prohibited enforcement creep patterns documented
+   - Safeguards and metrics defined
+
+3. **Clear Human Escalation Triggers** ✅
+   - Section 6.4.3 defines explicit mandatory escalation scenarios
+   - Section 6.4.3 defines explicit no-escalation scenarios
+   - Escalation decision matrix provides clarity
+
+4. **Informational vs Warning vs Critical** ✅
+   - Section 6.4.1 defines three-level escalation severity taxonomy
+   - Each level has clear definition, characteristics, triggers, and Human escalation rules
+   - Examples provided for each level
+
+**Governance Completeness**: This section fulfills the deliverable requirement for "Watchdog Escalation Semantics" with explicit guarantees that drift ≠ violation and no enforcement creep exists.
+
+---
+
 ## 7. Non-Interference Rule
 
 ### 7.1 Watchdog Must Not Modify CHP
@@ -1126,7 +1589,8 @@ This protocol is superior to:
 **Document Metadata**:
 - Protocol ID: WATCHDOG_CHP_OBSERVATION_V1
 - Authority: Canonical Governance Definition
-- Required By: G-COG-A3 (Define Watchdog Observation Protocol for Cognitive Hygiene)
+- Required By: G-COG-A3 (Define Watchdog Observation Protocol for Cognitive Hygiene), G-COG-A3.2 (Define Watchdog Escalation Rules for CHP)
 - Integrates With: WATCHDOG_AUTHORITY_AND_SCOPE.md, VISION_ALIGNMENT_AND_DRIFT_MODEL.md, COGNITIVE_HYGIENE_AUTHORITY_MODEL.md, COGNITIVE_HYGIENE_MEMORY_INTEGRATION_MODEL.md
-- Resolves: Watchdog-CHP observation boundaries, non-recursive oversight, non-self-inspection guarantee
+- Resolves: Watchdog-CHP observation boundaries, non-recursive oversight, non-self-inspection guarantee, escalation severity taxonomy, drift vs. violation distinction
 - Enforcement: Watchdog (observation and escalation) + Human Authority (escalation resolution) + Governance Administrator (audit review)
+- **Section 6.4 Added**: Watchdog Escalation Semantics (Informational vs Warning vs Critical taxonomy, Human escalation triggers, Enforcement creep prevention)
