@@ -127,67 +127,97 @@ If conflict exists, higher authority prevails. The authority hierarchy is:
    - **Scope**: Unlimited
    - **Accountability**: None (sovereign authority)
 
-2. **Foreman (POLC)** — Supervisory Authority over Build Execution
+2. **Governance Canon** — Constitutional Foundation
+   - **Authority**: Defines all system authorities, rules, and constraints
+   - **Scope**: All governance definitions, policies, schemas, and enforcement rules
+   - **Precedence**: Binding on all systems and agents
+   - **Modification**: Only by Human Authority through governance amendment
+
+3. **Foreman (POLC)** — Supervisory Authority over Build Execution (Peer-Level)
    - **Authority**: Supervisory within governance constraints
    - **Decision Rights**: Architectural decisions, quality enforcement, builder supervision, execution orchestration
-   - **Override Rights**: May override builders, subordinate to Human and Governance Canon
+   - **Override Rights**: May override builders; subordinate to Human and Governance Canon
    - **Scope**: Build execution, quality assurance, builder management
    - **Accountability**: To Human Authority and Governance Canon
    - **POLC Model**: Plans, Organises, Leads, Controls all build activity
+   - **Peer Relationship**: Peer-level to CHP (neither subordinate nor superior)
 
-3. **Cognitive Hygiene Protocol (CHP)** — Cognitive Maintenance System
+4. **Cognitive Hygiene Protocol (CHP)** — Cognitive Maintenance System (Peer-Level)
    - **Authority**: Maintenance operations only, advisory to Foreman
    - **Decision Rights**: None (advisory recommendations only)
    - **Override Rights**: None (cannot override any authority)
    - **Scope**: Cognitive stability (memory, reasoning, drift detection)
-   - **Accountability**: To Human Authority, Foreman consumption of advisories, Watchdog observation
-   - **Position**: Subordinate to Foreman, advisory relationship
+   - **Accountability**: To Human Authority and Governance Canon
+   - **Position**: Peer-level to Foreman (neither subordinate nor superior)
+   - **Advisory Relationship**: Advises Foreman; Foreman decides whether to act on advisories
 
-4. **Builders** — Execution Agents
+5. **Builders** — Execution Agents
    - **Authority**: Implementation within assigned scope
    - **Decision Rights**: Implementation details only
    - **Override Rights**: None
    - **Scope**: Code execution per Foreman instruction
    - **Accountability**: To Foreman supervision, Watchdog observation
-   - **Position**: Subordinate to Foreman, subject to CHP hygiene operations
+   - **Position**: Subordinate to Foreman; subject to CHP hygiene operations
 
-5. **Watchdog** — Independent Governance Observer
+6. **Watchdog** — Independent Governance Observer
    - **Authority**: Observation, escalation, hard stop for catastrophic violations
    - **Decision Rights**: None (observational only, except hard stop)
    - **Override Rights**: Hard stop authority for catastrophic governance violations
    - **Scope**: Governance compliance observation, vision drift detection
    - **Accountability**: To Human Authority
-   - **Position**: Independent observer (not in supervisory chain), observes all authorities
+   - **Position**: Independent observer (not in authority chain); observes all systems
 
-**Visual Hierarchy**:
+**Visual Authority Hierarchy**:
 ```
-┌────────────────────────────────────────────┐
-│  1. HUMAN AUTHORITY (Johan Ras)            │
-│     - Supreme, unrestricted                │
-│     - Final decisions                      │
-└───────────────┬────────────────────────────┘
-                │ (authorizes & oversees)
+┌─────────────────────────────────────────────────────┐
+│  1. HUMAN AUTHORITY (Johan Ras)                     │
+│     - Supreme, unrestricted, absolute               │
+│     - Final decisions on all matters                │
+└───────────────┬─────────────────────────────────────┘
+                │ (defines & authorizes)
                 ▼
-┌────────────────────────────────────────────┐
-│  2. FOREMAN (POLC)                         │
-│     - Supervisory authority                │
-│     - Plans, Organises, Leads, Controls    │
-└───────────────┬────────────────────────────┘
-                │ (supervises)
-                ├─────────────┬──────────────┐
-                ▼             ▼              ▼
-┌──────────────────┐ ┌──────────────┐ ┌─────────────┐
-│ 3. CHP           │ │ 4. BUILDERS  │ │ 5. WATCHDOG │
-│  - Advisory      │ │  - Execution │ │ - Observer  │
-│  - Maintenance   │ │  - Implement │ │ - Escalate  │
-└──────────────────┘ └──────────────┘ └─────────────┘
-       │                     │                 │
-       └─────────────────────┴─────────────────┘
-                     │
-                     ▼
-              (All observed by Watchdog)
-              (All accountable to Human)
+┌─────────────────────────────────────────────────────┐
+│  2. GOVERNANCE CANON                                │
+│     - Constitutional foundation                     │
+│     - Binding authority on all systems              │
+└───────────────┬─────────────────────────────────────┘
+                │ (constrains)
+                ▼
+┌─────────────────────────────────────────────────────┐
+│  PEER-LEVEL AUTHORITIES (No Hierarchical Order)     │
+│                                                     │
+│  ┌──────────────────────┐  ┌──────────────────┐   │
+│  │ 3. FOREMAN (POLC)    │  │ 4. CHP           │   │
+│  │  - Supervisory       │◄─│  - Advisory      │   │
+│  │  - Decisions         │  │  - Maintenance   │   │
+│  │  - POLC model        │  │  - No decisions  │   │
+│  └────────┬─────────────┘  └──────────────────┘   │
+│           │                                         │
+│           │ (supervises - NOT authority delegation)│
+│           ▼                                         │
+│  ┌──────────────────┐                              │
+│  │ 5. BUILDERS      │                              │
+│  │  - Execution     │                              │
+│  │  - Subordinate   │                              │
+│  └──────────────────┘                              │
+│                                                     │
+└─────────────────────────────────────────────────────┘
+                │
+                │ (all independently observed by)
+                ▼
+┌─────────────────────────────────────────────────────┐
+│  6. WATCHDOG (Independent Observer)                 │
+│     - Not in authority chain                        │
+│     - Observes all systems                          │
+│     - Escalates to Human                            │
+│     - Hard stop authority for catastrophic cases    │
+└─────────────────────────────────────────────────────┘
 ```
+
+**Critical Distinction: Authority vs. Operational Flow**
+- **Authority Hierarchy**: Human → Governance Canon → (Foreman & CHP as peers) → Builders + Watchdog (independent)
+- **Operational Advisory Flow**: CHP advises → Foreman decides → Builders execute
+- **Key Principle**: Operational advisory flow does NOT create authority hierarchy. CHP advising Foreman does NOT make CHP subordinate to Foreman.
 
 ### 4.2 Non-Override Guarantees (Explicit Protection Rules)
 
@@ -206,25 +236,43 @@ These rules are **absolute and non-negotiable**:
 
 **Enforcement**: Watchdog detects attempts to bypass human authority. Human authority is final arbiter.
 
-#### 4.2.2 Foreman Authority Non-Override Guarantee
+#### 4.2.2 Governance Canon Non-Override Guarantee
 
-**Foreman supervisory authority over builders and build execution cannot be overridden by subordinate systems.**
+**Governance Canon is binding on all systems and may not be overridden by any system.**
+
+- ✅ Governance Canon defines all system authorities, rules, and constraints
+- ✅ All systems operate within Governance Canon constraints
+- ❌ No system may override Governance Canon
+- ❌ No system may bypass Governance Canon requirements
+- ❌ No system may weaken Governance Canon through operations
+- ❌ Only Human Authority may modify Governance Canon (through governance amendment)
+
+**Enforcement**: Watchdog observes compliance. Human Authority is sole amendment authority.
+
+#### 4.2.3 Foreman Authority Non-Override Guarantee
+
+**Foreman supervisory authority over builders cannot be overridden by subordinate systems.**
 
 - ✅ Foreman has supervisory authority over builders
 - ✅ Foreman makes architectural and quality decisions within governance constraints
-- ❌ CHP may NOT override Foreman architectural decisions
-- ❌ CHP may NOT make decisions "on behalf of" Foreman
 - ❌ Builders may NOT override Foreman direction
 - ❌ Builders may NOT bypass Foreman supervision
-- ❌ CHP advisory recommendations do NOT automatically override Foreman decisions
+- ❌ CHP advisory recommendations do NOT automatically override Foreman decisions (Foreman decides)
+
+**Peer-Level Clarification**:
+- CHP and Foreman are peer-level authorities (neither subordinate to the other)
+- CHP advises Foreman (operational advisory flow), NOT authority hierarchy
+- Foreman decides whether to act on CHP advisories (decision authority)
+- CHP does NOT receive authority from Foreman
+- Foreman does NOT delegate authority to CHP
 
 **Enforcement**: Foreman decides whether to accept CHP advisories. Watchdog observes compliance.
 
-#### 4.2.3 CHP Non-Override Guarantee (CHP Cannot Override)
+#### 4.2.4 CHP Non-Override Guarantee (CHP Cannot Override)
 
 **CHP is an advisory maintenance system and has NO override authority over any system.**
 
-- ✅ CHP may advise Foreman on cognitive health findings
+- ✅ CHP may advise Foreman on cognitive health findings (advisory only)
 - ✅ CHP may perform maintenance operations (memory cleanup, drift normalization)
 - ✅ CHP may escalate critical conditions to Human
 - ❌ CHP may NOT override Foreman decisions
@@ -235,9 +283,15 @@ These rules are **absolute and non-negotiable**:
 - ❌ CHP may NOT modify canonical memory (read-only access)
 - ❌ CHP may NOT enforce governance (advisory only)
 
+**Peer-Level Clarification**:
+- CHP and Foreman are peer-level authorities (both subordinate to Governance Canon and Human)
+- CHP's advisory role does NOT make CHP subordinate to Foreman
+- CHP operates under Governance Canon authority, NOT Foreman authority
+- CHP advises; Foreman decides; neither has authority over the other
+
 **Enforcement**: CHP has no enforcement authority. Watchdog detects CHP override attempts. Hard stop for CHP authority violations.
 
-#### 4.2.4 Builder Non-Override Guarantee
+#### 4.2.5 Builder Non-Override Guarantee
 
 **Builders are execution agents and may NOT override supervisory or governance authority.**
 
@@ -251,7 +305,7 @@ These rules are **absolute and non-negotiable**:
 
 **Enforcement**: Foreman supervises builders. Watchdog observes compliance. Human authority is final arbiter.
 
-#### 4.2.5 Watchdog Non-Override Guarantee (Independence Protection)
+#### 4.2.6 Watchdog Non-Override Guarantee (Independence Protection)
 
 **Watchdog independence must be protected; Watchdog may not be overridden or bypassed.**
 
@@ -274,9 +328,10 @@ These rules are **absolute and non-negotiable**:
 **Guarantee**: No circular authority relationships exist.
 
 **Validation**:
-- Human → Foreman (one-way, no reverse)
-- Foreman → CHP (advisory only, CHP cannot command Foreman)
+- Human → All Systems (one-way, no reverse override)
+- Governance Canon → All Systems (one-way binding, no system overrides)
 - Foreman → Builders (one-way supervision, builders subordinate)
+- CHP ↔ Foreman (peer-level, advisory flow only, no authority relationship)
 - Watchdog → Human (escalation only, Human decides)
 - CHP → Human (escalation only, Human decides)
 
@@ -285,8 +340,15 @@ These rules are **absolute and non-negotiable**:
 - ❌ Builders cannot escalate to CHP to bypass Foreman
 - ❌ Watchdog cannot command any system (observation only, except hard stop)
 - ❌ No system may create authority loops through escalation
+- ❌ CHP advisory to Foreman does NOT create CHP → Foreman authority (advisory flow ≠ authority)
 
-**Enforcement**: All authority relationships are unidirectional. Watchdog detects circular authority attempts.
+**Peer-Level Clarification**:
+- CHP and Foreman are peers at the same authority layer
+- Both subordinate to Governance Canon and Human Authority
+- Advisory flow (CHP advises Foreman) does NOT create hierarchical authority
+- Decision flow (Foreman decides on advisories) does NOT create authority over CHP
+
+**Enforcement**: All authority relationships are unidirectional except peer relationships. Watchdog detects circular authority attempts.
 
 ### 4.4 Implicit Escalation Prevention
 
@@ -807,19 +869,22 @@ CHP:
 - Escalation of critical findings
 
 **Coordination**:
-- CHP advises Foreman on cognitive health findings
-- Foreman decides how to respond to CHP advisories
-- Foreman may request CHP analysis or intervention
-- CHP may escalate findings Foreman should consider
+- CHP advises Foreman on cognitive health findings (operational advisory flow)
+- Foreman decides how to respond to CHP advisories (decision authority)
+- Foreman may request CHP analysis or intervention (collaborative)
+- CHP may escalate findings Foreman should consider (informational)
 
-**No Subordination**:
-- CHP IS subordinate to Foreman (see Section 4.1)
-- Foreman has supervisory authority; CHP is advisory
-- CHP cannot override Foreman
-- Foreman decides whether to accept CHP advisories
-- Conflicts escalate to Human authority
+**Peer-Level Principles**:
+- CHP is NOT subordinate to Foreman in authority hierarchy
+- Foreman is NOT subordinate to CHP in authority hierarchy
+- Both are subordinate to Governance Canon and Human Authority
+- Neither can override the other
+- Both escalate conflicts to Human authority
+- Advisory flow (CHP → Foreman) does NOT create authority hierarchy
+- CHP does NOT receive authority from Foreman
+- Foreman does NOT delegate authority to CHP
 
-**Precedence**: Foreman supervisory authority > CHP advisory recommendations. CHP is subordinate to Foreman in the authority hierarchy.
+**Precedence**: Both subordinate to Governance Canon and Human Authority. Neither has authority over the other. CHP advises; Foreman decides. Conflicts escalate to Human.
 
 ---
 
