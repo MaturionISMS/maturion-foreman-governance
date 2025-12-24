@@ -377,7 +377,8 @@ In addition to the primary lifecycle states, the following failure states exist:
 │  INVALID    │ ──────► Reload → LOADING
 └─────────────┘            
 
-All states can transition to INACTIVE on system shutdown
+Note: All states can transition to INACTIVE on graceful system shutdown.
+      Failure states (FAILED, INVALID) may also transition via retry to LOADING.
 ```
 
 ---
