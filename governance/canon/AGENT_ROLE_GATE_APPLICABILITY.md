@@ -107,6 +107,24 @@ Gate applicability **MUST NOT** be inferred from:
 
 ---
 
+### 4.4 Repository Seeding / Admin Liaison Agents
+
+**Identity**: Agents performing repository initialization and structure creation
+
+**Examples**:
+- Repository initialization agents
+- Admin liaison agents
+- Structure seeding automation
+- Governance scaffolding agents
+
+**Canonical References**:
+- `governance/canon/REPOSITORY_SEEDING_AND_ENFORCEMENT_ROLE_SEPARATION.md` (Role definition and separation)
+- `governance/canon/REPOSITORY_INITIALIZATION_AND_GOVERNANCE_SEEDING_PROTOCOL.md` (Initialization protocol)
+- `governance/canon/INITIALIZATION_COMPLETENESS_GATE.md` (Gate requirements)
+- `governance/canon/AGENT_RECRUITMENT.md` (Administrator class definition)
+
+---
+
 ## 5. Gate Applicability by Agent Role
 
 ### 5.1 Builder Agent Gate Requirements
@@ -254,6 +272,55 @@ FM agents are **NOT REQUIRED** to satisfy builder-specific gates unless explicit
 **Rationale**: FM orchestrates and governs. When FM acts as a builder (producing application code), builder gates apply. When FM acts as orchestrator (managing governance, learning, failures), FM-scoped gates apply.
 
 **Summary**: FM agents are subject to **FM-scoped governance requirements** as defined by canon. Builder gates apply only when FM acts as builder.
+
+---
+
+### 5.4 Repository Seeding Agent Gate Requirements
+
+Repository Seeding / Admin Liaison agents **MUST** satisfy the following:
+
+#### 5.4.1 Initialization Completeness Requirements
+- **Gate**: Initialization Completeness Gate (validation after seeding)
+- **Requirements**:
+  - All mandatory directories created
+  - All mandatory files created and valid
+  - Repository initialization evidence complete
+  - Human authorization documented
+  - Repository state is REPOSITORY_INITIALIZED
+- **Canonical Reference**: `governance/canon/INITIALIZATION_COMPLETENESS_GATE.md`
+
+#### 5.4.2 Initialization Evidence Requirements
+- **Gate**: Initialization evidence validation
+- **Requirements**:
+  - Evidence file present at `.architecture/REPOSITORY_INITIALIZATION_EVIDENCE.md`
+  - Evidence file follows canonical schema
+  - All required sections complete
+  - All checklist items checked
+  - Human authorization recorded
+- **Canonical Reference**: `governance/schemas/REPOSITORY_INITIALIZATION_EVIDENCE.schema.md`
+
+#### 5.4.3 Governance Versioning Requirements
+- **Gate**: Governance version tracking validation
+- **Requirements**:
+  - `governance/GOVERNANCE_VERSION.md` exists
+  - Governance version recorded
+  - Governance repository reference present
+- **Canonical Reference**: `governance/canon/REPOSITORY_INITIALIZATION_AND_GOVERNANCE_SEEDING_PROTOCOL.md`
+
+#### 5.4.4 Gates That DO NOT Apply
+
+Repository Seeding agents are **NOT REQUIRED** to satisfy:
+- ❌ Build-to-Green enforcement (no application code built)
+- ❌ Architecture artifacts (initialization precedes architecture)
+- ❌ Builder QA reports (no code to test)
+- ❌ 100% GREEN QA (no tests to execute)
+- ❌ Build Philosophy compliance (no build process)
+- ❌ FM-specific gates (not acting as FM)
+- ❌ Governance evolution gates (not modifying governance)
+
+**Rationale**: Repository Seeding agents create mandatory structure only. They do not build code, design architecture, or enforce governance. Applying builder or architect gates to seeding work is a **governance error**.
+
+**Summary**: Repository Seeding agents are subject to **initialization completeness validation only**. Their work is validated by the Initialization Completeness Gate after seeding is complete.
 
 ---
 
@@ -486,6 +553,8 @@ This document integrates with and clarifies:
 - `PR_GATE_PRECONDITION_RULE.md` - Gate precondition enforcement
 - `GOVERNANCE_COMPLETENESS_MODEL.md` - Governance administrator responsibilities
 - `AGENT_RECRUITMENT.md` - Agent class definitions
+- `REPOSITORY_SEEDING_AND_ENFORCEMENT_ROLE_SEPARATION.md` - Repository seeding role separation
+- `INITIALIZATION_COMPLETENESS_GATE.md` - Repository initialization gate requirements
 
 ---
 
@@ -505,6 +574,7 @@ Precision is a prerequisite for scale.
 This clarification is successful when:
 - ✅ Canonical governance explicitly defines gate applicability by agent role
 - ✅ Governance Administrator PRs are not blocked by builder-only gates
+- ✅ Repository Seeding agents are not blocked by builder-only gates
 - ✅ Builder PR rigor is unchanged and strict
 - ✅ FM PRs are evaluated under correct role context
 - ✅ No manual overrides are required for correctly-scoped work
@@ -514,6 +584,14 @@ This clarification is successful when:
 ---
 
 ## 14. Version History
+
+### v1.1.0 (2025-12-24)
+- Added Repository Seeding / Admin Liaison Agent role definition (Section 4.4)
+- Added Repository Seeding agent gate requirements (Section 5.4)
+- Defined initialization completeness as primary gate for seeding agents
+- Clarified that builder-specific gates do not apply to seeding agents
+- Updated related documents list to include role separation and initialization gate
+- Updated success criteria to include Repository Seeding agents
 
 ### v1.0.0 (2025-12-22)
 - Initial canonical clarification
@@ -544,7 +622,7 @@ All PR gates MUST follow this model. No repository, agent, or workflow may:
 **Status**: Active and Enforced  
 **Owner**: Governance Administrator  
 **Approval Authority**: Johan Ras  
-**Last Updated**: 2025-12-22
+**Last Updated**: 2025-12-24
 
 ---
 
