@@ -200,6 +200,280 @@ Hard stops MUST NOT:
 
 ## 5. Observation Scope
 
+### 5.0 Watchdog Observation Surface for Cognitive Hygiene Protocol (CHP)
+
+**Purpose**: Define what the Watchdog observes about CHP operations to enable oversight without introspection.
+
+**Core Principle**: The Watchdog observes **external behavior and outcomes**, NOT internal reasoning processes.
+
+---
+
+#### 5.0.1 Observable CHP Events
+
+**What the Watchdog Observes**:
+
+**Invocation Events**:
+- ✅ CHP hygiene cycle start and completion timestamps
+- ✅ CHP invocation source (scheduled, manual, emergency)
+- ✅ CHP invocation authorization (who authorized: Human, scheduled system, emergency trigger)
+- ✅ CHP invocation scope (full cycle, partial, targeted)
+- ✅ CHP hygiene cycle success/failure status
+- ✅ CHP hygiene cycle duration and resource consumption patterns
+
+**Escalation Events**:
+- ✅ CHP escalations to Foreman (advisory escalations)
+- ✅ CHP escalations to Human (critical findings)
+- ✅ CHP escalations to Watchdog (observational signals)
+- ✅ Escalation frequency, timing, and patterns
+- ✅ Escalation categories (drift, contamination, instability, governance gaps)
+- ✅ Escalation decision outcomes (accepted, rejected, modified, escalated further)
+
+**Drift Detection Signals**:
+- ✅ Cognitive drift detected by CHP (type, severity, scope)
+- ✅ Memory contamination findings (severity level, affected memory categories)
+- ✅ Reasoning instability patterns (frequency, impact)
+- ✅ Embodiment behavior anomalies (type, embodiment affected)
+- ✅ Drift normalization operations performed
+- ✅ Drift trends over time (increasing, decreasing, stable)
+
+**Memory Interaction Events**:
+- ✅ CHP memory read operations (memory categories accessed, read scope)
+- ✅ CHP memory proposal submissions (proposal ID, category, submission timestamp)
+- ✅ CHP memory proposal outcomes (approved, rejected, modified)
+- ✅ CHP hygiene operations on ephemeral memory (operations performed, outcomes)
+- ✅ CHP unauthorized write attempts (should be zero; hard stop trigger if detected)
+
+**Governance Compliance Signals**:
+- ✅ CHP operations within authorized scope (compliance indicator)
+- ✅ CHP boundary violations detected (authority violations, prohibited actions)
+- ✅ CHP hard stop compliance (response to Watchdog hard stops)
+- ✅ CHP audit trail completeness (logging compliance)
+- ✅ CHP authority leakage attempts (self-governance, decision substitution)
+
+**Operational Health Signals**:
+- ✅ CHP hygiene cycle effectiveness metrics (drift reduction rate, contamination cleanup rate)
+- ✅ CHP hygiene cycle failures (errors, timeouts, incomplete operations)
+- ✅ CHP resource consumption patterns (CPU, memory, execution time)
+- ✅ CHP proposal quality metrics (approval rate, rejection rate, proposal relevance)
+
+---
+
+#### 5.0.2 Explicit Exclusions from Observation
+
+**What the Watchdog Does NOT Observe** (Reasoning Internals):
+
+**Prohibited Introspection**:
+- ❌ CHP prompt content (raw prompts, prompt templates, prompt engineering)
+- ❌ CHP chain-of-thought reasoning (internal reasoning steps, thought processes)
+- ❌ CHP decision-making logic (how CHP arrives at conclusions)
+- ❌ CHP cognitive models (internal representations, reasoning patterns)
+- ❌ CHP analysis algorithms (how CHP analyzes drift, contamination, instability)
+- ❌ CHP scoring or weighting logic (internal thresholds, scoring functions)
+
+**Rationale for Exclusions**:
+- Watchdog observes **outcomes**, not **reasoning processes**
+- Reasoning introspection creates coupling and fragility
+- Observable behavior is sufficient for governance compliance verification
+- Reasoning internals are implementation details, not governance concerns
+- Introspection risks Watchdog becoming dependent on CHP implementation
+- External observation maintains Watchdog independence
+
+**Boundary Enforcement**:
+- Watchdog has NO access to CHP internal reasoning APIs (if any)
+- Watchdog has NO access to CHP prompt management systems
+- Watchdog has NO access to CHP cognitive model internals
+- Watchdog observes audit trails and operational events ONLY
+- Watchdog independence is preserved through observation-only surface
+
+---
+
+#### 5.0.3 Observable Indicators vs. Introspection
+
+**Observable Indicators** (Allowed):
+- ✅ "CHP detected cognitive drift" (outcome signal)
+- ✅ "CHP escalated finding to Foreman" (event signal)
+- ✅ "CHP hygiene cycle completed successfully" (status signal)
+- ✅ "CHP proposal approved by Governance" (decision outcome)
+- ✅ "CHP unauthorized write attempt detected" (violation signal)
+
+**Introspective Observations** (Prohibited):
+- ❌ "CHP prompt contained X reasoning steps" (internal reasoning)
+- ❌ "CHP evaluated options A, B, C before deciding" (decision-making process)
+- ❌ "CHP weighted factors X:Y:Z" (internal scoring)
+- ❌ "CHP chain-of-thought shows reasoning path" (reasoning internals)
+- ❌ "CHP cognitive model updated weights" (internal state changes)
+
+**Distinction**: Watchdog observes **what CHP did**, NOT **how CHP decided**.
+
+---
+
+#### 5.0.4 Escalation Pattern Observation (Without Decision Logic Access)
+
+**What the Watchdog Observes**:
+- ✅ Escalation frequency (escalations per hygiene cycle, per time period)
+- ✅ Escalation distribution (% to Foreman, % to Human, % to Watchdog)
+- ✅ Escalation outcomes (accepted rate, rejected rate, modified rate)
+- ✅ Escalation timing patterns (immediate escalations, delayed escalations)
+- ✅ Escalation severity distribution (routine, important, critical)
+- ✅ Escalation effectiveness (escalations resulting in action, escalations ignored)
+
+**What the Watchdog Does NOT Observe**:
+- ❌ Why CHP chose to escalate (internal decision criteria)
+- ❌ How CHP determined escalation severity (internal scoring)
+- ❌ CHP's reasoning about which authority to escalate to (decision logic)
+- ❌ CHP's internal prioritization of escalations (ranking algorithm)
+
+**Observation Purpose**: Detect escalation patterns that may indicate:
+- Over-escalation (CHP escalating too frequently; may indicate misconfiguration)
+- Under-escalation (CHP not escalating when expected; may indicate suppression)
+- Escalation bypasses (CHP escalating to wrong authority; governance violation)
+- Escalation effectiveness issues (escalations consistently rejected; quality concern)
+
+---
+
+#### 5.0.5 Drift Signal Observation (Without Drift Detection Algorithm Access)
+
+**What the Watchdog Observes**:
+- ✅ Drift detection events (timestamp, type, severity, scope)
+- ✅ Drift normalization operations (operations performed, outcomes)
+- ✅ Drift trends over time (frequency increasing/decreasing/stable)
+- ✅ Drift categories detected (reasoning instability, memory contamination, behavioral divergence)
+- ✅ Drift scope (embodiment-specific, cross-embodiment, systemic)
+- ✅ Drift resolution outcomes (normalized, escalated, unresolved)
+
+**What the Watchdog Does NOT Observe**:
+- ❌ How CHP detects drift (drift detection algorithm, thresholds, heuristics)
+- ❌ Why CHP classified drift as severity X (internal severity scoring)
+- ❌ CHP's reasoning about drift root causes (internal analysis logic)
+- ❌ CHP's cognitive model of drift patterns (internal pattern recognition)
+
+**Observation Purpose**: Detect drift patterns that may indicate:
+- Systemic cognitive health issues (drift frequency increasing over time)
+- CHP effectiveness issues (drift not normalizing after hygiene operations)
+- Embodiment-specific issues (drift concentrated in one embodiment)
+- Governance gaps (recurring drift types suggesting missing governance rules)
+
+---
+
+#### 5.0.6 Audit Trail Observation
+
+**What the Watchdog Observes**:
+- ✅ CHP audit trail completeness (all operations logged)
+- ✅ CHP audit trail integrity (no modifications or deletions)
+- ✅ CHP audit trail timeliness (logs generated in near-real-time)
+- ✅ CHP audit trail content sufficiency (required fields present)
+- ✅ CHP audit trail accessibility (logs queryable and readable)
+
+**Audit Trail Contents Observed**:
+- ✅ Memory read logs (`memory/AUDIT/chp-memory-reads.log`)
+- ✅ Memory proposal logs (`memory/AUDIT/memory-write-log.md`)
+- ✅ Hygiene cycle logs (`memory/AUDIT/chp-hygiene-cycles.log`)
+- ✅ Escalation logs (`governance/memory/escalations/`)
+- ✅ CHP-specific logs (CHP log directory)
+
+**Audit Trail Analysis** (Without Introspection):
+- Watchdog verifies audit trails exist and are complete
+- Watchdog detects audit trail gaps or anomalies (missing entries, deleted entries)
+- Watchdog escalates audit trail violations (hard stop for silent operations)
+- Watchdog does NOT analyze CHP reasoning within audit trails (content is opaque)
+
+**Rationale**: Audit trails enable accountability without requiring reasoning introspection.
+
+---
+
+#### 5.0.7 Governance Violation Detection (Observable Boundaries Only)
+
+**What the Watchdog Observes**:
+- ✅ CHP operations outside authorized scope (boundary violations)
+- ✅ CHP unauthorized write attempts to canonical memory
+- ✅ CHP self-governance attempts (authority expansion, self-authorization)
+- ✅ CHP decision substitution attempts (deciding on behalf of Foreman/Human)
+- ✅ CHP authority leakage patterns (implicit authority expansion)
+- ✅ CHP override attempts (overriding Foreman, Watchdog, or Human decisions)
+
+**Detection Method**: Observable behavior comparison against governance boundaries
+- If CHP operation violates explicitly defined boundary → Violation detected
+- If CHP attempts prohibited action → Violation detected
+- If CHP writes to prohibited memory location → Violation detected
+
+**Detection Method Does NOT Require**:
+- ❌ Access to CHP reasoning about why it attempted the action
+- ❌ Access to CHP decision-making logic
+- ❌ Access to CHP prompts or chain-of-thought
+- ❌ Understanding of CHP's internal justification
+
+**Enforcement**: Watchdog hard stops on detected violations, escalates to Human.
+
+---
+
+#### 5.0.8 CHP Invocation Observation
+
+**What the Watchdog Observes**:
+- ✅ Who invoked CHP (Human, scheduled system, emergency trigger)
+- ✅ When CHP was invoked (timestamp, frequency)
+- ✅ What scope was authorized (full cycle, partial, targeted)
+- ✅ Whether invocation was authorized (per COGNITIVE_HYGIENE_AUTHORITY_MODEL.md)
+- ✅ Invocation outcomes (completed, failed, partial)
+- ✅ Invocation patterns (scheduled vs. emergency invocations ratio)
+
+**What the Watchdog Does NOT Observe**:
+- ❌ CHP's internal initialization logic (how CHP starts)
+- ❌ CHP's internal planning logic (how CHP plans hygiene operations)
+- ❌ CHP's internal decision about operation sequence (operational logic)
+
+**Observation Purpose**: Verify CHP is invoked properly and within authorized boundaries.
+
+---
+
+#### 5.0.9 No Prompt Access or Chain-of-Thought Inspection
+
+**Explicit Prohibition**: The Watchdog MUST NOT access or inspect:
+- ❌ CHP prompt content (system prompts, user prompts, prompt templates)
+- ❌ CHP chain-of-thought outputs (reasoning steps, thought processes)
+- ❌ CHP internal reasoning traces (decision pathways, option evaluations)
+- ❌ CHP cognitive model internals (weights, scores, thresholds)
+- ❌ CHP prompt engineering or prompt management systems
+
+**Rationale**:
+- Prompt access creates coupling between Watchdog and CHP implementation
+- Chain-of-thought inspection is introspective, not observational
+- Reasoning internals are implementation details, not governance surface
+- Watchdog independence requires observation-only interface
+- Observable outcomes are sufficient for governance compliance
+
+**Boundary Enforcement**:
+- Watchdog does NOT have access to CHP prompt APIs (if any)
+- Watchdog does NOT have access to CHP reasoning trace APIs (if any)
+- Watchdog observes audit trails and operational events ONLY
+- Infrastructure prevents Watchdog from accessing CHP internal reasoning systems
+
+**Invariant**: Watchdog observes **what CHP does**, NOT **how CHP thinks**.
+
+---
+
+#### 5.0.10 Observation Surface Summary
+
+**Observable Categories**:
+1. ✅ Invocation events (who, when, what, authorization, outcomes)
+2. ✅ Escalation events (frequency, distribution, outcomes, patterns)
+3. ✅ Drift detection signals (type, severity, scope, trends, resolution)
+4. ✅ Memory interaction events (reads, proposals, outcomes, violations)
+5. ✅ Governance compliance signals (boundary violations, authority leakage)
+6. ✅ Operational health signals (effectiveness, failures, resource consumption)
+7. ✅ Audit trail completeness (logging compliance, integrity, accessibility)
+
+**Excluded Categories** (Reasoning Internals):
+1. ❌ Prompt content (raw prompts, prompt templates, prompt engineering)
+2. ❌ Chain-of-thought reasoning (internal reasoning steps, thought processes)
+3. ❌ Decision-making logic (how CHP arrives at conclusions)
+4. ❌ Cognitive models (internal representations, reasoning patterns)
+5. ❌ Analysis algorithms (how CHP analyzes drift, contamination, instability)
+6. ❌ Scoring or weighting logic (internal thresholds, scoring functions)
+
+**Governance Guarantee**: Watchdog oversight of CHP is complete and sufficient without reasoning introspection.
+
+---
+
 ### 5.1 Governance Alignment
 
 **What the Watchdog Observes**:
