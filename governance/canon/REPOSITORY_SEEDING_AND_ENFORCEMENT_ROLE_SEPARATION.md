@@ -5,7 +5,7 @@ Canonical Governance Standard
 Version: v1.0  
 Authority: Johan Ras  
 Applies To: All New Application Repositories, All Repository Seeding Agents, All Governance Enforcement Agents  
-Related To: REPOSITORY_INITIALIZATION_AND_GOVERNANCE_SEEDING_PROTOCOL.md, AGENT_RECRUITMENT.md, AGENT_ROLE_GATE_APPLICABILITY.md
+Related To: REPOSITORY_INITIALIZATION_AND_GOVERNANCE_SEEDING_PROTOCOL.md, INITIALIZATION_COMPLETENESS_GATE.md, AGENT_RECRUITMENT.md, AGENT_ROLE_GATE_APPLICABILITY.md
 
 ---
 
@@ -475,7 +475,7 @@ This document **separates the roles** described in the initialization protocol:
 - Section 5.2 (Admin / Governance Liaison Agent) → Repository Seeding role
 - Section 9.4 (Governance Administrator) → Governance Enforcement role
 
-The initialization protocol defines **what must be done**.  
+The REPOSITORY_INITIALIZATION_AND_GOVERNANCE_SEEDING_PROTOCOL.md defines **what must be done**.  
 This document defines **who is authorized to do it**.
 
 ### 7.2 AGENT_RECRUITMENT.md
@@ -650,5 +650,5 @@ This role separation succeeds when:
 **Document Metadata**:
 - Document ID: REPOSITORY_SEEDING_AND_ENFORCEMENT_ROLE_SEPARATION_V1.0
 - Authority: Canonical Governance Standard
-- Integrates With: REPOSITORY_INITIALIZATION_AND_GOVERNANCE_SEEDING_PROTOCOL.md, AGENT_RECRUITMENT.md, AGENT_ROLE_GATE_APPLICABILITY.md, GOVERNANCE_PURPOSE_AND_SCOPE.md
+- Integrates With: REPOSITORY_INITIALIZATION_AND_GOVERNANCE_SEEDING_PROTOCOL.md, INITIALIZATION_COMPLETENESS_GATE.md, AGENT_RECRUITMENT.md, AGENT_ROLE_GATE_APPLICABILITY.md, GOVERNANCE_PURPOSE_AND_SCOPE.md
 - Enforcement: Agent Contracts + FM Recruitment Authority + Governance Administrator + Human Authority

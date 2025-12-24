@@ -458,9 +458,9 @@ Builder agents:
 
 ### 7.1 CI/CD Integration
 
-The Initialization Completeness Gate SHOULD be implemented as:
+The Initialization Completeness Gate MUST be implemented. The implementation MAY be either automated CI/CD or manual validation:
 
-**Automated CI/CD Workflow**:
+**Automated CI/CD Workflow** (Recommended):
 - Workflow file: `.github/workflows/initialization-completeness-gate.yml`
 - Trigger: On PR creation, on PR update, on manual request
 - Evaluation logic: Implements validation requirements from Section 4
@@ -711,7 +711,7 @@ This gate adds the following components to GOVERNANCE_COMPLETENESS_MODEL.md:
 
 ### Required Artifacts
 - `governance/canon/INITIALIZATION_COMPLETENESS_GATE.md` (this document)
-- `governance/schemas/REPOSITORY_INITIALIZATION_EVIDENCE.schema.md` (to be created)
+- `governance/schemas/REPOSITORY_INITIALIZATION_EVIDENCE.schema.md` (created in this PR)
 
 ### Component Registry Entry
 ```
