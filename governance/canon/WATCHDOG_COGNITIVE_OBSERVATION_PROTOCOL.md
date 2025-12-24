@@ -1426,11 +1426,13 @@ This policy derives authority from and implements:
 - Watchdog escalation paths apply to CHP observations (Section 6.3)
 - Hard stop authority applies to CHP violations (Section 6.1.2)
 - Watchdog independence preserved for CHP observation (Section 3.1)
+- Non-interference guarantees apply to CHP observation (Section 5.7)
 
 **Extensions**:
 - This protocol specifies CHP-specific observation scope
 - This protocol defines CHP-specific escalation triggers
 - This protocol clarifies cognitive drift vs. governance violation distinction
+- This protocol implements non-interference principles from Section 5.7 for CHP specifically
 
 ---
 
