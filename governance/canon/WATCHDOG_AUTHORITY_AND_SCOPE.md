@@ -609,6 +609,176 @@ Hard stops MUST NOT:
 
 ---
 
+### 5.7 Non-Interference & Independence Guarantees
+
+**Purpose**: Prevent recursive governance collapse by ensuring Watchdog independence and non-interference with cognitive systems.
+
+**Core Guarantee**: The Watchdog operates as an independent observer and escalator, never as an actor, modifier, or authorizer within the systems it monitors.
+
+---
+
+#### 5.7.1 Watchdog Must Not Modify Cognitive Systems
+
+**Principle**: Watchdog observes cognitive systems (including CHP) but does not control, modify, or execute their operations.
+
+**Absolute Prohibitions**:
+- ❌ MUST NOT modify CHP authority or scope
+- ❌ MUST NOT modify CHP hygiene operations
+- ❌ MUST NOT execute CHP operations
+- ❌ MUST NOT configure CHP parameters or thresholds
+- ❌ MUST NOT modify any cognitive system's operational logic
+- ❌ MUST NOT alter cognitive system outputs or findings
+
+**Permitted Actions**:
+- ✅ MAY observe cognitive system operations (read-only)
+- ✅ MAY escalate cognitive system violations (informational or hard stop)
+- ✅ MAY recommend cognitive system changes (advisory to Human Authority)
+
+**Rationale**:
+- Modification creates operational authority outside Watchdog scope
+- Watchdog role is observation and escalation, not execution
+- Cognitive systems remain under their own authority within governance constraints
+- Human Authority resolves escalations and directs changes
+
+**Enforcement**:
+- Watchdog has read-only access to cognitive systems (infrastructure-level)
+- Watchdog cannot execute cognitive system operations (no execution API access)
+- Watchdog escalations are reports, not commands
+- Human Authority implements changes through governance process
+
+---
+
+#### 5.7.2 Watchdog Must Not Suppress Cognition
+
+**Principle**: Watchdog must not suppress, censor, or filter cognition or findings from cognitive systems.
+
+**Absolute Prohibitions**:
+- ❌ MUST NOT suppress cognitive system escalations (even if Watchdog disagrees)
+- ❌ MUST NOT filter cognitive system findings (even if redundant or low-priority)
+- ❌ MUST NOT prevent cognitive systems from observing their operational state
+- ❌ MUST NOT interfere with cognitive system reasoning or analysis
+- ❌ MUST NOT block cognitive system outputs from reaching designated authorities
+
+**Permitted Actions**:
+- ✅ MAY observe cognitive system escalations and findings (oversight)
+- ✅ MAY escalate if cognitive system findings reveal governance violations
+- ✅ MAY recommend alternative cognitive system approaches (advisory to Human Authority)
+
+**Rationale**:
+- Cognitive suppression is antithetical to Watchdog observation role
+- Suppression creates hidden information and accountability gaps
+- Cognitive system findings must reach designated authorities (Foreman, Human)
+- Watchdog observes transparency; suppression violates transparency
+- Preventing recursive governance collapse requires free cognitive operation
+
+**Enforcement**:
+- Watchdog has no authority to block cognitive system outputs
+- Cognitive system escalations route independently of Watchdog observation
+- Human Authority receives both cognitive system and Watchdog findings independently
+- Suppression attempts are governance violations (Watchdog hard stop)
+
+**Exception**: Watchdog MAY issue hard stop if a cognitive system finding itself constitutes a governance violation (e.g., cognitive system escalates secrets in clear text). Hard stop prevents harm, not suppression of cognition.
+
+---
+
+#### 5.7.3 Watchdog Must Not Authorize Decisions
+
+**Principle**: Watchdog does not authorize, approve, or make decisions for cognitive systems or any monitored systems.
+
+**Absolute Prohibitions**:
+- ❌ MUST NOT authorize cognitive system operations (hygiene cycles, normalization, etc.)
+- ❌ MUST NOT approve cognitive system memory proposals
+- ❌ MUST NOT authorize cognitive system escalations
+- ❌ MUST NOT approve cognitive system operational changes
+- ❌ MUST NOT make decisions on behalf of monitored systems
+- ❌ MUST NOT substitute for Foreman, builder, or any agent decision authority
+
+**Permitted Actions**:
+- ✅ Human Authority authorizes cognitive system operations (manual trigger, governance changes)
+- ✅ Scheduled system authorizes cognitive system routine cycles (pre-authorized by Human)
+- ✅ Emergency triggers authorize cognitive system interventions (pre-authorized thresholds)
+
+**Rationale**:
+- Authorization creates operational authority outside Watchdog scope
+- Watchdog role is observation and escalation, not approval or decision-making
+- Cognitive system authorization follows governance-defined paths (Human, scheduled, emergency)
+- Authorization would compromise Watchdog independence
+- Decision-making authority belongs to designated agents and Human Authority
+
+**Enforcement**:
+- Watchdog has no authorization API or approval workflow
+- Cognitive system operations do not require Watchdog approval
+- Watchdog observations are informational, not approvals
+- Human Authority is sole authorization authority for governance changes
+
+**Exception**: Watchdog hard stop is NOT authorization or decision-making; it is a violation response mechanism. Hard stop prevents harm; resumption requires Human Authority authorization.
+
+---
+
+#### 5.7.4 Independence Preservation
+
+**Principle**: Watchdog independence is absolute and must not be compromised by any monitored system.
+
+**Requirements**:
+- Watchdog observes all systems independently (no system influence on observation)
+- Watchdog determines what to observe based on governance canon (not system recommendations)
+- Watchdog escalates based on governance rules (not system advisories)
+- Watchdog authority cannot be modified by monitored systems
+- Watchdog hard stop authority applies to all systems equally
+
+**Boundaries**:
+- No system can instruct Watchdog on what to observe
+- No system can request Watchdog to suppress observations
+- No system can bypass Watchdog observation
+- No system can modify Watchdog escalation thresholds
+- Transparency to Watchdog is mandatory, not optional
+
+**Rationale**:
+- Watchdog must remain independent to preserve governance integrity
+- All systems are subject to observation under governance canon
+- No system may control or influence its own oversight
+- Independence prevents recursive oversight collapse
+- Separation of observation from operation is fundamental
+
+**Enforcement**:
+- Watchdog authority defined in canonical governance (immutable by systems)
+- Human Authority is sole authority for Watchdog scope changes
+- Attempts to influence Watchdog observation are governance violations
+- Hard stop for any system attempting to bypass or influence Watchdog
+
+---
+
+#### 5.7.5 Recursive Governance Collapse Prevention
+
+**Problem**: Without clear non-interference boundaries, Watchdog could create recursive governance loops that undermine system stability and governance integrity.
+
+**Prohibited Recursive Patterns**:
+- ❌ Watchdog modifying systems it observes (breaks observation independence)
+- ❌ Watchdog suppressing findings it disagrees with (breaks transparency)
+- ❌ Watchdog authorizing actions it should only observe (breaks authority separation)
+- ❌ Systems observing Watchdog observation of themselves (breaks non-self-inspection)
+- ❌ Watchdog observing itself observing systems (breaks first-order observation principle)
+
+**Guarantees Against Collapse**:
+1. **First-Order Observation Only**: Watchdog observes systems (first-order). Watchdog does NOT observe itself observing (second-order).
+2. **No Reverse Observation**: Systems do NOT observe Watchdog observing them (no reverse feedback loop).
+3. **No Self-Inspection via Proxy**: Systems do NOT use Watchdog findings for self-improvement (no self-inspection bypass).
+4. **External Oversight**: Human Authority provides external oversight of Watchdog (not Watchdog itself).
+5. **Clear Authority Separation**: Observation, decision-making, and execution are separate authorities.
+
+**Enforcement**:
+- Watchdog does not observe its own observation processes
+- Systems have no access to Watchdog internal state or observation logs about themselves
+- Human Authority reviews Watchdog effectiveness (external oversight)
+- Hard stop for recursive observation attempts or self-inspection patterns
+
+**Alignment**:
+- This section implements WATCHDOG_COGNITIVE_OBSERVATION_PROTOCOL.md principles for all systems
+- Prevents recursive governance collapse as required by governance canon
+- Maintains clear boundaries between observation, decision, and execution
+
+---
+
 ## 6. Stop Conditions
 
 ### 6.1 Hard Stop Conditions
