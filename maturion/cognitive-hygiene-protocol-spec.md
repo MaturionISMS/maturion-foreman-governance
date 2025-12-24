@@ -78,7 +78,120 @@ CHP works hand-in-hand with:
 - Proactive Governance Engine  
 
 --------------------------------------------------------------------------------
-# 3. COGNITIVE HYGIENE CYCLE (CHC)
+# 3. ABSOLUTE WRITE PROHIBITION
+
+**CHP is a maintenance and observation system, NOT a learning or memory-writing system.**
+
+### 3.1 Zero Memory Write Authority
+
+CHP has **ZERO** authority to write to any persistent memory:
+
+- ❌ **NO** writes to canonical governance memory  
+- ❌ **NO** writes to long-term architectural memory  
+- ❌ **NO** writes to governance audit trails  
+- ❌ **NO** writes to learning records  
+- ❌ **NO** writes to builder accountability records  
+- ❌ **NO** writes to failure classifications  
+- ❌ **NO** writes to tenant memory (when activated)  
+- ❌ **NO** writes to experience memory  
+- ❌ **NO** writes to pattern libraries  
+- ❌ **NO** writes to any canonical artifact  
+
+**CHP has READ-ONLY access to all canonical and persistent memory.**
+
+### 3.2 Authorized Scope: Ephemeral Memory ONLY
+
+CHP may **ONLY** modify ephemeral and temporary memory that exists for runtime purposes:
+
+- ✅ **Session caches** (cleared after session ends)  
+- ✅ **Working memory buffers** (temporary reasoning context)  
+- ✅ **Embodiment-specific caches** (local runtime memory)  
+- ✅ **Temporary tenant session memory** (post-session cleanup only)  
+- ✅ **Volatile residues** (fragments left by runtime operations)  
+- ✅ **Reasoning chain buffers** (short-term cognitive traces)  
+
+**Critical Boundary**: CHP operates ONLY on memory that is:
+1. Temporary by design
+2. Intended to be cleared or reset
+3. NOT part of canonical knowledge
+4. NOT part of learning or accountability records
+5. NOT part of governance artifacts
+
+### 3.3 No Side-Effects Beyond Maintenance
+
+CHP hygiene operations MUST NOT:
+
+- ❌ Create indirect writes to persistent memory  
+- ❌ Trigger side-effects that modify canonical artifacts  
+- ❌ Invoke APIs or systems that write to long-term memory  
+- ❌ Generate proposals for memory writes (CHP does not propose learning)  
+- ❌ Recommend changes to governance canon or policies  
+- ❌ Modify schemas, contracts, or enforcement rules  
+- ❌ Delete or modify audit evidence  
+- ❌ Affect builder accountability records  
+- ❌ Weaken governance through cognitive operations  
+
+**Hygiene operations are maintenance ONLY, never mutation of canonical state.**
+
+### 3.4 No Indirect Mutation
+
+CHP MUST NOT circumvent write prohibition through:
+
+- ❌ **Escalation paths** (escalations are informational, not write commands)  
+- ❌ **Advisory recommendations** (advisories do not create writes)  
+- ❌ **Hygiene cycle outputs** (outputs are reports, not persistent changes)  
+- ❌ **Integration points** (no system may write on behalf of CHP)  
+- ❌ **API calls to other systems** (no delegation of write authority)  
+- ❌ **Foreman coordination** (Foreman decisions do not grant CHP write authority)  
+- ❌ **Emergency operations** (emergencies do not bypass prohibition)  
+
+**CHP has no path—direct or indirect—to write persistent memory.**
+
+### 3.5 Alignment with MEMORY_WRITE_POLICY.md
+
+This prohibition aligns with and enforces the principles defined in:
+- `memory/AUTHORITY/MEMORY_WRITE_POLICY.md`
+- `governance/canon/COGNITIVE_HYGIENE_AUTHORITY_MODEL.md`
+- `governance/canon/MEMORY_INTEGRITY_AND_CORRUPTION_MODEL.md`
+
+**Core Principle**: Memory writes are proposals requiring governance approval. CHP does not propose, does not write, does not learn.
+
+### 3.6 Prohibited Interpretation: CHP is NOT a Learning System
+
+**Explicit Clarification**: CHP is **NOT**:
+- ❌ A learning system  
+- ❌ A knowledge accumulation system  
+- ❌ A pattern recognition system that writes findings  
+- ❌ A self-improving system  
+- ❌ An experience capture system  
+- ❌ A memory evolution system  
+
+**CHP is**: A cognitive hygiene and maintenance system that observes, detects, cleans, and normalizes **temporary** cognitive state only.
+
+### 3.7 Enforcement and Violations
+
+**Watchdog Authority**:
+- Watchdog observes all CHP operations for write prohibition compliance  
+- Any CHP write to persistent memory is a **catastrophic governance violation**  
+- Watchdog issues **hard stop** for any CHP write attempt  
+- Human escalation is **mandatory** for any write prohibition breach  
+
+**Audit Trail**:
+- All CHP operations are logged and auditable  
+- Memory modifications are scoped to ephemeral memory only  
+- Any write to persistent memory is logged as violation  
+- Audit trail demonstrates zero persistent writes by CHP  
+
+**Violation Consequences**:
+- Immediate hard stop of CHP operations  
+- Root cause analysis required before resumption  
+- Human authority (Johan Ras) required for CHP resumption  
+- Governance amendment may be required to restore trust  
+
+**Invariant**: CHP hygiene operations leave zero persistent memory traces. CHP cleans; CHP does not write.
+
+--------------------------------------------------------------------------------
+# 4. COGNITIVE HYGIENE CYCLE (CHC)
 
 CHP defines a repeating daily cycle:
 
@@ -107,28 +220,28 @@ Each step runs individually AND as a batch pipeline.
 
 ---
 
-# 4. MEMORY SANITATION PROTOCOL
+# 5. MEMORY SANITATION PROTOCOL
 
-### 4.1 Remove session-carryover residues  
+### 5.1 Remove session-carryover residues  
 - ephemeral memory flushed  
 - per-tenant working memory purged  
 - unused reasoning chains removed  
 
-### 4.2 Clean embodiment memory buffers  
+### 5.2 Clean embodiment memory buffers  
 Builder, Risk, Command, Marketing memory caches cleaned:
 
 - hallucination residues removed  
 - irrelevant embeddings discarded  
 - drift-causing memories quarantined  
 
-### 4.3 Semantic Clarification  
+### 5.3 Semantic Clarification  
 Re-normalize semantic memory to ensure:
 
 - clarity  
 - consistency  
 - alignment with world-model truth  
 
-### 4.4 Episodic Memory Compaction  
+### 5.4 Episodic Memory Compaction  
 Remove:
 
 - repetitive entries  
@@ -139,23 +252,23 @@ Compact to preserve signal, remove noise.
 
 ---
 
-# 5. REASONING STABILITY MAINTENANCE
+# 6. REASONING STABILITY MAINTENANCE
 
-### 5.1 Contradiction Detection  
+### 6.1 Contradiction Detection  
 CHP scans reasoning samples for:
 
 - internal contradictions  
 - unresolved conflicts  
 - probability collapse  
 
-### 5.2 Inference Coherence Check  
+### 6.2 Inference Coherence Check  
 Ensures reasoning chains:
 
 - follow logical causation  
 - do not drift into irrelevant abstraction  
 - remain consistent across embodiments  
 
-### 5.3 World-model Alignment  
+### 6.3 World-model Alignment  
 Ensures:
 
 - no hallucinated facts are retained  
@@ -164,7 +277,7 @@ Ensures:
 
 ---
 
-# 6. DRIFT NORMALIZATION
+# 7. DRIFT NORMALIZATION
 
 This is CHP’s integration with **Sentinel**.
 
@@ -185,9 +298,9 @@ This is CHP’s integration with **Sentinel**.
 
 ---
 
-# 7. TENANT HYGIENE & ISOLATION SANITATION
+# 8. TENANT HYGIENE & ISOLATION SANITATION
 
-### 7.1 Remove tenant residue from caches  
+### 8.1 Remove tenant residue from caches  
 When switching tenants or after finishing a tenant session:
 
 - remove all tenant context from working memory  
@@ -195,42 +308,42 @@ When switching tenants or after finishing a tenant session:
 - scrub vector caches  
 - sanitize tool-output traces  
 
-### 7.2 Tenant Boundary Purification  
+### 8.2 Tenant Boundary Purification  
 Strengthen tenant isolation walls:
 
 - ensure no embeddings survive cross-boundary  
 - identity tokens cleared  
 - tenant metadata removed  
 
-### 7.3 Tenant Context Expiration  
+### 8.3 Tenant Context Expiration  
 All tenant hints and local reasoning must expire after session.
 
 ---
 
-# 8. EMBODIMENT DECOUPLING
+# 9. EMBODIMENT DECOUPLING
 
 Each embodiment receives a hygiene pass:
 
-### 8.1 Builder-Maturion Hygiene  
+### 9.1 Builder-Maturion Hygiene  
 - clear code-generation bias patterns  
 - reset design heuristics  
 - scrub project-specific constructs  
 - maintain architecture-governance alignment  
 
-### 8.2 Risk-Maturion Hygiene  
+### 9.2 Risk-Maturion Hygiene  
 - remove risk-context residue  
 - reset severity calibration  
 - normalize threat expectations  
 
-### 8.3 Command-Maturion Hygiene  
+### 9.3 Command-Maturion Hygiene  
 - remove decision-tree buildup  
 - stabilize executive reasoning  
 
-### 8.4 Marketing-Maturion Hygiene  
+### 9.4 Marketing-Maturion Hygiene  
 - scrub brand-specific reasoning  
 - reset content-generation bias patterns  
 
-### 8.5 Embodiment Boundary Reset  
+### 9.5 Embodiment Boundary Reset  
 Ensure embodiments do NOT:
 
 - carry traces from each other  
@@ -239,11 +352,11 @@ Ensure embodiments do NOT:
 
 ---
 
-# 9. WORLD-MODEL CONSISTENCY CHECK
+# 10. WORLD-MODEL CONSISTENCY CHECK
 
 CHP performs:
 
-### 9.1 Canonical Scan  
+### 10.1 Canonical Scan  
 Detects:
 
 - contamination  
@@ -251,14 +364,14 @@ Detects:
 - drift-based inconsistency  
 - unstable patterns  
 
-### 9.2 Relationship Integrity Validation  
+### 10.2 Relationship Integrity Validation  
 Ensures:
 
 - canonical relationships remain intact  
 - no unauthorized updates occurred  
 - ontology remains coherent  
 
-### 9.3 ARC-Approved Changes Check  
+### 10.3 ARC-Approved Changes Check  
 Confirms:
 
 - only ARC-approved modifications exist  
@@ -266,7 +379,7 @@ Confirms:
 
 ---
 
-# 10. PREDICTIVE CALIBRATION SYNC
+# 11. PREDICTIVE CALIBRATION SYNC
 
 CHP syncs Predictive Health Engine:
 
@@ -285,7 +398,7 @@ This ensures prediction remains:
 
 ---
 
-# 11. GOVERNANCE SYNC
+# 12. GOVERNANCE SYNC
 
 CHP ensures:
 
@@ -297,9 +410,9 @@ CHP ensures:
 
 ---
 
-# 12. BACKEND IMPLEMENTATION REQUIREMENTS
+# 13. BACKEND IMPLEMENTATION REQUIREMENTS
 
-### 12.1 Scheduled Hygiene Engine
+### 13.1 Scheduled Hygiene Engine
 
 POST /cognitive-hygiene/run
 
@@ -308,7 +421,7 @@ Copy code
 
 Runs daily OR triggered manually by Johan.
 
-### 12.2 Hygiene Stages API
+### 13.2 Hygiene Stages API
 
 GET /cognitive-hygiene/stages
 GET /cognitive-hygiene/report/{runId}
@@ -317,7 +430,7 @@ POST /cognitive-hygiene/run/stage
 yaml
 Copy code
 
-### 12.3 Embodiment Hygiene Actions  
+### 13.3 Embodiment Hygiene Actions  
 Each embodiment must implement:
 
 cleanupEmbodimentContext()
@@ -328,7 +441,7 @@ rebalanceReasoning()
 shell
 Copy code
 
-### 12.4 Memory Hygiene Actions
+### 13.4 Memory Hygiene Actions
 
 purgeSessionMemory()
 compactEpisodicMemory()
@@ -338,7 +451,7 @@ clearUnsafeAssociations()
 yaml
 Copy code
 
-### 12.5 Drift Normalization Hooks  
+### 13.5 Drift Normalization Hooks  
 Sentinel must provide:
 
 getDriftPattern()
@@ -347,7 +460,7 @@ resetDriftContext()
 yaml
 Copy code
 
-### 12.6 Isolation Cleanup Hooks  
+### 13.6 Isolation Cleanup Hooks  
 Arbiter must provide:
 
 purgeTenantTokens()
@@ -358,7 +471,7 @@ Copy code
 
 ---
 
-# 13. TREE VISUALISATION
+# 14. TREE VISUALISATION
 
 ### Node Hygiene Icon  
 🌀 spiral symbol
@@ -382,21 +495,21 @@ Displays:
 
 ---
 
-# 14. TESTING REQUIREMENTS
+# 15. TESTING REQUIREMENTS
 
-### 14.1 Unit Tests  
+### 15.1 Unit Tests  
 - memory purge  
 - embodiment cleanup  
 - drift reset  
 - world-model validation  
 
-### 14.2 Integration Tests  
+### 15.2 Integration Tests  
 - CHP ↔ Sentinel  
 - CHP ↔ Arbiter  
 - CHP ↔ Knowledge Boundaries  
 - CHP ↔ Proactive Governance Engine  
 
-### 14.3 Scenario Tests  
+### 15.3 Scenario Tests  
 Simulate:
 
 - drift escalation  
@@ -409,7 +522,7 @@ CHP must neutralise them.
 
 ---
 
-# 15. ACCEPTANCE CRITERIA
+# 16. ACCEPTANCE CRITERIA
 
 Cognitive Hygiene Protocol is complete when:
 
