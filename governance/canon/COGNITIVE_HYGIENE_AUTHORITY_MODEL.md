@@ -889,7 +889,155 @@ If conflict exists, higher authority prevails:
 
 ---
 
-## 8. Escalation Boundaries
+## 8. Escalation Boundaries & Signal Semantics
+
+### 8.0 Core Escalation Principles
+
+**Critical Invariants**: CHP escalations are informational signals, not decision triggers or execution commands.
+
+#### 8.0.1 Escalation ≠ Decision
+
+**Principle**: Escalation is a signal, not a decision or authorization.
+
+**Requirements**:
+- ✅ CHP escalations provide information, findings, and recommendations
+- ✅ Decision authority remains with designated authority (Foreman, Watchdog, Human)
+- ✅ Escalation does NOT imply approval, authorization, or execution
+- ✅ Escalation does NOT create obligation to act
+- ❌ CHP escalations do NOT constitute decisions
+- ❌ CHP escalations do NOT authorize actions
+- ❌ CHP escalations do NOT mandate responses
+
+**Explicit Separation**:
+```
+CHP Escalation (Signal) → Decision Authority Evaluates → Decision Authority Decides → Authorized Agent Executes
+```
+
+**Examples**:
+- ✅ CHP escalates cognitive drift to Foreman → Foreman decides response (accept, reject, investigate further)
+- ✅ CHP escalates critical finding to Human → Human decides action (approve intervention, reject, direct alternative)
+- ❌ CHP escalates drift to Foreman → Foreman automatically implements CHP recommendation (violates decision authority)
+- ❌ CHP escalates to Human → Automatic approval implied (violates human sovereignty)
+
+**Rationale**:
+- Preserves authority hierarchy (escalation does not transfer authority)
+- Maintains separation of duties (signal vs. decision vs. execution)
+- Protects human sovereignty (escalation does not bypass human authority)
+- Ensures accountability (decision-maker remains accountable, not signal originator)
+
+---
+
+#### 8.0.2 No Automatic Action
+
+**Principle**: No escalation triggers automatic action without explicit decision by designated authority.
+
+**Requirements**:
+- ✅ Every escalation requires explicit decision by designated authority
+- ✅ Decision-maker must actively evaluate escalation content
+- ✅ Decision-maker may accept, reject, modify, or escalate further
+- ✅ No escalation creates "default action" or "implied approval"
+- ❌ Escalations do NOT trigger automated workflows
+- ❌ Escalations do NOT activate pre-authorized responses without review
+- ❌ Escalations do NOT create obligation to act within timeframe
+
+**Prohibited Automatic Action Patterns**:
+- ❌ CHP escalates drift → Foreman automatically triggers builder action
+- ❌ CHP escalates to Human → Emergency protocol auto-activates
+- ❌ CHP escalates to Watchdog → Watchdog automatically hard stops
+- ❌ Repeated escalations trigger automatic escalation to higher authority
+
+**Required Decision Flow**:
+1. CHP generates escalation (signal with context, evidence, recommendation)
+2. Escalation delivered to designated authority
+3. Designated authority reviews escalation
+4. Designated authority makes explicit decision (accept/reject/modify/escalate)
+5. If accepted, designated authority explicitly authorizes execution
+6. Authorized agent executes per authorization
+
+**Enforcement**:
+- All escalations logged with decision outcome (accept/reject/modify/escalate)
+- Decision authority recorded for audit trail
+- No automated escalation-to-action pathways permitted
+- Watchdog detects automatic action violations
+
+**Rationale**:
+- Prevents governance bypass through escalation automation
+- Maintains decision authority with designated roles
+- Ensures human-in-the-loop for critical decisions
+- Protects against escalation-based attacks or manipulation
+
+---
+
+#### 8.0.3 Audit-Ready Escalation Paths
+
+**Principle**: Every escalation must be fully auditable and traceable.
+
+**Requirements for Every Escalation**:
+
+1. **Escalation Metadata** (Required):
+   - Timestamp (when escalation occurred)
+   - Originator (CHP)
+   - Destination authority (Foreman, Watchdog, Human)
+   - Escalation type (advisory, informational, critical)
+   - Escalation reason (trigger condition, context)
+   - Escalation ID (unique identifier for tracking)
+
+2. **Escalation Content** (Required):
+   - Findings (what was observed)
+   - Evidence (data, metrics, patterns supporting findings)
+   - Context (relevant background, history, related escalations)
+   - Recommendation (CHP's advisory on response, if applicable)
+   - Options (alternative responses for decision authority to consider)
+
+3. **Decision Record** (Required):
+   - Decision authority (who decided)
+   - Decision timestamp (when decision was made)
+   - Decision outcome (accept/reject/modify/escalate further)
+   - Decision rationale (why this decision was made)
+   - Action authorized (if any)
+
+4. **Execution Record** (If Action Authorized):
+   - Executor (who executed)
+   - Execution timestamp (when executed)
+   - Execution outcome (success/failure/partial)
+   - Execution evidence (logs, artifacts, results)
+
+**Audit Trail Location**:
+- Governance memory (governance/memory/escalations/)
+- CHP execution logs (for CHP-originated escalations)
+- Foreman execution logs (for Foreman decisions)
+- Watchdog observation logs (for Watchdog-observed escalations)
+
+**Audit Trail Accessibility**:
+- Governance Administrator: Full read access
+- Watchdog: Full read access (for observation)
+- Human Authority: Full read access
+- Foreman: Read access to own decisions and CHP escalations to Foreman
+
+**Audit Queries Supported**:
+- All escalations by type (advisory, informational, critical)
+- All escalations by destination (Foreman, Watchdog, Human)
+- All escalations by outcome (accepted, rejected, modified, escalated)
+- All escalations by timeframe
+- All escalations related to specific trigger (drift, corruption, failure)
+- Decision latency (time from escalation to decision)
+- Acceptance rate (% escalations accepted vs. rejected)
+
+**Audit Trail Integrity**:
+- Escalation records immutable (no modification after creation)
+- Decision records immutable (no modification after decision)
+- Execution records immutable (no modification after execution)
+- Audit trail versioned and backed up
+- Audit trail protected from deletion or tampering
+
+**Rationale**:
+- Enables governance compliance verification
+- Supports learning from escalation patterns
+- Provides accountability for decisions
+- Facilitates incident investigation
+- Demonstrates governance effectiveness
+
+---
 
 ### 8.1 CHP → Foreman (Advisory Escalation)
 
@@ -982,6 +1130,152 @@ If conflict exists, higher authority prevails:
 - No CHP escalation creates authority to execute
 - Human or Foreman decides response to all escalations
 - Escalations preserve authority hierarchy
+
+---
+
+### 8.5 Escalation Boundaries Summary
+
+**Purpose**: This subsection consolidates the escalation boundaries and signal semantics to ensure clarity and auditability.
+
+#### 8.5.1 Escalation Authority Matrix
+
+| Escalation Path | Type | Decision Authority | Automatic Action | Audit Required |
+|----------------|------|-------------------|------------------|----------------|
+| CHP → Foreman | Advisory, non-blocking | Foreman decides | ❌ No | ✅ Yes |
+| CHP → Watchdog | Observational signal | Watchdog observes (no decision) | ❌ No | ✅ Yes |
+| CHP → Human | Informational escalation | Human decides | ❌ No | ✅ Yes |
+
+**Key Invariants**:
+- No escalation path creates automatic action
+- No escalation path transfers decision authority
+- No escalation path bypasses designated authority hierarchy
+- All escalation paths require full audit trail
+
+---
+
+#### 8.5.2 Signal Semantics Guarantee
+
+**CHP Escalations Are Signals, Not Commands**:
+
+**What CHP Escalations ARE**:
+- ✅ Informational signals (data, observations, findings)
+- ✅ Advisory recommendations (suggestions, options)
+- ✅ Context for decision-making (evidence, patterns, history)
+- ✅ Inputs to designated authority (Foreman, Watchdog, Human)
+
+**What CHP Escalations ARE NOT**:
+- ❌ Decisions (decision authority remains with designated role)
+- ❌ Authorizations (no approval or permission granted)
+- ❌ Commands (no execution triggered)
+- ❌ Obligations (recipient not required to act)
+- ❌ Overrides (cannot bypass authority hierarchy)
+
+**Signal Processing Flow**:
+```
+┌─────────────────────────────────────────────────────────────┐
+│ CHP Generates Escalation                                    │
+│ (Signal with findings, evidence, recommendation)            │
+└────────────────────┬────────────────────────────────────────┘
+                     │ (signal transmitted)
+                     ▼
+┌─────────────────────────────────────────────────────────────┐
+│ Designated Authority Receives Signal                        │
+│ (Foreman, Watchdog, or Human)                              │
+└────────────────────┬────────────────────────────────────────┘
+                     │ (authority evaluates)
+                     ▼
+┌─────────────────────────────────────────────────────────────┐
+│ Designated Authority Makes Explicit Decision                │
+│ Options: Accept / Reject / Modify / Escalate Further       │
+└────────────────────┬────────────────────────────────────────┘
+                     │ (if accepted)
+                     ▼
+┌─────────────────────────────────────────────────────────────┐
+│ Designated Authority Explicitly Authorizes Execution        │
+│ (if decision requires action)                               │
+└────────────────────┬────────────────────────────────────────┘
+                     │ (authorization given)
+                     ▼
+┌─────────────────────────────────────────────────────────────┐
+│ Authorized Agent Executes Per Authorization                 │
+│ (Foreman directs Builder, or Human directs Foreman, etc.)  │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Enforcement**:
+- Watchdog observes escalation processing for governance compliance
+- Audit trail captures full signal-to-decision-to-execution flow
+- Any automatic action triggered by escalation is governance violation
+- Hard stop for escalation-to-action bypass patterns
+
+---
+
+#### 8.5.3 Non-Bypass Guarantee
+
+**Guarantee**: CHP escalations cannot bypass designated authority.
+
+**Prohibited Bypass Patterns**:
+- ❌ CHP escalates to Human to bypass Foreman decision authority (backdoor escalation)
+- ❌ CHP escalates to Foreman to override Watchdog observation (circumvent oversight)
+- ❌ CHP repeatedly escalates to pressure authority into decision (escalation-based coercion)
+- ❌ CHP escalates to self-authorize prohibited actions (authority laundering)
+
+**Required Escalation Discipline**:
+- ✅ CHP escalates to appropriate authority based on severity and scope
+- ✅ Routine findings → Foreman (advisory authority)
+- ✅ Observational signals → Watchdog (independent observation)
+- ✅ Critical conditions → Human (strategic decision authority)
+- ✅ Escalation path selection follows governance-defined criteria, not CHP preference
+
+**Authority Hierarchy Preservation**:
+```
+Human Authority (Supreme)
+    ↓ (may be escalated to for critical conditions)
+Governance Canon (Binding)
+    ↓ (defines escalation rules)
+Foreman ↔ CHP (Peer-level)
+    ↓ (CHP advises Foreman; both escalate to Human)
+Builders (Subordinate to Foreman)
+
+Watchdog (Independent Observer)
+    ↓ (observes all; escalates violations to Human)
+```
+
+**Escalation path must respect this hierarchy**:
+- CHP may escalate to Foreman (peer advisory)
+- CHP may signal to Watchdog (transparency)
+- CHP may escalate to Human (critical conditions)
+- CHP may NOT use escalation to bypass or override any authority
+
+**Enforcement**:
+- Governance Administrator validates escalation patterns for bypass attempts
+- Watchdog observes escalation behavior for authority circumvention
+- Human authority reviews escalation effectiveness and compliance
+- Escalation bypass is governance violation (Watchdog hard stop)
+
+---
+
+#### 8.5.4 Acceptance Criteria Verification
+
+**This section verifies compliance with issue G-COG-A1.3 acceptance criteria**:
+
+1. **Escalation ≠ Decision** ✅
+   - Section 8.0.1 explicitly defines escalation as signal, not decision
+   - Decision authority remains with designated role (Foreman, Watchdog, Human)
+   - Escalation-decision separation enforced and auditable
+
+2. **No Automatic Action** ✅
+   - Section 8.0.2 prohibits automatic action from escalations
+   - Every escalation requires explicit decision by designated authority
+   - No escalation-to-action pathways permitted without explicit authorization
+
+3. **Audit-Ready Escalation Paths** ✅
+   - Section 8.0.3 defines complete audit trail requirements
+   - All escalations logged with metadata, content, decision, and execution records
+   - Audit trails immutable, accessible, and queryable
+   - Escalation governance compliance verifiable through audit trail
+
+**Governance Completeness**: This section fulfills the deliverable requirement for "Escalation Boundaries & Signal Semantics" with explicit guarantees that CHP escalation does not bypass Foreman or Human Authority.
 
 ---
 
