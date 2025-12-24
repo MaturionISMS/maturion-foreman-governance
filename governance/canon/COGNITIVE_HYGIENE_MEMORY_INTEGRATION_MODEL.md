@@ -298,7 +298,7 @@ This policy derives authority from and implements:
   - Reset embodiment-specific caches
 
 #### 4.3.4 Audit Trails (Read-Only, Observational)
-- **Location**: `governance/memory/audit-trails/`, `compliance/evidence/**`, `memory/AUDIT/**` (OBSERVATIONAL ONLY - NOT FOR MUTATION)
+- **Location**: `memory/AUDIT/**`, `compliance/evidence/**` (OBSERVATIONAL ONLY - NOT FOR MUTATION)
 - **Purpose**: Observe governance compliance, detect audit anomalies (informational only)
 - **Access Level**: Read-only, observational (CHP does not enforce audit compliance)
 - **Critical Restriction**: CHP may read audit trails for transparency but may NOT modify, delete, or mutate audit records
