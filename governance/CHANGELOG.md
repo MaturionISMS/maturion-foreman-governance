@@ -64,6 +64,62 @@ Each entry follows this structure:
 
 ## Change History
 
+### [V1.1-DELEGATION-MODEL] - 2025-12-25 - [NON_BREAKING_ENHANCEMENT]
+
+**Changed By**: Governance Administrator (Copilot Agent)
+**Approved By**: Pending (Johan approval for PR merge)
+**Effective Date**: 2025-12-25 (upon PR merge)
+
+**Summary**: Introduced G-C13 Delegation Instruction & Audit Model with complete schemas for platform action delegation between FM and Maturion
+
+**Affected Artifacts**:
+- `governance/canon/DELEGATION_INSTRUCTION_AND_AUDIT_MODEL.md` (NEW - G-C13)
+- `governance/schemas/DELEGATION_INSTRUCTION.schema.md` (NEW)
+- `governance/schemas/DELEGATION_RESPONSE.schema.md` (NEW)
+- `governance/schemas/PLATFORM_ACTION_AUDIT_ENTRY.schema.md` (NEW)
+- `governance/canon/GOVERNANCE_COMPLETENESS_MODEL.md` (UPDATED - added Section 5.11)
+- `governance/CHANGELOG.md` (UPDATED - this entry)
+
+**Migration Required**: NO
+
+**Migration Guidance**: Not applicable - all changes are additive and backward compatible. This defines governance structure for platform action delegation, which was referenced but not fully specified in G-C12.
+
+**Rationale**: 
+This change addresses the need to:
+1. Complete the delegation model started in G-C12 (PLATFORM_AUTHORITY_BOUNDARY_AND_DELEGATION_MODEL.md)
+2. Define exact schemas for delegation instructions from FM to Maturion
+3. Define exact schemas for delegation responses from Maturion to FM
+4. Define complete audit trail structure for all platform actions
+5. Ensure platform actions are fully auditable and traceable per ISO 27001, ISO 31000, NIST CSF requirements
+6. Enable implementation of FM-PLAT-EXEC-01 (Delegated Platform Action Execution via Maturion)
+
+**Impact**: 
+- FM: Now has canonical schema for delegating platform actions to Maturion
+- Maturion: Now has canonical schema for responding to delegation requests and generating audit trails
+- Governance Administrator: New schemas to validate in governance completeness checks
+- Audit/Compliance: Platform action audit trails now have defined structure for compliance verification
+- All: Clear, unambiguous protocol for all platform action delegation
+
+**Key Principles**:
+- Explicit Instruction Principle: Every platform action requires explicit, complete delegation instruction
+- Complete Evidence Principle: Every platform action generates complete, immutable audit evidence
+- Bidirectional Confirmation Principle: Platform actions require confirmation in both directions
+- Audit Trail Immutability Principle: Audit trails are canonical evidence, never mutable logs
+
+**References**: 
+- Issue: FM-PLAT-EXEC-01 — Delegated Platform Action Execution via Maturion
+- PR: #[to be determined]
+- Constitutional Authority: GOVERNANCE_PURPOSE_AND_SCOPE.md, PLATFORM_AUTHORITY_BOUNDARY_AND_DELEGATION_MODEL.md (G-C12)
+- Depends On: G-C12 (PLATFORM_AUTHORITY_BOUNDARY_AND_DELEGATION_MODEL.md)
+
+**Notes**:
+- This is governance-definition only (implementation occurs in FM app and Maturion app repositories)
+- Schemas define normative structure for all delegation and audit artifacts
+- Audit requirements align with AUDIT_READINESS_MODEL.md and COMPLIANCE_AND_STANDARDS_GOVERNANCE.md
+- This completes the platform authority governance framework started with G-C12
+
+---
+
 ### [V1.0-GPCA-RIPPLE] - 2025-12-22 - [NON_BREAKING_ENHANCEMENT]
 
 **Changed By**: Governance Administrator (Copilot Agent)

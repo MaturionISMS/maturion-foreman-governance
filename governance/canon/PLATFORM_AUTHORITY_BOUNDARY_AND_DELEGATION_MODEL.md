@@ -6,8 +6,10 @@
 **Version**: 1.0.0  
 **Effective Date**: 2025-12-25  
 **Owner**: Maturion Engineering Leadership (Johan Ras)  
+**Canonical ID**: G-C12  
 **Precedence**: Subordinate only to GOVERNANCE_PURPOSE_AND_SCOPE.md  
-**Applies To**: All Foreman Instances, All Maturion Platform Instances, All Platform Actions
+**Applies To**: All Foreman Instances, All Maturion Platform Instances, All Platform Actions  
+**Extended By**: G-C13 (DELEGATION_INSTRUCTION_AND_AUDIT_MODEL.md) - Defines complete schemas for delegation instructions, responses, and audit trails
 
 ---
 
