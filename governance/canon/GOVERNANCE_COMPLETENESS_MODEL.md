@@ -183,6 +183,17 @@ The compliance canon requires traceability and evidence readiness (architecture 
 
 > Note: If these files do not yet exist, completeness is RED until they do.
 
+### 5.11 Platform Authority and Delegation Model (G-C12, G-C13)
+These components define platform authority boundaries and delegation protocol between FM and Maturion.
+
+| Component ID | Required Artifacts | Notes / Purpose | Dependencies |
+|---|---|---|---|
+| PLATFORM_AUTHORITY_BOUNDARY | `governance/canon/PLATFORM_AUTHORITY_BOUNDARY_AND_DELEGATION_MODEL.md` (G-C12) | Defines platform authority separation and delegation protocol | CANON_PURPOSE_SCOPE |
+| DELEGATION_INSTRUCTION_MODEL | `governance/canon/DELEGATION_INSTRUCTION_AND_AUDIT_MODEL.md` (G-C13) | Defines delegation instruction and audit model | PLATFORM_AUTHORITY_BOUNDARY |
+| DELEGATION_INSTRUCTION_SCHEMA | `governance/schemas/DELEGATION_INSTRUCTION.schema.md` | Normative structure for delegation instructions | DELEGATION_INSTRUCTION_MODEL |
+| DELEGATION_RESPONSE_SCHEMA | `governance/schemas/DELEGATION_RESPONSE.schema.md` | Normative structure for delegation responses | DELEGATION_INSTRUCTION_MODEL |
+| PLATFORM_ACTION_AUDIT_SCHEMA | `governance/schemas/PLATFORM_ACTION_AUDIT_ENTRY.schema.md` | Normative structure for platform action audit entries | DELEGATION_INSTRUCTION_MODEL, AUDIT_ARTIFACT_MODEL |
+
 ---
 
 ## 6. Validation Rules (How the Gate Must Evaluate)
