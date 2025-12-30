@@ -79,6 +79,13 @@ This rule exists to preserve:
 - Clean learning loops
 - Causal accountability
 - Auditability
+- CI as confirmation (not discovery) per CI_CONFIRMATORY_NOT_DIAGNOSTIC.md
+
+## 8. Related Documents
+
+- CI_CONFIRMATORY_NOT_DIAGNOSTIC.md - Establishes preflight evaluation obligation
+- PR_GATE_EVALUATION_AND_ROLE_PROTOCOL.md - Defines gate evaluation process
+- AGENT_ROLE_GATE_APPLICABILITY.md - Defines which gates apply to which agents
 
 ---
 

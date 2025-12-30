@@ -55,7 +55,9 @@ This protocol is a **lower-level operational document** that implements the cano
 
 **Principle**: PR gates are **enforcement mechanisms**, not discovery tools.
 
-**Rationale**: Per One-Time Build Law and QA-as-Proof philosophy, agents must achieve compliance **before** handover. Gates verify that compliance was achieved, not discover problems.
+**Rationale**: Per One-Time Build Law, QA-as-Proof philosophy, and CI_CONFIRMATORY_NOT_DIAGNOSTIC.md, agents must achieve compliance **before** handover. Gates verify that compliance was achieved, not discover problems.
+
+**Canonical Reference**: governance/canon/CI_CONFIRMATORY_NOT_DIAGNOSTIC.md
 
 ### 3.3 Predictable Enforcement
 
@@ -812,6 +814,7 @@ This protocol integrates with and clarifies:
 
 | Document | Relationship |
 |----------|--------------|
+| **CI_CONFIRMATORY_NOT_DIAGNOSTIC.md** | Establishes CI as confirmation only, defines preflight evaluation obligation |
 | **AGENT_ROLE_GATE_APPLICABILITY.md** | Defines which gates apply to which roles (authoritative source for Phase 2) |
 | **PR_GATE_PRECONDITION_RULE.md** | Defines gate precondition requirements (no green gate, no handover) |
 | **GOVERNANCE_ENFORCEMENT_TRANSITION.md** | Deprecates legacy gates, establishes modern model as authoritative |

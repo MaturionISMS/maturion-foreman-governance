@@ -30,6 +30,7 @@ This clarification ensures that:
 This rule derives authority from and implements:
 - **GOVERNANCE_PURPOSE_AND_SCOPE.md** - Role definitions and responsibilities
 - **BUILD_PHILOSOPHY.md** - One-Time Build Law, 100% GREEN mandate for builders
+- **CI_CONFIRMATORY_NOT_DIAGNOSTIC.md** - CI as confirmation, preflight evaluation obligation
 - **PR_GATE_PRECONDITION_RULE.md** - Gate precondition enforcement
 - **BUILDER_FIRST_PR_MERGE_MODEL.md** - Builder QA as canonical truth
 - **GOVERNANCE_GATE_CANON.md** - Gate enforcement model
@@ -546,6 +547,7 @@ This canonical clarification is operationalized through **PR Gate Release Checkl
 ## 11. Related Documents
 
 This document integrates with and clarifies:
+- `CI_CONFIRMATORY_NOT_DIAGNOSTIC.md` - Establishes preflight evaluation obligation
 - `GOVERNANCE_PURPOSE_AND_SCOPE.md` - Agent role definitions
 - `BUILD_PHILOSOPHY.md` - Builder requirements (100% GREEN mandate)
 - `BUILDER_FIRST_PR_MERGE_MODEL.md` - Builder QA contracts
