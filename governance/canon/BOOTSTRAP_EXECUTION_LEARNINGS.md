@@ -216,3 +216,38 @@ All officials MUST be appointed using a governed protocol that:
 **Status:** Recorded (Critical)  
 **Applies To:** FM, Governance Liaison, Builders, Watchdog roles
 
+### BL-0008 — PR Gate Layer-Down Is a Mandatory Prerequisite to Builder Appointment
+
+**Context**
+After bootstrap validation (Wave 0.x), FM must formally appoint builders and begin real execution.
+This requires enforceable PR merge discipline at the application repository level.
+
+**Observation**
+Although PR gate requirements were fully defined at the governance layer, they were not yet
+mechanically layered down into the FM application repository as active, role-aware merge controls.
+
+As a result:
+- Builders could theoretically be appointed without enforceable merge authority boundaries
+- Architecture could be produced without guaranteed build-to-green discipline
+- Governance intent existed, but enforcement was incomplete
+
+**Learning**
+Builder appointment MUST NOT occur unless PR gate rules are:
+- Present in the application repository
+- Role-aware (Builder vs FM vs Governance)
+- Actively enforceable
+- Aligned with canonical governance definitions
+
+Gate layer-down is not optional or implicit.
+It is a hard prerequisite to builder appointment and architecture freeze.
+
+**Required Correction**
+Before FM appoints builders:
+1. PR gate definitions must be layered down from governance
+2. Gate ownership and red declarant authority must be enforceable
+3. Merge rules must be verifiable in the application repository
+
+**Status:** Recorded  
+**Applies To:** All application repositories (FM app, SlotMaster, future apps)
+
+
