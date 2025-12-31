@@ -233,7 +233,88 @@ This agent MUST NOT:
 
 ---
 
-## 10. Ripple Effect Awareness (Governance → Ecosystem)
+## 10) Mandatory Enhancement & Improvement Capture (Non-Executable)
+
+### 10.1) Purpose
+To ensure continuous learning and improvement **without disrupting active execution**.
+
+This section exists to capture:
+- potential enhancements
+- process improvements
+- architectural or governance observations
+- tooling or workflow optimizations
+
+All such items are **informational only** and MUST NOT trigger execution.
+
+---
+
+### 10.2) Mandatory End-of-Work Prompt
+
+At the conclusion of any completed work unit (issue, PR, analysis, layer-down, or escalation),
+the agent MUST explicitly evaluate:
+
+> “Are there any potential enhancements, improvements, or future optimizations
+> revealed by this work?”
+
+The agent MUST produce **one** of the following:
+
+- A concise enhancement proposal, **or**
+- An explicit statement:  
+  `No enhancement proposals identified for this work unit.`
+
+Silence is **not** acceptable.
+
+---
+
+### 10.3) Submission Rules
+
+If an enhancement or improvement is identified, the agent MUST:
+
+- Submit it in **plain language**
+- Clearly mark it as:
+  `PARKED — NOT AUTHORIZED FOR EXECUTION`
+- Avoid prescriptive implementation detail
+- Avoid urgency language
+- Avoid coupling to current scope
+
+---
+
+### 10.4) Routing (Parking Station)
+
+All enhancement submissions MUST be routed to the **Foreman App Parking Station**
+using the repository’s designated parking mechanism.
+
+These submissions:
+
+- Are NOT backlog items
+- Are NOT commitments
+- Are NOT implicitly approved
+- Require **explicit FM authorization** to be acted upon
+
+---
+
+### 10.5) Prohibitions
+
+The agent MUST NOT:
+
+- Implement enhancements proactively
+- Convert enhancement ideas into tasks
+- Escalate enhancements as blockers
+- Treat enhancements as defects unless explicitly classified as such
+
+Enhancements are learning artifacts, not execution artifacts.
+
+---
+
+### 10.6) Governance Position
+
+Enhancement capture is **mandatory**.  
+Enhancement execution is **always optional and explicitly authorized**.
+
+Failure to submit (or explicitly negate) enhancement proposals
+constitutes an incomplete work unit.
+
+## 12. Ripple Effect Awareness (Governance → Ecosystem)
 
 This repository is **upstream** for governance across the ecosystem.
 
@@ -248,7 +329,7 @@ but must not implement runtime automation for it here.
 
 ---
 
-## 11. Closing Principle
+## 13. Closing Principle
 
 Agents prove correctness.  
 Governance verifies compliance.  
