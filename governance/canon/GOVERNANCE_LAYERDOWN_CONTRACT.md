@@ -41,6 +41,7 @@ This contract derives authority from and synthesizes requirements from:
 | **COMMISSIONING_EVIDENCE_MODEL.md** | Defines evidence requirements for commissioning |
 | **BUILD_PHILOSOPHY.md** | Defines Build-to-Green and One-Time Build Law |
 | **GOVERNANCE_COMPLETENESS_MODEL.md** | Defines governance enforcement semantics |
+| **MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md** | Defines continuous improvement capture requirements |
 
 This contract is a **synthesis document** that extracts layer-down requirements from these canonical sources. It does NOT create new requirements.
 
@@ -96,7 +97,8 @@ All application repositories MUST contain the following directory structure:
 │   ├── workflows/          # CI/CD workflow definitions (PR gates)
 │   └── agents/             # Agent recruitment definitions (custom agent contracts)
 ├── .architecture/          # Architecture artifacts + initialization evidence
-│   └── commissioning/      # Commissioning evidence (created during commissioning)
+│   ├── commissioning/      # Commissioning evidence (created during commissioning)
+│   └── parking-station/    # Enhancement & improvement parking area (MANDATORY)
 ├── .qa/                    # QA evidence artifacts (created during build)
 │   ├── builder/            # Builder QA reports (per BUILDER_FIRST_PR_MERGE_MODEL)
 │   ├── gpca/               # Gate-Predictive Compliance Analysis reports (optional)
@@ -261,6 +263,7 @@ Required canonical references:
 - BUILDER_FIRST_PR_MERGE_MODEL.md (for builder-driven repos)
 - AGENT_ROLE_GATE_APPLICABILITY.md
 - PR_GATE_EVALUATION_AND_ROLE_PROTOCOL.md
+- MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md
 
 ## Application-Specific Governance
 
@@ -365,6 +368,12 @@ Required canonical references:
 - `.qa/builder/SUMMARY.md`
 - Source: `BUILDER_FIRST_PR_MERGE_MODEL.md`, `BUILD_PHILOSOPHY.md`
 - Created: During build phase (per Builder handover)
+
+#### Parking Station (Initialization)
+- `.architecture/parking-station/README.md`
+- Source: `governance/templates/APPLICATION_PARKING_STATION_README.template.md`
+- Created: During repository initialization
+- Purpose: Enhancement and improvement capture per `MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md`
 
 ---
 

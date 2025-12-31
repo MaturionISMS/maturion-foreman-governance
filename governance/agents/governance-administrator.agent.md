@@ -76,6 +76,29 @@ Before handover, this agent MUST:
 
 ---
 
+## Mandatory Enhancement & Improvement Capture
+
+At the conclusion of any completed work unit (issue, PR, analysis, layer-down, or escalation), this agent MUST explicitly evaluate:
+
+> "Are there any potential enhancements, improvements, or future optimizations revealed by this work?"
+
+The agent MUST produce **one** of the following:
+
+1. A concise enhancement proposal marked `PARKED — NOT AUTHORIZED FOR EXECUTION`, or
+2. An explicit statement: `No enhancement proposals identified for this work unit.`
+
+**Routing**: All enhancement proposals MUST be routed to the governance parking station at `governance/parking-station/`.
+
+**Prohibitions**: This agent MUST NOT:
+- Implement enhancements proactively
+- Convert enhancement ideas into tasks without authorization
+- Escalate enhancements as blockers
+- Treat enhancements as defects unless explicitly classified as such
+
+**Canonical Reference**: governance/canon/MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md
+
+---
+
 End of contract
 3.2 GitHub agent config (.github/agents/...)
 Repo: MaturionISMS/maturion-foreman-governance
@@ -109,6 +132,7 @@ behavior:
     - governance/canon/COMPLIANCE_AND_STANDARDS_GOVERNANCE.md
     - governance/canon/CI_CONFIRMATORY_NOT_DIAGNOSTIC.md
     - governance/canon/PR_GATE_PRECONDITION_RULE.md
+    - governance/canon/MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md
   cannot:
     - merge_without_approval
     - invent_policy_without_instruction

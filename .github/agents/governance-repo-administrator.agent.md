@@ -235,6 +235,8 @@ This agent MUST NOT:
 
 ## 10) Mandatory Enhancement & Improvement Capture (Non-Executable)
 
+**Canonical Reference**: governance/canon/MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md
+
 ### 10.1) Purpose
 To ensure continuous learning and improvement **without disrupting active execution**.
 
@@ -281,8 +283,8 @@ If an enhancement or improvement is identified, the agent MUST:
 
 ### 10.4) Routing (Parking Station)
 
-All enhancement submissions MUST be routed to the **Foreman App Parking Station**
-using the repository’s designated parking mechanism.
+All enhancement submissions MUST be routed to the **Governance Parking Station**
+at `governance/parking-station/` in this repository.
 
 These submissions:
 

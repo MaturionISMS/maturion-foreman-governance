@@ -135,7 +135,33 @@ Foreman enforcement supersedes outcomes.
 
 ---
 
-## 10. Revocation
+## 10. Mandatory Enhancement & Improvement Capture
+
+At the conclusion of any completed work unit (issue, PR, build task), this Builder agent MUST explicitly evaluate:
+
+> "Are there any potential enhancements, improvements, or future optimizations revealed by this work?"
+
+The Builder agent MUST produce **one** of the following:
+
+1. A concise enhancement proposal marked `PARKED — NOT AUTHORIZED FOR EXECUTION`, or
+2. An explicit statement: `No enhancement proposals identified for this work unit.`
+
+**Routing**: Enhancement proposals MUST be routed to the application parking station at `.architecture/parking-station/` (or as defined by application-specific governance).
+
+**Prohibitions**: Builder agents MUST NOT:
+- Implement enhancements proactively
+- Convert enhancement ideas into tasks without authorization
+- Escalate enhancements as blockers
+- Delay work completion to develop enhancements
+- Execute enhancement work within current scope
+
+**Canonical Reference**: governance/canon/MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md
+
+Failure to comply constitutes incomplete work delivery.
+
+---
+
+## 11. Revocation
 
 The Foreman may revoke a Builder agent by:
 
@@ -149,7 +175,7 @@ All actions taken after revocation are invalid.
 
 ---
 
-## 11. Profile Precedence
+## 12. Profile Precedence
 
 If this profile conflicts with any non-canonical artifact, this profile
 prevails.
