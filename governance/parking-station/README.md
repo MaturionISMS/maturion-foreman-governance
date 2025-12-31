@@ -127,4 +127,7 @@ Changes to parking station documents require:
 
 ---
 
+- **QA Component–Indexed Build Success Model**  
+  PARKED — Defines quantitative success measurement using QA component ratios.
+
 End of Parking Station README
