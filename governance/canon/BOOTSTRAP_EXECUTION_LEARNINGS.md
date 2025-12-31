@@ -688,6 +688,113 @@ This learning mandates updates to Platform Readiness Canon (G-PLAT-READY-01) to:
 
 ---
 
+## BL-015 — Architecture Must Be Wiring-Complete to Support One-Time Builds
+
+### Classification
+- **Type:** Architecture / Governance Learning
+- **Phase:** Phase 4.3 → Phase 4.4 Transition
+- **Severity:** Catastrophic (One-Time Build Violation)
+- **Status:** Recorded
+- **Impacts:** All future architecture definitions and QA-to-Red derivations
+
+---
+
+### Context
+
+During Phase 4.3 (Architecture Definition) review, the architecture was found to be
+structurally complete, fully traceable to requirements, and compliant with all
+formal acceptance criteria.
+
+However, a deeper inspection revealed that the architecture **did not guarantee**
+a fully functional, one-time build application.
+
+---
+
+### Observed Issue
+
+The architecture permitted:
+- summary-level component definitions without explicit wiring
+- implicit assumptions about component contracts
+- reliance on builder interpretation to “fill in the gaps”
+- QA derivation without ensuring runtime completeness
+
+As a result, it was possible to:
+- design a QA-to-Red suite
+- recruit builders
+- and still produce a *hollow build* (structure without behavior)
+
+This failure mode is analogous to “a TV with buttons and casing, but no internal wiring.”
+
+---
+
+### Root Cause
+
+Architecture completeness was evaluated using:
+- structural coverage
+- requirement traceability
+- governance alignment
+
+…but **not** evaluated against a stricter criterion:
+
+> “Could this architecture, if implemented exactly as written, produce a fully
+> functional application in a single build pass without interpretation?”
+
+No canonical requirement existed that architecture must be **wiring-complete**.
+
+---
+
+### Learning
+
+For a governed, one-time build system:
+
+**Architecture MUST be wiring-complete, not just structurally complete.**
+
+This means:
+- No architectural element may exist without explicit operational definition
+- All component contracts must be explicit (inputs, outputs, dependencies, failures)
+- All runtime paths must be fully described end-to-end
+- No reliance on “high-level” or “summary-only” descriptions is permitted
+- Architecture must independently guarantee functional completeness
+
+Traceability alone is insufficient.
+
+---
+
+### Governance Impact
+
+This learning mandates that future architecture definitions:
+
+- Are evaluated against a **wiring-completeness standard**
+- Explicitly prohibit “summary-only” architecture sections
+- Require every architectural unit to map to numbered QA components
+- Ensure QA-to-Red cannot be defined without architectural wiring being complete
+
+This learning directly informs:
+- Architecture acceptance criteria
+- QA-to-Red design requirements
+- Builder task derivation rules
+
+---
+
+### Corrective Action Pattern
+
+When wiring incompleteness is detected:
+1. The issue must be classified as **catastrophic**
+2. A formal FL/CI root cause analysis must be performed
+3. Architecture must be corrected before QA-to-Red is finalized
+4. Existing QA artifacts must be re-aligned, not silently patched
+
+---
+
+### Ratchet Statement
+
+We do not accept architectures that *appear complete*.  
+We accept only architectures that *cannot produce hollow builds*.
+
+This condition is now permanently elevated.
+
+---
+
 ### Status
 
 **Recorded** — Non-Retroactive  
