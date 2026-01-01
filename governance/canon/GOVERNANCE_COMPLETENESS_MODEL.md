@@ -115,6 +115,8 @@ This section is the **single source of truth** for governance completeness check
 | GOV_ADMIN_CONTRACT | `governance/agents/governance-administrator.agent.md` OR equivalent canonical contract | Custodian role | CANON_PURPOSE_SCOPE |
 | GOV_ADMIN_GH_AGENT | `.github/agents/governance-administrator.md` | Selectable custom agent | GOV_ADMIN_CONTRACT |
 | FM_CONTRACT | Foreman contract file(s) as governed (path may vary by repo) | Orchestrator role definition | CANON_PURPOSE_SCOPE |
+| GOVERNANCE_LIAISON_SURVEY | `governance/canon/GOVERNANCE_LIAISON_ROLE_SURVEY.md` | Survey deriving Governance Liaison role from canonical sources | CANON_PURPOSE_SCOPE, AGENT_RECRUITMENT |
+| GOVERNANCE_LIAISON_MIN_REQ | `governance/canon/GOVERNANCE_LIAISON_MINIMUM_APPOINTMENT_REQUIREMENTS.md` | Minimum appointment requirements for Governance Liaison agents | GOVERNANCE_LIAISON_SURVEY, AGENT_RECRUITMENT, REPO_SEEDING_ROLE_SEPARATION |
 
 ### 5.3 Scope Control & PR Discipline
 | Component ID | Required Artifacts | Notes / Purpose | Dependencies |
