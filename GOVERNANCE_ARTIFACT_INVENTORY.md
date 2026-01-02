@@ -76,6 +76,10 @@ Canon files define constitutional governance rules, models, and protocols.
 | `GOVERNANCE_PURPOSE_AND_SCOPE.md` | Constitutional definition of governance purpose and authority | Readiness |
 | `GOVERNANCE_RIPPLE_MODEL.md` | Defines governance change ripple effects and impact analysis | Layer-down |
 | `GOVERNANCE_VERSIONING_AND_SYNC_PROTOCOL.md` | Defines governance versioning and synchronization | Layer-down |
+| `AGENT_RIPPLE_AWARENESS_OBLIGATION.md` | Defines agent obligation to recognize and surface ripple effects (Wave 1.2) | Layer-down, Feedback/learning |
+| `ASSISTED_RIPPLE_SCAN_SCOPE.md` | Defines scope of assisted ripple scanning within single repository (Wave 2.1) | Layer-down, Feedback/learning |
+| `ASSISTED_RIPPLE_SCAN_HUMAN_REVIEW_SEMANTICS.md` | Defines human review semantics for ripple scan reports (Wave 2.1) | Layer-down, Feedback/learning |
+| `CROSS_REPOSITORY_RIPPLE_AWARENESS_MODEL.md` | Defines passive cross-repository ripple signaling (Wave 2.2) | Layer-down, Feedback/learning |
 | `RIPPLE_INTELLIGENCE_LAYER.md` | Defines Ripple Intelligence concept and three ripple planes | Layer-down, Readiness, Feedback/learning |
 | `INITIALIZATION_COMPLETENESS_GATE.md` | Defines repository initialization validation gate | PR-gates, Readiness, Layer-down |
 | `LEARNING_INTAKE_AND_PROMOTION_MODEL.md` | Defines learning capture and promotion to canon | Feedback/learning |
@@ -147,6 +151,8 @@ Schema files define data structures for governance artifacts.
 | `PLATFORM_READINESS_EVIDENCE.schema.md` | Schema for platform readiness evidence | Readiness |
 | `REPOSITORY_INITIALIZATION_EVIDENCE.schema.md` | Schema for repository initialization evidence | Layer-down, Readiness |
 | `REQUIREMENT_SPECIFICATION.schema.md` | Schema for requirement specifications | Readiness |
+| `RIPPLE_SCAN_REPORT.schema.md` | Schema for ripple scan reports (Wave 2.1) | Feedback/learning, Layer-down |
+| `RIPPLE_SIGNAL.schema.md` | Schema for cross-repository ripple signals (Wave 2.2) | Feedback/learning, Layer-down |
 
 ---
 
@@ -162,6 +168,8 @@ Template files provide reusable structures for governance artifacts.
 | `PR_GATE_RELEASE_CHECKLIST_BUILDER.md` | Builder-specific PR gate release checklist | PR-gates |
 | `PR_GATE_RELEASE_CHECKLIST_FM.md` | FM-specific PR gate release checklist | PR-gates |
 | `PR_GATE_RELEASE_CHECKLIST_GOVERNANCE_ADMIN.md` | Governance Admin-specific PR gate release checklist | PR-gates |
+| `RIPPLE_SCAN_REPORT.template.md` | Template for ripple scan reports (Wave 2.1) | Feedback/learning, Layer-down |
+| `RIPPLE_SIGNAL.template.md` | Template for cross-repository ripple signals (Wave 2.2) | Feedback/learning, Layer-down |
 | `minimum-architecture-template.md` | Template for minimum architecture artifacts | Readiness, Layer-down |
 | `workflows/README.md` | Documentation for workflow templates | (documentation) |
 

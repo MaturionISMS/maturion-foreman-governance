@@ -581,6 +581,24 @@ This section provides **conceptual classification** of changes that trigger ripp
 
 ---
 
+### 9.5 CROSS_REPOSITORY_RIPPLE_AWARENESS_MODEL.md (Ripple-Wave 2.2)
+
+**Relationship**: Cross-repo signaling **implements** RIL Plane 1 across repository boundaries
+
+**Integration**:
+- CROSS_REPOSITORY_RIPPLE_AWARENESS_MODEL.md extends **Plane 1 (Proactive Downward Ripple)** to cross-repository awareness
+- Defines **passive signaling mechanism** for communicating ripple-worthy changes across repos
+- Enables repositories to become aware of upstream changes without enforcement or blocking
+- Provides foundation for future Maturion-brokered correlation (Wave 3+)
+
+**Sequence**:
+1. RIL Plane 1 provides conceptual framework for proactive ripple intelligence
+2. Wave 2.1 (Assisted Local Ripple Scan) implements Plane 1 within single repository
+3. Wave 2.2 (Cross-Repository Signaling) implements Plane 1 across repositories
+4. Wave 3+ (future) may add Maturion-brokered aggregation and correlation
+
+---
+
 ## 10. Explicit Non-Goals
 
 This document does NOT define:
@@ -630,12 +648,14 @@ This conceptual definition is successful when:
 
 ### 12.1 Version History
 
+- **v1.0.1** (2026-01-02) — Added Wave 2.2 review trigger (cross-repository signaling)
 - **v1.0.0** (2026-01-02) — Initial conceptual definition (Ripple-Wave 1.1)
 
 ### 12.2 Review Triggers
 
 This model MUST be reviewed when:
 - Ripple-Wave 1.2 (agent mindset alignment) is completed
+- Ripple-Wave 2.2 (cross-repository signaling) is completed
 - Ripple Intelligence implementation begins (automation/tooling)
 - New ripple planes or trigger classes are discovered
 - Governance evolution reveals ripple intelligence gaps
