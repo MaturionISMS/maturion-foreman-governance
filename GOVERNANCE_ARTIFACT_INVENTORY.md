@@ -76,6 +76,7 @@ Canon files define constitutional governance rules, models, and protocols.
 | `GOVERNANCE_PURPOSE_AND_SCOPE.md` | Constitutional definition of governance purpose and authority | Readiness |
 | `GOVERNANCE_RIPPLE_MODEL.md` | Defines governance change ripple effects and impact analysis | Layer-down |
 | `GOVERNANCE_VERSIONING_AND_SYNC_PROTOCOL.md` | Defines governance versioning and synchronization | Layer-down |
+| `RIPPLE_INTELLIGENCE_LAYER.md` | Defines Ripple Intelligence concept and three ripple planes | Layer-down, Readiness, Feedback/learning |
 | `INITIALIZATION_COMPLETENESS_GATE.md` | Defines repository initialization validation gate | PR-gates, Readiness, Layer-down |
 | `LEARNING_INTAKE_AND_PROMOTION_MODEL.md` | Defines learning capture and promotion to canon | Feedback/learning |
 | `LEARNING_PROMOTION_RULE.md` | Defines rules for promoting learnings to governance | Feedback/learning |
