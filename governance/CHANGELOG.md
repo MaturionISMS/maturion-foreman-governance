@@ -64,6 +64,45 @@ Each entry follows this structure:
 
 ## Change History
 
+### [RIPPLE-WAVE-1.1] - 2026-01-02 - [NON_BREAKING_ENHANCEMENT]
+
+**Changed By**: Governance Administrator (Copilot Agent)
+**Approved By**: Pending (Johan approval for PR merge)
+**Effective Date**: 2026-01-02 (upon PR merge)
+
+**Summary**: Introduced Ripple Intelligence Layer (RIL) as first-class governance concept, establishing shared understanding of proactive change-impact awareness vs reactive runtime enforcement
+
+**Affected Artifacts**:
+- `governance/canon/RIPPLE_INTELLIGENCE_LAYER.md` (NEW)
+- `GOVERNANCE_ARTIFACT_INVENTORY.md` (UPDATED - added RIL entry)
+- `governance/CHANGELOG.md` (UPDATED - this entry)
+
+**Migration Required**: NO
+
+**Migration Guidance**: Not applicable - this is a conceptual definition that clarifies and reconciles existing terminology. No implementation changes required.
+
+**Rationale**: 
+This change addresses the need to:
+1. Define "Ripple Intelligence" clearly and unambiguously
+2. Establish three ripple planes: Proactive Downward Ripple, Reactive Runtime Ripple, Upward Learning Ripple
+3. Reconcile "ripple" vs "runtime enforcement" terminology confusion
+4. Provide conceptual classification of ripple triggers (governance canon changes, agent contract changes, etc.)
+5. Clarify that RIL operates BEFORE merge and BEFORE execution (proactive) vs runtime enforcement which operates DURING execution (reactive)
+6. Establish shared vocabulary for reasoning about change propagation across boundaries
+
+**Impact**: 
+- All agents: Now have shared conceptual understanding of ripple intelligence
+- FM: Clarifies distinction between proactive intelligence (Plane 1) and reactive enforcement (Plane 2)
+- Governance Administrator: New canonical document to maintain
+- Future work: Ripple-Wave 1.2 will align agent mindset and obligations based on this conceptual foundation
+
+**References**: 
+- Issue: Ripple-Wave 1.1 — Ripple Intelligence Concept Definition
+- Complements: GOVERNANCE_RIPPLE_MODEL.md, FM_RUNTIME_ENFORCEMENT_AND_AWARENESS_MODEL.md
+- Part of: Ripple Intelligence Layer (RIL) progressive implementation plan
+
+---
+
 ### [V1.1-DELEGATION-MODEL] - 2025-12-25 - [NON_BREAKING_ENHANCEMENT]
 
 **Changed By**: Governance Administrator (Copilot Agent)
