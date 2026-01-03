@@ -801,4 +801,145 @@ This condition is now permanently elevated.
 **Applies To:** All future operational readiness validations  
 **Effective:** 2025-12-31
 
+---
+
+## BL-016 — FM Must Automatically Recognize and Respond to Execution Complexity Limits
+
+### Classification
+- **Type:** Governance Learning
+- **Phase:** Wave 1.0.7 Execution Observation
+- **Severity:** Structural
+- **Status:** Recorded
+- **Impacts:** FM Authority, Escalation Requirements, Execution Safety Model
+
+---
+
+### Context
+
+During Wave 1.0.7 execution, real-world platform and cognitive constraints surfaced that tested the system's ability to self-recognize execution pressure without external prompting.
+
+Bootstrap execution revealed that FM operates under practical constraints:
+- Model context limits
+- Platform execution time limits
+- Cognitive capability boundaries
+- Multi-step execution complexity thresholds
+
+---
+
+### Observed Issue
+
+Existing governance defines:
+- **When FM must escalate** (governance conflicts, unrecoverable failures, security concerns)
+- **What conditions trigger hard stops** (CS violations, circuit breaker thresholds, catastrophic failures)
+- **FM's authority to pause/halt for specific trigger conditions**
+
+However, governance does NOT explicitly define:
+- FM's obligation to self-recognize when execution complexity exceeds practical capability
+- FM's authority to halt or pause **based on complexity/pressure assessment** (before hitting specific failure thresholds)
+- FM's responsibility to filter execution pressure signals through FM judgment
+- FM's expected behavior when task complexity approaches cognitive/platform limits
+
+---
+
+### Root Cause
+
+FM escalation rules were defined for **specific failure conditions** (QA failures, governance violations, security incidents) but not for **general execution complexity assessment**.
+
+The system implicitly assumed FM would:
+- Recognize when a task exceeds reasonable execution capability
+- Self-assess complexity vs. available resources (time, context, platform limits)
+- Halt or pause execution proactively if complexity is impractical
+- Do so without requiring external instruction or specific failure triggers
+
+This expectation was **never explicitly canonized**.
+
+---
+
+### Learning
+
+**When execution complexity exceeds practical capability** (model limits, context saturation, platform constraints, cognitive overload), **FM is expected to automatically recognize this condition, halt or pause execution if required, and re-evaluate execution strategy through FM authority** — even if this temporarily stops the build.
+
+**This is NOT about automatic correction or enforcement.**  
+**This is about automatic recognition and self-filtering by FM.**
+
+**Key Characteristics**:
+1. **Self-Recognition**: FM must detect when execution is approaching or exceeding practical limits
+2. **FM Judgment**: FM evaluates whether complexity is manageable or requires intervention
+3. **Proactive Halt/Pause**: FM may halt or pause execution **before** hitting specific failure thresholds
+4. **Re-Evaluation**: FM re-evaluates execution strategy (decomposition, delegation, escalation to human)
+5. **Authority Preservation**: FM retains decision-making authority; this is not automated enforcement
+
+**Complexity Indicators** (non-exhaustive):
+- Task requires reasoning beyond available context window
+- Execution timeline exceeds platform limits (GitHub Actions timeouts)
+- Multi-step orchestration complexity approaches cognitive saturation
+- Dependency chains create unmaintainable execution state
+- QA validation becomes impractically large or complex
+- Architecture completeness requires iteration beyond practical bounds
+
+**FM Response Options**:
+- **Pause and Decompose**: Break complex task into smaller sub-tasks
+- **Escalate for Simplification**: Request human authority to simplify requirements
+- **Halt for Resource Allocation**: Halt execution until platform/cognitive resources available
+- **Re-Plan Execution Strategy**: Adjust approach (phased execution, delegation, staged delivery)
+
+---
+
+### Why This Gap Allowed Pressure
+
+Without explicit governance stating FM must self-recognize execution complexity:
+- FM may proceed with impractical execution attempts (exhausting resources without outcome)
+- FM may interpret "continue execution" mandate as "never halt for complexity"
+- Human authority may need to externally observe and intervene (reactive, not proactive)
+- Execution pressure accumulates until specific failure thresholds trigger (late detection)
+
+Explicit governance enables FM to **proactively manage execution complexity** rather than **reactively respond to failures**.
+
+---
+
+### Governance Impact
+
+This learning establishes:
+- FM has **obligation** to self-recognize execution complexity limits
+- FM has **authority** to halt/pause based on complexity assessment (not just specific failures)
+- FM **judgment** is authoritative for complexity evaluation (with escalation if uncertain)
+- Execution safety includes **proactive complexity management**, not just reactive failure response
+
+**Integration with Existing Canon**:
+- Extends **FOREMAN_AUTHORITY_AND_SUPERVISION_MODEL.md** escalation boundaries (§7.2 Soft Stop Conditions) to include complexity assessment
+- Aligns with **BUILD_INTERVENTION_AND_ALERT_MODEL.md** Pause semantics (§3.4) for resource/strategic decisions
+- Complements **CASCADING_FAILURE_CIRCUIT_BREAKER.md** by enabling halt **before** failure accumulation
+- Integrates with **COGNITIVE_CAPABILITY_ORCHESTRATION_MODEL.md** by recognizing cognitive capability limits
+
+---
+
+### Governance Action Required
+
+This learning informs future updates to:
+- **FOREMAN_AUTHORITY_AND_SUPERVISION_MODEL.md**: Add "Execution Complexity Assessment" as soft stop condition (§7.2)
+- **BUILD_INTERVENTION_AND_ALERT_MODEL.md**: Clarify Pause authority includes complexity-based pauses (§3.4)
+- **FM_ROLE_CANON.md**: Add "Self-Recognize Complexity Limits" to core responsibilities (§7)
+
+These updates are **informational**, not immediately required. This learning captures the expectation for future canonization.
+
+---
+
+### Status
+
+**Recorded** — Non-Retroactive  
+**Applies To:** All FM execution going forward  
+**Effective:** 2026-01-03
+
+---
+
+### Ratchet Statement
+
+FM is not expected to execute beyond practical capability.
+
+FM is expected to self-recognize execution pressure and respond through FM authority.
+
+This expectation is now explicitly recorded.
+
+---
+
 
