@@ -110,6 +110,8 @@ This policy derives authority from and implements:
 - Per-wave format: `WAVE_<n>_IMPLEMENTATION_PROGRESS.md`
 - Example: `WAVE_1_IMPLEMENTATION_PROGRESS.md`, `WAVE_2_IMPLEMENTATION_PROGRESS.md`
 - Alternative (multi-project): `<PROJECT>_WAVE_<n>_IMPLEMENTATION_PROGRESS.md`
+  - PROJECT formatting: lowercase with hyphens (e.g., `fm-app`, `slot-master`)
+  - Example: `fm-app_WAVE_1_IMPLEMENTATION_PROGRESS.md`, `slot-master_WAVE_2_IMPLEMENTATION_PROGRESS.md`
 
 **Artifact Location**:
 - Application repository root OR
@@ -254,7 +256,28 @@ The progress artifact MUST be updated:
 
 **FM MUST NOT proceed with gate merge until certification complete.**
 
-Human authority (Johan) may override blocking, but override must be explicit and documented in progress artifact.
+Human authority (Johan) may override blocking, but override must be explicit and documented in progress artifact as follows:
+
+**Override Documentation Requirements**:
+- Override recorded in Section 8.2 (Certification Verdict) of progress artifact
+- Must include:
+  - **Override Authority**: Name of human authority granting override (e.g., "Johan Ras")
+  - **Override Date**: Timestamp of override decision (ISO 8601 format: YYYY-MM-DD HH:MM)
+  - **Override Reason**: Explicit justification for overriding certification requirements
+  - **Override Scope**: What specific certification requirements are being waived
+  - **Override Risk Acknowledgment**: Explicit acknowledgment of risks accepted
+  - **Override Approval Signature**: Explicit approval statement (e.g., "Override approved by Johan Ras on 2026-01-04")
+
+**Example Override Documentation**:
+```
+**Override Applied**:
+- Override Authority: Johan Ras
+- Override Date: 2026-01-04 14:30
+- Override Reason: Critical production issue requires immediate deployment despite incomplete artifact index
+- Override Scope: Artifact index completeness requirement waived for this wave only
+- Override Risk Acknowledgment: Risk of incomplete documentation accepted; reconstruction required in next wave
+- Override Approval: Override approved by Johan Ras on 2026-01-04
+```
 
 ---
 

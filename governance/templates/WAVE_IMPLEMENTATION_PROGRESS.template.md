@@ -269,8 +269,10 @@
 **Evidence-Based Verdict**:
 [Provide explicit determination based on verification above]
 
-**Example**:
+**Example** (replace bracketed placeholders with actual values):
 "Wave [N] is COMPLETE. All [X] issues merged, all [Y] artifacts indexed and verified, cumulative QA is 100% GREEN ([Z] tests passing, 0 failures), zero test debt confirmed, all governance gates passed. Wave closure certification completed on [YYYY-MM-DD]."
+
+**Note**: Replace [X], [Y], [Z], [N], and [YYYY-MM-DD] with actual counts, wave number, and date.
 
 **Certification Statement**:
 > Wave [N] closure certified on [YYYY-MM-DD] based on evidence review. All artifacts indexed, all QA GREEN, zero test debt, all governance requirements met.

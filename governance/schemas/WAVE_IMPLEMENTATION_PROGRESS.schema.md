@@ -246,6 +246,16 @@ Each subsection must contain:
 - **Certification Statement**: Must be present if Status is `COMPLETE`
 - Certification Statement format: 
   > Wave [N] closure certified on [YYYY-MM-DD] based on evidence review. [Evidence summary].
+
+**Evidence Summary Requirements**:
+The evidence summary MUST include at minimum:
+- Artifact completeness statement (e.g., "All 25 artifacts indexed")
+- QA status (e.g., "QA 100% GREEN with 150 tests passing")
+- Test debt confirmation (e.g., "zero test debt confirmed")
+- Governance gate status (e.g., "all governance requirements met")
+
+**Example Adequate Evidence Summary**:
+"All 25 artifacts indexed and verified complete, cumulative QA is 100% GREEN (150 tests passing, 0 failures), zero test debt confirmed, all 6 governance gates passed."
 - **Certified By**: Must be non-empty string
 - **Certification Date**: Must be valid ISO 8601 date
 - **Supporting Evidence**: Must list or link to evidence sources

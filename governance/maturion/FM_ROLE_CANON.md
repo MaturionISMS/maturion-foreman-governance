@@ -145,11 +145,16 @@ At each phase transition:
 - **Progress artifact is authoritative** over memory, PR history, and chat context
 
 **Update Frequency (Mandatory)**:
-- At phase transitions (architecture → QA → build → validation → merge)
-- At artifact creation (when any artifact instructed or delivered)
-- At issue completion (when any issue fully merged)
-- At correction events (when progress gaps discovered)
-- At wave closure (final update with certification)
+- At phase transitions (architecture → QA → build → validation → merge) — **within 4 hours** of phase change
+- At artifact creation (when any artifact instructed or delivered) — **within 4 hours** of creation
+- At issue completion (when any issue fully merged) — **within 4 hours** of merge
+- At correction events (when progress gaps discovered) — **immediately** (within 1 hour)
+- At wave closure (final update with certification) — **before gate merge request**
+
+**Timing Expectations**:
+- "Within 4 hours" means update must occur during same work session or by end of work day, whichever is sooner
+- "Immediately" (for corrections) means update must occur as soon as gap is discovered, without delay
+- Updates should reflect current state; retroactive updates at wave end are prohibited
 
 **Prohibited**:
 - Retroactive-only updates (updating only at wave end)
