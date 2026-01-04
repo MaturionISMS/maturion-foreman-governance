@@ -130,7 +130,64 @@ At each phase transition:
 - Document all validation results
 - Maintain execution timeline with timestamps
 - Maintain state transition log with reasons
+- **Maintain canonical progress artifact per wave** (see §6.1 below)
+- **Certify wave closure based on evidence** (see §6.2 below)
 - Provide evidence for audit and governance validation
+
+#### 6.1 Canonical Progress Recording (ACTIVE — New 2026-01-04)
+
+**FM Authority and Responsibility (ACTIVE)**:
+- **Create canonical progress artifact** at wave start (e.g., `WAVE_<n>_IMPLEMENTATION_PROGRESS.md`)
+- **Update progress artifact systematically**: at phase transitions, artifact creation, issue completion, correction events, wave closure
+- **Maintain artifact index**: explicit tracking of all instructed artifacts (name → path → status)
+- **Document execution timeline**: chronological record of all wave events with dates
+- **Record corrections and RCAs**: when progress recording gaps occur or execution context degrades
+- **Progress artifact is authoritative** over memory, PR history, and chat context
+
+**Update Frequency (Mandatory)**:
+- At phase transitions (architecture → QA → build → validation → merge)
+- At artifact creation (when any artifact instructed or delivered)
+- At issue completion (when any issue fully merged)
+- At correction events (when progress gaps discovered)
+- At wave closure (final update with certification)
+
+**Prohibited**:
+- Retroactive-only updates (updating only at wave end)
+- Delegating progress recording to builders or other agents
+- Relying on memory or PR history as authoritative
+- Skipping progress updates to save time
+
+**Integration**:
+- See MANDATORY_CANONICAL_PROGRESS_RECORDING_AND_WAVE_CLOSURE_CERTIFICATION.md for full requirements
+- See governance/templates/WAVE_IMPLEMENTATION_PROGRESS.template.md for artifact structure
+- See governance/schemas/WAVE_IMPLEMENTATION_PROGRESS.schema.md for validation requirements
+
+#### 6.2 Wave Closure Certification (ACTIVE — New 2026-01-04)
+
+**FM Certification Responsibility (ACTIVE)**:
+- **Review canonical progress artifact** before wave gate merge
+- **Verify artifact index completeness**: all instructed artifacts indexed and status `COMPLETE`
+- **Verify phase completeness**: all issues show `COMPLETE` for all phases
+- **Verify QA compliance**: cumulative QA 100% GREEN, zero test debt
+- **Verify governance gates**: all gates passed
+- **Produce evidence-based verdict**: `COMPLETE` | `IN_PROGRESS` | `BLOCKED`
+- **Certify wave closure explicitly**: statement with timestamp and supporting evidence
+
+**Certification Blocking Authority**:
+- FM MUST block wave gate merge if certification fails
+- FM MUST NOT certify wave closure without evidence review
+- FM MUST NOT proceed with incomplete artifact index
+- FM MUST NOT certify with failing QA or test debt
+
+**Reconstruction Obligation**:
+- When execution context degrades (multiple PRs, time gaps, unstable execution)
+- FM MUST reconstruct canonical progress from all available sources (PRs, issues, commits, discussions)
+- FM MUST document reconstruction in progress artifact (Section 6: Corrections and RCA)
+- FM MUST complete reconstruction before wave closure certification
+
+**Integration**:
+- See MANDATORY_CANONICAL_PROGRESS_RECORDING_AND_WAVE_CLOSURE_CERTIFICATION.md §5 for certification protocol
+- See WAVE_MODEL.md for wave completion criteria (extended by this requirement)
 
 ### 7. Failure Recovery
 - Detect failures automatically

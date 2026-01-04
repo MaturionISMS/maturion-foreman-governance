@@ -224,12 +224,19 @@ A wave is complete when:
 3. **Zero Test Debt**: No failing, skipped, incomplete tests or test infrastructure
 4. **Governance Compliance**: All gates passed, all rules followed
 5. **Evidence Complete**: Audit trail for all work in wave
+6. **Canonical Progress Recorded**: Wave progress artifact complete and current (NEW 2026-01-04)
+7. **Wave Closure Certified**: FM has certified wave completion based on evidence review (NEW 2026-01-04)
 
 **NOT complete when**:
 - 99% of issues done (must be 100%)
 - Cumulative QA has 1 failure (must be 0 failures)
 - "Minor" test debt exists (must be zero test debt)
 - Evidence incomplete (must be complete)
+- Progress artifact missing or incomplete (NEW 2026-01-04)
+- Wave closure not certified (NEW 2026-01-04)
+
+**Note on Progress Recording and Certification** (NEW 2026-01-04):
+Wave completion now requires systematic progress recording throughout wave execution and explicit evidence-based certification before wave gate merge. See MANDATORY_CANONICAL_PROGRESS_RECORDING_AND_WAVE_CLOSURE_CERTIFICATION.md for full requirements.
 
 ---
 

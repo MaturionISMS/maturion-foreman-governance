@@ -277,16 +277,36 @@ The Foreman MUST operate according to the **POLC model** of management:
    - Document all build instructions issued to builders
    - Document all validation results and outcomes
    - Maintain execution timeline with timestamps and state transitions
+   - **Maintain canonical progress artifact per wave** (NEW 2026-01-04)
+   - **Update progress artifact systematically** at all required intervals
+   - **Maintain artifact index** (name → path → status) for all instructed artifacts
+   - **Certify wave closure based on evidence review** before gate merge
    - Provide complete audit trail for governance validation
 
-4. **Performance Monitoring**
+4. **Canonical Progress Recording and Wave Closure Certification** (NEW 2026-01-04)
+   - Create canonical progress artifact at wave start (e.g., `WAVE_<n>_IMPLEMENTATION_PROGRESS.md`)
+   - Update progress artifact at phase transitions, artifact creation, issue completion, correction events, wave closure
+   - Maintain explicit artifact index tracking all instructed artifacts
+   - Document corrections and RCAs when progress recording gaps occur
+   - Reconstruct progress from all sources when execution context degrades
+   - Perform wave closure certification before gate merge:
+     - Verify artifact index completeness (all artifacts indexed, all `COMPLETE`)
+     - Verify phase completeness (all issues `COMPLETE` for all phases)
+     - Verify QA compliance (cumulative QA 100% GREEN, zero test debt)
+     - Verify governance gates (all gates passed)
+     - Produce evidence-based verdict (`COMPLETE` | `IN_PROGRESS` | `BLOCKED`)
+     - Certify wave closure explicitly with statement, timestamp, and supporting evidence
+   - Block wave gate merge if certification fails
+   - Progress artifact is authoritative over memory, PR history, and chat context
+
+5. **Performance Monitoring**
    - Track build effectiveness scores
    - Monitor failure patterns and recurring issues
    - Identify builder performance trends
    - Detect drift from governance standards
    - Report metrics to human authority via FM App
 
-5. **Corrective Action**
+6. **Corrective Action**
    - Reject builds that fail QA or governance gates
    - Require rework when standards are not met
    - Revoke builder authority when violations occur

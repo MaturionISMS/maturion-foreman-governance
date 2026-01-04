@@ -1070,3 +1070,163 @@ This condition is now permanently elevated.
 
 ---
 
+## BL-017 — Execution Progress Must Be Systematically Recorded in a Single Canonical Artifact
+
+### Classification
+- **Type:** Governance Learning (Execution Integrity)
+- **Phase:** Wave 1 Execution Observation
+- **Severity:** Critical (Auditability and Wave Closure Risk)
+- **Status:** Recorded
+- **Impacts:** All future wave executions, FM responsibilities, wave closure certification
+
+---
+
+### Context
+
+During Wave 1 execution in the FM App repository, a structural gap was identified at Wave closure:
+
+- Execution progress was distributed across multiple long-lived and unstable PRs
+- Some FM-referenced artifacts could not be reliably located
+- Wave completion could not be certified based on a single authoritative progress record
+- Progress knowledge relied partially on implicit memory rather than explicit evidence
+
+This was surfaced during Wave 1 gate merge preparation and required progress reconstruction before wave closure could be validated.
+
+---
+
+### Observed Issue
+
+Current governance **does not explicitly require**:
+
+- A single canonical execution progress record
+- Systematic artifact indexing (what exists, where, status)
+- Explicit wave closure certification based on evidence
+- A defined FM obligation to reconstruct progress when execution context spans multiple PRs
+
+As a result:
+- Progress can exist without being canonically recorded
+- Wave closure risks being implicit rather than evidence-based
+- Auditability and repeatability are weakened
+- FM cannot certify wave completion from evidence alone
+
+---
+
+### Root Cause
+
+**Governance gap**: No canon explicitly mandates that:
+
+1. FM MUST maintain a canonical progress record per wave
+2. The record MUST be authoritative over memory, PR history, and chat context
+3. Progress MUST be recorded systematically (per phase, per artifact)
+4. Wave closure MUST be certified based on evidence, not assumption
+
+The One-Time Build system requires explicit evidence at all stages, but wave progress recording was implicitly assumed rather than constitutionally mandated.
+
+---
+
+### Learning
+
+**For a governed, one-time build system with auditable wave execution:**
+
+**Execution progress MUST be systematically and completely recorded in a single canonical progress artifact, suitable for audit and wave closure certification.**
+
+This means:
+- FM MUST maintain a canonical progress record per wave (e.g., `WAVE_<n>_IMPLEMENTATION_PROGRESS.md`)
+- The progress record is authoritative over all other sources (memory, PR history, conversations)
+- Progress MUST be recorded per wave and per phase
+- Artifact index MUST be explicit (name → path → status)
+- Wave closure certification MUST be based on evidence review, not assumption
+- FM MUST reconstruct progress from all execution surfaces when context degrades
+- Wave closure without certification is invalid
+
+**Key Characteristics**:
+1. **Single Source of Truth**: One canonical progress artifact per wave
+2. **Systematic Recording**: Progress recorded per phase (architecture, QA, build, validation)
+3. **Artifact Indexing**: All instructed artifacts explicitly tracked (name, path, status)
+4. **Evidence-Based Certification**: Wave completion verdict derived from artifact review
+5. **Reconstruction Obligation**: FM must reconstruct if progress context degrades
+6. **Blocking Authority**: Wave gate merge blocked without certified completion
+
+---
+
+### Why This Gap Allowed Failure
+
+Without explicit governance stating FM must maintain canonical progress records:
+- Progress exists implicitly (in memory, PRs, conversations) but not authoritatively
+- Wave closure can be declared based on "I think we're done" rather than "Evidence shows completion"
+- Artifact location and status become ambiguous over time
+- Auditability degrades as execution context spans multiple PRs or time periods
+- Repeatability is impossible (future waves cannot learn from unclear past execution)
+
+Explicit governance enables FM to **proactively maintain progress** rather than **retroactively reconstruct it under pressure**.
+
+---
+
+### Governance Impact
+
+This learning establishes:
+- FM has **obligation** to maintain canonical progress record per wave
+- FM has **responsibility** to certify wave closure based on evidence
+- FM MUST **reconstruct progress** if execution context degrades
+- Wave gate merge is **blocked** without certified wave completion
+
+**Integration with Existing Canon**:
+- Extends **FOREMAN_AUTHORITY_AND_SUPERVISION_MODEL.md** Control responsibilities (§4.4) to include progress recording
+- Extends **FM_ROLE_CANON.md** evidence trail maintenance (§6) to require canonical progress artifact
+- Complements **WAVE_MODEL.md** wave completion criteria (§VIII) by requiring explicit certification
+- Aligns with **AUDIT_READINESS_MODEL.md** by ensuring wave execution is fully auditable
+
+---
+
+### Governance Action Required
+
+This learning informs creation of new governance canon:
+- **MANDATORY_CANONICAL_PROGRESS_RECORDING_AND_WAVE_CLOSURE_CERTIFICATION.md**: Define constitutional requirement for progress recording
+- **WAVE_IMPLEMENTATION_PROGRESS.template.md**: Define mandatory progress artifact format
+- **WAVE_IMPLEMENTATION_PROGRESS.schema.md**: Define validation requirements for progress artifacts
+- Layer-down to **FM_ROLE_CANON.md**: Add progress recording as core FM responsibility
+- Layer-down to **FOREMAN_AUTHORITY_AND_SUPERVISION_MODEL.md**: Add to Control (C) phase responsibilities
+
+These updates ensure future waves cannot experience the same progress ambiguity.
+
+---
+
+### Ratchet Statement
+
+**This requirement is permanent and non-retroactive.**
+
+Going forward:
+- Wave execution progress **MUST** be recorded in a canonical artifact
+- Wave closure **MUST** be certified based on evidence
+- FM **MUST** maintain artifact indexes (name → path → status)
+- Wave gate merge **MUST** be blocked without certified completion
+
+**Implicit progress tracking is governance debt.**
+
+We do not accept wave closures that depend on memory or assumption.
+
+This condition is now permanently elevated.
+
+---
+
+### Status
+
+**Recorded** — Non-Retroactive  
+**Applies To:** All future wave executions  
+**Effective:** 2026-01-04
+
+---
+
+### Cross-References
+
+- Issue: #[ISSUE_NUMBER] — Mandatory Canonical Progress Recording & Wave Closure Certification
+- Implements: MANDATORY_CANONICAL_PROGRESS_RECORDING_AND_WAVE_CLOSURE_CERTIFICATION.md (to be created)
+- Template: governance/templates/WAVE_IMPLEMENTATION_PROGRESS.template.md (to be created)
+- Schema: governance/schemas/WAVE_IMPLEMENTATION_PROGRESS.schema.md (to be created)
+- Layer-Down Impacts:
+  - governance/maturion/FM_ROLE_CANON.md
+  - governance/canon/FOREMAN_AUTHORITY_AND_SUPERVISION_MODEL.md
+  - governance/execution/WAVE_MODEL.md
+
+---
+
