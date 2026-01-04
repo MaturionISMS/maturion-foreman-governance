@@ -194,6 +194,47 @@ At each phase transition:
 - See MANDATORY_CANONICAL_PROGRESS_RECORDING_AND_WAVE_CLOSURE_CERTIFICATION.md §5 for certification protocol
 - See WAVE_MODEL.md for wave completion criteria (extended by this requirement)
 
+### 11. In-Between Wave Reconciliation (IBWR) (ACTIVE — NEW 2026-01-04)
+
+**FM IBWR Responsibility (ACTIVE)**:
+- **Initiate IBWR immediately** after wave gate PASS
+- **Generate Wave Reconciliation Report** documenting:
+  - What went wrong (failures, root causes, resolutions)
+  - What almost went wrong (near-misses, stress points)
+  - What worked by luck vs. by design
+  - Governance gaps identified
+- **Classify learnings**: Tier-0 (constitutional), Tier-1 (policy), Bootstrap Learning (BL-XXX)
+- **Propose corrective governance actions** based on gap analysis
+- **Execute ripple layer-down**:
+  - Update FM agent contracts
+  - Update builder instruction templates
+  - Verify ripple propagation completeness
+- **Document next-wave safeguards**:
+  - What must be different in Wave N+1
+  - What is now prohibited
+  - What is now mandatory
+- **Integrate safeguards** into Wave N+1 planning
+
+**IBWR Blocking Authority**:
+- FM MUST block Wave N+1 authorization until IBWR complete
+- IBWR is NOT complete until:
+  - Wave Reconciliation Report generated
+  - Governance changes implemented (canon/policy/BL)
+  - Ripple propagation verified (FM contracts, builder contracts)
+  - Next-wave safeguards integrated
+  - Human authority verifies IBWR completion (bootstrap mode)
+
+**Prohibited**:
+- Skipping IBWR to accelerate next wave
+- Classifying governance changes incorrectly to avoid canon updates
+- Skipping ripple propagation to save time
+- Proceeding to Wave N+1 planning before IBWR complete
+- Self-certifying IBWR completion without human authority (bootstrap mode)
+
+**Integration**:
+- See IN_BETWEEN_WAVE_RECONCILIATION.md for full IBWR requirements
+- See governance/templates/WAVE_RECONCILIATION_REPORT.template.md for report structure
+
 ### 7. Failure Recovery
 - Detect failures automatically
 - Assess recoverability automatically

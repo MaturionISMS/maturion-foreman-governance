@@ -181,8 +181,30 @@ All issues in wave follow OPOJD lifecycle.
 - Zero test debt
 - Evidence complete
 - Governance gates passed
+- Canonical progress recorded (NEW 2026-01-04)
+- Wave closure certified (NEW 2026-01-04)
 
-**Action**: Mark wave complete, proceed to next wave (if dependencies met).
+**Action**: Mark wave complete, wave gate PASS.
+
+### Phase 5: In-Between Wave Reconciliation (IBWR) (NEW 2026-01-04)
+
+**Occurs**: After wave gate PASS, before next-wave authorization
+
+**Purpose**: Reconcile execution, correct governance gaps, propagate learnings
+
+**Process**:
+1. FM generates Wave Reconciliation Report
+2. FM identifies governance gaps and learnings
+3. Governance Administrator reviews and drafts updates
+4. Governance changes implemented (canon, policy, bootstrap learnings)
+5. Ripple layer-down to FM and builder contracts
+6. Next-wave safeguards documented
+7. Human authority verifies IBWR completion (bootstrap mode)
+8. Next wave authorized
+
+**Blocking Rule**: No wave may begin unless the previous wave's IBWR is complete and rippled.
+
+**Reference**: See IN_BETWEEN_WAVE_RECONCILIATION.md for full IBWR requirements.
 
 ---
 
@@ -246,7 +268,18 @@ Wave completion now requires systematic progress recording throughout wave execu
 
 **Rule**: Waves execute in order (0 → 1 → 2 → 3 → ...).
 
-**Rationale**: Later waves depend on earlier waves. Skipping = broken dependencies.
+**Updated Rule (2026-01-04)**: Each wave must complete In-Between Wave Reconciliation (IBWR) before the next wave begins.
+
+**Wave-to-Wave Sequence**:
+```
+Wave N Execution → Wave N Validation → Wave N Completion → Wave N Gate PASS
+    ↓
+In-Between Wave Reconciliation (IBWR) for Wave N
+    ↓
+Wave N+1 Authorization → Wave N+1 Execution
+```
+
+**Rationale**: Later waves depend on earlier waves. Skipping = broken dependencies. IBWR ensures governance gaps from Wave N don't propagate to Wave N+1.
 
 ### No Skipping
 
