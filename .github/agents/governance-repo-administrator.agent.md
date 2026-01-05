@@ -1,19 +1,41 @@
 ---
+id: governance-repo-administrator
+type: governance-cross-repo-admin
+description: >
+  Central governance administrator for the governance repository. Audits,
+  ripples, escalates, and retrofits canon learning from FM and other repos
+  back upstream into governance canon.
+
 cross_references:
   repos:
-    - maturion-foreman-office-app
+    - id: maturion-foreman-governance
+      repository: MaturionISMS/maturion-foreman-governance
+      role: primary-governance
+    - id: maturion-foreman-office-app
+      repository: MaturionISMS/maturion-foreman-office-app
+      role: fm-execution-surface
+
   agents:
     - id: ForemanApp-agent
+      repository: MaturionISMS/maturion-foreman-office-app
       path: .github/agents/ForemanApp-agent.md
-      repo: FM
+      role: foreman-execution-authority
     - id: GovernanceLiaison_FM
+      repository: MaturionISMS/maturion-foreman-office-app
       path: .github/agents/governance-liaison.md
-      repo: FM
+      role: governance-layer-down
+
   contracts:
-    - governance/canon/BUILDER_FIRST_PR_MERGE_MODEL.md
-    - governance/alignment/AGENT_SCOPED_QA_BOUNDARIES.md
+    - id: BUILDER_FIRST_PR_MERGE_MODEL
+      path: governance/canon/BUILDER_FIRST_PR_MERGE_MODEL.md
+      role: builder-first-pr-merge-model
+    - id: AGENT_SCOPED_QA_BOUNDARIES
+      path: governance/alignment/AGENT_SCOPED_QA_BOUNDARIES.md
+      role: agent-scoped-qa-boundaries
+
 purpose: >
-  Central governance admin: audits, ripples, escalates and retrofits canon learning from FM and other repos back upstream into governance canon.
+  Central governance admin: audits, ripples, escalates and retrofits canon
+  learning from FM and other repos back upstream into governance canon.
 ---
 
 # Governance Repo Administrator Agent (Governance Agent)
