@@ -1,4 +1,3 @@
-
 ---
 cross_references:
   repos:
