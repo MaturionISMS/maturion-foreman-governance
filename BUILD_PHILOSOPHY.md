@@ -376,6 +376,54 @@ Action Required: Foreman must design architecture and create failing QA first.
 - Manual testing only validates QA itself
 - If manual testing finds an issue, add test to QA
 
+### ❌ No Second-Time Failures (BL-018/BL-019-Derived)
+- **First-time failures**: CATASTROPHIC — Learn, document, ratchet, prevent recurrence
+- **Second-time failures**: EMERGENCY — Absolutely PROHIBITED, triggers TARP (Trigger Action Response Plan)
+- When a failure class is discovered:
+  - Create Bootstrap Learning (BL) or FL/CI entry
+  - Perform forward-scan of ALL relevant pending work
+  - Correct ALL instances, not just the triggering one
+  - Implement structural prevention (gates, automation, validation)
+  - Add to canonical governance
+- Second occurrence of same failure pattern indicates:
+  - Learning was not promoted properly
+  - Forward-scan was not performed
+  - Structural prevention was inadequate
+  - Governance enforcement failed
+- **Response to second-time failure (EMERGENCY - TARP Activation)**:
+  - **Immediate STOP** all related execution
+  - **Activate TARP** (Trigger Action Response Plan):
+    - Emergency assessment of root cause (why prevention failed)
+    - Immediate corrective actions (forward-scan, structural fixes)
+    - Evidence of system-level change before ANY resumption
+    - Escalation to governance/constitutional level
+  - **Document as EMERGENCY** in FL/CI registry
+  - **TARP completion required** before execution may resume
+- **Examples of prohibited second-time failures**:
+  - ❌ Same planning gap recurring after BL recorded
+  - ❌ Same QA gap recurring after promotion to canon
+  - ❌ Same architecture gap after completeness requirements updated
+  - ❌ Any failure class repeating after ratchet established
+- **Why this matters**:
+  - One-Time Build requires "never repeat" discipline
+  - First-time failures are catastrophic but expected (learning opportunities)
+  - Second-time failures are emergencies indicating systemic process failure
+  - TARP ensures rapid, structured response to prevent third occurrence
+  - Third-time failures must be impossible by design
+- **Enforcement**:
+  - BL forward-scan is mandatory (see LEARNING_INTAKE_AND_PROMOTION_MODEL.md § 6.3)
+  - Validation gates must prevent known failure classes
+  - Automation must block second occurrences
+  - No manual override permitted for known failure patterns
+- **Bootstrap Learning Evidence**:
+  - BL-018 (FM App Wave 2.2): QA Catalog misalignment discovered — CATASTROPHIC (first-time)
+  - BL-019 (FM App Wave 2.3+): Same pattern occurred same day → 9 of 14 subwaves affected — EMERGENCY (second-time)
+  - Cause: Forward-scan not performed after BL-018
+  - Response: TARP activated — immediate stop, forward-scan, automated validation gate, mandatory forward-scan obligation
+  - Resolution: Automated validation gate, mandatory forward-scan obligation canonized
+
+**Rule**: First-time failures are CATASTROPHIC learning opportunities. Second-time failures are EMERGENCIES requiring TARP activation. **The same failure MUST NOT occur twice.**
+
 ---
 
 ## The Guardrails: Process Enforcement
@@ -725,12 +773,13 @@ Architecture → Red QA → Build to Green → Validation → Merge
 
 *This is the Maturion Build Philosophy. All agents, builders, and processes must align with this philosophy. This document is the canonical source of truth for how we build software.*
 
-**Version**: 1.2 (Zero Test Debt Hardening)  
+**Version**: 1.3 (Second-Time Failure Prohibition)  
 **Authority**: Johan (Maturion Leadership)  
 **Status**: Active and Enforced  
-**Last Updated**: 2025-12-13
+**Last Updated**: 2026-01-05
 
 **Changelog**:
+- **1.3 (2026-01-05)**: Second-Time Failure Prohibition canonized; BL forward-scan obligation established; "never repeat" discipline elevated to constitutional anti-pattern (BL-018/BL-019 derived)
 - **1.2 (2025-12-13)**: Zero Test Debt codified as constitutional requirement; explicit enforcement of NO carry-over debt, NO temporary exceptions, NO partial passes
 - **1.1 (2025-12-13)**: FL/CI Integration; Test Infrastructure as Production Code
 - **1.0 (Initial)**: QA-First Architecture-Driven Development foundation

@@ -99,7 +99,13 @@ Once promoted:
    - Learning promotion was incomplete
    - Structural changes were inadequate
    - Enforcement mechanism failed
-   This triggers **Double-Catastrophic Failure protocol** per QA_POLICY_MASTER.md Section 1.5.
+   
+   This triggers **EMERGENCY classification and TARP (Trigger Action Response Plan) activation**:
+   - Immediate STOP of all related execution
+   - Emergency assessment: Why did prevention fail?
+   - Rapid corrective actions: Forward-scan, structural fixes, automation
+   - Evidence of system-level change required before ANY resumption
+   - Document as EMERGENCY in FL/CI registry with TARP completion report
 
 3. **Learning Must Result in Structural Change**: Promotion without enforceable structural change is invalid. Documentation-only updates are insufficient unless the documentation defines new enforceable rules or schemas.
 
@@ -128,6 +134,107 @@ After learning promotion, the following MUST be verifiable:
 4. Can compliance be **audited**? (Yes = valid, No = incomplete)
 
 If answer to ANY question is NO, promotion is **incomplete** and must be strengthened.
+
+### 6.3 BL Forward-Scan Obligation (BL-019-Derived)
+
+**Mandatory Requirement**: When ANY Bootstrap Learning (BL) or Feedback Loop/Continuous Improvement (FL/CI) entry is recorded, the system MUST perform a forward-scan of ALL relevant pending work to identify and correct additional instances of the same failure pattern.
+
+**Context**: Recording a single learning instance without scanning for additional occurrences allows the same failure to recur immediately, violating the "never repeat" principle of the One-Time Build system.
+
+**Bootstrap Learning Source**:
+- **BL-019** (FM App, Wave 2): After BL-018 documented QA Catalog misalignment in Subwave 2.2, FM failed to forward-scan remaining Wave 2 subwaves (2.3 to 2.14). This allowed the same pattern to occur in Subwave 2.3 on the **same day**, affecting 9 of 14 total subwaves (64%).
+
+**Forward-Scan Process** (Mandatory):
+
+When a BL is recorded:
+
+1. **Identify Failure Pattern**
+   - Extract the root cause category (planning gap, architecture gap, QA gap, etc.)
+   - Define the failure pattern in abstract, reusable terms
+   - Identify the scope of work that could exhibit the same pattern
+
+2. **Scan All In-Scope Pending Work**
+   - For wave-level learnings: scan all pending subwaves in the same wave
+   - For feature-level learnings: scan all pending features with similar characteristics
+   - For process-level learnings: scan all pending work using the same process
+   - Include work that has been planned but not yet authorized
+
+3. **Validate Each Instance**
+   - Apply the new learning/ratchet to each pending work item
+   - Identify which items fail the new validation
+   - Document all instances requiring correction
+
+4. **Correct All Instances**
+   - Do NOT proceed with only the triggering instance
+   - Correct ALL identified instances before authorizing ANY of them
+   - Use automation where possible (validation scripts, gates)
+   - Record forward-scan results in FL/CI registry
+
+5. **Evidence and Auditability**
+   - Document that forward-scan was performed
+   - List all items scanned
+   - List all items requiring correction
+   - List all corrections applied
+   - Archive forward-scan results as evidence
+
+**Prohibited Actions**:
+
+- ❌ Recording a BL without performing forward-scan
+- ❌ Correcting only the triggering instance and proceeding with others
+- ❌ Assuming "other instances are probably fine" without validation
+- ❌ Deferring forward-scan corrections to "handle them later"
+- ❌ Issuing authorizations before forward-scan corrections complete
+
+**Forward-Scan Validation Questions**:
+
+Before considering a BL complete:
+
+1. Has forward-scan been performed for all relevant pending work? (Yes = valid, No = incomplete)
+2. Have ALL instances requiring correction been identified? (Yes = valid, No = incomplete)
+3. Have ALL identified instances been corrected? (Yes = valid, No = incomplete)
+4. Is there evidence of forward-scan and corrections? (Yes = valid, No = incomplete)
+
+If answer to ANY question is NO, BL processing is **incomplete**.
+
+**Second-Time Failure Prevention**:
+
+Forward-scan is the PRIMARY mechanism for preventing second-time failures. A second occurrence of the same failure pattern indicates:
+- Forward-scan was not performed
+- Forward-scan was incomplete
+- Corrections were not applied to all instances
+
+Second-time failures are classified as **EMERGENCY** and trigger **TARP (Trigger Action Response Plan)** activation, requiring:
+- Immediate STOP
+- Emergency root cause analysis
+- Rapid corrective actions
+- Evidence of system-level change
+- TARP completion before resumption
+
+**Integration with Existing Sections**:
+
+- Extends Section 6.1 (Enforcement): Failure to forward-scan is a governance violation
+- Extends Section 6.2 (Validation): Forward-scan evidence is required for promotion completeness
+- Complements Section 4 (Promotion Decision): Forward-scan is mandatory for all promoted learnings
+
+**Example: BL-019 Forward-Scan (FM App)**
+
+When BL-018 was recorded (Wave 2.2 QA misalignment):
+
+✅ **Should have happened**:
+1. Identify pattern: QA ranges assigned without catalog validation
+2. Scan: All Wave 2 subwaves (2.1 to 2.14)
+3. Validate: Run catalog alignment check on each subwave
+4. Correct: Extend QA Catalog and regenerate specs for all misaligned subwaves
+5. Evidence: Document forward-scan results, record corrections
+
+❌ **What actually happened**:
+1. BL-018 recorded for Subwave 2.2 only
+2. No forward-scan performed
+3. Subwave 2.3 issued with same pattern
+4. Builder rejected (governance working)
+5. **Second-time failure triggered** (beyond catastrophic)
+
+**Ratchet Condition**: Forward-scan after BL recording is now a **mandatory, non-negotiable requirement**. Failure to forward-scan is a governance violation.
 
 ---
 

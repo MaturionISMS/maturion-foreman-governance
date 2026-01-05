@@ -159,6 +159,16 @@ These exist because the canonical build model requires requirement specification
 | GPCA_POLICY | `governance/canon/GATE_PREDICTIVE_COMPLIANCE_ANALYSIS.md` | Defines Gate-Predictive Compliance Analysis model | GOVERNANCE_GATE_DEFINITION, BUILDER_QA_HANDOVER_POLICY |
 | GPCA_REPORT_SCHEMA | `governance/schemas/GPCA_PREDICTION_REPORT.schema.md` | Normative structure for GPCA prediction reports | GPCA_POLICY |
 
+### 5.7.1 QA Catalog Alignment (BL-018/BL-019-Derived)
+| Component ID | Required Artifacts | Notes / Purpose | Dependencies |
+|---|---|---|---|
+| ARCH_QA_CATALOG_ALIGNMENT | `governance/canon/ARCHITECTURE_COMPLETENESS_REQUIREMENTS.md` § 3.14 | Mandates QA Catalog alignment before wave planning | QA_POLICY_MASTER |
+| QA_CATALOG_ALIGNMENT_GATE | `governance/canon/QA_CATALOG_ALIGNMENT_GATE_CANON.md` | Defines QA-Catalog-Alignment gate for wave-based delivery | GOVERNANCE_GATE_DEFINITION, ARCH_QA_CATALOG_ALIGNMENT |
+| BL_FORWARD_SCAN_OBLIGATION | `governance/canon/LEARNING_INTAKE_AND_PROMOTION_MODEL.md` § 6.3 | Mandates forward-scan after BL creation | LEARNING_SCHEMA |
+| TARP_TEMPLATE | `governance/templates/TARP_SECOND_TIME_FAILURE_TEMPLATE.md` | TARP template for second-time failure emergencies | BL_FORWARD_SCAN_OBLIGATION |
+
+> **Note**: These components were added 2026-01-05 following BL-018/BL-019 (FM App Wave 2). They ensure Architecture → QA Catalog → QA-to-Red → Planning flow is enforced and second-time failures trigger TARP.
+
 ### 5.8 Governance Evolution
 | Component ID | Required Artifacts | Notes / Purpose | Dependencies |
 |---|---|---|---|
