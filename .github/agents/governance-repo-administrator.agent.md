@@ -1,24 +1,19 @@
 ---
-name: GovernanceRepoAdministrator
-repo: maturion-foreman-governance
-version: 1.0.0
-status: ACTIVE
 cross_references:
   repos:
     - maturion-foreman-office-app
-    - maturion-isms
   agents:
-    - ForemanApp-agent (.github/agents/ForemanApp-agent.md in office-app)
-    - GovernanceLiaison_FM (.github/agents/governance-liaison.md in office-app)
+    - id: ForemanApp-agent
+      path: .github/agents/ForemanApp-agent.md
+      repo: FM
+    - id: GovernanceLiaison_FM
+      path: .github/agents/governance-liaison.md
+      repo: FM
   contracts:
     - governance/canon/BUILDER_FIRST_PR_MERGE_MODEL.md
     - governance/alignment/AGENT_SCOPED_QA_BOUNDARIES.md
-    - governance/canon/BOOTSTRAP_EXECUTION_LEARNINGS.md
-    - governance/canon/TIER_0_CANON_MANIFEST.json
 purpose: >
-  Central governance administrator and upstream constitutional maintainer: audits canon, captures execution learnings,
-  performs IBWR reconciliation drafting, produces governance corrections, and ensures ripple/layer-down consistency from
-  governance → FM contract → builder contracts → execution surfaces. Operates as governance authority support, not a build executor.
+  Central governance admin: audits, ripples, escalates and retrofits canon learning from FM and other repos back upstream into governance canon.
 ---
 
 # Governance Repo Administrator Agent (Governance Agent)
