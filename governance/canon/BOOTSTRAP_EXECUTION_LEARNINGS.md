@@ -1573,6 +1573,203 @@ Failure to forward-scan is a governance violation.
 
 ---
 
-**Next Learning ID**: BL-020
+**Next Learning ID**: BL-021
+
+## BL-020 — FM Pre-Authorization Structural Failure (Subwave 2.5) (Cross-Repo Canonical Reference)
+
+### Classification
+- **Type:** Governance Learning (Structural Failure — FM Planning/Authorization Process)
+- **Phase:** Wave 2.5 Execution (FM Office App)
+- **Severity:** Catastrophic (First-Time) — Structural defense mechanism missing
+- **Status:** Canonized to Platform-Wide Requirements
+- **Impacts:** All FM planning/authorization decisions, all wave/subwave assignments, all builder appointments
+
+---
+
+### Context
+
+**Source Repository**: `maturion-foreman-office-app`  
+**Date Registered**: 2026-01-05  
+**Issue Reference**: Subwave 2.5 Authorization Failure (Post BL-018/BL-019)
+
+Despite strong governance canon for:
+- QA-Catalog-Alignment (BL-018/BL-019)
+- BL Forward-Scan Obligation
+- Second-time Failure Prohibition (TARP)
+- FM and builder `.agent` contracts describing these duties
+
+FM **repeatedly made authorization mistakes at the planning/gating layer** (e.g., Subwave 2.5), indicating a **missing structural defense mechanism** at the FM planning layer.
+
+---
+
+### Observed Issue
+
+**Pattern**: FM does not consistently run an explicit, structured pre-authorization checklist before:
+- Declaring subwaves "READY FOR AUTHORIZATION"
+- Issuing builder appointments
+
+**Specific Instance (Subwave 2.5)**:
+- After BL-018/BL-019 corrections, FM attempted to authorize Subwave 2.5
+- Authorization attempted without systematic validation of:
+  - QA Catalog alignment (BL-018/BL-019 pattern)
+  - QA-to-Red test foundation completeness
+  - Architecture alignment with planned scope
+  - BL/FL-CI ratchet compliance status
+  - Dependency gate satisfaction
+- Authorization mistakes occurred despite existing governance canon
+
+---
+
+### Root Cause
+
+**Primary Failure**: FM lacks an **explicit, structured pre-authorization checklist** that acts as a **mandatory gate** before authorization decisions.
+
+**Failure Sequence**:
+1. Governance canon exists for QA alignment, BL forward-scan, architecture completeness
+2. FM `.agent` contract references these requirements
+3. Builder contracts enforce these requirements
+4. **BUT**: FM has no systematic checklist forcing validation before authorization
+5. Authorization mistakes occur because validation is implicit/optional rather than explicit/mandatory
+6. FM authorization decisions lack structural defense mechanism
+
+**Contributing Factors**:
+- Governance requirements scattered across multiple canon documents
+- No single "gate" document consolidating pre-authorization validation
+- FM agent prompt lacks explicit checklist execution requirement
+- Authorization readiness validation is implicit rather than enforced
+- No standardized format for recording pre-authorization validation
+
+---
+
+### Learning
+
+**Core Insight**: FM authorization without an explicit, structured pre-authorization checklist is a **structural vulnerability** that permits governance failures to enter execution.
+
+**Constitutional Principle**: FM planning/authorization authority MUST be paired with a **mandatory pre-authorization validation mechanism** that forces systematic readiness checking before ANY wave/subwave authorization or builder appointment.
+
+**Required Structural Fix**:
+
+1. **Canonize FM Pre-Authorization Checklist**
+   - Define canonical checklist at governance level (`FM_PREAUTH_CHECKLIST_CANON.md`)
+   - Mandatory items: QA Catalog Alignment, QA-to-Red Foundation, Architecture Alignment, BL/FL-CI Ratchet Status, Dependency Gates
+   - Clear PASS/FAIL outcomes with explicit authorization blocking on FAIL
+
+2. **Ripple to FM Repo**
+   - Create FM-local checklist implementation (`governance/specs/FM_PREAUTH_CHECKLIST.md`)
+   - Integrate into FM planning/authorization documentation
+   - Provide validation tools/scripts where applicable
+
+3. **Layer Down into .agent Binding**
+   - Update `ForemanApp-agent.md` with strong reference to checklist
+   - Explicit instruction: "Before authorizing waves/subwaves, you MUST execute FM_PREAUTH_CHECKLIST and report PASS/FAIL for each item"
+   - Enforcement language: Checklist execution non-negotiable
+
+4. **Runtime Enforcement**
+   - FM executes checklist before EVERY authorization
+   - Record checklist execution evidence in wave/subwave planning documents
+   - Checklist FAIL blocks authorization absolutely
+   - Forward-scan after BL/FL-CI includes checklist re-execution
+
+---
+
+### Governance Impact
+
+**New Canonical Standard Created**:
+- `governance/canon/FM_PREAUTH_CHECKLIST_CANON.md` — Comprehensive FM pre-authorization checklist
+
+**Existing Canon Updated**:
+- `ARCHITECTURE_COMPLETENESS_REQUIREMENTS.md` § 3.14 — Reference to FM Pre-Authorization Checklist
+- `LEARNING_INTAKE_AND_PROMOTION_MODEL.md` § 6.3 — Forward-scan integrated into checklist
+- `BOOTSTRAP_EXECUTION_LEARNINGS.md` — This BL-020 entry
+- `governance/execution/WAVE_MODEL.md` — Wave authorization flow requires checklist
+
+**Cross-Repository Impact**:
+- FM repo: Create `governance/specs/FM_PREAUTH_CHECKLIST.md`
+- FM repo: Update `.github/agents/ForemanApp-agent.md` with checklist binding
+- All future wave/subwave authorizations blocked until checklist PASS
+
+---
+
+### Mandatory Requirements (Permanent, Platform-Wide)
+
+All future FM planning and authorization MUST include:
+
+1. **Checklist Execution Before Authorization**
+   - FM MUST execute FM Pre-Authorization Checklist before ANY wave/subwave authorization
+   - FM MUST execute checklist before ANY builder appointment
+   - FM MUST execute checklist before re-authorizing blocked work
+
+2. **Checklist Items Validated**
+   - QA Catalog Alignment (per BL-018/BL-019)
+   - QA-to-Red Foundation (tests exist and RED)
+   - Architecture Alignment (architecture covers scope)
+   - BL/FL-CI Ratchet Status (no blocking learnings)
+   - Dependency Gates (all dependencies satisfied)
+
+3. **Evidence Recording**
+   - Checklist execution recorded in wave/subwave planning document
+   - PASS/FAIL result with date and validation references
+   - If FAIL: Documented blockers, corrections, re-execution
+
+4. **Authorization Blocking**
+   - Checklist FAIL blocks authorization absolutely
+   - No builder appointments without checklist PASS
+   - No "READY FOR AUTHORIZATION" status without checklist PASS
+
+---
+
+### Prohibited Actions (Permanent, Platform-Wide)
+
+- ❌ Authorizing waves/subwaves without executing FM Pre-Authorization Checklist
+- ❌ Issuing builder appointments without checklist PASS
+- ❌ Proceeding with authorization when checklist items FAIL
+- ❌ Treating checklist execution as optional or implicit
+- ❌ Omitting checklist execution evidence from planning documents
+- ❌ Skipping checklist re-execution after BL/FL-CI corrections
+
+---
+
+### Ratchet Statement
+
+**This learning establishes that FM authorization without an explicit, structured pre-authorization checklist is a catastrophic structural failure requiring immediate governance-level fix.**
+
+This is a **first-time failure** (CATASTROPHIC classification) representing a **missing structural defense mechanism** rather than execution error. The system has learned and canonized the FM Pre-Authorization Checklist as permanent prevention.
+
+**Second occurrences trigger EMERGENCY classification and TARP activation** — though this should be structurally prevented by checklist enforcement.
+
+---
+
+### Status
+
+**Recorded & Canonized** — Platform-Wide, Non-Retroactive  
+**Applies To:** All FM instances in all repositories with wave-based delivery  
+**Effective:** 2026-01-05
+
+---
+
+### Cross-References
+
+**FM Office App (Source)**:
+- Issue reference for Subwave 2.5 authorization failure
+- `BOOTSTRAP_EXECUTION_LEARNINGS.md` — BL-020 detailed entry (if exists)
+- `FLCI_REGISTRY.md` — BL-020 registry entry
+
+**Governance Repo (Canonical)**:
+- `governance/canon/FM_PREAUTH_CHECKLIST_CANON.md` — NEW canonical checklist
+- `governance/canon/ARCHITECTURE_COMPLETENESS_REQUIREMENTS.md` § 3.14 — Checklist reference
+- `governance/canon/LEARNING_INTAKE_AND_PROMOTION_MODEL.md` § 6.3 — Forward-scan integration
+- `governance/canon/BOOTSTRAP_EXECUTION_LEARNINGS.md` — This BL-020 entry
+- `governance/execution/WAVE_MODEL.md` — Wave authorization flow update
+- `governance/canon/GOVERNANCE_CANON_MANIFEST.md` — Checklist added as PUBLIC_API
+
+**Layer-Down Targets** (FM Repo):
+- `governance/specs/FM_PREAUTH_CHECKLIST.md` — FM-local checklist (Stage 2)
+- `.github/agents/ForemanApp-agent.md` — Agent contract binding (Stage 3)
+
+---
+
+**End of BL-020**
+
+---
 
 

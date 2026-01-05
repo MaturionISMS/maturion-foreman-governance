@@ -192,6 +192,15 @@ Based on Wave 2 learnings and IBWR improvements, FM creates the following planni
 - All QA ranges assigned to subwaves MUST be validated against canonical QA Catalog
 - See ARCHITECTURE_COMPLETENESS_REQUIREMENTS.md § 3.14 and QA_CATALOG_ALIGNMENT_GATE_CANON.md
 
+**FM Pre-Authorization Checklist** (BL-020-Derived):
+- FM MUST execute the FM Pre-Authorization Checklist (per `FM_PREAUTH_CHECKLIST_CANON.md`) before:
+  - Declaring any wave/subwave "READY FOR AUTHORIZATION"
+  - Issuing any builder appointments
+  - Re-authorizing blocked work after corrections
+- Checklist validates: QA Catalog Alignment, QA-to-Red Foundation, Architecture Alignment, BL/FL-CI Ratchet Status, Dependency Gates
+- Checklist FAIL blocks authorization absolutely
+- Execution evidence must be recorded in wave/subwave planning documents
+
 **Reference Examples**:
 - FM App Wave 2: `WAVE_2_ROLLOUT_PLAN.md` (complete operational specification)
 - Builder issues directory: `wave2_builder_issues/SUBWAVE_*.md` (pre-generated appointment packages)

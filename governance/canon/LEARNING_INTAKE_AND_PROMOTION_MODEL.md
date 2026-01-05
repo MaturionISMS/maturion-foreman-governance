@@ -236,6 +236,14 @@ When BL-018 was recorded (Wave 2.2 QA misalignment):
 
 **Ratchet Condition**: Forward-scan after BL recording is now a **mandatory, non-negotiable requirement**. Failure to forward-scan is a governance violation.
 
+**FM Pre-Authorization Checklist Integration**:
+
+Forward-scan obligation is implemented as **Item 2.4 (BL/FL-CI Ratchet Status)** of the canonical **FM Pre-Authorization Checklist** (`FM_PREAUTH_CHECKLIST_CANON.md`). FM MUST execute the full pre-authorization checklist before wave/subwave authorization, which includes mandatory BL forward-scan verification. The checklist ensures that:
+- ALL Bootstrap Learnings are reviewed for applicability
+- All active BL/FL-CI entries are resolved
+- Forward-scan is completed after any new BL/FL-CI creation
+- Second-time failure prevention mechanisms are validated
+
 ---
 
 ## 7. PartPulse Classification and Promotion (Completed Example)

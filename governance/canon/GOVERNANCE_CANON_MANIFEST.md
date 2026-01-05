@@ -110,11 +110,13 @@ It serves to:
 | `CASCADING_FAILURE_CIRCUIT_BREAKER.md` | 1.0.0 | PUBLIC_API | FM App, SlotMaster | 2026-01-05 |
 | `CI_CONFIRMATORY_NOT_DIAGNOSTIC.md` | 1.0.0 | PUBLIC_API | FM App, SlotMaster | 2026-01-05 |
 | `FAILURE_PROMOTION_RULE.md` | 1.0.0 | PUBLIC_API | FM App, SlotMaster | 2026-01-05 |
+| `FM_PREAUTH_CHECKLIST_CANON.md` | 1.0.0 | PUBLIC_API | FM App, SlotMaster | 2026-01-05 |
 | `GATE_PREDICTIVE_COMPLIANCE_ANALYSIS.md` | 1.0.0 | OPTIONAL | FM App | 2026-01-05 |
 | `INITIALIZATION_COMPLETENESS_GATE.md` | 1.0.0 | PUBLIC_API | FM App, SlotMaster | 2026-01-05 |
 | `PR_GATE_EVALUATION_AND_ROLE_PROTOCOL.md` | 1.0.0 | PUBLIC_API | FM App, SlotMaster | 2026-01-05 |
 | `PR_GATE_PRECONDITION_RULE.md` | 1.0.0 | PUBLIC_API | FM App, SlotMaster | 2026-01-05 |
 | `PR_SCOPE_CONTROL_POLICY.md` | 1.0.0 | PUBLIC_API | FM App, SlotMaster | 2026-01-05 |
+| `QA_CATALOG_ALIGNMENT_GATE_CANON.md` | 1.0.0 | PUBLIC_API | FM App, SlotMaster | 2026-01-05 |
 | `SCOPE_TO_DIFF_RULE.md` | 1.0.0 | PUBLIC_API | FM App, SlotMaster | 2026-01-05 |
 
 ### 3.5 Governance & Layerdown Models (PUBLIC_API)
@@ -221,10 +223,10 @@ It serves to:
 
 ## 4. Governance Public API Summary
 
-**Total Canon Files**: 84  
-**PUBLIC_API**: 54 files (64%)  
+**Total Canon Files**: 86  
+**PUBLIC_API**: 56 files (65%)  
 **OPTIONAL**: 16 files (19%)  
-**INTERNAL**: 14 files (17%)  
+**INTERNAL**: 14 files (16%)  
 **DEPRECATED**: 0 files (0%)
 
 ### 4.1 Critical Path Canon (Must-Have for Downstream Repos)

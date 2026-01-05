@@ -630,6 +630,10 @@ Before ANY wave/subwave authorization:
 - [ ] Validation script executed (if available) with exit 0
 ```
 
+**FM Pre-Authorization Checklist Integration**:
+
+This validation gate is implemented as **Item 2.1 (QA Catalog Alignment)** of the canonical **FM Pre-Authorization Checklist** (`FM_PREAUTH_CHECKLIST_CANON.md`). FM MUST execute the full pre-authorization checklist before wave/subwave authorization. The checklist ensures architecture alignment is validated as part of a comprehensive readiness assessment including QA Catalog validation, QA-to-Red foundation, BL/FL-CI ratchet status, and dependency gates.
+
 **Prohibited Actions** (Permanent):
 
 - ❌ Assigning QA ranges to waves/subwaves without verifying QA_CATALOG.md
