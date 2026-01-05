@@ -1230,3 +1230,349 @@ This condition is now permanently elevated.
 
 ---
 
+## BL-018 — Wave Planning MUST Verify QA Catalog Before Subwave Assignment (Cross-Repo Canonical Reference)
+
+### Classification
+- **Type:** Governance Learning (Architecture and Planning Integrity)
+- **Phase:** Wave 2.2 Execution (FM Office App)
+- **Severity:** Catastrophic (First-Time Failure)
+- **Status:** Canonized to Platform-Wide Requirements
+- **Impacts:** All wave-based delivery systems, all applications
+
+---
+
+### Context
+
+**Source Repository**: `maturion-foreman-office-app`  
+**Date Registered**: 2026-01-05  
+**Issue Reference**: #399 (Wave 2.2 Block — Parking Station Subwave)
+
+During Wave 2.2 (Parking Station Advanced) planning and execution in the FM Office App, a catastrophic planning gap was discovered: QA ranges were assigned to subwaves without verifying that the QA components existed in the canonical QA Catalog or that their semantic definitions matched the intended feature scope.
+
+---
+
+### Observed Issue
+
+Wave 2.2 was planned with QA-376 to QA-385 as the assigned QA range for parking station features (prioritization and bulk operations). However, these QA IDs in `QA_CATALOG.md` were actually:
+- **QA-376 to QA-380**: Network Failure Modes (network partition, WebSocket loss, API timeout, GitHub API failure, notification failure)
+- **QA-381 to QA-385**: Resource Failure Modes (memory exhaustion, CPU overload, disk space, file handle exhaustion, thread pool exhaustion)
+
+**Complete semantic disconnect**: Parking station UI features vs network/resource failure modes.
+
+**Impact**:
+- Wave 2.2 subwave specification was structurally invalid
+- Builder (ui-builder) would have been assigned failure mode tests instead of UI features
+- Issue #398 created with non-existent QA components as scope
+- Wave 2 execution blocked at subwave 2.2
+
+---
+
+### Root Cause
+
+Wave 2 planning proceeded without verifying:
+- QA component existence in `QA_CATALOG.md`
+- QA definition semantic alignment with subwave intent
+- Architectural sequence: Architecture → QA Catalog → QA-to-Red → Planning
+
+**Governance Failure**: No validation step existed to ensure QA Catalog alignment before sub-issue creation.
+
+---
+
+### Learning
+
+**Wave planning and subwave assignment MUST verify that all assigned QA ranges exist in the canonical QA Catalog and semantically match the intended feature scope.**
+
+QA ranges cannot be assumed or assigned sequentially without validation. The canonical flow must be enforced:
+
+```
+Architecture → QA Catalog Extension → QA-to-Red Creation → Wave Planning → Subwave Assignment
+```
+
+No skipping allowed.
+
+---
+
+### Canonization (Platform-Wide)
+
+This learning has been **canonized into governance** and applies to **ALL repositories**:
+
+**Canon Updates**:
+1. **ARCHITECTURE_COMPLETENESS_REQUIREMENTS.md § 3.14**
+   - QA Catalog Alignment and Validation (BL-018/BL-019-Derived)
+   - Mandatory QA-CATALOG-ALIGNMENT-GATE validation checklist
+   - Prohibited actions: Planning without catalog verification
+
+2. **QA_CATALOG_ALIGNMENT_GATE_CANON.md** (NEW)
+   - Canonical gate definition for QA Catalog alignment
+   - 5 mandatory validations: Existence, Semantic, Collision, Architecture, QA-to-Red
+   - Automation patterns and CI/CD integration
+
+3. **LEARNING_INTAKE_AND_PROMOTION_MODEL.md § 6.3**
+   - BL Forward-Scan obligation established
+   - Mandatory after ANY BL creation
+
+4. **BUILD_PHILOSOPHY.md v1.3**
+   - Second-time failure prohibition elevated to anti-pattern
+
+**Evidence**: `governance/evidence/BL_018_019_CANONIZATION_EVIDENCE_SUMMARY.md`
+
+---
+
+### Mandatory Requirements (Permanent, Platform-Wide)
+
+All future wave planning and subwave assignment MUST include:
+
+1. **QA Catalog Verification**: Before assigning QA ranges, verify all QA IDs exist in canonical QA Catalog
+2. **QA Definition Alignment**: Verify QA component definitions match intended feature scope
+3. **QA ID Collision Check**: Verify assigned ranges not already allocated to other features
+4. **Architecture Completeness**: Verify architecture sections exist for all subwave features
+5. **QA Catalog Extension (If Needed)**: Extend catalog BEFORE wave planning if new features require it
+6. **Sequential Governance**: Architecture → QA Catalog → QA-to-Red → Wave Planning (in order)
+
+---
+
+### Prohibited Actions (Permanent, Platform-Wide)
+
+- ❌ Assigning QA ranges without verifying QA_CATALOG.md
+- ❌ Assuming QA components exist based on sequential numbering
+- ❌ Planning waves before architecture extended with new features
+- ❌ Creating sub-issue specs without QA Catalog validation
+- ❌ Skipping QA-to-Red precondition verification
+- ❌ Allowing builders to proceed with invalid QA assignments
+
+---
+
+### Ratchet Statement
+
+**This learning establishes that wave planning without QA Catalog verification is a catastrophic structural failure requiring complete rework.**
+
+This is a **first-time failure** (CATASTROPHIC classification) but expected learning opportunity. The system has learned and canonized prevention mechanisms.
+
+**Second occurrences trigger EMERGENCY classification and TARP activation** (see BL-019).
+
+---
+
+### Status
+
+**Recorded & Canonized** — Platform-Wide, Non-Retroactive  
+**Applies To:** All repositories with wave-based delivery  
+**Effective:** 2026-01-05
+
+---
+
+### Cross-References
+
+**FM Office App (Source)**:
+- `BOOTSTRAP_EXECUTION_LEARNINGS.md` — BL-018 detailed entry
+- `FLCI_REGISTRY_UPDATE_BL_018.md` — FL/CI registry entry
+- `ROOT_CAUSE_ANALYSIS_WAVE_2_2_BLOCK.md` — Detailed RCA
+- `WAVE_2_EXECUTION_RATCHET_QA_CATALOG_VERIFICATION.md` — Ratchet checklist
+
+**Governance Repo (Canonical)**:
+- `governance/canon/ARCHITECTURE_COMPLETENESS_REQUIREMENTS.md` § 3.14
+- `governance/canon/QA_CATALOG_ALIGNMENT_GATE_CANON.md`
+- `governance/canon/LEARNING_INTAKE_AND_PROMOTION_MODEL.md` § 6.3
+- `BUILD_PHILOSOPHY.md` v1.3 — Second-time failure prohibition
+- `governance/evidence/BL_018_019_CANONIZATION_EVIDENCE_SUMMARY.md`
+
+---
+
+## BL-019 — Second-Time QA Catalog Semantic Misalignment and Forward-Scan Failure (Cross-Repo Canonical Reference)
+
+### Classification
+- **Type:** Governance Learning (Enforcement Failure — Second-Time)
+- **Phase:** Wave 2.3+ Execution (FM Office App)
+- **Severity:** Emergency (Second-Time Failure — TARP Activation)
+- **Status:** Canonized to Platform-Wide Requirements
+- **Impacts:** All BL/FL/CI processes, all forward-scan obligations, all wave-based delivery
+
+---
+
+### Context
+
+**Source Repository**: `maturion-foreman-office-app`  
+**Date Registered**: 2026-01-05 (SAME DAY as BL-018)  
+**Issue Reference**: #402 (Subwave 2.3 Invalid Appointment), PR #403 (Builder Rejection)
+
+After BL-018 was documented for Wave 2.2 QA Catalog misalignment, FM created a ratchet but **failed to forward-scan remaining Wave 2 subwaves (2.3 to 2.14)** for the same pattern. When Subwave 2.3 was issued, api-builder correctly applied BL-018 verification and rejected the appointment as INVALID due to the **exact same QA Catalog misalignment pattern**.
+
+**This is a SECOND-TIME FAILURE** of the same pattern on the same day.
+
+---
+
+### Observed Issue
+
+**Subwave 2.3 Assignment**:
+- Claimed: QA-341 to QA-350 for "System Optimizations Phase 1" (Caching, Query Optimization)
+- Actual Catalog: Analytics/Memory/Storage/Logging/Watchdog Failure Modes
+- **Complete semantic disconnect** (same pattern as BL-018)
+
+**Forward-Scan Results** (performed after second failure):
+- **9 of 14 Wave 2 subwaves (64%)** affected by same pattern
+- Misaligned: 2.1, 2.2, 2.3, 2.6, 2.9, 2.10
+- Undefined: 2.4, 2.13, 2.14
+- Only 5 subwaves (36%) correctly aligned
+
+**Builder Response**:
+- api-builder correctly applied BL-018 ratchet to Subwave 2.3
+- Rejected appointment as INVALID
+- Declared BLOCKED per governance
+- **Governance working correctly; prevention mechanism failed**
+
+---
+
+### Root Cause (Second-Order Failure)
+
+**Primary Failure**: FM failed to apply BL-018 ratchet when it was created
+
+**Failure Sequence**:
+1. Wave 2 planned with QA misalignments (BL-018 triggered for 2.2)
+2. BL-018 ratchet created with verification checklist
+3. **FM did NOT forward-scan remaining Wave 2.3+ subwaves**
+4. Wave 2.3 issued without correcting known gap
+5. api-builder correctly rejected (governance working, but second occurrence happened)
+
+**This is a SECOND-ORDER FAILURE**:
+- **First failure (BL-018)**: Planning without QA verification (catastrophic, expected)
+- **Second failure (BL-019)**: Not correcting all instances after discovery (emergency, prohibited)
+
+---
+
+### Learning
+
+**When ANY Bootstrap Learning or FL/CI entry is recorded, the system MUST perform a forward-scan of ALL relevant pending work to identify and correct additional instances of the same failure pattern.**
+
+Recording a single learning without scanning for additional occurrences violates the "never repeat" principle. Forward-scan is mandatory, non-negotiable, and the PRIMARY mechanism for preventing second-time failures.
+
+**Second-time failures trigger EMERGENCY classification and TARP (Trigger Action Response Plan) activation.**
+
+---
+
+### Canonization (Platform-Wide)
+
+This learning has been **canonized into governance** and applies to **ALL repositories**:
+
+**Canon Updates**:
+1. **LEARNING_INTAKE_AND_PROMOTION_MODEL.md § 6.3**
+   - BL Forward-Scan Obligation (BL-019-Derived)
+   - 5-step mandatory forward-scan process
+   - Forward-scan validation questions (all must be YES)
+   - Prohibited: Recording BL without forward-scan
+
+2. **BUILD_PHILOSOPHY.md v1.3**
+   - No Second-Time Failures (anti-pattern)
+   - First-time = CATASTROPHIC (expected learning)
+   - Second-time = EMERGENCY (TARP activation)
+   - BL-019 documented as example
+
+3. **TARP_SECOND_TIME_FAILURE_TEMPLATE.md** (NEW)
+   - Comprehensive TARP structure (5 phases, 0-48 hours)
+   - BL-019 as worked example
+   - Integration with governance canon
+
+4. **QA_CATALOG_ALIGNMENT_GATE_CANON.md**
+   - Failure severity classification updated
+   - TARP activation for second-time QA misalignments
+
+**Evidence**: `governance/evidence/BL_018_019_CANONIZATION_EVIDENCE_SUMMARY.md`
+
+---
+
+### Mandatory Forward-Scan Process (Permanent, Platform-Wide)
+
+When a BL is recorded:
+
+1. **Identify Failure Pattern** — Extract root cause, define pattern abstractly
+2. **Scan ALL In-Scope Pending Work** — Not just affected items, ALL relevant work
+3. **Validate Each Instance** — Apply new learning/ratchet to each item
+4. **Correct ALL Instances** — Do NOT proceed with only triggering instance
+5. **Evidence and Auditability** — Document forward-scan, list corrections
+
+---
+
+### Prohibited Actions (Permanent, Platform-Wide)
+
+- ❌ Recording BL without performing forward-scan
+- ❌ Correcting only triggering instance and proceeding with others
+- ❌ Assuming "other instances are probably fine" without validation
+- ❌ Deferring forward-scan corrections
+- ❌ Issuing authorizations before forward-scan complete
+
+---
+
+### TARP Activation (BL-019 Example)
+
+**Phase 1: IMMEDIATE STOP (0-2 hours)**
+- Wave 2 execution SUSPENDED
+- All pending subwaves (2.3 to 2.14) blocked
+
+**Phase 2: EMERGENCY ASSESSMENT (2-8 hours)**
+- Failure pattern: Same as BL-018 (QA Catalog misalignment)
+- Why did prevention fail: No forward-scan after BL-018
+- Scope: 9 of 14 subwaves affected (64%)
+
+**Phase 3: RAPID CORRECTIVE ACTIONS (8-24 hours)**
+- Forward-scan: All 14 Wave 2 subwaves analyzed
+- Automation: Created `validate-wave2-qa-alignment.py` (tested, working)
+- Governance: BL-019 FL/CI entry, canonization initiated
+
+**Phase 4: SYSTEM-LEVEL CHANGE VERIFICATION (24-48 hours)**
+- Structural prevention: QA-CATALOG-ALIGNMENT-GATE mandatory
+- Automation: Validation script blocks misalignments (exit 1)
+- Governance canon: 6 documents created/updated
+
+**Phase 5: RESUMPTION APPROVAL (48+ hours)**
+- Status: PENDING completion of 9 subwave corrections
+- Timeline: 8-12 days for full correction
+- Approval: FM (after corrections) → Owner (after canonization)
+
+---
+
+### Ratchet Statement
+
+**Forward-scan after BL recording is now a mandatory, non-negotiable requirement.**
+
+Failure to forward-scan is a governance violation.
+
+**Second-time failures are EMERGENCIES** requiring TARP activation. Third-time failures must be impossible by design.
+
+---
+
+### Status
+
+**Recorded & Canonized** — Platform-Wide, Non-Retroactive  
+**Applies To:** All BL/FL/CI processes, all repositories  
+**Effective:** 2026-01-05
+
+---
+
+### Cross-References
+
+**FM Office App (Source)**:
+- `BOOTSTRAP_EXECUTION_LEARNINGS.md` — BL-019 detailed entry
+- `BL_019_EXECUTIVE_SUMMARY.md` — Second-time failure analysis
+- `BL_019_README.md` — Investigation package
+- `FLCI_REGISTRY_UPDATE_BL_019_SECOND_FAILURE_CATASTROPHIC.md` — FL/CI registry
+- `WAVE_2_FORWARD_SCAN_QA_ALIGNMENT_VERIFICATION.md` — Forward-scan results
+- `WAVE_2_EMERGENCY_CORRECTIVE_ACTION_PLAN_BL_019.md` — Corrective actions
+- `validate-wave2-qa-alignment.py` — Validation script
+- `wave2-qa-alignment-validation-results.json` — Evidence
+
+**Governance Repo (Canonical)**:
+- `governance/canon/LEARNING_INTAKE_AND_PROMOTION_MODEL.md` § 6.3
+- `BUILD_PHILOSOPHY.md` v1.3 — Second-time failure prohibition
+- `governance/templates/TARP_SECOND_TIME_FAILURE_TEMPLATE.md`
+- `governance/canon/QA_CATALOG_ALIGNMENT_GATE_CANON.md`
+- `governance/evidence/BL_018_019_CANONIZATION_EVIDENCE_SUMMARY.md`
+
+---
+
+**Maintained by**: Maturion Governance Administrator  
+**Last Updated**: 2026-01-05  
+**Registry Status**: ACTIVE
+
+---
+
+**Next Learning ID**: BL-020
+
+
