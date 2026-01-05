@@ -2,7 +2,7 @@
 
 ## Status
 Canonical Governance Standard  
-Version: v1.2  
+Version: v1.3  
 Authority: Johan Ras  
 Applies To: All Applications, All Builds, Foreman, Builders, Governance Administrator
 
@@ -578,6 +578,90 @@ This document formalizes **validated learning from PartPulse failures**:
 
 ---
 
+### 3.14 QA Catalog Alignment and Validation (BL-018/BL-019-Derived) (MANDATORY)
+
+**Requirement**: Architecture MUST be aligned with a validated QA Catalog before wave planning, subwave assignment, or builder appointment.
+
+**Context**: Wave planning that proceeds without QA Catalog alignment creates structurally invalid build specifications where assigned QA ranges do not match intended feature scope. This prevents builders from executing correctly and blocks wave execution.
+
+**Bootstrap Learning Sources**:
+- **BL-018**: Wave 2.2 (FM App) — QA ranges assigned to parking station features were actually allocated to network/resource failure modes
+- **BL-019**: Wave 2.3+ (FM App) — Multiple subwaves exhibited same pattern on same day; FM failed to forward-scan after BL-018 discovery
+
+**Required Flow** (Architecture → QA Catalog → QA-to-Red → Planning):
+
+1. **Architecture Extension First**
+   - When new features are designed, architecture MUST be extended to include complete feature definitions
+   - Architecture freeze occurs before QA Catalog extension
+
+2. **QA Catalog Extension and Validation**
+   - QA Catalog (canonical QA component registry) MUST be extended with QA components that match architectural features
+   - Each QA component MUST have:
+     - Unique QA ID
+     - Semantic description matching feature intent
+     - Category (component/flow/state/failure)
+     - Architectural element reference
+   - QA ID ranges MUST NOT overlap or conflict with existing allocations
+
+3. **QA-to-Red Test Creation**
+   - QA-to-Red tests MUST be created for all new QA components
+   - Tests MUST fail (RED status) because architecture exists but implementation does not
+   - QA-to-Red precondition MUST be satisfied before planning proceeds
+
+4. **Wave/Subwave Planning Validation**
+   - Before assigning QA ranges to waves or subwaves:
+     - Verify ALL assigned QA IDs exist in QA Catalog
+     - Verify QA component descriptions semantically match wave/subwave intent
+     - Verify no QA ID collisions with other allocations
+     - Verify QA-to-Red tests exist and are RED
+   - Planning artifacts MUST reference validated QA ranges only
+
+**Mandatory Validation Gate** (QA-CATALOG-ALIGNMENT-GATE):
+
+Before ANY wave/subwave authorization:
+
+```
+- [ ] All assigned QA ranges verified in QA_CATALOG.md
+- [ ] All QA definitions match wave/subwave feature intent
+- [ ] No QA ID collisions with existing allocations
+- [ ] Architecture sections exist and are frozen for all features
+- [ ] QA-to-Red tests exist for all assigned QA ranges
+- [ ] QA-to-Red precondition satisfied (all tests RED)
+- [ ] Validation script executed (if available) with exit 0
+```
+
+**Prohibited Actions** (Permanent):
+
+- ❌ Assigning QA ranges to waves/subwaves without verifying QA_CATALOG.md
+- ❌ Assuming QA components exist based on sequential numbering
+- ❌ Planning waves before architecture is extended with new features
+- ❌ Creating wave/subwave specifications without QA Catalog validation
+- ❌ Skipping QA-to-Red precondition verification before builder assignment
+- ❌ Allowing builders to proceed with structurally invalid QA assignments
+
+**Automation Requirement**:
+
+Application repositories implementing wave-based delivery SHOULD provide:
+- QA Catalog validation scripts (e.g., `validate-wave-qa-alignment.py`)
+- Exit code semantics: 0 = aligned, 1 = blocking misalignment detected
+- Machine-readable validation results (e.g., JSON output)
+- Integration with CI/CD to block execution when misalignments exist
+
+**Completeness Test**:
+- [ ] Does QA Catalog exist and contain all components for planned features?
+- [ ] Are all wave/subwave QA assignments validated against QA Catalog?
+- [ ] Do QA component descriptions semantically match feature intent?
+- [ ] Are QA-to-Red tests created and RED before planning proceeds?
+- [ ] Is validation automated (if wave-based delivery)?
+
+**Violation**: If wave/subwave planning proceeds without QA Catalog alignment validation, it is a **catastrophic governance failure** requiring complete rework.
+
+**Ratchet Condition**: This learning establishes that wave planning without QA Catalog verification is a catastrophic structural failure. Second occurrences of this pattern are **beyond catastrophic** and absolutely prohibited.
+
+**Evidence of Learning**: FM App Wave 2 execution revealed that 9 of 14 subwaves (64%) had QA misalignments when BL-018 ratchet was not applied retroactively via forward-scan. Automated validation prevented third occurrence.
+
+---
+
 ## 9. Precedence
 
 This document has **canonical authority** for architecture completeness.
@@ -587,6 +671,36 @@ If any architecture artifact, builder behavior, or Foreman process conflicts wit
 ---
 
 ## 10. Changelog
+
+### Version 1.3 (2026-01-05)
+
+**Status**: QA Catalog Alignment Canonization  
+**Authority**: Johan Ras  
+**Trigger**: BL-018/BL-019 — Wave 2 QA Catalog Semantic Misalignment (FM App)
+
+**Summary**: Extended architecture completeness to mandate QA Catalog alignment validation before wave planning and subwave assignment.
+
+**Key Requirements Added**:
+- QA Catalog Alignment and Validation (3.14) — Architecture must be aligned with validated QA Catalog before planning
+- Mandatory flow: Architecture → QA Catalog → QA-to-Red → Planning (no skipping)
+- QA-CATALOG-ALIGNMENT-GATE validation checklist (mandatory before authorization)
+- Automation requirement for wave-based delivery validation
+
+**Bootstrap Learning Sources**:
+- **BL-018** (Wave 2.2, FM App): QA-376 to QA-385 claimed for parking station but allocated to network/resource failure modes
+- **BL-019** (Wave 2.3+, FM App): Multiple subwaves with same pattern; FM failed to forward-scan after BL-018
+
+**Failure Mode Addressed**: Wave planning without QA Catalog validation creates structurally invalid build specifications where QA ranges don't match feature intent. This blocks builders and halts execution.
+
+**Key Prohibitions Added**:
+- Assigning QA ranges without QA_CATALOG.md verification
+- Assuming QA components exist based on sequential numbering
+- Planning without QA-to-Red precondition satisfied
+- Allowing builders to proceed with invalid QA assignments
+
+**Effect**: Wave/subwave planning without QA Catalog alignment validation is now a **catastrophic governance failure**. Second occurrences are **beyond catastrophic** and absolutely prohibited.
+
+---
 
 ### Version 1.2 (2025-12-22)
 
