@@ -153,6 +153,51 @@ Each wave contains:
 **Process**: Analyze dependencies, validate wave boundaries, confirm prerequisites  
 **Output**: Wave execution plan
 
+#### Wave Planning Artifacts (Post-Wave 2 / Post-IBWR)
+
+Based on Wave 2 learnings and IBWR improvements, FM creates the following planning artifacts:
+
+**1. Wave Implementation Plan**
+- High-level wave strategy and scope
+- QA range allocations
+- Feature categorization
+- Architecture references
+
+**2. Wave Rollout Plan** (MANDATORY for Wave 2+)
+- **Purpose**: Complete operational specification translating implementation plan into actionable builder assignments
+- **Contents**:
+  - Builder assignments (explicit role → subwave mapping)
+  - Subwave specifications (with pre-defined builder issues ready for copy-paste creation)
+  - Sequencing and dependencies (critical path, parallelization opportunities)
+  - Duration estimates per subwave
+  - QA component allocations per subwave
+  - Intermediate checkpoints (for subwaves >10 QA)
+  - Escalation triggers
+  - Terminal state enforcement (BLOCKED or COMPLETE only)
+  
+**3. Builder Appointment Packages**
+- Pre-generated issue files for each subwave (in `wave{N}_builder_issues/` directory)
+- Issues contain complete scope, QA ranges, acceptance criteria
+- Ready for copy-paste creation when subwave is authorized
+- Verified against QA Catalog before package creation (QA-CATALOG-ALIGNMENT-GATE)
+
+**Rollout Plan Integration**:
+- The rollout plan is created AFTER IBWR when wave planning is revisited
+- It serves as the authoritative source for builder appointments
+- When implementing, issues are created as direct copies from the rollout plan files
+- This ensures consistency and reduces planning-to-execution gaps
+
+**QA Catalog Alignment** (BL-018/BL-019-Derived):
+- Wave planning MUST verify QA Catalog alignment before finalizing rollout plan
+- All QA ranges assigned to subwaves MUST be validated against canonical QA Catalog
+- See ARCHITECTURE_COMPLETENESS_REQUIREMENTS.md § 3.14 and QA_CATALOG_ALIGNMENT_GATE_CANON.md
+
+**Reference Examples**:
+- FM App Wave 2: `WAVE_2_ROLLOUT_PLAN.md` (complete operational specification)
+- Builder issues directory: `wave2_builder_issues/SUBWAVE_*.md` (pre-generated appointment packages)
+
+
+
 ### Phase 2: Wave Execution
 
 **Process** (per issue in wave):
