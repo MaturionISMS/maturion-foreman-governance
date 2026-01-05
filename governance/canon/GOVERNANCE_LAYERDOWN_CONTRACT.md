@@ -3,10 +3,11 @@
 ## Status
 **Type**: Canonical Governance Standard  
 **Authority**: Supreme - Johan Ras  
-**Version**: 1.0.0  
-**Effective Date**: 2025-12-29  
+**Version**: 1.1.0  
+**Effective Date**: 2026-01-05 (Updated)  
 **Applies To**: All Application Repositories (FM, SlotMaster, Future Apps)  
-**Purpose**: Define authoritative requirements for layering governance into application repositories
+**Purpose**: Define authoritative requirements for layering governance into application repositories  
+**Companion Protocol**: CROSS_REPOSITORY_LAYER_DOWN_PROTOCOL.md (cross-repo coordination)
 
 ---
 
@@ -42,8 +43,12 @@ This contract derives authority from and synthesizes requirements from:
 | **BUILD_PHILOSOPHY.md** | Defines Build-to-Green and One-Time Build Law |
 | **GOVERNANCE_COMPLETENESS_MODEL.md** | Defines governance enforcement semantics |
 | **MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md** | Defines continuous improvement capture requirements |
+| **CROSS_REPOSITORY_LAYER_DOWN_PROTOCOL.md** | Defines explicit cross-repo governance propagation protocol (v1.0.0, 2026-01-05) |
+| **GOVERNANCE_CANON_MANIFEST.md** | Authoritative index of canonical files with layer-down status (v1.0.0, 2026-01-05) |
 
 This contract is a **synthesis document** that extracts layer-down requirements from these canonical sources. It does NOT create new requirements.
+
+**IMPORTANT UPDATE (2026-01-05)**: This contract now works in conjunction with **CROSS_REPOSITORY_LAYER_DOWN_PROTOCOL.md**, which defines explicit version synchronization, governance liaison responsibilities, and cross-repo reading boundaries. See that protocol for governance propagation process details.
 
 ---
 
