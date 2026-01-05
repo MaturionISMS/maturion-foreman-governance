@@ -563,17 +563,27 @@ This gate exists because of validated bootstrap learnings:
 
 ## Failure Severity Classification
 
-### Catastrophic Failures
+### Catastrophic Failures (First-Time)
 
 **First-time QA misalignment** (BL-018 class):
 - Severity: CATASTROPHIC
 - Response: Create BL, perform forward-scan, implement gate
-- Classification: Design gap
+- Classification: Design gap (expected learning opportunity)
+
+### Emergency Failures (Second-Time - TARP Activation)
 
 **Second-time QA misalignment** (BL-019 class):
-- Severity: BEYOND CATASTROPHIC
-- Response: Immediate STOP, governance escalation, evidence of system change required
+- Severity: EMERGENCY
+- Response: **TARP (Trigger Action Response Plan) activation**:
+  - Immediate STOP all related execution
+  - Emergency assessment: Why did prevention fail?
+  - Rapid corrective actions (forward-scan, structural fixes, automation)
+  - Evidence of system-level change required
+  - TARP completion before ANY resumption
+  - Document as EMERGENCY with TARP report
 - Classification: Governance enforcement failure
+
+### Prohibited Failures (Third-Time)
 
 **Third-time QA misalignment**:
 - Severity: CONSTITUTIONALLY PROHIBITED

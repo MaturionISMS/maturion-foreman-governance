@@ -99,7 +99,13 @@ Once promoted:
    - Learning promotion was incomplete
    - Structural changes were inadequate
    - Enforcement mechanism failed
-   This triggers **Double-Catastrophic Failure protocol** per QA_POLICY_MASTER.md Section 1.5.
+   
+   This triggers **EMERGENCY classification and TARP (Trigger Action Response Plan) activation**:
+   - Immediate STOP of all related execution
+   - Emergency assessment: Why did prevention fail?
+   - Rapid corrective actions: Forward-scan, structural fixes, automation
+   - Evidence of system-level change required before ANY resumption
+   - Document as EMERGENCY in FL/CI registry with TARP completion report
 
 3. **Learning Must Result in Structural Change**: Promotion without enforceable structural change is invalid. Documentation-only updates are insufficient unless the documentation defines new enforceable rules or schemas.
 
@@ -197,7 +203,12 @@ Forward-scan is the PRIMARY mechanism for preventing second-time failures. A sec
 - Forward-scan was incomplete
 - Corrections were not applied to all instances
 
-Second-time failures are **beyond catastrophic** and trigger escalation.
+Second-time failures are classified as **EMERGENCY** and trigger **TARP (Trigger Action Response Plan)** activation, requiring:
+- Immediate STOP
+- Emergency root cause analysis
+- Rapid corrective actions
+- Evidence of system-level change
+- TARP completion before resumption
 
 **Integration with Existing Sections**:
 
