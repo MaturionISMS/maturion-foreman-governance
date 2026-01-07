@@ -41,6 +41,7 @@ Escalate **after** failures occur when:
 - security / permissions uncertainty
 - repeated regressions or unstable behavior
 - cross-repo changes required
+- **warning or test-debt discovery from prior work** (per QA_POLICY_MASTER.md Section 3.3)
 
 ## FM Authority and Responsibility (ACTIVE)
 

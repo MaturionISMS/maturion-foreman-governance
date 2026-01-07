@@ -262,6 +262,51 @@ FM **MUST** verify ALL of the following items. Failure of ANY item results in ch
 
 ---
 
+### 2.6 Warning Status Validation ✓
+
+**Requirement**: Zero unresolved warnings from prior work before authorizing downstream work.
+
+**Mandatory Validations**:
+
+1. **Prior Work Warning Status**
+   - ALL previous waves/subwaves have zero unresolved warnings
+   - CI build logs from previous waves show zero warnings (or all whitelisted)
+   - No warning accumulation across waves
+   - Latest merged commits from previous work are warning-free
+
+2. **Warning Whitelist Current**
+   - If warning whitelist exists (`/governance/qa/warning-whitelist.json`), review all entries
+   - All whitelisted warnings have valid justification
+   - All whitelisted warnings have resolution plans
+   - No expired whitelist entries (review quarterly or per-wave)
+   - Whitelist not growing unbounded
+
+3. **Warning Discovery Protocol Ready**
+   - Agent contracts include warning discovery obligations (per QA_POLICY_MASTER.md Section 3.3)
+   - Escalation path for warning discovery is clear
+   - Warning Discovery Report schemas available
+   - Builder agents trained on Warning Discovery Blocker Protocol
+
+**Verification Method**:
+- Review CI logs from previous merged PRs for warning output
+- Check warning whitelist file for validity and expiration
+- Verify agent contracts include Section 3.3 protocol references
+- Spot-check recent wave completion reports for warning status
+
+**Failure Action**:
+- STOP authorization
+- If prior warnings found: Re-assign original agent to remediate as BLOCKER
+- If whitelist invalid: Clean up whitelist, require remediations
+- If agent contracts incomplete: Update agent contracts before authorization
+- Forward-scan ALL pending work for warning patterns (analogous to BL-019)
+
+**Integration**:
+- This validates Section 3.3 of QA_POLICY_MASTER.md (Warning Discovery Blocker Protocol)
+- Ensures "Zero warnings from current AND prior work" (Gate-Eligible Green requirement)
+- Prevents warning accumulation across waves/subwaves
+
+---
+
 ## 3. Checklist Outcomes
 
 ### 3.1 PASS ✓

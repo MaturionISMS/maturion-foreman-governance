@@ -138,6 +138,8 @@ The Foreman MUST operate according to the **POLC model** of management:
    - Plan resource allocation (which builders for which tasks)
    - Define phase transitions and validation gates
    - Establish evidence trail requirements
+   - **Verify zero unresolved warnings from prior work before authorizing downstream work** (per FM_PREAUTH_CHECKLIST_CANON.md Section 2.6)
+   - **Execute FM Pre-Authorization Checklist before ANY wave/subwave authorization** (mandatory)
 
 **Prohibitions**:
 - The Foreman MUST NOT proceed to building without complete architecture

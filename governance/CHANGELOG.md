@@ -64,6 +64,101 @@ Each entry follows this structure:
 
 ## Change History
 
+### [ZERO-WARNING-POLICY-ALIGNMENT] - 2026-01-07 - [BREAKING_CHANGE]
+
+**Changed By**: Governance Administrator (Copilot Agent)
+**Approved By**: Pending (Johan approval for PR merge)
+**Effective Date**: Upon PR merge (target: 2026-01-08)
+
+**Summary**: Comprehensive governance canon alignment to make zero-warning/test-debt doctrine explicit, aligned, and non-optional across all repositories. Establishes mandatory blocker protocol for warning discovery from prior work.
+
+**Affected Artifacts**:
+- `governance/policy/QA_POLICY_MASTER.md` (UPDATED - Section 1.1.2, NEW Section 3.3, Section 5.3)
+- `governance/escalation/ESCALATION_POLICY.md` (UPDATED - reactive escalation triggers)
+- `governance/canon/FM_PREAUTH_CHECKLIST_CANON.md` (UPDATED - NEW Section 2.6)
+- `governance/policy/BUILDER_QA_HANDOVER_POLICY.md` (UPDATED - Section 4.1, NEW Section 8.4)
+- `governance/policy/PR_GATE_FAILURE_HANDLING_PROTOCOL.md` (UPDATED - NEW Section 5.10, Section 6)
+- `governance/canon/FOREMAN_AUTHORITY_AND_SUPERVISION_MODEL.md` (UPDATED - Section 4.1)
+- `governance/canon/WARNING_DISCOVERY_BLOCKER_PROTOCOL.md` (NEW - comprehensive standalone protocol)
+- `governance/schemas/WARNING_DISCOVERY_REPORT.schema.md` (NEW)
+- `governance/schemas/WARNING_REMEDIATION_REPORT.schema.md` (NEW)
+- `governance/schemas/WARNING_VERIFICATION_REPORT.schema.md` (NEW)
+- `governance/reports/ZERO_WARNING_TEST_DEBT_GAP_ANALYSIS.md` (NEW - rationale and gap analysis)
+- `governance/reports/ZERO_WARNING_RIPPLE_NOTIFICATION.md` (NEW - downstream impact summary)
+- `governance/reports/GOVERNANCE_LIAISON_HANDOVER_ZERO_WARNING_LAYERDOWN.md` (NEW - layer-down instructions)
+- `governance/CHANGELOG.md` (UPDATED - this entry)
+
+**Migration Required**: YES - Mandatory layer-down to all downstream repositories
+
+**Migration Guidance**: 
+1. **FM Office App** (IMMEDIATE - within 1 week):
+   - Update ForemanApp-agent.md with Section 2.6 (Warning Status Validation) and warning escalation protocol
+   - Update ALL builder agent contracts with warning discovery obligations (Section 8.4 pattern)
+   - Create warning evidence directory structure: /governance/evidence/warnings/{discovery,remediation,verification,forward-scan}/
+   - Create /governance/qa/warning-whitelist.json (empty initially)
+   - RECOMMENDED: Add linter check to CI as blocking gate
+   - RECOMMENDED: Update QA suite to include warning detection
+   - See: governance/reports/GOVERNANCE_LIAISON_HANDOVER_ZERO_WARNING_LAYERDOWN.md
+
+2. **ISMS Repository** (future): Same updates as FM Office App when initialized
+
+3. **All Agent Contracts**: Add standard warning discovery obligations language (provided in handover doc)
+
+**Rationale**: 
+This change addresses the need to:
+1. Make "zero warnings and zero test debt" doctrine explicit and binding (was implicit/ambiguous)
+2. Establish mandatory blocker protocol when agent discovers warnings from prior work
+3. Define clear responsibilities: discovering agent halts/escalates, original agent remediates as BLOCKER, discovering agent verifies
+4. Prevent warning accumulation across waves/subwaves through proactive FM validation (FM_PREAUTH_CHECKLIST Section 2.6)
+5. Formalize evidence trail with three warning report schemas
+6. Integrate warning discovery into escalation triggers and gate failure classifications
+7. Close governance gaps identified in comprehensive gap analysis
+8. Ensure alignment across QA policy, handover policy, escalation policy, PR gate policy, FM authority model
+
+**Key Principles**:
+- **Zero Warnings from Current AND Prior Work**: Gate-Eligible Green requires zero unresolved warnings (current or inherited)
+- **Immediate Halt on Discovery**: Discovering agent MUST stop current work immediately
+- **Original Agent Accountability**: Agent that introduced warnings MUST remediate as BLOCKER
+- **Verification Required**: Discovering agent MUST verify remediation before resuming work
+- **Forward-Scan Mandatory**: After warning discovery, ALL pending work scanned for same pattern (prevents second-time failures per BL-019 precedent)
+- **Whitelisting Governed**: Warnings MAY be whitelisted with justification, expiration, FM/Governance approval (temporary exception, not permanent solution)
+
+**Breaking Changes**:
+1. **Handover Pre-Conditions Stricter**: Builders can no longer hand over work with unresolved prior warnings (Section 4.1 updated)
+2. **FM Authorization Blocked**: FM cannot authorize work if prior waves have unresolved warnings (Section 2.6 mandatory validation)
+3. **Gate Failure Classification**: PRs may fail gate with UNRESOLVED_WARNINGS classification requiring blocker remediation protocol
+
+**Non-Breaking Enhancements**:
+1. **Warning Whitelist Governance**: Formal process for exceptions with transparency
+2. **Forward-Scan Requirement**: Prevents pattern repetition across pending work
+3. **Evidence Trail**: Three schemas ensure complete audit trail and governance compliance
+
+**Impact**: 
+- **Builders**: MUST halt and escalate upon discovering prior warnings; MUST remediate warnings they introduced as BLOCKER; MUST verify remediation before resuming work
+- **FM**: MUST validate warning status before authorization (Section 2.6); MUST coordinate warning discovery escalation and remediation protocol; MUST perform forward-scan after discoveries
+- **Governance Administrator**: MUST coordinate when FM unavailable; MUST audit warning whitelist quarterly; MUST track warning discovery frequency trends
+- **All Agents**: Bound by WARNING_DISCOVERY_BLOCKER_PROTOCOL.md obligations
+- **Downstream Repositories**: MUST layer-down agent contract updates, directory structure, evidence schemas
+
+**Validation Criteria**:
+Downstream repositories compliant when:
+- ✅ Agent contracts reference WARNING_DISCOVERY_BLOCKER_PROTOCOL.md
+- ✅ Agent contracts include warning discovery obligations
+- ✅ FM contract includes Section 2.6 (Warning Status Validation)
+- ✅ Warning evidence directory structure exists
+- ✅ Warning whitelist file exists (even if empty)
+
+**References**: 
+- Issue: Align Governance Canon: Zero-Warning/Test-Debt Policy and Ripple Enforcement
+- Gap Analysis: governance/reports/ZERO_WARNING_TEST_DEBT_GAP_ANALYSIS.md
+- Ripple Notification: governance/reports/ZERO_WARNING_RIPPLE_NOTIFICATION.md
+- Layer-Down Instructions: governance/reports/GOVERNANCE_LIAISON_HANDOVER_ZERO_WARNING_LAYERDOWN.md
+- Core Protocol: governance/canon/WARNING_DISCOVERY_BLOCKER_PROTOCOL.md
+- Schemas: governance/schemas/WARNING_*_REPORT.schema.md
+- Related Canon: QA_POLICY_MASTER.md Section 3.3, FM_PREAUTH_CHECKLIST_CANON.md Section 2.6, BUILDER_QA_HANDOVER_POLICY.md Section 8.4
+
+---
+
 ### [RIPPLE-WAVE-2.1] - 2026-01-02 - [NON_BREAKING_ENHANCEMENT]
 
 **Changed By**: Governance Administrator (Copilot Agent)
