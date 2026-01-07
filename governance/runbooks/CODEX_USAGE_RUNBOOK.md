@@ -73,7 +73,7 @@ CodexAdvisor is **explicitly prohibited** from being used for:
 - **Gate bypass decisions:** "Should we skip this QA gate?"
 
 ### Governance Authority
-- **Governance interpretation:** "What does OPOJB doctrine mean?" (refer to canonical governance instead)
+- **Governance interpretation:** "What does OPOJD doctrine mean?" (refer to canonical governance instead)
 - **Governance redefinition:** "Rewrite this governance rule"
 - **Authority escalation:** "Override Foreman's decision"
 - **Canonical governance creation:** "Draft a new canonical governance artifact" (governance agent does this)
@@ -99,7 +99,7 @@ All requests to CodexAdvisor MUST follow these mandatory framing rules:
 Requests MUST be framed as requests for **advice, guidance, or recommendations**, not commands or execution instructions.
 
 **Correct Patterns:**
-- ✅ "CodexAdvisor, please advise: Does this architecture align with OPOJB principles?"
+- ✅ "CodexAdvisor, please advise: Does this architecture align with OPOJD principles?"
 - ✅ "CodexAdvisor, I need guidance: What risks do you see in this PR?"
 - ✅ "CodexAdvisor, please review: Is this builder instruction clear and complete?"
 - ✅ "CodexAdvisor, advisory input requested: Does this approach align with governance?"
@@ -143,7 +143,7 @@ All CodexAdvisor output MUST be interpreted according to these rules:
 CodexAdvisor recommendations are **advisory inputs** to decision-making, not binding truth or decisions.
 
 **Correct Interpretation:**
-- ✅ "CodexAdvisor suggests this approach may violate OPOJB. I will review canonical governance to confirm."
+- ✅ "CodexAdvisor suggests this approach may violate OPOJD. I will review canonical governance to confirm."
 - ✅ "CodexAdvisor identifies a potential risk. I will assess whether this risk is acceptable."
 - ✅ "CodexAdvisor recommends additional testing. I will decide whether to add tests."
 
@@ -397,7 +397,7 @@ Reinforce authority separation in agent contracts and this runbook.
 4. **Preventative action:** Update runbook or governance to make requirement clearer
 
 **Example:**  
-Pre-build advisory review was skipped, leading to architecture that violates OPOJB. Corrective action: halt build, perform advisory review, revise architecture.
+Pre-build advisory review was skipped, leading to architecture that violates OPOJD. Corrective action: halt build, perform advisory review, revise architecture.
 
 ### Scenario 4: Codex Is Over-Used or Misused
 **Trigger:** CodexAdvisor is invoked for trivial decisions, used as a crutch, or asked repetitive questions.
