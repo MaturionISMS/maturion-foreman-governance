@@ -481,7 +481,7 @@ This runbook is written to be:
 ## Versioning and Updates
 
 **Version:** 1.0  
-**Effective Date:** 2026-01-07  
+**Effective Date:** Upon Ratification  
 **Next Review:** After Wave 1.1 completion or upon CodexAdvisor agent contract update  
 
 **Update Authority:**  
