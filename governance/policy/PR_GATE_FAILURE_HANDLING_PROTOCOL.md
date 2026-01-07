@@ -258,6 +258,49 @@ Every gate failure MUST be classified as one of these types:
 
 ---
 
+### 5.10 Unresolved Warnings from Prior Work (GOVERNANCE - BLOCKER)
+
+**Classification**: `UNRESOLVED_WARNINGS`  
+**Description**: Builder discovered or gate detected warnings or test debt from prior work (previous job/wave/subwave)  
+**Examples**:
+- Build warnings in code from previous wave
+- Lint warnings from previous subwave
+- Test debt (skipped tests) from previous builder
+- Suppressed warnings without whitelist justification
+- Warning accumulation across waves
+
+**Responsible Party**: Original agent who introduced warnings (identified via git history + job tracking)
+
+**Remediation Protocol** (per QA_POLICY_MASTER.md Section 3.3):
+1. **Discovering agent HALTS current work** (cannot proceed)
+2. **Discovering agent escalates to FM/Governance** with WARNING_DISCOVERY_REPORT
+3. **FM/Governance identifies original responsible agent**
+4. **Original agent re-assigned to remediate as BLOCKER** (higher priority than current work)
+5. **Original agent remediates warnings** and provides WARNING_REMEDIATION_REPORT
+6. **Discovering agent verifies remediation** and provides WARNING_VERIFICATION_REPORT
+7. **Only then may discovering agent resume work**
+8. **FM/Governance performs forward-scan** of ALL pending work for same pattern
+
+**Severity**: CRITICAL (blocks merge, blocks downstream work, requires blocker remediation)
+
+**Note**: This is NOT a discovering agent failure. Discovering agent correctly identified governance violation from prior work. Original agent must remediate.
+
+**Escalation Required**: YES - Immediate FM/Governance involvement to identify responsible party
+
+**Evidence Required**:
+- WARNING_DISCOVERY_REPORT.schema.md (from discovering agent)
+- WARNING_REMEDIATION_REPORT.schema.md (from original agent)
+- WARNING_VERIFICATION_REPORT.schema.md (from discovering agent after remediation)
+- CI logs showing warnings (before and after)
+- Git commit history identifying warning origin
+
+**Integration**: 
+- QA_POLICY_MASTER.md Section 3.3 (Warning Discovery Blocker Protocol)
+- ESCALATION_POLICY.md (Warning discovery as escalation trigger)
+- FM_PREAUTH_CHECKLIST_CANON.md Section 2.6 (Warning status validation)
+
+---
+
 ## 6. Responsibility Assignment
 
 ### 6.1 Builder Responsibility
@@ -268,6 +311,8 @@ Builder is responsible for gate failures classified as:
 - CONTENT_INCONSISTENCY
 - NOT_READY_DECLARED
 - GOVERNANCE_VIOLATION (for execution violations like test debt, QA coverage)
+
+**Note**: Builder is NOT responsible for UNRESOLVED_WARNINGS from prior work (original agent responsible)
 
 **Builder Actions**:
 1. Review gate failure output
@@ -284,6 +329,7 @@ Governance Administrator is responsible for gate failures classified as:
 - GOVERNANCE_VIOLATION (for policy ambiguity or conflicts)
 - GATE_INFRASTRUCTURE_FAILURE (for governance repo issues)
 - **GPCA_MISPREDICTION** (predictability invariant violation)
+- **UNRESOLVED_WARNINGS** (coordination role: identify original agent, enforce remediation blocker protocol)
 
 **Governance Administrator Actions**:
 1. Review gate failure

@@ -103,6 +103,7 @@ Builder MUST meet ALL pre-conditions before handover:
 - ✅ All tests passing (100% PASS)
 - ✅ Zero test debt (no skipped tests without justification)
 - ✅ Build-to-Green achieved
+- ✅ Zero unresolved warnings from current work AND prior work (per QA_POLICY_MASTER.md Section 3.3)
 
 ### 4.2 Evidence Generated
 - ✅ `.qa/builder/SUMMARY.md` exists and conforms to schema
@@ -310,6 +311,54 @@ If issues are discovered after merge:
 - Builder QA process improvement required
 
 **Post-merge failures indicate Builder QA gaps, not gate failures.**
+
+---
+
+### 8.4 Warning Discovery from Prior Work During Execution
+
+If Builder discovers warnings or test debt from prior work during execution:
+
+**Builder MUST**:
+1. **IMMEDIATELY HALT current work**
+   - Stop all implementation, testing, and handover preparation
+   - Do NOT attempt to work around warnings
+   - Do NOT suppress or ignore warnings
+
+2. **GENERATE WARNING DISCOVERY REPORT**
+   - Document warning details (source, line, message, severity)
+   - Document suspected origin (which job/wave/subwave)
+   - Document suspected responsible agent
+   - Document impact on current work
+   - Use schema: `governance/schemas/WARNING_DISCOVERY_REPORT.schema.md`
+
+3. **ESCALATE TO FM/GOVERNANCE**
+   - Submit warning discovery report per ESCALATION_POLICY.md
+   - Include impact assessment: Can current work proceed safely?
+   - Request blocker resolution before resuming work
+   - Provide evidence (CI logs, local build logs, screenshots)
+
+4. **BLOCK HANDOVER until warnings remediated**
+   - Declare current work BLOCKED
+   - Do NOT declare READY_FOR_MERGE
+   - Do NOT hand over with unresolved prior warnings
+   - Wait for FM/Governance to re-assign original agent
+
+5. **VERIFY REMEDIATION**
+   - After original agent remediates, builder re-validates
+   - Builder confirms warnings resolved
+   - Builder provides verification evidence
+   - Only then may builder resume work and proceed to handover
+
+**This is absolute. Warning discovery from prior work is an execution blocker per QA_POLICY_MASTER.md Section 3.3.**
+
+**Builder MUST NOT**:
+- ❌ Proceed with current work despite unresolved warnings
+- ❌ Suppress warnings without escalation
+- ❌ Claim "not my responsibility" and continue
+- ❌ Work around warnings instead of escalating
+- ❌ Hand over work with unresolved prior warnings
+
+**Violation of this protocol is a governance violation requiring escalation.**
 
 ---
 
