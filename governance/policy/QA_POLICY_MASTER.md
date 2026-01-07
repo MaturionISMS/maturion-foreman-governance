@@ -101,12 +101,13 @@ This section formally defines the foundational concepts that govern all QA and v
 **Characteristics**:
 - All tests pass (100%)
 - Zero errors (build, lint, runtime, type)
-- Zero warnings (unless explicitly whitelisted)
+- Zero warnings from current work AND prior work (unless explicitly whitelisted)
 - Zero test debt (no skips, stubs, or incomplete tests)
 - Full QA coverage verified
 - Build Philosophy process followed
 - Evidence trail complete
 - Constitutional compliance verified
+- No unresolved warnings inherited from previous jobs/waves/subwaves
 
 **Authority**: Gate-Eligible Green is **necessary and sufficient** for merge consideration.
 
@@ -747,6 +748,260 @@ The following actions MAY be performed ONLY through governed mechanisms:
 
 ---
 
+### 3.3 Warning and Test-Debt Discovery from Prior Work (MANDATORY BLOCKER PROTOCOL)
+
+**Purpose**: Ensure that warnings or test debt from previous jobs, waves, or subwaves are immediately remedied before downstream work proceeds.
+
+**Constitutional Principle**: **Any agent that discovers warning or test debt due to prior work MUST immediately generate a report, and the original agent must be re-assigned and required to perform the correction as a blocker, before downstream work proceeds.**
+
+This is not optional. This is a mandatory blocker protocol.
+
+---
+
+#### 3.3.1 When This Protocol Applies
+
+This protocol activates when ANY agent discovers:
+- Build warnings from prior work (previous job, wave, or subwave)
+- Lint warnings from prior work
+- Test warnings from prior work  
+- Test debt (skipped tests, incomplete tests, stubbed tests) from prior work
+- Suppressed warnings without proper whitelist justification
+- Accumulated warnings that should have been remediated earlier
+
+**Scope**: "Prior work" includes:
+- Previous subwave within same wave
+- Previous wave
+- Previous job by same builder
+- Previous job by different builder
+- Any work that merged before current work began
+
+---
+
+#### 3.3.2 Agent Discovery Obligations (MANDATORY)
+
+When an agent discovers warnings or test debt from prior work, the agent **MUST**:
+
+1. **IMMEDIATE HALT**
+   - Stop all current work immediately
+   - Do NOT proceed with current task
+   - Do NOT work around the warnings
+   - Do NOT suppress or ignore the warnings
+
+2. **GENERATE WARNING DISCOVERY REPORT**
+   - Document warning details (source file, line, message, severity)
+   - Document suspected origin (which job/wave/subwave)
+   - Document suspected responsible agent
+   - Document impact on current work
+   - Timestamp discovery
+
+3. **ESCALATE TO FOREMAN/GOVERNANCE**
+   - Submit warning discovery report via governance escalation protocol
+   - Include impact assessment: Can current work proceed safely?
+   - Request blocker resolution before resuming work
+   - Provide evidence (logs, CI output, local build output)
+
+4. **BLOCK CURRENT WORK**
+   - Declare current work BLOCKED until warnings remediated
+   - Do NOT hand over current work with unresolved prior warnings
+   - Do NOT attempt partial completion
+
+**This is absolute. No exceptions. Discovery of prior-work warnings is an execution blocker.**
+
+---
+
+#### 3.3.3 Foreman/Governance Response Protocol (MANDATORY)
+
+When FM or Governance receives a warning discovery report:
+
+1. **ACKNOWLEDGE IMMEDIATELY**
+   - Confirm receipt of warning discovery report
+   - Acknowledge discovering agent's work is blocked
+   - Commit to resolution timeline
+
+2. **IDENTIFY RESPONSIBLE AGENT**
+   - Determine which job/wave/subwave introduced the warnings
+   - Identify the agent that executed that work
+   - Review that agent's handover reports for accuracy
+   - Determine if warnings were known and ignored
+
+3. **RE-ASSIGN ORIGINAL AGENT (BLOCKER)**
+   - Re-assign original responsible agent to remediate warnings
+   - Mark as BLOCKER priority (higher than normal work)
+   - Provide warning discovery report as evidence
+   - Set clear acceptance criteria: Zero warnings, verified by discovering agent
+
+4. **ORIGINAL AGENT REMEDIATES**
+   - Original agent MUST fix all warnings
+   - Original agent MUST provide remediation evidence
+   - Original agent MUST update handover reports if inaccurate
+   - Original agent MUST generate Warning Remediation Report
+
+5. **DISCOVERING AGENT VERIFIES**
+   - Discovering agent re-validates after remediation
+   - Discovering agent confirms warnings resolved
+   - Discovering agent provides verification evidence
+   - Only then may discovering agent resume work
+
+6. **FORWARD-SCAN FOR PATTERN**
+   - FM/Governance MUST scan ALL pending work for same pattern
+   - Identify other instances of same warning
+   - Correct ALL instances before any further authorization
+   - Document forward-scan results
+
+---
+
+#### 3.3.4 Responsibilities by Role
+
+**Builder Agent (Discovering Agent)**:
+- MUST detect warnings during build/test execution
+- MUST halt and escalate upon discovery
+- MUST NOT proceed until warnings remediated
+- MUST verify remediation before resuming
+
+**Builder Agent (Original/Responsible Agent)**:
+- MUST remediate warnings as BLOCKER priority
+- MUST provide remediation evidence
+- MUST explain why warnings were not caught during original work
+- MUST update processes to prevent recurrence
+
+**Foreman (FM)**:
+- MUST triage warning discovery reports
+- MUST identify responsible agent
+- MUST enforce blocker priority on remediation
+- MUST verify remediation before authorizing downstream work
+- MUST perform forward-scan for pattern
+
+**Governance Administrator**:
+- MUST ensure protocol compliance
+- MUST audit warning discovery/remediation evidence
+- MUST escalate if protocol violations occur
+- MUST update canon if new warning patterns emerge
+
+---
+
+#### 3.3.5 Warning Classification
+
+**CRITICAL Warnings** (MUST be remediated immediately):
+- Security warnings (potential vulnerabilities)
+- Data corruption warnings
+- Memory leak warnings
+- API contract violation warnings
+- Deprecation warnings for imminent removal
+
+**HIGH Warnings** (MUST be remediated before wave closure):
+- Performance degradation warnings
+- Type safety warnings
+- Accessibility warnings
+- Best practice violations with known failure modes
+
+**MEDIUM Warnings** (MAY be whitelisted with justification):
+- Style warnings (if codified style guide permits)
+- Optional chaining warnings (if architecture explicitly allows)
+- Informational warnings with no runtime impact
+
+**LOW Warnings** (MAY be whitelisted for single wave):
+- Third-party library warnings (not under our control)
+- Platform-specific warnings with documented workarounds
+
+**Classification determines timeline, NOT whether to remediate.** All warnings MUST be remediated or explicitly whitelisted.
+
+---
+
+#### 3.3.6 Whitelisting vs. Remediation
+
+**Remediation** (PREFERRED):
+- Fix root cause of warning
+- Update code to eliminate warning
+- Update architecture if needed
+- Generate zero-warning build
+
+**Whitelisting** (GOVERNED EXCEPTION):
+- ONLY if remediation not feasible immediately
+- ONLY with explicit justification
+- ONLY with approval from FM/Governance
+- MUST include resolution plan with timeline
+- MUST be reviewed at wave closure
+- MUST NOT accumulate indefinitely
+
+**Whitelist Entry Requirements**:
+- Warning details (file, line, message)
+- Justification (why not immediately remediated)
+- Resolution plan (when and how will be fixed)
+- Approval (FM/Governance signature)
+- Expiration (wave number or date)
+- Review status (must be reviewed quarterly)
+
+**Whitelist Location**: `/governance/qa/warning-whitelist.json` (canonical per repository)
+
+---
+
+#### 3.3.7 Prohibited Actions
+
+The following actions are **ABSOLUTELY FORBIDDEN**:
+
+❌ **Proceeding with downstream work despite unresolved warnings**  
+❌ **Suppressing warnings without whitelist justification**  
+❌ **Ignoring warnings discovered during execution**  
+❌ **Deferring warning remediation to "future work"**  
+❌ **Claiming warnings are "not my responsibility"**  
+❌ **Working around warnings instead of fixing root cause**  
+❌ **Accumulating warnings across waves without remediation plan**
+
+**Violation of this protocol is a governance violation requiring escalation and FL/CI activation.**
+
+---
+
+#### 3.3.8 Evidence Requirements
+
+**Warning Discovery**:
+- Warning Discovery Report (governance/schemas/WARNING_DISCOVERY_REPORT.schema.md)
+- CI logs showing warnings
+- Local build logs showing warnings
+- Screenshot evidence if applicable
+
+**Warning Remediation**:
+- Warning Remediation Report (governance/schemas/WARNING_REMEDIATION_REPORT.schema.md)
+- Commit references for fixes
+- Before/after CI logs
+- Zero-warning build confirmation
+
+**Warning Verification**:
+- Warning Verification Report (governance/schemas/WARNING_VERIFICATION_REPORT.schema.md)
+- Discovering agent sign-off
+- Re-execution logs showing zero warnings
+- Timestamp of verification
+
+**All evidence MUST be committed to repository and referenced in governance reports.**
+
+---
+
+#### 3.3.9 Integration with Existing Governance
+
+This protocol integrates with:
+- **Section 1.1.2 Gate-Eligible Green**: "Zero warnings from current AND prior work"
+- **Section 3.1.2 Error Suppression**: Suppressing warnings = prohibited
+- **Section 3.2.2 Warning Whitelisting**: Governed exception mechanism
+- **Section 5 FL/CI**: Warning patterns trigger learning promotion
+- **ESCALATION_POLICY.md**: Warning discovery = escalation trigger
+- **FM_PREAUTH_CHECKLIST_CANON.md**: Pre-authorization warning status validation
+- **BUILDER_QA_HANDOVER_POLICY.md**: Handover blocked by unresolved warnings
+
+---
+
+#### 3.3.10 Success Criteria
+
+This protocol succeeds when:
+- ✅ Zero warnings in all builds (or all whitelisted with justification)
+- ✅ No warning accumulation across waves
+- ✅ All agents know to halt and escalate upon warning discovery
+- ✅ Original agents remediate warnings as blocker priority
+- ✅ Forward-scan prevents pattern repetition
+- ✅ Evidence trail complete for all warning discoveries/remediations
+
+**This protocol is mandatory, non-negotiable, and applies to all agents in all repositories.**
+
+---
+
 ## Section 4: Governance Gate Relationship
 
 This section defines how QA integrates with the Governance Gate.
@@ -920,7 +1175,14 @@ Every failure must be classified into one of these categories:
    - Constitutional safeguard was missing or ineffective
    - **Fix**: Add new constitutional rule or enhance existing
 
+6. **Warning/Test-Debt Accumulation**
+   - Warnings or test debt from prior work were not detected/remediated
+   - Warning Discovery Blocker Protocol was not followed
+   - **Fix**: Enforce Section 3.3 protocol, add detection mechanisms, forward-scan pending work
+
 **Every failure MUST be classified. "Unknown" is not acceptable.**
+
+**Note**: Warning/test-debt accumulation is a special case requiring immediate forward-scan of ALL pending work to identify and remediate similar patterns (per Section 3.3.6).
 
 ### 5.4 Structural Fix Requirement
 
