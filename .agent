@@ -52,6 +52,9 @@ governance:
     - id: agent-contract-migration
       path: governance/canon/AGENT_CONTRACT_MIGRATION_GUIDE.md
       role: contract-minimalism-and-migration
+    - id: mandatory-enhancement-capture
+      path: governance/canon/MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md
+      role: enhancement-capture-standard
     # NOTE: AGENT_HANDOVER_VERIFICATION_PROTOCOL.md is planned from the incident;
     # when created, add as a binding here.
 
