@@ -29,6 +29,9 @@ This is the **primary obligation**, and all rules, QA checks, and governance mec
 - ❌ "Mostly working" (missing features = NOT GREEN)
 - ❌ "Works for me" (untested edge cases = NOT GREEN)
 - ❌ "Will fix later" (incomplete = NOT GREEN)
+- ❌ **"Only X failing"** (minimizing language = TEST DODGING - see POLICY-NO-ONLY-LANGUAGE)
+- ❌ **"Just documentation issues"** (minimizing language = TEST DODGING)
+- ❌ **"Minor problems"** (minimizing language = TEST DODGING)
 - ❌ **Incomplete test helpers** (stub implementations = NOT GREEN)
 - ❌ **Any test debt** (skipped tests, test stubs, incomplete test infrastructure = NOT GREEN)
 - ❌ **Partial test passes** (ANY failing test = TOTAL FAILURE, not acceptable)
@@ -771,12 +774,35 @@ Architecture → Red QA → Build to Green → Validation → Merge
 
 ---
 
+## Related Governance Policies
+
+### POLICY-NO-ONLY-LANGUAGE
+
+**Critical**: The use of minimizing language ("only", "just", "minor", "non-blocking") when describing test failures or technical debt is **BANNED**.
+
+This policy enforces the 100% GREEN mandate by preventing test dodging - the practice of using minimizing language to obscure failures and claim incomplete work is "complete".
+
+**Banned Language**:
+- ❌ "Only X tests failing"
+- ❌ "Just documentation issues"
+- ❌ "Minor problems"
+- ❌ "Non-blocking failures"
+
+**Required Language**:
+- ✅ "100% tests passing" or "NOT READY - X tests failing"
+
+**Policy Authority**: `governance/policy/POLICY-NO-ONLY-LANGUAGE.md`  
+**Bootstrap Learning**: `docs/bootstrap-learning/BOOTSTRAP-TEST-DODGING-001.md`  
+**Effective Date**: 2026-01-08 (immediate enforcement)
+
+---
+
 *This is the Maturion Build Philosophy. All agents, builders, and processes must align with this philosophy. This document is the canonical source of truth for how we build software.*
 
-**Version**: 1.3 (Second-Time Failure Prohibition)  
+**Version**: 1.4 (NO-ONLY-LANGUAGE policy integration)  
 **Authority**: Johan (Maturion Leadership)  
 **Status**: Active and Enforced  
-**Last Updated**: 2026-01-05
+**Last Updated**: 2026-01-08
 
 **Changelog**:
 - **1.3 (2026-01-05)**: Second-Time Failure Prohibition canonized; BL forward-scan obligation established; "never repeat" discipline elevated to constitutional anti-pattern (BL-018/BL-019 derived)

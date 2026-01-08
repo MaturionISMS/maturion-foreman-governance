@@ -32,7 +32,8 @@ governance/
 ├── templates/
 │   └── BUILDER_TASK_TEMPLATE.md      # Task templates
 ├── policy/
-│   └── QA_POLICY_MASTER.md           # Quality policies
+│   ├── QA_POLICY_MASTER.md           # Quality policies
+│   └── POLICY-NO-ONLY-LANGUAGE.md    # Ban on minimizing language (CRITICAL)
 ├── opojd/                             # OPOJD doctrine and compliance
 ├── autonomy/                          # Autonomy execution reports
 ├── waves/                             # Modernization waves
@@ -62,6 +63,11 @@ The following documents are **BINDING** and must be respected by all systems and
    - When to escalate to higher authority
    - Who has decision authority
    - Escalation paths and timeframes
+
+5. **`governance/policy/POLICY-NO-ONLY-LANGUAGE.md`** - Ban on minimizing language
+   - Zero tolerance for "only", "just", "minor", "non-blocking" language
+   - 100% GREEN mandate enforcement
+   - Test dodging prevention
 
 ## Agent Onboarding
 
