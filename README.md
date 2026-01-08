@@ -63,6 +63,42 @@ The following documents are **BINDING** and must be respected by all systems and
    - Who has decision authority
    - Escalation paths and timeframes
 
+## Agent Onboarding
+
+**New agents start here**: `governance/canon/AGENT_ONBOARDING_QUICKSTART.md`
+
+This streamlined onboarding guide provides:
+- Your role and authority boundaries
+- Essential canonical governance documents
+- 3-step operational protocol
+- Escalation rules
+- Mandatory compliance requirements
+
+### Agent Contract Structure
+
+All agent contracts follow a **minimal, reference-based format**:
+- **YAML header**: Identity, governance bindings, scope, capabilities, constraints
+- **Mission**: 1-2 sentence core purpose
+- **Allowed/Forbidden actions**: Concise operational boundaries
+- **Escalation protocol**: When and how to escalate
+- **Onboarding references**: Links to canonical governance
+
+**Contract templates**: `governance/templates/AGENT_CONTRACT.template.md`
+
+### Key Principle: Contract Minimalism
+
+Agent contracts are **thin binding shells**. All governance doctrine, philosophy, and detailed process lives in `governance/canon/` and is **referenced, not duplicated**.
+
+This approach:
+- ✅ Reduces cognitive load
+- ✅ Prevents governance drift
+- ✅ Ensures single source of truth
+- ✅ Simplifies updates and maintenance
+
+**Migration guide**: `governance/canon/AGENT_CONTRACT_MIGRATION_GUIDE.md` (for future waves)
+
+---
+
 ## Governance CI/CD
 
 This repository includes governance validation workflows:
