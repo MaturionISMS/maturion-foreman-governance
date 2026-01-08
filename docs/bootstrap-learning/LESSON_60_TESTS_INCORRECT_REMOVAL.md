@@ -186,7 +186,7 @@ Agents SHALL NOT remove tests without:
 
 Violation = Test Dodging = Work Stoppage
 
-Required reading: 
+**Required Reading**:
 - governance/policy/TEST_REMOVAL_GOVERNANCE_GATE.md
 - governance/policy/ARCHITECTURE_TEST_TRACEABILITY_METHODOLOGY.md
 ```

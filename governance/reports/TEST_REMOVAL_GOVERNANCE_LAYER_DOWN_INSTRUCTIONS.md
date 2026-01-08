@@ -50,6 +50,7 @@ Two new canonical policies created:
 
 **Step 1**: Navigate to FM App repository issue tracker:
 - URL: https://github.com/MaturionISMS/maturion-foreman-office-app/issues
+- **Note**: Verify current repository location before use if repository has been moved
 
 **Step 2**: Create new issue with:
 - **Title**: "URGENT: Layer Down Test Removal Governance Policies to Agent Contracts"
@@ -229,7 +230,9 @@ Comment on this issue with any questions or technical blockers. Governance Admin
 
 ---
 
-## Expected Timeline
+## Expected Timeline (For Issue Creator)
+
+**Note**: This timeline is for the Governance Administrator creating and monitoring the layer-down issue. The timeline inside the issue template above is for the assignee completing the layer-down work.
 
 **Issue Creation**: Immediately after PR merge  
 **Governance Liaison Acknowledgement**: 24 hours  
