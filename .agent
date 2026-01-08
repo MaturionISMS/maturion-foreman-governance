@@ -1,5 +1,4 @@
 ---
-```yaml
 agent:
   id: maturion-foreman-governance-repo
   class: overseer
@@ -62,7 +61,6 @@ enforcement:
   on_scope_violation: halt_and_escalate
   on_governance_resolution_failure: halt
   escalation_target: Maturion
-```
 ---
 
 # Maturion Foreman Governance Repository
