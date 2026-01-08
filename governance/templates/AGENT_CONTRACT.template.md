@@ -127,7 +127,38 @@ Example:
 ### 3. Report Completion
 - Use terminal states: **COMPLETE** or **BLOCKED**
 - Generate required reports (QA, compliance, etc.)
-- Capture enhancements (per MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md)
+- **Capture enhancements and improvements** (per MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md v2.0.0):
+  - Feature Enhancement Review (mandatory)
+  - Process Improvement Reflection (mandatory — answer all 5 questions)
+
+---
+
+## Enhancement & Improvement Capture (For Builders)
+
+**For Builder agents only**: At work unit conclusion, you MUST complete BOTH:
+
+### Feature Enhancement Review
+Evaluate: "Are there any potential feature enhancements, architectural improvements, or future technical optimizations revealed by this work?"
+
+Produce either:
+1. Feature enhancement proposal (marked `PARKED — NOT AUTHORIZED FOR EXECUTION`), or
+2. Explicit statement: "No feature enhancement proposals identified."
+
+### Process Improvement Reflection
+Answer ALL mandatory questions:
+1. What went well in this build?
+2. What was blocked, failed, or caused delays?
+3. What governance or process gaps were exposed?
+4. What should be improved before the next iteration?
+5. Did the builder comply with all applicable governance learnings (BL-016, BL-018, BL-019, BL-020, BL-021, etc.)?
+
+After answering all questions, produce either:
+1. Process improvement proposal (marked `PARKED — NOT AUTHORIZED FOR EXECUTION`), or
+2. Explicit statement: "No process improvement proposals identified. (All mandatory reflection questions answered above)"
+
+**Prohibition**: "No process improvements identified" is INVALID unless ALL questions have been answered.
+
+**Reference**: `governance/canon/MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md` v2.0.0
 
 ---
 

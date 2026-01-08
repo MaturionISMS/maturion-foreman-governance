@@ -1,9 +1,10 @@
 # BUILDER CONTRACT BINDING CHECKLIST
 
 **Status**: Canonical Governance Validation Checklist  
-**Version**: 1.0.0  
+**Version**: 1.1.0  
 **Authority**: Maturion Engineering Leadership (Johan Ras)  
 **Created**: 2026-01-01  
+**Last Updated**: 2026-01-08  
 **Purpose**: Machine-checkable checklist of what MUST appear in every builder contract to be considered constitutionally bound
 
 ---
@@ -612,25 +613,72 @@ Each item includes:
     tsp_compliance_required: true
   ```
 
-### A.12 Enhancement Capture Requirement
+### A.12 Enhancement and Improvement Capture Requirement
 
-#### A.12.1 Mandatory Enhancement Evaluation
+#### A.12.1 Mandatory Feature Enhancement Evaluation
 
-- **Element**: `enhancement_capture.mandatory` or explicit clause
+- **Element**: `enhancement_capture.feature_enhancement_mandatory` or explicit clause
 - **Requirement**: MANDATORY
 - **Validation**: 
   - Field exists OR explicit section in contract text
-  - States enhancement evaluation required at end of work unit
+  - States feature enhancement evaluation required at end of work unit
   - States enhancements marked as PARKED (not for immediate execution)
-  - References enhancement capture standard
-- **Canonical Reference**: `governance/canon/MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md`, `governance/profiles/builder.v1.md` section 10
-- **Severity if Missing**: LOW - Enhancement capture incomplete
+  - References enhancement capture standard v2.0.0
+- **Canonical Reference**: `governance/canon/MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md` v2.0.0, `governance/profiles/builder.v1.md` section 10.1
+- **Severity if Missing**: MEDIUM - Feature enhancement capture incomplete
 - **Format**:
   ```yaml
   enhancement_capture:
-    mandatory: true
+    feature_enhancement_mandatory: true
     end_of_work_evaluation_required: true
     parked_enhancements_not_executed: true
+  ```
+
+#### A.12.2 Mandatory Process Improvement Reflection (NEW - v2.0.0)
+
+- **Element**: `enhancement_capture.process_improvement_mandatory` or explicit clause
+- **Requirement**: MANDATORY
+- **Validation**: 
+  - Field exists OR explicit section in contract text
+  - States process improvement reflection required at end of work unit
+  - Lists ALL mandatory process reflection questions (5 questions minimum)
+  - Prohibits "No process improvements" without answering questions
+  - States process improvements marked as PARKED (not for immediate execution)
+  - References enhancement capture standard v2.0.0
+- **Canonical Reference**: `governance/canon/MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md` v2.0.0 section 5.2-5.3, `governance/profiles/builder.v1.md` section 10.2
+- **Severity if Missing**: CRITICAL - Process improvement capture missing (governance gap)
+- **Format**:
+  ```yaml
+  enhancement_capture:
+    process_improvement_mandatory: true
+    process_reflection_questions_required: true
+    mandatory_questions:
+      - "What went well in this build?"
+      - "What was blocked, failed, or caused delays?"
+      - "What governance or process gaps were exposed?"
+      - "What should be improved before the next iteration?"
+      - "Did the builder comply with all applicable governance learnings?"
+    no_improvements_without_questions_prohibited: true
+    parked_improvements_not_executed: true
+  ```
+
+#### A.12.3 Process Improvement → BL Promotion Awareness
+
+- **Element**: `enhancement_capture.bl_promotion_awareness` or explicit clause
+- **Requirement**: MANDATORY
+- **Validation**: 
+  - Field exists OR explicit section in contract text
+  - States builder must flag systematic governance gaps for BL consideration
+  - References Bootstrap Learning promotion model
+  - Clarifies builder responsibility (flag) vs FM/Governance responsibility (register BL)
+- **Canonical Reference**: `governance/canon/MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md` v2.0.0 section 6.3, `governance/canon/BOOTSTRAP_EXECUTION_LEARNINGS.md`
+- **Severity if Missing**: MEDIUM - BL promotion path unclear
+- **Format**:
+  ```yaml
+  enhancement_capture:
+    bl_promotion_awareness: true
+    builder_flags_systematic_gaps: true
+    fm_registers_bl_entries: true
   ```
 
 ---
@@ -1190,6 +1238,22 @@ In PR gates:
       governance-validator --type builder --contract "$contract" || exit 1
     done
 ```
+
+---
+
+## VERSION HISTORY
+
+### v1.1.0 (2026-01-08)
+- **Added**: Section A.12.2 — Mandatory Process Improvement Reflection requirement (5 mandatory questions)
+- **Added**: Section A.12.3 — Process Improvement → BL Promotion Awareness requirement
+- **Changed**: Section A.12.1 — Renamed from "Mandatory Enhancement Evaluation" to "Mandatory Feature Enhancement Evaluation" for clarity
+- **Changed**: Severity of A.12.1 from LOW to MEDIUM (feature enhancement capture is important)
+- **Changed**: Severity of A.12.2 is CRITICAL (process improvement reflection is governance-critical)
+- **Rationale**: Implements requirement from issue "Require Compulsory Process Improvement Reflection in All Builder Agent Contracts" — addresses governance gap where systematic process failures, test escapes, and build-to-green cycle violations were not captured as learnings
+
+### v1.0.0 (2026-01-01)
+- Initial release with comprehensive builder contract validation checklist
+- Sections A (Universal Requirements), B (Role-Specific), C (Constitutional), D (FM Appointment)
 
 ---
 

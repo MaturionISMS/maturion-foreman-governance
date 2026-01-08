@@ -1,9 +1,10 @@
 # FM Builder Appointment Protocol
 
 **Status**: Canonical Governance Protocol  
-**Version**: 1.0.0  
+**Version**: 1.1.0  
 **Authority**: Supreme - Canonical  
 **Effective Date**: 2026-01-03  
+**Last Updated**: 2026-01-08  
 **Owner**: Maturion Engineering Leadership (Johan Ras)  
 **Precedence**: Implements BL-0007 requirement for governed appointment protocol  
 **Applies To**: All Foreman Instances, All Builder Appointments, All Repositories
@@ -203,7 +204,7 @@ FM MUST execute ALL steps in sequence. Omitting ANY step constitutes incomplete 
 - [ ] A.9: Escalation requirements (escalation format specification, escalation triggers enumeration, escalation target)
 - [ ] A.10: Prohibited roles declaration (what builder is NOT)
 - [ ] A.11: Technology governance binding (approved technology stack only)
-- [ ] A.12: Enhancement capture requirement (mandatory enhancement evaluation)
+- [ ] A.12: Enhancement and improvement capture requirement (mandatory feature enhancement evaluation, mandatory process improvement reflection with 5 questions, BL promotion awareness)
 
 **Section B: Role-Specific Requirements (CONDITIONAL based on builder class)**:
 - [ ] B.1-B.5: Role-specific standards (UI, API, Schema, Integration, QA)
@@ -477,14 +478,21 @@ FM MUST continuously supervise builders and MAY NOT delegate these responsibilit
 
 **Terminal-State Validation**:
 - Builder reports **BLOCKED** (escalation with blocker details) → FM assesses blocker and resolves or escalates
-- Builder reports **COMPLETE** (100% GREEN QA, full delivery) → FM validates QA results and architecture conformance
+- Builder reports **COMPLETE** (100% GREEN QA, full delivery, BOTH feature AND process reflections) → FM validates:
+  - QA results (100% GREEN)
+  - Architecture conformance
+  - **Feature enhancement review completed** (proposal submitted OR "none identified" declared)
+  - **Process improvement reflection completed** (all 5 mandatory questions answered AND proposal submitted OR "none identified" declared after answering questions)
 
 **Invalid States** (require FM intervention):
 - Builder reports IN_PROGRESS → OPOJD violation (redirect to terminal-state execution)
 - Builder reports AWAITING_APPROVAL → OPOJD violation (no mid-execution approvals)
 - Builder reports PARTIAL_COMPLETION → One-Time Build Law violation (100% or escalate, no partial)
+- **Builder reports COMPLETE without feature enhancement review** → Incomplete work delivery (must complete review)
+- **Builder reports COMPLETE without process improvement reflection** → Incomplete work delivery (must answer all questions)
+- **Builder declares "no process improvements" without answering mandatory questions** → Invalid declaration (questions must be answered first)
 
-**FM Enforcement**: Any non-terminal state reported by builder triggers immediate FM intervention and corrective instruction.
+**FM Enforcement**: Any non-terminal state or incomplete reflection reported by builder triggers immediate FM intervention and corrective instruction.
 
 ---
 
