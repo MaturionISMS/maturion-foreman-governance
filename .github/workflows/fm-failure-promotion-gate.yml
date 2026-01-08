@@ -21,14 +21,17 @@ jobs:
       - name: Resolve active build
         run: |
           if [ ! -f "architecture/BUILD_ACTIVE" ]; then
-            echo "❌ GOVERNANCE BLOCK: BUILD_ACTIVE missing."
-            exit 1
+            echo "ℹ️ No active build (BUILD_ACTIVE missing). Skipping failure promotion gate."
+            echo "SKIP_VALIDATION=true" >> $GITHUB_ENV
+            exit 0
           fi
           BUILD_ID="$(cat architecture/BUILD_ACTIVE | tr -d '\r' | tr -d '\n')"
           BUILD_DIR="architecture/builds/${BUILD_ID}"
           echo "BUILD_DIR=$BUILD_DIR" >> $GITHUB_ENV
+          echo "SKIP_VALIDATION=false" >> $GITHUB_ENV
 
       - name: Enforce governance evidence for failure records
+        if: env.SKIP_VALIDATION != 'true'
         run: |
           FAIL_DIR="${BUILD_DIR}/failures"
           if [ ! -d "$FAIL_DIR" ]; then

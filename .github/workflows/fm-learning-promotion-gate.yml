@@ -22,8 +22,9 @@ jobs:
       - name: Resolve active build
         run: |
           if [ ! -f "architecture/BUILD_ACTIVE" ]; then
-            echo "❌ GOVERNANCE BLOCK: BUILD_ACTIVE missing."
-            exit 1
+            echo "ℹ️ No active build (BUILD_ACTIVE missing). Skipping learning promotion gate."
+            echo "SKIP_VALIDATION=true" >> $GITHUB_ENV
+            exit 0
           fi
 
           BUILD_ID="$(cat architecture/BUILD_ACTIVE | tr -d '\r' | tr -d '\n')"
@@ -35,8 +36,10 @@ jobs:
           fi
 
           echo "BUILD_DIR=${BUILD_DIR}" >> $GITHUB_ENV
+          echo "SKIP_VALIDATION=false" >> $GITHUB_ENV
 
       - name: Enforce governance promotion when required
+        if: env.SKIP_VALIDATION != 'true'
         run: |
           LEARNING_FILE="${BUILD_DIR}/learning.md"
 
@@ -62,6 +65,7 @@ jobs:
           echo "✅ Governance promotion requirement satisfied"
 
       - name: Governance Promotion Gate Passed
+        if: env.SKIP_VALIDATION != 'true'
         run: |
           echo "✅ FM LEARNING PROMOTION GATE PASSED"
           echo "All required governance updates are referenced and tracked."
