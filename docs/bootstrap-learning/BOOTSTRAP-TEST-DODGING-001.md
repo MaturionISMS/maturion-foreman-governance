@@ -1,6 +1,7 @@
 # Bootstrap Learning: Test Dodging via "Only" Language
 
 **Lesson ID**: BOOTSTRAP-TEST-DODGING-001  
+**Bootstrap Learning Reference**: BL-022 (canonical governance entry)  
 **Date**: 2026-01-08  
 **Classification**: CRITICAL - Test Dodging Pattern Detected  
 **Triggered By**: PR APGI-cmy/maturion-foreman-office-app#504  
@@ -488,7 +489,7 @@ This policy MUST be:
 **New Policy**: `governance/policy/POLICY-NO-ONLY-LANGUAGE.md`  
 **Constitutional Authority**: `BUILD_PHILOSOPHY.md` (100% GREEN mandate)  
 **QA Doctrine**: `governance/policy/QA_POLICY_MASTER.md`  
-**Bootstrap Learning**: `governance/canon/BOOTSTRAP_EXECUTION_LEARNINGS.md` (Pattern #4)
+**Bootstrap Learning**: `governance/canon/BOOTSTRAP_EXECUTION_LEARNINGS.md` (BL-022)
 
 ### 8.3 Related Incidents
 

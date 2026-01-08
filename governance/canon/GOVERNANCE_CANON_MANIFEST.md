@@ -219,14 +219,33 @@ It serves to:
 | `failure.template.md` | 1.0.0 | INTERNAL | N/A | 2026-01-05 |
 | `scope-declaration.template.md` | 1.0.0 | INTERNAL | N/A | 2026-01-05 |
 
+### 3.14 Governance Policies (PUBLIC_API)
+
+These policies are located in `governance/policy/` and establish constitutional governance rules that apply across all repositories.
+
+| Policy File | Version | Layer-Down Status | Downstream Repos | Last Updated | Policy ID |
+|-------------|---------|-------------------|------------------|--------------|-----------|
+| `POLICY-NO-ONLY-LANGUAGE.md` | 1.0 | PUBLIC_API | FM App, SlotMaster, All Repos | 2026-01-08 | POLICY-NO-ONLY-LANGUAGE |
+| `TEST_REMOVAL_GOVERNANCE_GATE.md` | 1.0 | PUBLIC_API | FM App, SlotMaster, All Repos | 2026-01-08 | N/A |
+| `ARCHITECTURE_TEST_TRACEABILITY_METHODOLOGY.md` | 1.0 | PUBLIC_API | FM App, SlotMaster, All Repos | 2026-01-08 | N/A |
+| `QA_POLICY_MASTER.md` | 1.0 | PUBLIC_API | FM App, SlotMaster, All Repos | 2026-01-05 | N/A |
+| `BUILDER_QA_HANDOVER_POLICY.md` | 1.0 | PUBLIC_API | FM App, SlotMaster | 2026-01-05 | N/A |
+| `PR_GATE_FAILURE_HANDLING_PROTOCOL.md` | 1.0 | PUBLIC_API | FM App, SlotMaster | 2026-01-05 | N/A |
+| `APP_DESCRIPTION_REQUIREMENT_POLICY.md` | 1.0 | PUBLIC_API | FM App, SlotMaster | 2026-01-05 | N/A |
+| `FM_MATURION_DELEGATED_ACTION_POLICY.md` | 1.0 | PUBLIC_API | FM App | 2026-01-05 | N/A |
+
+**Note**: POLICY-NO-ONLY-LANGUAGE is a constitutional policy with Tier-0 authority, banning minimizing language when describing test failures, warnings, or technical debt. It enforces T0-002 (Governance Supremacy Rule) and T0-003 (Zero Test Debt Constitutional Rule). See also: Bootstrap Learning BL-022.
+
 ---
 
 ## 4. Governance Public API Summary
 
 **Total Canon Files**: 86  
-**PUBLIC_API**: 56 files (65%)  
-**OPTIONAL**: 16 files (19%)  
-**INTERNAL**: 14 files (16%)  
+**Total Policy Files**: 8  
+**Combined Total**: 94  
+**PUBLIC_API**: 64 files (68%)  
+**OPTIONAL**: 16 files (17%)  
+**INTERNAL**: 14 files (15%)  
 **DEPRECATED**: 0 files (0%)
 
 ### 4.1 Critical Path Canon (Must-Have for Downstream Repos)
@@ -295,6 +314,7 @@ When a breaking change is required:
 | Date | Change | Authority |
 |------|--------|-----------|
 | 2026-01-05 | Initial manifest created | Governance Administrator Agent |
+| 2026-01-08 | Added Section 3.14 (Governance Policies) including POLICY-NO-ONLY-LANGUAGE | Governance Administrator Agent |
 
 ### 7.2 Layer-Down Completion Tracking
 
