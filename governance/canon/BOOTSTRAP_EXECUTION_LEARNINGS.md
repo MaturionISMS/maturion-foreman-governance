@@ -1772,4 +1772,187 @@ This is a **first-time failure** (CATASTROPHIC classification) representing a **
 
 ---
 
+## BL-021 — Incorrect Test Removal Due to Wrong Traceability Methodology (INCIDENT-2026-01-08)
+
+### Classification
+
+**CATASTROPHIC** — First-Time Structural Failure (Missing Governance Gate + Wrong Methodology)
+
+### Context
+
+Wave 0 test suite review and technical debt assessment
+
+### Incident Summary
+
+60 Wave 0 RED tests were proposed for removal with justification that they were "speculative" and lacked architectural basis. Initial analysis used incorrect traceability methodology (searching for implementation class names in architecture rather than mapping test behaviors to architectural requirements).
+
+Upon deeper review using correct methodology, **all 60 tests were found to be architecturally grounded**, validating explicit or implied requirements from the architecture specifications.
+
+### Observed Issue
+
+Tests validating architectural requirements were incorrectly classified as "ungrounded" due to:
+1. Wrong traceability methodology (class name matching vs requirement mapping)
+2. Abstraction level confusion (expecting architecture to specify implementation details)
+3. Misunderstanding of test purpose (driving implementation vs validating existing code)
+4. No governance gate for test removal decisions
+
+### Root Cause Analysis
+
+**Primary Cause**: No documented standard methodology for test-to-architecture traceability analysis
+
+**Contributing Factors**:
+1. **Methodology Gap**: No canonical definition of correct vs incorrect traceability approach
+2. **Governance Gap**: No test removal governance gate requiring evidence and approval
+3. **Training Gap**: Agents not trained on abstraction levels (architecture = requirements, tests = validation, implementation = classes/methods)
+4. **Process Gap**: No requirement to map tests to architectural requirements before removal
+5. **Misunderstanding of Test Role**: Treating unimplemented features as invalid test targets (tests DRIVE implementation, don't just validate existing code)
+
+**Why This Matters**: Test removal based on flawed analysis:
+- Loses required architectural QA coverage
+- Removes specification traceability
+- Eliminates regression protection
+- Creates false impression that architecture is incomplete
+
+### Specific Examples of Methodology Error
+
+**Example 1: Evidence Schema Validation**
+- ❌ Wrong: "No 'EvidenceSchemaValidator' class in architecture → Test ungrounded"
+- ✅ Correct: "Architecture requires 'auditable evidence' → Requires structure → Requires validation → Schema validation implied → Test valid"
+
+**Example 2: Silence Detection Heartbeat**
+- ❌ Wrong: "Architecture says silence detection, not heartbeat → Test ungrounded"
+- ✅ Correct: "Silence detection REQUIRES heartbeat/update signal → Heartbeat functionally necessary → Test valid"
+
+**Example 3: Governance Enforcement Mechanisms**
+- ❌ Wrong: "No 'ArchitectureFreezeEnforcer' class in architecture → Test ungrounded"
+- ✅ Correct: "Architecture specifies 'Governance Supremacy Enforcer' → Enforcement mechanisms implied → Test valid"
+
+### Learning
+
+**Core Lesson**: Test-to-architecture traceability MUST use requirement-based mapping, not implementation-based matching.
+
+**Correct Methodology**:
+```
+Test → Validates What Behavior? → Required By Which Requirement? → Architecture Section?
+```
+
+**Incorrect Methodology**:
+```
+Test → References What Class? → Search Architecture for Class Name → Not Found = Ungrounded
+```
+
+**Key Principles Established**:
+1. Architecture specifies REQUIREMENTS (what), not IMPLEMENTATION (how)
+2. Tests validate BEHAVIORS, not specific class/method existence
+3. Implied requirements are still requirements (e.g., "auditable" implies "validated structure")
+4. Tests for unimplemented features are VALID (tests drive implementation)
+5. Component-functional requirements are valid (e.g., silence detection requires heartbeat)
+
+### Governance Impact
+
+**Immediate Actions Taken**:
+1. Created **TEST_REMOVAL_GOVERNANCE_GATE.md** policy
+   - Zero-tolerance policy for test removal
+   - Required evidence: traceability analysis, impact assessment, alternative coverage
+   - Approval requirements based on test count and risk
+   - Prohibited justifications documented
+   - Enforcement and violation response defined
+
+2. Created **ARCHITECTURE_TEST_TRACEABILITY_METHODOLOGY.md** policy
+   - Correct vs incorrect methodology documented
+   - Abstraction level principles established
+   - Decision tree for traceability
+   - Common scenarios and training examples
+   - Anti-patterns to avoid
+
+3. Recorded this bootstrap learning (BL-021)
+
+**Forward-Binding Expectations**:
+- All test removal proposals MUST use correct traceability methodology
+- All test removal proposals MUST follow governance gate process
+- All agents MUST be trained on traceability methodology before authorization
+- Repeat violations trigger agent contract review
+
+### Prohibited Actions (Permanent, Platform-Wide)
+
+- ❌ Removing tests without traceability analysis
+- ❌ Using class name matching for traceability
+- ❌ Assuming unimplemented features invalidate tests
+- ❌ Expecting architecture to specify implementation details
+- ❌ Removing tests due to being "noisy" or "slowing development"
+- ❌ Bypassing test removal governance gate
+- ❌ Insufficient evidence or impact analysis for test removal
+
+### Ratchet Statement
+
+**This learning establishes that test removal without proper traceability analysis and governance approval is a catastrophic governance failure requiring immediate restoration and incident response.**
+
+This is a **first-time failure** (CATASTROPHIC classification) representing **missing governance infrastructure** (no test removal gate + no traceability methodology). The system has learned and canonized both policies as permanent prevention.
+
+**Second occurrences trigger EMERGENCY classification** — indicating either:
+- Agent training failure
+- Agent contract ambiguity
+- Governance communication failure
+- Deliberate bypass (most severe)
+
+### Status
+
+**Recorded & Canonized** — Platform-Wide, Non-Retroactive  
+**Applies To:** All repositories with architectural QA requirements  
+**Effective:** 2026-01-08
+
+### Impact Assessment
+
+**Tests Affected**: 60 Wave 0 RED tests  
+**Coverage Impact**: Architectural requirement validation across evidence, governance enforcement, escalation, and decision tracking components  
+**Resolution**: Tests retained; traceability documented; governance policies established  
+**Technical Debt Impact**: No debt created; proper governance prevents future occurrences
+
+### Cross-References
+
+**Governance Repo (Canonical)**:
+- `governance/policy/TEST_REMOVAL_GOVERNANCE_GATE.md` — Test removal policy (NEW)
+- `governance/policy/ARCHITECTURE_TEST_TRACEABILITY_METHODOLOGY.md` — Traceability methodology (NEW)
+- `governance/canon/BOOTSTRAP_EXECUTION_LEARNINGS.md` — This BL-021 entry
+- `governance/policy/QA_POLICY_MASTER.md` — QA coverage doctrine
+- `governance/canon/REQUIREMENT_SPECIFICATION_GOVERNANCE.md` — Requirements abstraction levels
+
+**Layer-Down Targets** (All Application Repos):
+- FM agent contracts — Test removal governance gate reference
+- Builder agent contracts — Traceability methodology training requirement
+- QA handover policies — Test removal process integration
+
+**Reference Materials**:
+- INCIDENT-2026-01-08-INCORRECT-TEST-REMOVAL — Incident report (if created)
+- PR #470 analysis — Original test removal proposal and review
+
+### Prevention Measures
+
+**Structural**:
+1. Test Removal Governance Gate (mandatory approval process)
+2. Traceability Methodology Canon (standardized analysis approach)
+3. Agent training on abstraction levels
+4. Evidence requirements for test removal
+5. Approval thresholds based on risk
+
+**Procedural**:
+1. All test removal requires traceability analysis
+2. All traceability analysis reviewed for methodology correctness
+3. High-volume removals (>10 tests) require CS2 approval
+4. All removals documented in TEST_REMOVAL_LOG.md
+5. Bootstrap learning captured if systemic gap revealed
+
+**Cultural**:
+1. Tests drive implementation (not just validate existing code)
+2. Unimplemented features are valid test targets
+3. Architecture specifies requirements, not implementations
+4. Implied requirements are still requirements
+5. Burden of proof on remover, not reviewer
+
+---
+
+**End of BL-021**
+
+---
+
 
