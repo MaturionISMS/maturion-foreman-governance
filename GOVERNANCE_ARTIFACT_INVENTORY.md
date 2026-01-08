@@ -298,6 +298,17 @@ Escalation policies and protocols.
 
 ---
 
+## Governance Incidents (governance/incidents/)
+
+Formal incident reports for governance violations, test dodging, and catastrophic governance failures.
+
+| File | Purpose | Categories |
+|------|---------|------------|
+| `README.md` | Incident directory documentation and structure | Feedback/learning |
+| `INCIDENT-2026-01-08-TEST-DODGING-WARNING-SUPPRESSION.md` | Test dodging incident via pytest warning suppression | Feedback/learning |
+
+---
+
 ## Governance Evidence (governance/evidence/)
 
 Evidence files documenting governance compliance and readiness.
@@ -701,21 +712,22 @@ Implementation completion reports (not canonical governance, but records impleme
 
 ## Summary
 
-**Total Governance Artifacts Inventoried**: 279+
+**Total Governance Artifacts Inventoried**: 281+
 
 **Category Distribution**:
 - **Readiness**: Primary category for platform, build, and execution readiness governance
 - **PR-gates**: PR gate enforcement, validation, and evaluation governance
-- **Feedback/learning**: Learning intake, promotion, failure handling, and improvement governance
+- **Feedback/learning**: Learning intake, promotion, failure handling, incident tracking, and improvement governance
 - **Layer-down**: Governance propagation to downstream repositories
 
 **Notes**:
 - Some artifacts are uncategorized (marked as documentation, philosophy, templates, or implementation status)
 - Many artifacts serve multiple categories simultaneously
 - No interpretation, correction, or gap analysis has been applied
-- This inventory is complete as of 2025-12-31
+- This inventory was last updated 2026-01-08 to include governance/incidents/ directory
 
 ---
 
-**Completion Status**: COMPLETE  
+**Completion Status**: CURRENT  
+**Last Updated**: 2026-01-08
 **Next Phase**: Gap analysis (Phase 1.2 - requires separate authorization)
