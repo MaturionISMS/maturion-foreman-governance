@@ -134,8 +134,8 @@ jobs:
 
       - name: Validate escalation for CI paths
         run: |
-          if ! grep -q ".github/**" .agent; then
-            echo "❌ .github/** must be restricted or escalation-required"
+          if ! grep -q ".github/" .agent; then
+            echo "❌ .github/ paths must be restricted or escalation-required"
             exit 1
           fi
 
