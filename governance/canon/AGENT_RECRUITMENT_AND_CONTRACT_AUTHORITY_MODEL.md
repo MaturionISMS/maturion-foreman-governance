@@ -22,6 +22,8 @@ This clarification eliminates ambiguity that previously existed regarding agent 
 
 **Critical Context**: This model has always been **implied** in governance canon. This document makes it **explicit and auditable**.
 
+**For Agent Onboarding**: New agents should read **AGENT_ONBOARDING_QUICKSTART.md** first for a streamlined introduction to the governance framework, then reference this document for detailed authority clarification.
+
 ---
 
 ## 2. Constitutional Authority

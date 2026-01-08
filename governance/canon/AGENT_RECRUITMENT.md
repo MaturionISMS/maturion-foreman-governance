@@ -97,15 +97,24 @@ Recruited agents MUST reference canonical governance exactly once via the
 `governance.canon` binding in their `.agent` contract.
 
 `.agent` contracts MUST NOT enumerate individual doctrines, laws, or
-philosophy files (such as build philosophy, OPOJD, TED, or related
-governance artifacts).
+philosophy files beyond reference-only bindings in `governance.bindings`.
+
+**Reference-Based Approach**: Agents should include a `governance.bindings`
+section listing canonical documents that define their authority, protocols,
+and constraints. These are **references only** - not duplications of content.
 
 Resolution of specific doctrines and their application is the responsibility
 of the canonical governance source, not the `.agent` contract.
 
-Any `.agent` file that attempts to duplicate or locally reinterpret doctrine
-is considered over-specified and at risk of drift; canonical governance
-prevails in all such cases.
+Any `.agent` file that duplicates governance doctrine (beyond YAML reference
+bindings) is considered over-specified and at risk of drift; canonical
+governance prevails in all such cases.
+
+**Recommended Onboarding**: All agents should reference
+`AGENT_ONBOARDING_QUICKSTART.md` as their starting point, which provides a
+streamlined path to understanding governance without duplication.
+
+### 6.2 Canonical Governance Reference
 
 Every recruited agent must be bound to a single canonical governance source defined by:
 - Repository
