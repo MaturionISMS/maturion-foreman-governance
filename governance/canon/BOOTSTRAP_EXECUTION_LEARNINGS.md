@@ -2557,11 +2557,11 @@ This is a **TRANSFORMATIVE** discovery (not a failure — a pattern identificati
 ### Cross-References
 
 **Governance Repo (Canonical):**
-- `governance/canon/COMBINED_TESTING_PATTERN.md` — Canonical pattern definition (TO BE CREATED)
+- `governance/canon/COMBINED_TESTING_PATTERN.md` — Canonical pattern definition (CREATED)
 - `governance/canon/BOOTSTRAP_EXECUTION_LEARNINGS.md` — This BL-025 entry
-- `governance/canon/IN_BETWEEN_WAVE_RECONCILIATION.md` — CWT integration (TO BE UPDATED)
-- `governance/execution/WAVE_MODEL.md` — CST/CWT lifecycle integration (TO BE UPDATED)
-- `governance/templates/WAVE_RECONCILIATION_REPORT.template.md` — CST/CWT sections (TO BE UPDATED)
+- `governance/canon/IN_BETWEEN_WAVE_RECONCILIATION.md` — CWT integration (UPDATED)
+- `governance/execution/WAVE_MODEL.md` — CST/CWT lifecycle integration (UPDATED)
+- `governance/templates/WAVE_RECONCILIATION_REPORT.template.md` — CST/CWT sections (UPDATED)
 
 **Layer-Down Targets (All Application Repos - Advisory):**
 - FM agent contracts — CST checkpoint identification, CWT execution obligation
@@ -2603,10 +2603,10 @@ This is a **TRANSFORMATIVE** discovery (not a failure — a pattern identificati
 
 **Phase 1 — Governance Canon (This Repo):**
 - ✅ BL-025 recorded in BOOTSTRAP_EXECUTION_LEARNINGS.md
-- [ ] Create COMBINED_TESTING_PATTERN.md (canonical definition)
-- [ ] Update IN_BETWEEN_WAVE_RECONCILIATION.md (add CWT mandate)
-- [ ] Update WAVE_RECONCILIATION_REPORT.template.md (add CST/CWT sections)
-- [ ] Update WAVE_MODEL.md (add CST/CWT lifecycle)
+- ✅ Create COMBINED_TESTING_PATTERN.md (canonical definition)
+- ✅ Update IN_BETWEEN_WAVE_RECONCILIATION.md (add CWT mandate)
+- ✅ Update WAVE_RECONCILIATION_REPORT.template.md (add CST/CWT sections)
+- ✅ Update WAVE_MODEL.md (add CST/CWT lifecycle)
 
 **Phase 2 — FM Guidance (Cross-Repo Advisory):**
 - [ ] Propose FM contract update: CST checkpoint identification
