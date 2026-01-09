@@ -3,8 +3,8 @@
 ## Status
 **Type**: PR Gate Release Checklist (Canonical Documentation)  
 **Authority**: Governance (Canonical)  
-**Version**: 1.0.0  
-**Effective Date**: 2025-12-22  
+**Version**: 1.1.0  
+**Effective Date**: 2026-01-09  
 **Agent Role**: Builder Agent  
 **Canonical Reference**: `governance/canon/AGENT_ROLE_GATE_APPLICABILITY.md`
 
@@ -158,6 +158,31 @@ If a PR satisfies all items but still fails, that is a **governance defect**, no
 
 ---
 
+### Category 7: Constitutional Sandbox Compliance (BL-024)
+
+**Gate**: Constitutional vs Procedural compliance validation  
+**Canonical Reference**: `governance/canon/CONSTITUTIONAL_SANDBOX_PATTERN.md`, `BUILD_PHILOSOPHY.md` (v1.5)
+
+**Purpose**: Verify constitutional requirements satisfied regardless of procedural path taken
+
+#### Constitutional Requirements (ALL MUST BE YES)
+- [ ] **7.1** Zero Test Debt: Confirmed (no failing, skipped, or incomplete tests)
+- [ ] **7.2** 100% GREEN: Achieved (all tests passing, zero warnings, zero errors)
+- [ ] **7.3** BUILD_PHILOSOPHY Sequence: Maintained (Architecture → Red QA → Build to Green)
+- [ ] **7.4** Governance Gates: Satisfied (all validation gates passed)
+- [ ] **7.5** Quality Integrity: Verified (comprehensive QA, no quality negotiation)
+- [ ] **7.6** No constitutional rule violations (GSR, QIC respected)
+
+#### Procedural Adaptations (IF ANY)
+- [ ] **7.7** Procedural guidance adaptations documented (if flexibility applied)
+- [ ] **7.8** Constitutional justification provided (for any adaptation)
+- [ ] **7.9** Efficiency gain or context-appropriate optimization verified (if adapted)
+- [ ] **7.10** Adaptation does not weaken governance enforcement
+
+**Note**: Constitutional compliance is MANDATORY. Procedural flexibility is PERMITTED within constitutional boundaries. See `governance/canon/CONSTITUTIONAL_SANDBOX_PATTERN.md` for tier hierarchy and decision framework.
+
+---
+
 ## Predictability Invariant
 
 > **If all checklist items above are satisfied, the PR gate MUST pass.**
@@ -195,14 +220,22 @@ Gate logic must:
 ## Related Documents
 
 - `governance/canon/AGENT_ROLE_GATE_APPLICABILITY.md` - Agent role gate definitions
-- `BUILD_PHILOSOPHY.md` - Build-to-Green, One-Time Build Law
+- `BUILD_PHILOSOPHY.md` - Build-to-Green, One-Time Build Law, Constitutional Sandbox Pattern
 - `governance/canon/BUILDER_FIRST_PR_MERGE_MODEL.md` - Builder QA contracts
 - `GOVERNANCE_GATE_CANON.md` - Constitutional safeguards (CS1-CS6, GSR)
 - `governance/canon/GATE_PREDICTIVE_COMPLIANCE_ANALYSIS.md` - GPCA model
+- `governance/canon/CONSTITUTIONAL_SANDBOX_PATTERN.md` - Constitutional vs Procedural hierarchy (BL-024)
+- `governance/canon/BOOTSTRAP_EXECUTION_LEARNINGS.md` - BL-024 (Constitutional Sandbox discovery)
 
 ---
 
 ## Versioning
+
+### v1.1.0 (2026-01-09)
+- Added Category 7: Constitutional Sandbox Compliance (BL-024)
+- Added constitutional vs procedural validation requirements
+- Added procedural adaptation documentation requirements
+- Reference to CONSTITUTIONAL_SANDBOX_PATTERN.md
 
 ### v1.0.0 (2025-12-22)
 - Initial release

@@ -693,8 +693,56 @@ This build philosophy aligns with and extends:
 - **Foreman's Role**: Orchestrator and architect, not code generator
 - **Builder's Role**: Implement to specifications, not invent solutions
 - **Autonomy Model**: Autonomous within strict quality boundaries
+- **Constitutional Sandbox Pattern**: Constitutional rules have supreme authority; agent judgment within boundaries is encouraged
 
 **This philosophy IS the operational model. All agents must follow it.**
+
+### Constitutional Sandbox Pattern
+
+**Core Principle** (Bootstrap Learning BL-024): Constitutional rules have SUPREME AUTHORITY over procedural guidance. Agent/human judgment and flexibility are ENCOURAGED within constitutional boundaries to optimize for quality, speed, and adaptive execution—as long as constitutional boundaries are NEVER violated.
+
+**Two-Tier Governance Hierarchy**:
+
+1. **Tier 1 — Constitutional Rules (Supreme Authority)**:
+   - BUILD_PHILOSOPHY execution sequence (Architecture → Red QA → Build to Green → Validation)
+   - Zero Test Debt mandate (no failing, skipped, or incomplete tests)
+   - 100% GREEN requirement (all tests passing, zero warnings, zero errors)
+   - Governance Supremacy Rule (GSR)
+   - Quality Integrity Contract (QIC)
+   - **Non-negotiable, unbreakable, universal**
+
+2. **Tier 2 — Procedural Guidance (Flexible, Advisory)**:
+   - Collaborative handoff sequences
+   - Role separation requirements
+   - Process step details
+   - Prescribed collaboration patterns
+   - **Flexible, context-dependent, optimizable within constitutional boundaries**
+
+**Agent Judgment Framework**:
+
+**ALWAYS PERMITTED** (Within Constitutional Sandbox):
+- ✅ Optimizing process efficiency while maintaining constitutional compliance
+- ✅ Consolidating roles when constitutional quality achievable
+- ✅ Reordering procedural steps while preserving constitutional sequence
+- ✅ Adapting execution to context within boundaries
+- ✅ Exercising judgment to achieve constitutional requirements efficiently
+
+**NEVER PERMITTED** (Constitutional Violations):
+- ❌ Violating Zero Test Debt mandate
+- ❌ Accepting less than 100% GREEN
+- ❌ Skipping or reordering BUILD_PHILOSOPHY constitutional sequence
+- ❌ Bypassing governance validation gates
+- ❌ Weakening quality standards
+
+**Key Question Before Any Procedural Adaptation**:
+> "Does this maintain ALL constitutional requirements while optimizing execution?"
+
+If YES: Flexibility is encouraged.  
+If NO: Adaptation is prohibited.
+
+**Complete Specification**: `governance/canon/CONSTITUTIONAL_SANDBOX_PATTERN.md`
+
+**Evidence**: Bootstrap Learning BL-024, derived from Wave 2.11 execution (maturion-foreman-office-app#530) where builder agent consolidated roles, achieved 100% GREEN + Zero Test Debt in ~4.5 hours vs 7-9 days prescribed model, demonstrating intelligent judgment within constitutional constraints.
 
 ---
 
@@ -799,17 +847,20 @@ This policy enforces the 100% GREEN mandate by preventing test dodging - the pra
 
 *This is the Maturion Build Philosophy. All agents, builders, and processes must align with this philosophy. This document is the canonical source of truth for how we build software.*
 
-**Version**: 1.4 (NO-ONLY-LANGUAGE policy integration)  
+**Version**: 1.5 (Constitutional Sandbox Pattern integration)  
 **Authority**: Johan (Maturion Leadership)  
 **Status**: Active and Enforced  
-**Last Updated**: 2026-01-08
+**Last Updated**: 2026-01-09
 
 **Version History**:
+- **v1.5** (2026-01-09): Added Constitutional Sandbox Pattern (BL-024), two-tier governance hierarchy (Constitutional vs Procedural), agent judgment framework within constitutional boundaries
 - **v1.4** (2026-01-08): Added POLICY-NO-ONLY-LANGUAGE reference, banned language examples in "NOT 100% GREEN" section, and Related Governance Policies section
 - **v1.3** (2026-01-05): Second-Time Failure Prohibition
 - **Earlier versions**: Initial build philosophy and zero test debt doctrine
 
 **Changelog**:
+- **1.5 (2026-01-09)**: Constitutional Sandbox Pattern canonized (BL-024); two-tier governance hierarchy established (Constitutional Tier 1 supreme, Procedural Tier 2 flexible); agent judgment framework within constitutional boundaries; evidence from Wave 2.11 (~4.5h vs 7-9 days, 100% GREEN maintained)
+- **1.4 (2026-01-08)**: POLICY-NO-ONLY-LANGUAGE integration; test dodging prevention (BL-022)
 - **1.3 (2026-01-05)**: Second-Time Failure Prohibition canonized; BL forward-scan obligation established; "never repeat" discipline elevated to constitutional anti-pattern (BL-018/BL-019 derived)
 - **1.2 (2025-12-13)**: Zero Test Debt codified as constitutional requirement; explicit enforcement of NO carry-over debt, NO temporary exceptions, NO partial passes
 - **1.1 (2025-12-13)**: FL/CI Integration; Test Infrastructure as Production Code

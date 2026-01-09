@@ -2110,7 +2110,242 @@ This is a **first-time failure** (CATASTROPHIC classification) representing **mi
 
 ---
 
-**Next Learning ID**: BL-023
+**Next Learning ID**: BL-024
+
+---
+
+## BL-024 — Constitutional Sandbox Pattern: Agent Judgment Within Governance Boundaries
+
+### Classification
+
+**TRANSFORMATIVE** — Systematic Pattern Discovery Enabling Adaptive Execution Within Constitutional Constraints
+
+### Context
+
+During Wave 2.11 build execution (maturion-foreman-office-app), a builder agent was assigned a collaborative scenario (api-builder + qa-builder handoff), where process guidance suggested strict sequential handoff. The builder agent (Copilot) prioritized constitutional BUILD_PHILOSOPHY (Architecture → QA-to-Red → Build-to-Green → Validation) over literal procedural instructions, delivering both implementation and comprehensive QA as a single actor while maintaining zero test debt, 100% GREEN, and full governance alignment.
+
+### Incident Summary
+
+Builder agent demonstrated intelligent judgment by recognizing that strict adherence to collaborative process guidance would conflict with superior constitutional requirements. Agent chose to execute both roles, achieving rapid delivery (~4.5 hours vs. 7-9 days estimated for prescribed sequential model) while preserving all non-negotiable constitutional requirements:
+- ✅ Architecture → QA-to-Red → Build-to-Green sequence maintained
+- ✅ Zero Test Debt enforced
+- ✅ 100% GREEN achieved
+- ✅ All constitutional quality gates satisfied
+- ✅ No governance violations
+
+### Observed Pattern
+
+**Constitutional Rules** (supreme authority):
+- BUILD_PHILOSOPHY execution sequence
+- Zero Test Debt mandate
+- 100% GREEN requirement
+- Governance Supremacy Rule (GSR)
+- Quality Integrity Contract (QIC)
+
+**Process Guidance** (flexible, advisory):
+- Collaborative handoff sequences
+- Role separation requirements
+- Mandated process steps
+- Prescribed collaboration patterns
+
+**Key Discovery**: Agent/human judgment IS encouraged inside constitutional boundaries to optimize for quality, speed, and adaptive execution, as long as constitutional boundaries are never violated.
+
+### Root Cause Analysis
+
+**Primary Insight**: Governance structure implicitly created a two-tier hierarchy but never explicitly documented it.
+
+**Contributing Factors**:
+1. **Implicit Hierarchy**: Constitutional vs procedural distinction existed but wasn't canonized
+2. **Process Rigidity**: Procedural guidance written with mandatory language could conflict with constitutional optimization
+3. **Judgment Uncertainty**: Agents lacked explicit permission to exercise judgment within constitutional sandbox
+4. **Efficiency Gap**: Strict process adherence could slow progress when constitutional compliance achievable via alternative paths
+
+**Why This Matters**: Explicit canonization of the constitutional sandbox pattern:
+- Empowers intelligent agents to optimize execution within safe boundaries
+- Prevents procedural guidance from becoming counterproductive constraints
+- Enables adaptive, resilient delivery while guaranteeing constitutional safety
+- Clarifies when agent judgment is appropriate vs. prohibited
+
+### Learning
+
+**Core Lesson**: Constitutional rules (BUILD_PHILOSOPHY, Zero Test Debt, 100% GREEN, GSR, QIC) have SUPREME AUTHORITY over procedural/process guidance. Agent/human judgment and flexibility are ENCOURAGED within the constitutional sandbox, enabling optimization for quality, speed, and adaptive execution—as long as constitutional boundaries are NEVER violated.
+
+**Key Principles Established**:
+
+1. **Two-Tier Governance Hierarchy**:
+   - **Tier 1 (Constitutional)**: Unbreakable rules defining quality, safety, governance supremacy
+   - **Tier 2 (Procedural)**: Flexible guidance describing typical/recommended execution paths
+
+2. **Constitutional Sandbox Model**:
+   - Constitutional rules form unbreakable boundaries (the "sandbox walls")
+   - Inside the sandbox: judgment, ingenuity, optimization, and adaptation are encouraged
+   - Outside the sandbox: prohibited—constitutional violations never permitted
+
+3. **Decision Framework for Agents**:
+   - ALWAYS comply with constitutional rules (non-negotiable)
+   - EVALUATE procedural guidance for applicability to current context
+   - EXERCISE judgment to optimize within constitutional constraints
+   - DOCUMENT when procedural guidance adjusted with constitutional justification
+
+4. **When Flexibility Is Appropriate**:
+   - ✅ Process step reordering that maintains constitutional sequence
+   - ✅ Role consolidation when constitutional quality achievable
+   - ✅ Efficiency optimization preserving all constitutional requirements
+   - ✅ Adaptive execution responding to context while respecting boundaries
+
+5. **When Flexibility Is PROHIBITED**:
+   - ❌ ANY constitutional rule violation (Zero Test Debt, 100% GREEN, GSR, QIC, BUILD_PHILOSOPHY)
+   - ❌ Skipping constitutional validation gates
+   - ❌ Weakening quality standards
+   - ❌ Bypassing governance enforcement
+
+### Governance Impact
+
+**Immediate Actions Required**:
+
+1. **Create Canonical Document**: `CONSTITUTIONAL_SANDBOX_PATTERN.md`
+   - Define constitutional vs procedural hierarchy explicitly
+   - Document the sandbox model and boundaries
+   - Provide decision framework for agents
+   - Include examples of appropriate flexibility vs prohibited actions
+
+2. **Update BUILD_PHILOSOPHY.md**
+   - Add section referencing Constitutional Sandbox Pattern
+   - Clarify constitutional hierarchy
+
+3. **Layer Down to Builder Contracts** (Advisory, Cross-Repo):
+   - Update builder contract guidance: agent judgment encouraged within constitutional bounds
+   - Add constitutional vs process distinction to builder onboarding
+   - Include sandbox decision framework
+
+4. **Update Pre-Handover Checklist**:
+   - Add "Constitutional vs Process Compliance" check
+   - Verify constitutional requirements satisfied (mandatory)
+   - Document procedural adaptations with justification (if any)
+
+5. **Update Rollout Guidance**:
+   - Favor agent discretion where constitutional compliance maintained
+   - Document when prescriptive process vs flexible execution appropriate
+
+**Forward-Binding Expectations**:
+- All agents MUST comply with constitutional rules (non-negotiable)
+- All agents MAY exercise judgment within constitutional sandbox
+- All procedural adaptations MUST document constitutional justification
+- All execution MUST verify constitutional compliance before completion
+
+### Prohibited Actions (Permanent, Platform-Wide)
+
+**Never Permitted** (Constitutional Violations):
+- ❌ Violating Zero Test Debt mandate
+- ❌ Accepting less than 100% GREEN
+- ❌ Bypassing BUILD_PHILOSOPHY sequence
+- ❌ Weakening governance enforcement
+- ❌ Skipping constitutional validation gates
+- ❌ Violating GSR or QIC
+
+**Always Permitted** (Within Constitutional Sandbox):
+- ✅ Optimizing process efficiency while maintaining constitutional compliance
+- ✅ Consolidating roles when quality achievable
+- ✅ Reordering procedural steps while preserving constitutional sequence
+- ✅ Adapting execution to context within boundaries
+- ✅ Exercising judgment to achieve constitutional requirements efficiently
+
+### Ratchet Statement
+
+**This learning establishes the Constitutional Sandbox Pattern as the authoritative model for agent judgment and execution flexibility within governance.**
+
+This is a **TRANSFORMATIVE** discovery (not a failure—a systematic pattern identification) representing **explicit canonization of implicit hierarchy**. The system recognizes and formalizes that constitutional rules are supreme, procedural guidance is flexible, and agent judgment within constitutional boundaries is encouraged for optimal execution.
+
+**This pattern enables**: More adaptive, resilient, and efficient agent-led delivery while GUARANTEEING core constitutional requirements are always safeguarded.
+
+### Status
+
+**Recorded & Canonization In Progress** — Platform-Wide, Non-Retroactive  
+**Applies To:** All repositories, all agents, all execution contexts  
+**Effective:** 2026-01-09
+
+### Impact Assessment
+
+**PR Evidence**: maturion-foreman-office-app#530 (Wave 2.11)  
+**Agent Impact**: Explicit permission to exercise judgment within constitutional sandbox  
+**Canon Required**: CONSTITUTIONAL_SANDBOX_PATTERN.md (NEW)  
+**BUILD_PHILOSOPHY Update**: Add constitutional hierarchy section  
+**Layer-Down Required**: Builder contracts, FM guidance (advisory cross-repo)  
+**Delivery Impact**: ~4.5 hours actual vs 7-9 days prescribed model (60-95% efficiency gain)
+
+### Cross-References
+
+**Governance Repo (Canonical)**:
+- `governance/canon/CONSTITUTIONAL_SANDBOX_PATTERN.md` — Canonical pattern definition (TO BE CREATED)
+- `governance/canon/BOOTSTRAP_EXECUTION_LEARNINGS.md` — This BL-024 entry
+- `BUILD_PHILOSOPHY.md` — Supreme constitutional authority
+- `governance/canon/LEARNING_INTAKE_AND_PROMOTION_MODEL.md` — Learning promotion rules
+- `governance/CONSTITUTION.md` — Constitutional principles
+
+**Layer-Down Targets** (All Application Repos - Advisory)**:
+- FM agent contracts — Constitutional sandbox awareness
+- Builder agent contracts — Judgment permission within boundaries
+- Pre-handover checklists — Constitutional vs process validation
+- Rollout guidance — Flexibility where constitutional compliance maintained
+
+**Reference Materials**:
+- PR maturion-foreman-office-app#530 — Wave 2.11 execution demonstrating pattern
+- Issue maturion-foreman-governance#[this issue] — BL-024 canonization request
+- BUILD_PHILOSOPHY.md — Constitutional foundation
+
+### Prevention Measures
+
+**Structural**:
+1. CONSTITUTIONAL_SANDBOX_PATTERN.md (canonical definition)
+2. BUILD_PHILOSOPHY.md updated with hierarchy
+3. Pre-handover checklist includes constitutional validation
+4. Builder contracts reference sandbox model
+
+**Procedural**:
+1. All execution validates constitutional compliance (mandatory)
+2. All procedural adaptations documented with constitutional justification
+3. Pre-merge validation confirms constitutional requirements satisfied
+4. Handover verification includes constitutional vs process check
+
+**Cultural**:
+1. "Constitutional compliance is mandatory; process optimization is encouraged"
+2. "Exercise judgment inside the sandbox; never violate the boundaries"
+3. "Flexibility serves quality; quality is never flexible"
+4. "Optimize for speed and efficiency within constitutional constraints"
+
+### Ripple Plan
+
+**Phase 1 — Governance Canon** (This Repo):
+- ✅ BL-024 recorded in BOOTSTRAP_EXECUTION_LEARNINGS.md
+- [ ] Create CONSTITUTIONAL_SANDBOX_PATTERN.md (canonical definition)
+- [ ] Update BUILD_PHILOSOPHY.md (add constitutional hierarchy section)
+- [ ] Update pre-handover checklist templates
+
+**Phase 2 — FM Guidance** (Cross-Repo Advisory):
+- [ ] Propose FM contract update: Constitutional sandbox awareness
+- [ ] Propose pre-authorization checklist addition: Constitutional validation
+
+**Phase 3 — Builder Contracts** (Cross-Repo Advisory):
+- [ ] Propose builder contract updates: Judgment permission within sandbox
+- [ ] Propose builder onboarding: Constitutional vs procedural training
+
+**Phase 4 — Rollout Guidance** (Cross-Repo Advisory):
+- [ ] Update wave planning guidance: Favor agent discretion where appropriate
+- [ ] Document when prescriptive vs flexible execution suitable
+
+---
+
+**End of BL-024**
+
+---
+
+**Maintained by**: Maturion Governance Administrator  
+**Last Updated**: 2026-01-09  
+**Registry Status**: ACTIVE
+
+---
+
+**Next Learning ID**: BL-025
 
 ---
 
