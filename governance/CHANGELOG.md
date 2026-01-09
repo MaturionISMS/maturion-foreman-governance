@@ -64,6 +64,77 @@ Each entry follows this structure:
 
 ## Change History
 
+### [DEFECT-RESOLUTION-MAINTENANCE-CANON] - 2026-01-09 - [NON_BREAKING_ENHANCEMENT]
+
+**Changed By**: Governance Administrator (Copilot Agent)
+**Approved By**: Pending (Johan approval for PR merge)
+**Effective Date**: Upon PR merge (target: 2026-01-09)
+
+**Summary**: Created comprehensive canonical governance protocol for resolving defects, performing maintenance, and managing patches for already published builds and production systems. Fills critical gap in governance coverage by extending One-Time Build Law, Zero Test Debt, and QA-to-Red discipline to post-production maintenance cycles.
+
+**Affected Artifacts**:
+- `governance/canon/DEFECT_RESOLUTION_MAINTENANCE_CANON.md` (NEW - comprehensive defect resolution protocol)
+- `governance/canon/GOVERNANCE_CANON_MANIFEST.md` (UPDATED - added new canon to Section 3.2)
+- `governance/CHANGELOG.md` (UPDATED - this entry)
+
+**Migration Required**: YES - Mandatory layer-down to all application repositories
+
+**Migration Guidance**: 
+1. **PartPulse** (FIRST APPLICATION - within 2 weeks):
+   - Review DEFECT_RESOLUTION_MAINTENANCE_CANON.md with team
+   - Implement defect triage process (Section 4)
+   - Create fix authorization gate (Section 5)
+   - Configure governance gates for fix PRs (Section 10)
+   - Document rollback procedures for current production version
+   - Execute first fix using new protocol and gather learnings
+   
+2. **FM Office App** (within 4 weeks of PartPulse validation):
+   - Adapt protocol to office-app context
+   - Implement defect classification system
+   - Update FM contract with fix planning requirements
+   - Create fix PR templates with evidence requirements
+   
+3. **SlotMaster and Future Applications** (within 6 weeks):
+   - Ripple protocol via CROSS_REPOSITORY_LAYER_DOWN_PROTOCOL.md
+   - Governance liaison implements changes in each repo
+   - Report completion to governance repo
+
+**Rationale**: 
+- **Gap Identified**: Governance covers new builds comprehensively but lacks structured process for defect fixes, maintenance, and production support
+- **Risk Mitigation**: Unstructured defect fixes create test debt, bypass quality gates, risk production stability, and introduce governance drift
+- **Owner Feedback**: Catastrophic risk if not addressed - need same discipline for fixes as for new builds
+- **Philosophy Alignment**: Extends BUILD_PHILOSOPHY.md (One-Time Build Law → One-Time Fix Law), OPOJD (continuous execution), QA_POLICY_MASTER (zero test debt), and all existing build lifecycle governance to maintenance context
+
+**Impact**: 
+- **Who**: All FM instances, all application repositories, all maintenance work
+- **What**: Defect fixes, patches, tech debt remediation, security updates, production support
+- **When**: Effective immediately for all post-production changes
+- **Authority**: PUBLIC_API canonical governance - downstream repos MUST implement
+
+**Key Principles Established**:
+1. Maintenance is not exempt from governance (same 100% GREEN, zero test debt requirements)
+2. One-Time Fix Law (fixes work correctly first time, no iteration)
+3. Production safety first (rollback plans, impact analysis, additional validation)
+4. Defect learning promotion (every defect improves governance permanently)
+5. Architecture-first for all fixes (no "quick fix" shortcuts)
+6. Complete audit trail (discovery → closure fully documented)
+
+**Integration**:
+- Extends BUILD_PHILOSOPHY.md to post-production context
+- Applies OPOJD_DOCTRINE.md to fix cycles
+- Implements QA_POLICY_MASTER.md failure handling for defects
+- Uses FM_BUILDER_APPOINTMENT_PROTOCOL.md for fix work
+- Follows VERSIONING_AND_EVOLUTION_GOVERNANCE.md for releases
+- Leverages LEARNING_INTAKE_AND_PROMOTION_MODEL.md for defect patterns
+- Uses GOVERNANCE_RIPPLE_MODEL.md for cross-repo awareness
+
+**References**: 
+- Issue: [GOVERNANCE] Canonical Protocol: Existing Build Defect Resolution & Published System Maintenance
+- Canon: `governance/canon/DEFECT_RESOLUTION_MAINTENANCE_CANON.md`
+- Manifest: `governance/canon/GOVERNANCE_CANON_MANIFEST.md` (Section 3.2)
+
+---
+
 ### [ZERO-WARNING-POLICY-ALIGNMENT] - 2026-01-07 - [BREAKING_CHANGE]
 
 **Changed By**: Governance Administrator (Copilot Agent)

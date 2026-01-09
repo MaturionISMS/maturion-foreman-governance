@@ -93,6 +93,7 @@ It serves to:
 | `BUILD_TREE_EXECUTION_MODEL.md` | 1.0.0 | PUBLIC_API | FM App | 2026-01-05 |
 | `BUILDER_CONTRACT_BINDING_CHECKLIST.md` | 1.0.0 | PUBLIC_API | FM App, SlotMaster | 2026-01-05 |
 | `BUILDER_FIRST_PR_MERGE_MODEL.md` | 1.0.0 | PUBLIC_API | FM App, SlotMaster | 2026-01-05 |
+| `DEFECT_RESOLUTION_MAINTENANCE_CANON.md` | 1.0.0 | PUBLIC_API | PartPulse, FM App, SlotMaster | 2026-01-09 |
 
 ### 3.3 Delegation & Execution Models (PUBLIC_API)
 
