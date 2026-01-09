@@ -8,7 +8,7 @@
 **Owner**: Maturion Engineering Leadership (Johan Ras)  
 **Precedence**: Subordinate to GOVERNANCE_PURPOSE_AND_SCOPE.md and BUILD_PHILOSOPHY.md  
 **Applies To**: All Wave Executions, All Application Repositories  
-**Related Canon**: MANDATORY_CANONICAL_PROGRESS_RECORDING_AND_WAVE_CLOSURE_CERTIFICATION.md, WAVE_MODEL.md
+**Related Canon**: MANDATORY_CANONICAL_PROGRESS_RECORDING_AND_WAVE_CLOSURE_CERTIFICATION.md, WAVE_MODEL.md, COMBINED_TESTING_PATTERN.md
 
 ---
 
@@ -131,6 +131,28 @@ IBWR SHALL consume the following inputs:
 - Cases where governance conflicts occurred
 - Cases where governance gaps required escalation
 
+### 4.5 Combined Wave Testing (CWT) Evidence (MANDATORY)
+**Authority**: COMBINED_TESTING_PATTERN.md (BL-025)
+
+> **CWT is a constitutional requirement. IBWR CANNOT complete without CWT PASS.**
+
+**Required CWT Evidence:**
+- [ ] CWT scope defined (waves covered, modules covered, scenarios covered)
+- [ ] CWT tests executed (automated or manual with documented steps)
+- [ ] CWT results recorded (PASS/FAIL with detailed evidence)
+- [ ] Cross-wave integration validated (all waves through Wave N)
+- [ ] Cross-module integration validated (all modules in Wave N)
+- [ ] Multi-scenario coverage verified (happy path + error paths + edge cases)
+- [ ] CWT PASS verdict recorded
+
+**CWT Failure Response:**
+- CWT failures BLOCK IBWR completion absolutely
+- Integration issues trigger corrective actions
+- Wave closure CANNOT proceed with unresolved CWT failures
+- FM escalates if CWT reveals systemic integration gaps
+
+**Reference**: See COMBINED_TESTING_PATTERN.md § 5 (Combined Wave Testing)
+
 ---
 
 ## 5. Required Outputs (MANDATORY)
@@ -248,20 +270,34 @@ IBWR is **NOT COMPLETE** until:
 - [ ] Ripple layer-down plan created
 - [ ] Next-wave safeguards documented
 
-### 6.2 Governance Changes Implemented
+### 6.2 CWT Validation Complete (MANDATORY)
+**Authority**: COMBINED_TESTING_PATTERN.md § 5 (BL-025)
+
+- [ ] CWT executed after wave QA PASS
+- [ ] CWT scope documented (waves, modules, scenarios)
+- [ ] Cross-wave integration validated (PASS)
+- [ ] Cross-module integration validated (PASS)
+- [ ] Multi-scenario coverage verified (PASS)
+- [ ] CWT PASS verdict recorded in Wave Reconciliation Report
+- [ ] CWT evidence documented and auditable
+
+**Blocking Rule (Reinforced):**
+> **IBWR CANNOT complete without CWT PASS. Failure to execute CWT SHALL block next-wave authorization.**
+
+### 6.3 Governance Changes Implemented
 - [ ] Governance canon updated (if Tier-0 changes)
 - [ ] Policy/procedure documents updated (if Tier-1 changes)
 - [ ] Bootstrap learnings added (if BL-XXX classifications)
 - [ ] Changes committed and merged to governance repository
 
-### 6.3 Ripple Propagation Verified
+### 6.4 Ripple Propagation Verified
 - [ ] FM agent contract updated (if impacted)
 - [ ] Builder contracts/instructions updated (if impacted)
 - [ ] Template updates completed (if impacted)
 - [ ] Cross-references validated
 - [ ] Ripple propagation checklist complete
 
-### 6.4 Next-Wave Safeguards Integrated
+### 6.5 Next-Wave Safeguards Integrated
 - [ ] Wave N+1 planning incorporates safeguards
 - [ ] Wave N+1 cannot violate new prohibitions
 - [ ] Wave N+1 will satisfy new mandatory requirements

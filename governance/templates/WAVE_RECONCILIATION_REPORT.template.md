@@ -125,6 +125,137 @@
 
 ---
 
+## 3A. Combined Subwave Testing (CST) Checkpoint Results
+
+**Authority**: COMBINED_TESTING_PATTERN.md § 4 (BL-025)
+
+### 3A.1 CST Checkpoints Identified
+
+**CST Convergence Points Planned:**
+- [Checkpoint 1]: [Subwaves/modules converging, integration risk assessment]
+- [Checkpoint 2]: [Subwaves/modules converging, integration risk assessment]
+
+**CST Decision Rationale:**
+- Why CST was applied at these checkpoints (integration risk justification)
+- Why CST was NOT applied at other points (low risk or adequate regression coverage)
+
+### 3A.2 CST Execution Results
+
+| CST Checkpoint | Scenarios Tested | Execution Date | Result | Issues Discovered | Resolution |
+|----------------|------------------|----------------|--------|-------------------|------------|
+| [Checkpoint 1] | [Integration scenarios] | [YYYY-MM-DD] | [PASS/FAIL] | [Integration issues found] | [How resolved] |
+| [Checkpoint 2] | [Integration scenarios] | [YYYY-MM-DD] | [PASS/FAIL] | [Integration issues found] | [How resolved] |
+
+**Overall CST Assessment:**
+- CST provided early integration feedback: [YES/NO]
+- Integration issues caught before wave completion: [N issues]
+- Rework avoided due to CST: [Estimated effort saved]
+
+### 3A.3 CST Lessons Learned
+
+**What Worked Well:**
+- [CST success 1]
+- [CST success 2]
+
+**What Could Be Improved:**
+- [CST improvement 1]
+- [CST improvement 2]
+
+**Recommendations for Next Wave CST:**
+- [Recommendation 1]
+- [Recommendation 2]
+
+---
+
+## 3B. Combined Wave Testing (CWT) Validation Results (MANDATORY)
+
+**Authority**: COMBINED_TESTING_PATTERN.md § 5 (BL-025)
+
+> **CWT is constitutionally required. IBWR CANNOT complete without CWT PASS.**
+
+### 3B.1 CWT Scope
+
+**Waves Covered:**
+- Wave 1 through Wave [N] (complete cross-wave integration)
+
+**Modules Covered:**
+- [Module 1]: [Integration points tested]
+- [Module 2]: [Integration points tested]
+- [Module 3]: [Integration points tested]
+
+**Scenarios Covered:**
+- Happy path scenarios: [N scenarios]
+- Error path scenarios: [N scenarios]
+- Edge case scenarios: [N scenarios]
+
+### 3B.2 CWT Execution Evidence
+
+**CWT Execution Date:** [YYYY-MM-DD]
+
+**Test Execution Method:**
+- [ ] Automated integration test suite
+- [ ] Manual validation with documented steps
+- [ ] Combination of automated and manual
+
+**CWT Test Results:**
+
+| Test Category | Tests Executed | Tests Passed | Tests Failed | Coverage |
+|---------------|----------------|--------------|--------------|----------|
+| Cross-Wave Integration | [N tests] | [N passed] | [N failed] | [X%] |
+| Cross-Module Integration | [N tests] | [N passed] | [N failed] | [X%] |
+| Multi-Scenario (Happy) | [N tests] | [N passed] | [N failed] | [X%] |
+| Multi-Scenario (Error) | [N tests] | [N passed] | [N failed] | [X%] |
+| Multi-Scenario (Edge) | [N tests] | [N passed] | [N failed] | [X%] |
+
+**Overall CWT Pass Rate:** [X%] (Must be 100% for IBWR completion)
+
+### 3B.3 CWT Validation Results
+
+**Cross-Wave Integration Validation:**
+- [ ] All waves through Wave [N] integrate correctly
+- [ ] Wave-to-wave dependencies validated
+- [ ] No cross-wave regressions detected
+
+**Cross-Module Integration Validation:**
+- [ ] All modules in Wave [N] integrate correctly
+- [ ] Module-to-module interfaces validated
+- [ ] Architectural boundaries tested (frontend ↔ backend, service ↔ database, etc.)
+
+**Multi-Scenario Coverage Validation:**
+- [ ] Happy path scenarios validate correctly
+- [ ] Error path scenarios handle failures gracefully
+- [ ] Edge case scenarios behave correctly
+- [ ] Complex multi-module interactions validated
+
+### 3B.4 CWT PASS Verdict (MANDATORY)
+
+**CWT Overall Verdict:** [PASS / FAIL]
+
+**If PASS:**
+- [ ] All CWT tests passed (100% GREEN)
+- [ ] Cross-wave integration validated
+- [ ] Cross-module integration validated
+- [ ] Multi-scenario coverage complete
+- [ ] IBWR may proceed
+
+**If FAIL:**
+- [ ] Integration issues documented (see below)
+- [ ] Corrective actions defined
+- [ ] IBWR BLOCKED until CWT PASS achieved
+- [ ] Wave closure CANNOT proceed
+
+**CWT Failure Details (if applicable):**
+- [Failure 1]: [Description, root cause, corrective action]
+- [Failure 2]: [Description, root cause, corrective action]
+
+### 3B.5 CWT Evidence Archive
+
+**CWT Test Logs:** [Link or path to test execution logs]  
+**CWT Test Results:** [Link or path to detailed results]  
+**CWT Coverage Report:** [Link or path to coverage analysis]
+
+---
+
 ## 4. Governance Gaps Identified
 
 ### 4.1 Governance Gaps Summary
@@ -330,14 +461,29 @@
 - [ ] Ripple layer-down plan created
 - [ ] Next-wave safeguards documented
 
-### 8.2 Governance Changes Implemented
+### 8.2 CWT Validation Complete (MANDATORY)
+
+**Authority**: COMBINED_TESTING_PATTERN.md § 5 (BL-025)
+
+- [ ] CWT executed after wave QA PASS
+- [ ] CWT scope documented (waves, modules, scenarios)
+- [ ] Cross-wave integration validated (PASS)
+- [ ] Cross-module integration validated (PASS)
+- [ ] Multi-scenario coverage verified (PASS)
+- [ ] CWT PASS verdict recorded (Section 3B.4)
+- [ ] CWT evidence documented and auditable
+
+**Blocking Rule:**
+> **IBWR CANNOT complete without CWT PASS.**
+
+### 8.3 Governance Changes Implemented
 
 - [ ] Governance canon updated (if Tier-0 changes)
 - [ ] Policy/procedure documents updated (if Tier-1 changes)
 - [ ] Bootstrap learnings added (if BL-XXX classifications)
 - [ ] Changes committed and merged to governance repository
 
-### 8.3 Ripple Propagation Verified
+### 8.4 Ripple Propagation Verified
 
 - [ ] FM agent contract updated (if impacted)
 - [ ] Builder contracts/instructions updated (if impacted)
@@ -345,13 +491,13 @@
 - [ ] Cross-references validated
 - [ ] Ripple propagation checklist complete
 
-### 8.4 Next-Wave Safeguards Integrated
+### 8.5 Next-Wave Safeguards Integrated
 
 - [ ] Wave [N+1] planning incorporates safeguards
 - [ ] Wave [N+1] cannot violate new prohibitions
 - [ ] Wave [N+1] will satisfy new mandatory requirements
 
-### 8.5 Human Authority Approval (Bootstrap Mode)
+### 8.6 Human Authority Approval (Bootstrap Mode)
 
 - [ ] Human authority (Johan) reviewed IBWR outputs
 - [ ] Human authority approved governance changes

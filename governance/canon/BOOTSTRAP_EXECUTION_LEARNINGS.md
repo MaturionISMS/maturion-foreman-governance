@@ -2339,13 +2339,301 @@ This is a **TRANSFORMATIVE** discovery (not a failure—a systematic pattern ide
 
 ---
 
+## BL-025 — Combined Subwave Testing (CST) and Combined Wave Testing (CWT) Must Be Strategic Integration Gates
+
+### Classification
+- **Type:** Governance Learning (Strategic Quality Assurance Pattern)
+- **Phase:** Multi-Wave Execution Observation
+- **Severity:** Transformative (Pattern Discovery — Forward-Binding Prevention)
+- **Status:** Recorded & Canonization Required
+- **Impacts:** All multi-wave builds, IBWR process, wave planning, QA strategy
+
+---
+
+### Context
+
+During multi-wave, one-time build execution across multiple repositories, a structural gap was identified: while wave-level testing (Wave 1 QA, Wave 2 QA, cumulative regression) was well-defined, there was no canonical requirement for **intermediate integration testing** at strategic convergence points within waves (subwaves) or **comprehensive cross-wave integration testing** before final E2E validation.
+
+This created a risk pattern:
+- Integration issues discovered too late (at E2E or IBWR)
+- No early detection at subwave convergence points
+- Expensive rework when cross-module issues found late
+- Inadequate cross-wave, cross-module, multi-scenario validation
+
+---
+
+### Observed Issue
+
+**Current Testing Model:**
+- Subwave testing: Individual QA per subwave (isolated)
+- Wave testing: Cumulative regression (Wave 1 + Wave 2 + ... + Wave N)
+- E2E testing: Final validation before production
+
+**Gap Identified:**
+- No **Combined Subwave Testing (CST)** at strategic convergence checkpoints
+- No **Combined Wave Testing (CWT)** as mandatory gate before IBWR
+- Integration assurance delayed until late in execution
+- Cross-module, cross-wave, multi-scenario coverage not mandated
+
+**Risk:**
+- Subwaves complete in isolation → integration failures discovered late
+- Waves close without absolute cross-wave validation → IBWR finds surprises
+- E2E becomes first comprehensive integration test → expensive failures
+
+---
+
+### Root Cause
+
+**Primary Cause:** No canonical requirement for strategic integration testing between component-level QA and final E2E validation.
+
+**Contributing Factors:**
+1. **Testing Model Gap:** Wave model defined regression but not intermediate integration
+2. **Cost vs. Assurance Balance:** No guidance on when integration testing cost is justified
+3. **Strategic Checkpoint Gap:** No definition of "convergence points" requiring integration gates
+4. **IBWR Gap:** IBWR template did not mandate CWT before wave closure
+
+**Why This Matters:**
+- One-time builds cannot afford late integration failures
+- Strategic integration gates provide earlier feedback at lower cost
+- Multi-wave builds require explicit cross-wave validation before IBWR
+- Cumulative regression alone insufficient for complex integration scenarios
+
+---
+
+### Learning
+
+**Core Lesson:** Multi-wave, one-time builds MUST implement **Combined Subwave Testing (CST)** at strategic convergence checkpoints and **Combined Wave Testing (CWT)** as a mandatory gate before IBWR completion.
+
+**Key Principles Established:**
+
+#### 1. Combined Subwave Testing (CST)
+**Definition:** Integration testing at strategic subwave convergence points where multiple subwaves or modules must interact.
+
+**When to Apply CST:**
+- ✅ Multiple subwaves complete and must integrate (e.g., API + UI subwaves)
+- ✅ Cross-module dependencies reach integration readiness
+- ✅ Architectural boundaries crossed (frontend ↔ backend, service ↔ service)
+- ✅ Significant feature complexity requires mid-wave validation
+- ❌ NOT required for every subwave (cost vs. value balance)
+- ❌ NOT required for isolated, independent subwaves
+
+**CST Characteristics:**
+- **Strategic, not exhaustive:** Applied at convergence points, not everywhere
+- **Integration-focused:** Tests cross-module, cross-subwave interactions
+- **Earlier feedback:** Catches integration issues before wave completion
+- **Cost-effective:** Prevents expensive late-stage rework
+
+#### 2. Combined Wave Testing (CWT)
+**Definition:** Comprehensive cross-wave, cross-module, multi-scenario integration testing conducted after wave completion and before IBWR.
+
+**When to Apply CWT:**
+- ✅ ALWAYS before IBWR completion (mandatory gate)
+- ✅ After wave-level QA passes (cumulative regression GREEN)
+- ✅ Before wave closure certification finalized
+- ✅ As final validation before wave gate merge
+
+**CWT Characteristics:**
+- **Absolute requirement:** Not optional, not deferrable
+- **Comprehensive coverage:** Cross-wave + cross-module + multi-scenario
+- **Integration assurance:** Validates entire system state after wave N
+- **IBWR prerequisite:** IBWR cannot complete without CWT PASS
+
+**CWT Scope:**
+- All waves through current wave (Wave 1 → Wave N)
+- Cross-module scenarios (not just isolated module tests)
+- Multi-scenario paths (happy path + error paths + edge cases)
+- Architectural integration points (all boundaries validated)
+
+#### 3. Strategic vs. Exhaustive Testing
+**Balance Principle:** Testing cost must be justified by integration risk and feedback value.
+
+**Decision Framework:**
+```
+Low Integration Risk → Rely on cumulative regression (Wave QA)
+Medium Integration Risk → Apply CST at convergence points
+High Integration Risk → CWT mandatory (always before IBWR)
+```
+
+**CST Decision Criteria:**
+- Do multiple subwaves/modules interact? → CST likely needed
+- Is architectural boundary crossed? → CST likely needed
+- Is feature complexity high? → CST likely needed
+- Are subwaves independent? → CST may not be needed
+
+**CWT is Always Required:** CWT is NOT a decision — it is mandatory before every IBWR.
+
+---
+
+### Governance Impact
+
+**Immediate Actions Required:**
+
+1. **Create Canonical Pattern Document:** `governance/canon/COMBINED_TESTING_PATTERN.md`
+   - Define CST integration gate pattern
+   - Define CWT mandatory requirements
+   - Provide decision framework for when to apply CST
+   - Specify evidence and validation requirements
+
+2. **Update IN_BETWEEN_WAVE_RECONCILIATION.md**
+   - Add CWT as mandatory IBWR prerequisite (Section 4: Required Inputs)
+   - Add CWT validation evidence to completion checklist
+   - Specify CWT blocking authority (IBWR cannot complete without CWT PASS)
+
+3. **Update WAVE_RECONCILIATION_REPORT Template**
+   - Add CST Checkpoint Documentation section
+   - Add CWT Validation Results section
+   - Add cross-wave testing evidence requirements
+   - Add multi-scenario coverage verification
+
+4. **Update WAVE_MODEL.md**
+   - Add CST integration gate pattern to wave lifecycle
+   - Add CWT requirement before wave closure
+   - Define strategic convergence checkpoints
+   - Reference COMBINED_TESTING_PATTERN.md
+
+5. **Layer Down to FM/Builder Guidance (Advisory, Cross-Repo):**
+   - FM planning: Identify CST convergence points during wave planning
+   - FM validation: Execute CWT before IBWR initiation
+   - Builder obligations: Provide integration test coverage for CST/CWT
+   - IBWR process: Document CWT execution and results
+
+**Forward-Binding Expectations:**
+- All future multi-wave builds MUST implement CWT before IBWR
+- Wave planning MUST identify strategic CST checkpoints
+- IBWR MUST include CWT validation evidence
+- Wave closure certification MUST verify CWT completion
+
+---
+
+### Prohibited Actions (Permanent, Platform-Wide)
+
+**Never Permitted:**
+- ❌ Completing IBWR without CWT validation
+- ❌ Declaring wave complete without CWT PASS
+- ❌ Skipping CWT to accelerate wave closure
+- ❌ Treating CWT as optional or deferrable
+- ❌ Relying solely on cumulative regression for integration assurance
+
+**Always Permitted (Within Cost/Benefit Balance):**
+- ✅ Applying CST at strategic convergence points
+- ✅ Skipping CST for isolated, independent subwaves (with justification)
+- ✅ Defining custom CST scope based on integration risk
+- ✅ Adjusting CST frequency based on wave complexity
+
+---
+
+### Ratchet Statement
+
+**This learning establishes Combined Subwave Testing (CST) and Combined Wave Testing (CWT) as the canonical pattern for strategic integration assurance in multi-wave, one-time builds.**
+
+This is a **TRANSFORMATIVE** discovery (not a failure — a pattern identification) representing **explicit canonization of strategic integration gates**. The system recognizes that:
+- Cumulative regression alone is insufficient for complex integration scenarios
+- Strategic integration gates (CST) provide earlier, cost-effective feedback
+- Comprehensive cross-wave validation (CWT) is mandatory before IBWR
+- One-time builds require explicit integration assurance at strategic checkpoints
+
+**This pattern enables:** Earlier integration feedback, reduced late-stage rework, comprehensive cross-wave validation, and higher confidence in wave closure decisions.
+
+---
+
+### Status
+
+**Recorded & Canonization Required** — Platform-Wide, Forward-Binding  
+**Applies To:** All multi-wave builds, all IBWR processes, all wave planning  
+**Effective:** 2026-01-09
+
+---
+
+### Impact Assessment
+
+**Pattern Scope:** Multi-wave, one-time build execution  
+**Testing Model Impact:** Introduces CST (strategic) and CWT (mandatory)  
+**IBWR Impact:** CWT becomes mandatory prerequisite  
+**Wave Planning Impact:** Must identify strategic CST convergence points  
+**Canon Required:** COMBINED_TESTING_PATTERN.md (NEW)
+
+---
+
+### Cross-References
+
+**Governance Repo (Canonical):**
+- `governance/canon/COMBINED_TESTING_PATTERN.md` — Canonical pattern definition (TO BE CREATED)
+- `governance/canon/BOOTSTRAP_EXECUTION_LEARNINGS.md` — This BL-025 entry
+- `governance/canon/IN_BETWEEN_WAVE_RECONCILIATION.md` — CWT integration (TO BE UPDATED)
+- `governance/execution/WAVE_MODEL.md` — CST/CWT lifecycle integration (TO BE UPDATED)
+- `governance/templates/WAVE_RECONCILIATION_REPORT.template.md` — CST/CWT sections (TO BE UPDATED)
+
+**Layer-Down Targets (All Application Repos - Advisory):**
+- FM agent contracts — CST checkpoint identification, CWT execution obligation
+- Builder agent contracts — Integration test coverage for CST/CWT
+- Wave planning guidance — CST convergence point analysis
+- IBWR process — CWT validation evidence requirements
+
+**Rationale:**
+- Addresses integration assurance gap in multi-wave builds
+- Provides cost-effective early feedback at strategic checkpoints
+- Mandates comprehensive validation before wave closure
+- Enables confident wave progression without late surprises
+
+---
+
+### Prevention Measures
+
+**Structural:**
+1. COMBINED_TESTING_PATTERN.md (canonical definition)
+2. IN_BETWEEN_WAVE_RECONCILIATION.md updated (CWT mandatory)
+3. WAVE_RECONCILIATION_REPORT.template.md updated (CST/CWT sections)
+4. WAVE_MODEL.md updated (integration gate lifecycle)
+
+**Procedural:**
+1. Wave planning identifies CST convergence points
+2. FM executes CWT before IBWR initiation
+3. IBWR completion checklist includes CWT validation
+4. Wave closure blocked without CWT PASS
+
+**Cultural:**
+1. "Integration assurance is strategic, not exhaustive"
+2. "CST at convergence points, CWT before IBWR"
+3. "Early integration feedback prevents late rework"
+4. "CWT is mandatory, not optional"
+
+---
+
+### Ripple Plan
+
+**Phase 1 — Governance Canon (This Repo):**
+- ✅ BL-025 recorded in BOOTSTRAP_EXECUTION_LEARNINGS.md
+- [ ] Create COMBINED_TESTING_PATTERN.md (canonical definition)
+- [ ] Update IN_BETWEEN_WAVE_RECONCILIATION.md (add CWT mandate)
+- [ ] Update WAVE_RECONCILIATION_REPORT.template.md (add CST/CWT sections)
+- [ ] Update WAVE_MODEL.md (add CST/CWT lifecycle)
+
+**Phase 2 — FM Guidance (Cross-Repo Advisory):**
+- [ ] Propose FM contract update: CST checkpoint identification
+- [ ] Propose FM contract update: CWT execution before IBWR
+- [ ] Propose wave planning guidance: CST convergence analysis
+
+**Phase 3 — Builder Contracts (Cross-Repo Advisory):**
+- [ ] Propose builder contract updates: Integration test requirements
+- [ ] Propose builder onboarding: CST/CWT pattern training
+
+**Phase 4 — Rollout Guidance (Cross-Repo Advisory):**
+- [ ] Document CST/CWT pattern for next IBWR
+- [ ] Refine CST/CWT boundaries using first-application evidence
+
+---
+
+**End of BL-025**
+
+---
+
 **Maintained by**: Maturion Governance Administrator  
 **Last Updated**: 2026-01-09  
 **Registry Status**: ACTIVE
 
 ---
 
-**Next Learning ID**: BL-025
+**Next Learning ID**: BL-026
 
 ---
 

@@ -3,7 +3,9 @@
 **Status**: Canonical  
 **Authority**: Execution Canon  
 **Source Basis**: Phase 1 Classification - Category B (Execution Canon)  
-**Last Canonized**: 2025-12-24
+**Last Canonized**: 2025-12-24  
+**Last Updated**: 2026-01-09 (BL-025 CST/CWT Integration)  
+**Related Canon**: IN_BETWEEN_WAVE_RECONCILIATION.md, MANDATORY_CANONICAL_PROGRESS_RECORDING_AND_WAVE_CLOSURE_CERTIFICATION.md, COMBINED_TESTING_PATTERN.md
 
 ---
 
@@ -162,6 +164,13 @@ Based on Wave 2 learnings and IBWR improvements, FM creates the following planni
 - QA range allocations
 - Feature categorization
 - Architecture references
+- **Combined Subwave Testing (CST) convergence point identification** (NEW 2026-01-09, BL-025)
+
+**CST Checkpoint Identification** (BL-025):
+- FM identifies strategic convergence points requiring integration testing
+- Decision based on integration risk (cross-subwave, cross-module, architectural boundaries)
+- CST checkpoints documented in wave plan with integration risk justification
+- See COMBINED_TESTING_PATTERN.md § 4 for CST decision framework
 
 **2. Wave Rollout Plan** (MANDATORY for Wave 2+)
 - **Purpose**: Complete operational specification translating implementation plan into actionable builder assignments
@@ -221,22 +230,59 @@ All issues in wave follow OPOJD lifecycle.
 **Process**:
 1. Run ALL wave issue QA → Must be 100% GREEN
 2. Run ALL previous wave QA → Must be 100% GREEN (cumulative QA)
-3. Verify zero test debt
-4. Verify all governance gates passed
-5. Verify evidence trail complete
+3. **Execute Combined Wave Testing (CWT) → Must be 100% PASS** (NEW 2026-01-09, BL-025)
+4. Verify zero test debt
+5. Verify all governance gates passed
+6. Verify evidence trail complete
 
-**Outcome**: Wave is 100% GREEN + no regression, OR wave is blocked.
+**CWT Integration (MANDATORY)**:
+- **Authority**: COMBINED_TESTING_PATTERN.md § 5 (BL-025)
+- **Timing**: After cumulative QA passes, before wave completion
+- **Scope**: Cross-wave + cross-module + multi-scenario integration testing
+- **Mandate**: CWT is constitutionally required, not optional
+- **Blocking**: Wave completion CANNOT proceed without CWT PASS
+
+**Outcome**: Wave is 100% GREEN + no regression + CWT PASS, OR wave is blocked.
+
+### Phase 3A: Combined Subwave Testing (CST) (Strategic, NEW 2026-01-09, BL-025)
+
+**Authority**: COMBINED_TESTING_PATTERN.md § 4 (BL-025)
+
+**CST Application**:
+- **Timing**: During wave execution, at strategic convergence checkpoints
+- **Purpose**: Early integration feedback at cross-subwave/cross-module integration points
+- **Mandate**: Applied when integration risk justifies cost (strategic, not exhaustive)
+- **Decision**: FM identifies CST checkpoints during wave planning
+
+**CST Characteristics**:
+- Applied selectively at high-integration-risk convergence points
+- Tests cross-subwave, cross-module interactions
+- Provides earlier feedback than waiting for wave completion
+- Prevents expensive late-stage rework
+
+**CST vs. Wave QA**:
+- Wave QA: Validates individual features and cumulative regression
+- CST: Validates integration at strategic mid-wave checkpoints
+- CWT: Validates comprehensive cross-wave integration (mandatory)
+
+**Reference**: See COMBINED_TESTING_PATTERN.md for CST decision framework.
 
 ### Phase 4: Wave Completion
 
 **Criteria**:
 - All issues in wave merged
 - Cumulative QA 100% GREEN
+- **Combined Wave Testing (CWT) 100% PASS** (NEW 2026-01-09, BL-025)
 - Zero test debt
 - Evidence complete
 - Governance gates passed
 - Canonical progress recorded (NEW 2026-01-04)
 - Wave closure certified (NEW 2026-01-04)
+
+**CWT Prerequisite**:
+- CWT MUST PASS before wave completion can be declared
+- IBWR CANNOT begin without CWT PASS
+- Wave gate merge CANNOT be authorized without CWT PASS
 
 **Action**: Mark wave complete, wave gate PASS.
 
