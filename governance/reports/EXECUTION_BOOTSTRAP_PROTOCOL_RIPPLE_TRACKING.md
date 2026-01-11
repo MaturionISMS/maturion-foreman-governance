@@ -13,6 +13,7 @@ This ripple propagates the **Execution Bootstrap Protocol** and **Prehandover Ve
 
 **Canonical Sources:**
 - `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md` (v1.0.0, 2026-01-11)
+- `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL_MONITORING_AND_ENFORCEMENT.md` (v1.0.0, 2026-01-11)
 - `governance/canon/GOVERNANCE_LIAISON_TRAINING_PROTOCOL.md` (v1.0.0, 2026-01-11)
 - `governance/canon/GOVERNANCE_LIAISON_MINIMUM_APPOINTMENT_REQUIREMENTS.md` (v1.1, 2026-01-11)
 - `governance/canon/CROSS_REPOSITORY_LAYER_DOWN_PROTOCOL.md` (v1.1.0, 2026-01-11)
@@ -39,6 +40,12 @@ This ripple propagates the **Execution Bootstrap Protocol** and **Prehandover Ve
 - ForemanApp-agent.md (Add prehandover verification supervision)
 - All *-builder.md contracts (Add prehandover verification obligations)
 - governance-liaison.agent.md (if exists - Add execution verification requirements)
+
+**Monitoring Obligations** (per `EXECUTION_BOOTSTRAP_PROTOCOL_MONITORING_AND_ENFORCEMENT.md`):
+- Establish incident tracking for protocol violations in `governance/incidents/protocol-violations/`
+- Participate in quarterly monitoring data collection
+- Report compliance status to governance repository quarterly
+- Track local KPIs (FM compliance rate, Builder compliance rate, CI failure rates)
 
 ---
 
@@ -80,11 +87,13 @@ This ripple propagates the **Execution Bootstrap Protocol** and **Prehandover Ve
 
 **Artifacts Created**:
 - ✅ EXECUTION_BOOTSTRAP_PROTOCOL.md (v1.0.0)
+- ✅ EXECUTION_BOOTSTRAP_PROTOCOL_MONITORING_AND_ENFORCEMENT.md (v1.0.0)
 - ✅ GOVERNANCE_LIAISON_TRAINING_PROTOCOL.md (v1.0.0)
 - ✅ GOVERNANCE_LIAISON_MINIMUM_APPOINTMENT_REQUIREMENTS.md (v1.1)
 - ✅ CROSS_REPOSITORY_LAYER_DOWN_PROTOCOL.md (v1.1.0)
 - ✅ PREHANDOVER_PROOF_TEMPLATE.md (already existed, now referenced)
 - ✅ EXECUTION_BOOTSTRAP_PROTOCOL_LAYERDOWN_FM_APPS.md (layer-down instructions)
+- ✅ EXECUTION_BOOTSTRAP_PROTOCOL_QUARTERLY_MONITORING_REPORT.template.md (monitoring template)
 
 **Evidence**: Commit SHA [to be recorded after merge]
 
@@ -197,6 +206,26 @@ Layer down Execution Bootstrap Protocol and prehandover verification requirement
 - [ ] PREHANDOVER_PROOF observed in recent agent PRs
 - [ ] No deviations or gaps detected
 - [ ] Ripple closure report generated
+
+---
+
+### Milestone 7: Monitoring Activation ⏳ PENDING
+
+**Target Date**: End of Q1 2026 (March 31, 2026)
+
+**Actions**:
+1. Confirm all repositories have established incident tracking for protocol violations
+2. Validate quarterly monitoring data collection processes in place
+3. Prepare first quarterly monitoring report (Q1 2026)
+4. Publish monitoring report by April 14, 2026
+
+**Completion Criteria**:
+- [ ] All repositories tracking violations locally
+- [ ] All repositories prepared for quarterly data collection
+- [ ] First quarterly monitoring report published on time
+- [ ] Monitoring framework validated and operational
+
+**Authority**: `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL_MONITORING_AND_ENFORCEMENT.md`
 
 ---
 
