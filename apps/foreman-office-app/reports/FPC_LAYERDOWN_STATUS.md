@@ -16,7 +16,7 @@
 **Governance Version Applied**: `7dc8110` (commit hash from governance repository)  
 **Reference PR**: APGI-cmy/maturion-foreman-office-app#538
 
-**Note on Governance Versioning**: The governance repository uses commit hashes as version identifiers to ensure precise traceability to canonical governance state at time of layer-down. This aligns with `CROSS_REPOSITORY_LAYER_DOWN_PROTOCOL.md` requirements for version synchronization.
+**Note on Governance Versioning**: The governance repository uses commit hashes as version identifiers to ensure precise traceability to canonical governance state at time of layer-down. This aligns with `governance/canon/CROSS_REPOSITORY_LAYER_DOWN_PROTOCOL.md` requirements for version synchronization.
 
 ---
 
@@ -30,7 +30,7 @@
 - Operational CI/CD workflows
 - Production deployment capability
 
-**Governance Gap**: Required alignment with standardized FPC layer-down protocol and canonical governance structure as defined in `FPC_REPOSITORY_LAYERDOWN_GUIDE.md`.
+**Governance Gap**: Required alignment with standardized FPC layer-down protocol and canonical governance structure as defined in `governance/canon/FPC_REPOSITORY_LAYERDOWN_GUIDE.md`.
 
 ---
 
@@ -43,7 +43,7 @@
 ### FPC Category Validation Status
 
 ✅ **Category 1: Directory Structure** - PASS  
-All mandatory directories established per `GOVERNANCE_LAYERDOWN_CONTRACT.md`:
+All mandatory directories established per `governance/canon/GOVERNANCE_LAYERDOWN_CONTRACT.md`:
 - `.github/workflows/`
 - `.github/agents/`
 - `governance/alignment/`
