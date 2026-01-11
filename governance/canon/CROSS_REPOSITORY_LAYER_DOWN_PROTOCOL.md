@@ -35,9 +35,12 @@ This protocol derives authority from and complements:
 - **GOVERNANCE_VERSIONING_AND_SYNC_PROTOCOL.md** — Version synchronization semantics
 - **CROSS_REPOSITORY_RIPPLE_AWARENESS_MODEL.md** — Ripple signaling mechanism
 - **GOVERNANCE_CANON_MANIFEST.md** — Canonical file inventory with layer-down status
+- **FPC_REPOSITORY_LAYERDOWN_GUIDE.md** — Single entry point for executing layer-down (2026-01-11)
 
 This protocol addresses the concern from PR #869:
 > "It is ALARMING that the Governors have this elevated view without explicit, controlled, layered-down protocols in every dependent repo."
+
+**For Execution**: To perform governance layer-down on a new repository, see **FPC_REPOSITORY_LAYERDOWN_GUIDE.md** (command: "Layer down governance, FPC").
 
 ---
 
