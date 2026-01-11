@@ -13,8 +13,8 @@ This matrix tracks governance layer-down status and version alignment across all
 
 | Repository | Key | Governance Version | Layer-Down Status | Last Sync | Notes |
 |------------|-----|-------------------|------------------|-----------|-------|
-| maturion-foreman-office-app | foreman-office-app | - | - | - | Next.js Foreman orchestration app |
-| maturion-ai-foreman | ai-foreman | - | - | - | Python-based Foreman implementation |
+| maturion-foreman-office-app | foreman-office-app | TBD | PENDING | TBD | Next.js Foreman orchestration app |
+| maturion-ai-foreman | ai-foreman | TBD | PENDING | TBD | Python-based Foreman implementation |
 | PartPulse | partpulse | v2.1.0 | COMPLETE | 2026-01-11 | FPC layer-down complete, operational, Build-to-Green phase |
 
 ---

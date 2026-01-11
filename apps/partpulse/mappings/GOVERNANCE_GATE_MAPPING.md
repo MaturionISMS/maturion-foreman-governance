@@ -4,7 +4,7 @@
 
 This document maps the canonical **Governance Gate** definition from `GOVERNANCE_GATE_CANON.md` to the specific implementation in the **PartPulse** repository.
 
-**Canonical Reference**: `GOVERNANCE_GATE_CANON.md` in maturion-foreman-governance repository
+**Canonical Reference**: `/GOVERNANCE_GATE_CANON.md` in maturion-foreman-governance repository
 
 ---
 
