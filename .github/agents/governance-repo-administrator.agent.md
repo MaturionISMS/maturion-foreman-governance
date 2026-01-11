@@ -55,6 +55,9 @@ governance:
     - id: mandatory-enhancement-capture
       path: governance/canon/MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md
       role: enhancement-capture-standard
+    - id: mandatory-process-improvement-reflection
+      path: governance/canon/MANDATORY_PROCESS_IMPROVEMENT_REFLECTION_PROTOCOL.md
+      role: process-improvement-reflection-protocol
     # NOTE: AGENT_HANDOVER_VERIFICATION_PROTOCOL.md is planned from the incident;
     # when created, add as a binding here.
 

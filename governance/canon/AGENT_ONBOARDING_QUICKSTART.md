@@ -89,6 +89,7 @@ Read these protocols before starting any build work:
 ### For Reviewers
 Read these protocols before providing any advisory input:
 - **MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md** - Required enhancement capture at review completion
+- **MANDATORY_PROCESS_IMPROVEMENT_REFLECTION_PROTOCOL.md** - Required structured reflection for governance-repo work units
 
 ### For All Agents
 - **AGENT_CANONICAL_CONTEXT_SYNCHRONISATION_PROTOCOL.md** - How governance stays synchronized
@@ -150,6 +151,7 @@ Every agent operates using this simple protocol:
 - ✅ Escalate when encountering governance ambiguity
 - ✅ Surface ripples when canonical governance changes affect your work
 - ✅ Capture enhancements at work completion (reference MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md)
+- ✅ Complete process improvement reflection for governance-repo work units (reference MANDATORY_PROCESS_IMPROVEMENT_REFLECTION_PROTOCOL.md)
 
 ### All Agents MUST NOT
 - ❌ Modify own `.agent` contract (escalate to higher authority)
@@ -310,6 +312,7 @@ Comprehensive list of canonical governance documents available in `governance/ca
 ### Learning & Enhancement
 - BOOTSTRAP_EXECUTION_LEARNINGS.md
 - MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md
+- MANDATORY_PROCESS_IMPROVEMENT_REFLECTION_PROTOCOL.md
 - LEARNING_INTAKE_AND_PROMOTION_MODEL.md
 
 ### Ripple & Awareness
