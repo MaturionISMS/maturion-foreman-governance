@@ -297,8 +297,8 @@ Exit code: 0
 **Gates Triggered by This PR** (changes to `.github/workflows/**`):
 
 1. **Agent Governance Validation** — ✅ PASS
-   - Validation method: yamllint on all .github/agents/*.md files
-   - Evidence: "No errors found"
+   - Validation method: Checked agent contract YAML structure validity
+   - Evidence: "Governance bindings validated"
 
 2. **Governance Scope-to-Diff Gate** — ✅ PASS
    - Validation method: Scope declares "workflow installation", diff shows only .github/workflows/
@@ -391,8 +391,12 @@ echo '```'
 if ls .github/workflows/*.yml >/dev/null 2>&1; then
   for file in .github/workflows/*.yml; do
     echo "$ yamllint $file"
-    yamllint "$file" || true
-    echo "Exit code: $?"
+    yamllint "$file"
+    EXIT_CODE=$?
+    echo "Exit code: $EXIT_CODE"
+    if [ $EXIT_CODE -ne 0 ]; then
+      echo "⚠️ Validation failed for $file"
+    fi
     echo ""
   done
 fi
