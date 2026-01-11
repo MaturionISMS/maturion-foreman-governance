@@ -2633,7 +2633,308 @@ This is a **TRANSFORMATIVE** discovery (not a failure — a pattern identificati
 
 ---
 
-**Next Learning ID**: BL-026
+## BL-026 — Automated Deprecation Detection Must Be Mandatory Pre-Commit and CI Gate
+
+### Classification
+- **Type:** Governance Learning (Technical Debt Prevention — Proactive)
+- **Phase:** Wave 2.13 Execution (FM Office App)
+- **Severity:** Transformative (Pattern Discovery — Forward-Binding Prevention)
+- **Status:** Recorded & Canonization Required
+- **Impacts:** All repositories, all languages, all CI/CD pipelines, all pre-commit workflows
+
+---
+
+### Context
+
+**Source Repository**: `maturion-foreman-office-app`  
+**Date Registered**: 2026-01-11  
+**Issue Reference**: Wave 2.13 Builder Reflection — datetime.utcnow() deprecation discovery
+
+During Wave 2.13 execution, proactive deprecation scanning discovered Python `datetime.utcnow()` usage throughout the codebase. This deprecated API (Python 3.12+) was not detected during prior waves and had accumulated silently as technical debt. Builder proactively remediated all instances, preventing future breaking changes.
+
+**Key Insight**: Without automated detection gates, deprecation warnings accumulate as invisible technical debt until language/library upgrades force expensive remediation waves.
+
+---
+
+### Observed Issue
+
+**Current State:**
+- Deprecation warnings not detected during development
+- No pre-commit hooks scanning for deprecated API usage
+- No CI/CD gates blocking merges with deprecation warnings
+- Deprecated APIs can accumulate across multiple waves
+- Remediation deferred until upgrade forces action
+
+**Gap Identified:**
+- No automated deprecation detection at commit time
+- No CI/CD enforcement preventing deprecated API usage
+- No governance policy mandating deprecation scanning
+- BL-024 (Zero Warning Test Debt) mandate lacks explicit automated enforcement for deprecations
+- No exception process for justified deprecated API usage
+
+**Risk:**
+- Silent accumulation of technical debt
+- Breaking changes during language/library upgrades
+- Expensive remediation waves required
+- Violation of Zero Warning Test Debt doctrine
+- One-Time Build principle compromised by deferred debt
+
+---
+
+### Root Cause
+
+**Primary Cause:** No canonical policy requiring automated deprecation detection as mandatory pre-commit and CI gate.
+
+**Contributing Factors:**
+1. **Policy Gap:** BL-024 (Zero Warning Test Debt) mandate exists but lacks explicit automation requirement for deprecations
+2. **Tooling Gap:** No standardized deprecation detection tools configured
+3. **Prevention Gap:** No pre-commit hooks blocking deprecated API usage
+4. **Enforcement Gap:** No CI/CD gates failing PRs with deprecation warnings
+5. **Exception Gap:** No governed process for justified deprecated API usage
+
+**Why This Matters:**
+- Deprecations represent future breaking changes that accumulate silently
+- Proactive prevention cheaper than reactive remediation
+- Automated detection prevents human oversight failures
+- Aligns with Zero Warning Test Debt constitutional mandate
+- Supports One-Time Build principle by preventing deferred debt
+
+---
+
+### Learning
+
+**Core Lesson:** All code changes MUST pass automated deprecation detection before commit and merge. Deprecation warnings are a form of technical debt that must be prevented proactively through mandatory automation, not remediated reactively through waves.
+
+**Key Principles Established:**
+
+#### 1. Proactive Prevention Over Reactive Remediation
+- Deprecations MUST be blocked at source (pre-commit)
+- CI/CD MUST enforce zero deprecation warnings
+- Accumulation of deprecation debt is prohibited
+- Early detection prevents expensive remediation
+
+#### 2. Zero Tolerance for Deprecation Debt
+- All deprecation warnings treated as blockers
+- No "acceptable" level of deprecation warnings
+- Applies to all code (application, tests, scripts, configuration)
+- Exception process required for justified usage
+
+#### 3. Language and Ecosystem Agnostic
+- Policy applies uniformly across all languages
+- Python: `ruff`, `pylint` with deprecation checks
+- JavaScript/TypeScript: ESLint with `deprecation` plugin
+- Go: `staticcheck` with SA1019
+- Java, C#, others: ecosystem-appropriate tools
+- Implementation varies; mandate does not
+
+#### 4. Integration with Zero Warning Doctrine
+- Deprecation warnings are subset of "warnings" (QA_POLICY_MASTER.md)
+- Gate-Eligible Green requires zero deprecation warnings
+- WARNING_DISCOVERY_BLOCKER_PROTOCOL applies to deprecations
+- Prior-work deprecations require original agent re-assignment
+- All warning whitelist governance applies
+
+---
+
+### Governance Impact
+
+**Immediate Actions Required:**
+
+1. **Create Canonical Policy:** `governance/policy/AUTOMATED_DEPRECATION_DETECTION_GATE.md`
+   - Define mandatory deprecation detection requirements
+   - Specify pre-commit and CI/CD integration obligations
+   - Document exception process with FM approval requirements
+   - Provide language-specific implementation guidance
+   - Align with BL-024 (Zero Warning Test Debt) doctrine
+   - Reference QA_POLICY_MASTER and WARNING_DISCOVERY_BLOCKER_PROTOCOL
+
+2. **Update BOOTSTRAP_EXECUTION_LEARNINGS.md**
+   - Record this BL-026 entry
+   - Link to new policy
+   - Define ripple plan for cross-repo implementation
+
+3. **Reference from Existing Canon**
+   - QA_POLICY_MASTER.md — Add deprecation detection to Gate-Eligible Green requirements
+   - WARNING_DISCOVERY_BLOCKER_PROTOCOL.md — Clarify deprecations trigger protocol
+   - CONSTITUTIONAL_SANDBOX_PATTERN.md — Deprecation prevention as constitutional requirement
+
+4. **Layer Down to Application Repositories (Advisory):**
+   - FM contracts: Pre-authorization checklist includes deprecation status
+   - Builder contracts: Deprecation detection obligation before handover
+   - CI/CD templates: Add deprecation detection workflows
+   - Pre-commit hooks: Configure deprecation scanning
+
+**Forward-Binding Expectations:**
+- All repositories MUST implement pre-commit deprecation detection
+- All CI/CD pipelines MUST include deprecation gates
+- All PRs MUST pass deprecation checks before merge
+- All exceptions MUST be documented and FM-approved
+- All deprecation whitelist entries MUST be reviewed quarterly
+
+---
+
+### Mandatory Implementation Requirements
+
+**Pre-Commit Detection (Developer Machine):**
+- Tool: Language-appropriate linter with deprecation checks enabled
+- Configuration: Enable all deprecation detection rules
+- Hook: Block commit if deprecation warnings detected
+- Examples: Python (`ruff` with `UP` rules), JavaScript (ESLint with `deprecation` plugin)
+
+**CI/CD Gate Detection (GitHub Actions):**
+- Step: Run deprecation detection in all PR workflows
+- Tooling: Same as pre-commit hooks for consistency
+- Behavior: Block PR merge if deprecation warnings detected
+- Reporting: Clear deprecation findings in PR check status
+
+**Exception Process (FM Approval Required):**
+- Code documentation: Inline comment at each usage site
+- Technical debt ticket: Track migration plan and target date
+- FM approval: Documented in PR description before merge
+- Whitelist entry: Added to repository deprecation whitelist
+- Quarterly review: Validate progress and revoke expired exceptions
+
+---
+
+### Prohibited Actions (Permanent, Platform-Wide)
+
+**Never Permitted:**
+- ❌ Committing code with deprecation warnings without exception
+- ❌ Merging PRs with unresolved deprecation warnings
+- ❌ Bypassing deprecation detection pre-commit hooks
+- ❌ Disabling deprecation CI/CD gates
+- ❌ Using deprecated APIs without FM approval and documentation
+- ❌ Deferring deprecation remediation to "future waves"
+
+**Always Required:**
+- ✅ Pre-commit hooks with deprecation detection enabled
+- ✅ CI/CD gates failing on deprecation warnings
+- ✅ Exception process with FM approval and tracking
+- ✅ Quarterly review of all deprecation whitelist entries
+- ✅ Tooling configured and maintained per language
+
+---
+
+### Ratchet Statement
+
+**This learning establishes automated deprecation detection as a mandatory, non-negotiable gate for technical debt prevention across all Maturion repositories.**
+
+This is a **TRANSFORMATIVE** discovery (not a failure — a proactive pattern identification) representing **explicit canonization of deprecation prevention as constitutional requirement**. The system recognizes that:
+- Deprecation warnings are future breaking changes that must be prevented
+- Automated detection is required; human vigilance is insufficient
+- Zero Warning Test Debt (BL-024) mandate includes deprecations
+- Proactive prevention is cheaper and safer than reactive remediation
+- One-Time Build principle requires preventing all deferred debt
+
+**This pattern enables:** Future-proof codebases, zero technical debt accumulation from deprecations, seamless language/library upgrades, and sustained Zero Warning discipline.
+
+---
+
+### Status
+
+**Recorded & Canonization Required** — Platform-Wide, Forward-Binding  
+**Applies To:** All repositories, all languages, all CI/CD pipelines  
+**Effective:** 2026-01-11
+
+---
+
+### Impact Assessment
+
+**Pattern Scope:** All codebases, all languages, all development workflows  
+**Policy Created:** AUTOMATED_DEPRECATION_DETECTION_GATE.md (NEW)  
+**CI/CD Impact:** All PR workflows must include deprecation detection  
+**Pre-Commit Impact:** All repositories must configure deprecation hooks  
+**Exception Process:** Governed process with FM approval required
+
+---
+
+### Cross-References
+
+**Governance Repo (Canonical):**
+- `governance/policy/AUTOMATED_DEPRECATION_DETECTION_GATE.md` — Canonical policy (CREATED)
+- `governance/canon/BOOTSTRAP_EXECUTION_LEARNINGS.md` — This BL-026 entry
+- `governance/policy/QA_POLICY_MASTER.md` — Zero Warning mandate (Section 1.1.2)
+- `governance/canon/CONSTITUTIONAL_SANDBOX_PATTERN.md` — BL-024 Zero Test Debt (Constitutional Rule #2)
+- `governance/canon/WARNING_DISCOVERY_BLOCKER_PROTOCOL.md` — Warning enforcement
+
+**Source Evidence (FM Office App):**
+- Wave 2.13 Builder Reflection — datetime.utcnow() deprecation discovery
+- Python PEP-604 — Type union deprecation reference
+
+**Layer-Down Targets (All Application Repos — Advisory):**
+- FM contracts: Pre-authorization checklist includes deprecation status
+- Builder contracts: Deprecation detection obligation
+- CI/CD templates: Deprecation detection workflows
+- Pre-commit hooks: Deprecation scanning configuration
+
+**Rationale:**
+- Prevents silent accumulation of deprecation technical debt
+- Implements Zero Warning Test Debt mandate (BL-024) with automation
+- Reduces future remediation waves and breaking change risk
+- Aligns with One-Time Build principle (no deferred debt)
+- Proactive prevention cheaper than reactive remediation
+
+---
+
+### Prevention Measures
+
+**Structural:**
+1. AUTOMATED_DEPRECATION_DETECTION_GATE.md (canonical policy)
+2. Pre-commit hooks with deprecation detection (all repos)
+3. CI/CD gates with deprecation scanning (all workflows)
+4. Exception whitelist with quarterly review (all repos)
+
+**Procedural:**
+1. All code changes scanned for deprecations before commit
+2. All PRs blocked if deprecation warnings detected
+3. All exceptions require FM approval and tracking
+4. All whitelist entries reviewed quarterly
+
+**Cultural:**
+1. "Prevent deprecation debt; don't defer remediation"
+2. "Automate detection; don't rely on human vigilance"
+3. "Zero deprecation warnings is zero technical debt"
+4. "Future-proof codebases through proactive prevention"
+
+---
+
+### Ripple Plan
+
+**Phase 1 — Governance Canon (This Repo):**
+- ✅ BL-026 recorded in BOOTSTRAP_EXECUTION_LEARNINGS.md
+- ✅ Create AUTOMATED_DEPRECATION_DETECTION_GATE.md (canonical policy)
+- [ ] Update GOVERNANCE_CANON_MANIFEST.md (policy reference)
+- [ ] Notify governance liaison of new policy availability
+
+**Phase 2 — Application Repositories (Layer-Down Required):**
+- [ ] foreman-office-app: Implement Python deprecation detection
+- [ ] partpulse: Implement language-appropriate deprecation detection
+- [ ] ai-foreman: Implement language-appropriate deprecation detection
+- [ ] Future repos: Include deprecation gate in repository template
+
+**Phase 3 — FM Contract Updates (Advisory):**
+- [ ] Propose FM pre-auth checklist update: Deprecation status validation
+- [ ] Propose FM wave planning: Deprecation audit in readiness phase
+- [ ] Propose FM handover validation: Zero deprecation verification
+
+**Phase 4 — Builder Contract Updates (Advisory):**
+- [ ] Propose builder contracts: Deprecation detection obligation
+- [ ] Propose builder QA checklist: Deprecation scan requirement
+- [ ] Propose builder onboarding: Deprecation policy training
+
+---
+
+**End of BL-026**
+
+---
+
+**Maintained by**: Maturion Governance Administrator  
+**Last Updated**: 2026-01-11  
+**Registry Status**: ACTIVE
+
+---
+
+**Next Learning ID**: BL-027
 
 ---
 
