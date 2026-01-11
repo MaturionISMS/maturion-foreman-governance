@@ -133,7 +133,7 @@ After layer-down complete and issue closed:
 
 - **Issue Template**: `/tmp/FM_REPO_LAYER_DOWN_ISSUE.md`
 - **Governance Changes**: This PR
-- **FL/CI Report**: `governance/reports/FOREMAN_REPO_FL_CI_GOVERNANCE_SCAN.md` (PR #869)
+- **FL/CI Report**: `apps/foreman-office-app/reports/FOREMAN_REPO_FL_CI_GOVERNANCE_SCAN.md` (PR #869, moved in governance restructuring)
 - **Audit Report**: `governance/reports/GOVERNANCE_FOLDER_AUDIT_2026_01_05.md`
 - **Canon Manifest**: `governance/canon/GOVERNANCE_CANON_MANIFEST.md`
 - **Layer-Down Protocol**: `governance/canon/CROSS_REPOSITORY_LAYER_DOWN_PROTOCOL.md`

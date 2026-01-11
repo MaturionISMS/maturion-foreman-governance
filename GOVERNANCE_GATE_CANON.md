@@ -579,33 +579,18 @@ This table defines the relationship between controls, required evidence, and val
 
 ## Repository Integration
 
-### For maturion-foreman-app
+### Existing Repository Implementations
 
-**Implementation**:
-- This document is canonical reference
-- Governance Gate workflow references this document
-- All validators implement controls defined here
-- Evidence locations as specified in mapping table
+Each repository that implements this Governance Gate has a specific mapping document that details its implementation:
 
-**Workflow File**: `.github/workflows/governance-gate.yml`
+- **maturion-foreman-office-app**: See `apps/foreman-office-app/mappings/GOVERNANCE_GATE_MAPPING.md`
+- **maturion-ai-foreman**: See `apps/ai-foreman/mappings/GOVERNANCE_GATE_MAPPING.md`
 
-**Validator Modules**: `lib/foreman/governance/*-validator.ts`
-
-**Configuration**: `foreman/governance/governance-gate-config.json`
-
-### For maturion-ai-foreman
-
-**Implementation**:
-- References this document as canonical source
-- Implements identical control set
-- Uses same evidence structure
-- Maintains consistency with foreman-app
-
-**Workflow File**: `.github/workflows/governance-gate.yml`
-
-**Validator Modules**: `lib/governance/*-validator.ts`
-
-**Configuration**: `governance/governance-gate-config.json`
+These mapping documents specify:
+- Workflow file locations
+- Validator module paths
+- Configuration file locations
+- Repository-specific implementation details
 
 ### For Future Repositories
 

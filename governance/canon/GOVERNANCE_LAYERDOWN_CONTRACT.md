@@ -50,6 +50,8 @@ This contract is a **synthesis document** that extracts layer-down requirements 
 
 **IMPORTANT UPDATE (2026-01-05)**: This contract now works in conjunction with **CROSS_REPOSITORY_LAYER_DOWN_PROTOCOL.md**, which defines explicit version synchronization, governance liaison responsibilities, and cross-repo reading boundaries. See that protocol for governance propagation process details.
 
+**IMPORTANT UPDATE (2026-01-11)**: For step-by-step layer-down execution, see **FPC_REPOSITORY_LAYERDOWN_GUIDE.md**, which provides a single entry point and complete procedure for governance layer-down. Use command: "Layer down governance, FPC".
+
 ---
 
 ## 3. Scope

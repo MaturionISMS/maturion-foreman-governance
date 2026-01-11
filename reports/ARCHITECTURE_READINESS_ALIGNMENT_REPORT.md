@@ -60,7 +60,7 @@ This report assesses whether the **current FM app architecture** is structurally
 - `MEMORY_INTEGRITY_AND_CORRUPTION_MODEL.md` (v1.0.0)
 
 **Architecture Documentation Reviewed**:
-- `docs/architecture/FOREMAN_APP_ARCHITECTURE.md`
+- `apps/foreman-office-app/docs/FOREMAN_APP_ARCHITECTURE.md` (moved in 2026-01-11 restructuring)
 - `architecture/runtime/memory/GOVERNANCE_MEMORY.md`
 - `architecture/runtime/memory/LONG_TERM_MEMORY.md`
 - `memory/README.md` (Canonical Memory Structure)

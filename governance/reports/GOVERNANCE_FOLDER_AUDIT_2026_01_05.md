@@ -123,7 +123,7 @@ governance/
 ### 3.1 Cross-Repo References Found
 
 **FM App Repository References** (15 occurrences):
-- `reports/FOREMAN_REPO_FL_CI_GOVERNANCE_SCAN.md`: Documents FM repo analysis
+- `apps/foreman-office-app/reports/FOREMAN_REPO_FL_CI_GOVERNANCE_SCAN.md`: Documents FM repo analysis (moved in restructuring)
 - `schemas/REPOSITORY_INITIALIZATION_EVIDENCE.schema.md`: References governance repo URL
 - `schemas/BRANCH_PROTECTION_EVIDENCE.schema.md`: Examples use governance repo URL
 - Various canon documents: Implicit references to "FM app" or "application repositories"
@@ -296,7 +296,7 @@ governance/
 ### 8.1 Files with FM App References
 
 **Direct References** (15 occurrences):
-1. `reports/FOREMAN_REPO_FL_CI_GOVERNANCE_SCAN.md` ✅ (Report, no remapping needed)
+1. `apps/foreman-office-app/reports/FOREMAN_REPO_FL_CI_GOVERNANCE_SCAN.md` ✅ (Report, moved to repo-specific location in restructuring)
 2. `schemas/REPOSITORY_INITIALIZATION_EVIDENCE.schema.md` ⚠️ (Example uses governance repo URL—acceptable)
 3. `schemas/BRANCH_PROTECTION_EVIDENCE.schema.md` ⚠️ (Example uses governance repo URL—acceptable)
 

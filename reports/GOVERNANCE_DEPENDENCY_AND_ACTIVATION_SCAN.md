@@ -292,7 +292,7 @@ These governance artifacts are intentionally NOT activated as enforcement mechan
 | **GPCA not active** | Builders can manually reference governance canon before PR submission | Manual process functional |
 | **Learning loops not automated** | Manual learning promotion via governance administrator | Escalation policy provides path |
 | **Governance ripple not automated** | Manual cross-repo governance updates via pull requests | Change control documented |
-| **FM app not yet interpreting canon** | FM app development roadmap includes governance integration | Architecture documented in `/docs/architecture/FOREMAN_APP_ARCHITECTURE.md` |
+| **FM app not yet interpreting canon** | FM app development roadmap includes governance integration | Architecture documented in `/apps/foreman-office-app/docs/FOREMAN_APP_ARCHITECTURE.md` (moved in 2026-01-11 restructuring) |
 
 ---
 
@@ -304,7 +304,7 @@ This section analyzes alignment with the FM Office App (`maturion-foreman-app`) 
 
 **Repository**: `MaturionISMS/maturion-foreman-app`  
 **Purpose**: Next.js runtime application executing Foreman orchestration, governance enforcement, and QA validation  
-**Architecture Documentation**: Available in this governance repo at `/docs/architecture/FOREMAN_APP_ARCHITECTURE.md`
+**Architecture Documentation**: Available in this governance repo at `/apps/foreman-office-app/docs/FOREMAN_APP_ARCHITECTURE.md` (moved in 2026-01-11 restructuring)
 
 **Key FM App Responsibilities:**
 1. Webhook processing (GitHub events)
@@ -755,8 +755,8 @@ governance/templates/
 **FM App Repository**: `MaturionISMS/maturion-foreman-app`
 
 **FM App Architecture Documentation** (in governance repo):
-- `/docs/architecture/FOREMAN_APP_ARCHITECTURE.md` - Complete architecture documentation
-- `/docs/architecture/FOREMAN_APP_VERCEL_ARCHITECTURE.md` - Vercel deployment architecture
+- `/apps/foreman-office-app/docs/FOREMAN_APP_ARCHITECTURE.md` - Complete architecture documentation (moved in 2026-01-11 restructuring)
+- `/apps/foreman-office-app/docs/FOREMAN_APP_VERCEL_ARCHITECTURE.md` - Vercel deployment architecture (moved in 2026-01-11 restructuring)
 
 **FM App Technology Stack**:
 - Framework: Next.js 14 (App Router)
