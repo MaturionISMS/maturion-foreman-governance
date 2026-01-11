@@ -18,6 +18,8 @@ This standard ensures that learning, observations, and improvement ideas are sys
 
 **Critical Extension (v2.0.0)**: This standard now explicitly requires **process improvement reflection** in addition to feature enhancements. Builders must reflect on **what failed in the build process** and **what governance, tooling, or process gaps were exposed**, ensuring systematic capture of execution learnings beyond product features.
 
+**Governance-Repo Extension**: For governance repository work units specifically, see `MANDATORY_PROCESS_IMPROVEMENT_REFLECTION_PROTOCOL.md` which provides additional structured reflection requirements including the **five mandatory questions** that must be answered at the completion of every governance-repo work unit.
+
 ---
 
 ## 2. Constitutional Authority
@@ -524,6 +526,7 @@ This standard should be read in conjunction with:
 - `LEARNING_PROMOTION_RULE.md` — Learning promotion process
 - `GOVERNANCE_LAYERDOWN_CONTRACT.md` — Layer-down requirements
 - `governance/parking-station/README.md` — Parking station rules
+- `MANDATORY_PROCESS_IMPROVEMENT_REFLECTION_PROTOCOL.md` — Mandatory structured reflection for governance-repo work units (extends this standard)
 
 ---
 
