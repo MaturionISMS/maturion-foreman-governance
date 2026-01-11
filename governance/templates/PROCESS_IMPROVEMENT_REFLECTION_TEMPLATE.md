@@ -47,24 +47,29 @@ No process improvements identified for this work unit. [Justify why: Was this a 
 
 ## Question 4: Did you comply with all relevant governance learnings (BLs / bootstrap learnings)?
 
-[Check compliance with active Bootstrap Learnings from `governance/canon/BOOTSTRAP_EXECUTION_LEARNINGS.md`. For each applicable BL, state COMPLIANT or NON-COMPLIANT with justification.]
+[Check compliance with active Bootstrap Learnings from `governance/canon/BOOTSTRAP_EXECUTION_LEARNINGS.md`. Review all entries marked as "Active" or "Ratchet" and assess applicability to this work unit. For each applicable BL, state COMPLIANT or NON-COMPLIANT with justification.]
 
 **BL Compliance Verification:**
 
-- **BL-016 (FM Complexity Recognition)**: [COMPLIANT / NOT APPLICABLE / NON-COMPLIANT]
+**Instructions**: 
+1. Read `governance/canon/BOOTSTRAP_EXECUTION_LEARNINGS.md` to identify all active BL entries
+2. For each BL entry that applies to this work unit, create a section below with format:
+   ```
+   - **BL-XXX ([Brief Title])**: [COMPLIANT / NOT APPLICABLE / NON-COMPLIANT]
+     - [Justification or explanation]
+   ```
+3. Common BL entries to check (but always verify against canonical source):
+   - BL-016: FM complexity recognition
+   - BL-018: QA Catalog alignment
+   - BL-019: Forward-scan obligation
+   - BL-022: Constitutional sandbox
+
+**BL Entries Checked:**
+
+- **BL-[ID] ([Title])**: [COMPLIANT / NOT APPLICABLE / NON-COMPLIANT]
   - [Justification or explanation]
 
-- **BL-018 (QA Catalog Alignment)**: [COMPLIANT / NOT APPLICABLE / NON-COMPLIANT]
-  - [Justification or explanation]
-
-- **BL-019 (Forward-Scan Obligation)**: [COMPLIANT / NOT APPLICABLE / NON-COMPLIANT]
-  - [Justification or explanation]
-
-- **BL-022 (Constitutional Sandbox)**: [COMPLIANT / NOT APPLICABLE / NON-COMPLIANT]
-  - [Justification or explanation]
-
-- **Other Active BLs**: [List any other applicable BL entries]
-  - [Compliance status and justification]
+[Add additional BL entries as needed based on current BOOTSTRAP_EXECUTION_LEARNINGS.md]
 
 **Verdict**: [COMPLIANT / NON-COMPLIANT]
 

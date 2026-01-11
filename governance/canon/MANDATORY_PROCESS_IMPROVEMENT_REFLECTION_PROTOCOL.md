@@ -84,16 +84,12 @@ At the conclusion of **every governance-repo work unit**, the responsible agent 
 
 **Question 4: Did you comply with all relevant governance learnings (BLs / bootstrap learnings)?**
 - Verify compliance with active learning and ratchet conditions.
-- Specifically check against:
-  - **BL-016**: FM complexity recognition and escalation expectations
-  - **BL-018**: QA Catalog alignment verification before subwave authorization
-  - **BL-019**: Forward-scan obligation after warning/learning discovery
-  - **BL-022**: Constitutional sandbox and policy language requirements
-  - Any other BL entries marked as "Active" or "Ratchet" in `BOOTSTRAP_EXECUTION_LEARNINGS.md`
+- Check all BL entries marked as "Active" or "Ratchet" in `governance/canon/BOOTSTRAP_EXECUTION_LEARNINGS.md`
 - For each applicable BL:
   - State: **COMPLIANT** or **NON-COMPLIANT**
   - If non-compliant: Document the reason and escalate immediately
 - If no BLs are applicable to this work unit: State explicitly: "No applicable BL entries for this work unit."
+- **Note**: The canonical source for active BL entries is `BOOTSTRAP_EXECUTION_LEARNINGS.md`. Always reference the most current version of that document rather than relying on any hardcoded list.
 
 **Question 5: What actionable improvement should be layered up to governance canon or processes for future prevention?**
 - Propose concrete governance/process changes suitable for canonization or policy update.
@@ -167,9 +163,13 @@ For standalone reflections, use:
 PROCESS_IMPROVEMENT_REFLECTION_<WORK_UNIT_ID>_<DATE>.md
 ```
 
+Where:
+- `<WORK_UNIT_ID>` = Issue number (ISSUE_285), PR number (PR_123), or descriptive identifier (CANON_RESTRUCTURING)
+- `<DATE>` = ISO 8601 date format: YYYY-MM-DD
+
 Example:
 ```
-PROCESS_IMPROVEMENT_REFLECTION_ISSUE_285_2026_01_11.md
+PROCESS_IMPROVEMENT_REFLECTION_ISSUE_285_2026-01-11.md
 ```
 
 For inline reflections within completion reports or incident documents, clearly label the section:
@@ -319,7 +319,7 @@ Create `governance/runbooks/GOVERNANCE_RESTRUCTURING_RUNBOOK.md` with step-by-st
 ---
 
 **Reflection Completed**: 2026-01-11  
-**Stored**: governance/memory/PROCESS_IMPROVEMENT_REFLECTION_ISSUE_285_2026_01_11.md  
+**Stored**: governance/memory/PROCESS_IMPROVEMENT_REFLECTION_ISSUE_285_2026-01-11.md  
 **Status**: COMPLETE
 ```
 
