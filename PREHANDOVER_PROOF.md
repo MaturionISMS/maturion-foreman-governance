@@ -226,7 +226,7 @@ Changes to `governance/**` files trigger the following workflows:
 ### Summary
 **Total Gates Identified**: 7  
 **Applicable Gates**: 1 (Governance Policy Validation)  
-**Gates PASS**: 1  
+**Gates Expected PASS**: 1 (validated preflight, will confirm in CI)  
 **Gates SKIP**: 6 (correct - not applicable to governance repo training material updates)  
 **Gates FAIL**: 0  
 **Unknown Gate Status**: 0
