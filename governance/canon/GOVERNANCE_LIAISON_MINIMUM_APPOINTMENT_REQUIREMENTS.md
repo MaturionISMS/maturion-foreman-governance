@@ -148,13 +148,29 @@ When explicitly authorized and within declared scope, Governance Liaison MAY:
    - Document all initialization activities
    - Record decisions and authorizations
 
+7. **Execute Prehandover Verification (MANDATORY)**
+   - Follow 7-step Execution Bootstrap Protocol for all executable artifacts
+   - Attach PREHANDOVER_PROOF to all PRs requiring execution verification
+   - Validate all gates in preflight before handover
+   - Capture execution evidence with exit codes
+   - ONLY declare complete after local execution GREEN
+
 **Preconditions:**
 - Human authorization received (Johan)
 - Repository exists (REPOSITORY_CREATED state)
 - Canonical governance accessible
 - Protocol specification provided (REPOSITORY_INITIALIZATION_AND_GOVERNANCE_SEEDING_PROTOCOL.md)
 
-**Canonical Reference:** `governance/canon/REPOSITORY_SEEDING_AND_ENFORCEMENT_ROLE_SEPARATION.md` Section 3.1.2
+**Execution Verification Requirements:**
+- ALL directory creation MUST be verified locally before handover
+- ALL workflow installations MUST be validated with yamllint/syntax checks
+- ALL gate configurations MUST be tested in preflight
+- ALL handover PRs MUST include PREHANDOVER_PROOF section
+- CI is confirmatory, NOT diagnostic — failures must be caught in preflight
+
+**Canonical Reference:** `governance/canon/REPOSITORY_SEEDING_AND_ENFORCEMENT_ROLE_SEPARATION.md` Section 3.1.2  
+**Execution Authority**: `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md`  
+**Template**: `governance/templates/PREHANDOVER_PROOF_TEMPLATE.md`
 
 #### 4.1.2 Governance Coupling Tasks (Secondary Use Case)
 
@@ -167,15 +183,27 @@ When explicitly authorized and within declared scope, Governance Liaison MAY:
    - Update governance artifact references per explicit instructions
    - Remediate governance coupling violations when authorized and instructed
 
+3. **Execute Prehandover Verification (MANDATORY)**
+   - Follow Execution Bootstrap Protocol when updating executable artifacts
+   - Attach PREHANDOVER_PROOF when changes affect workflows, gates, or contracts
+   - Validate changes locally before handover
+
 **Preconditions:**
 - Explicit instruction from FM or Governance Administrator
 - Specific scope defined (which files, which references)
 - Canonical governance accessible
 - Authorization trail documented
 
+**Execution Verification Requirements:**
+- If updating workflows: Validate YAML syntax with yamllint
+- If updating gates: Test gate logic in preflight
+- If updating contracts: Validate schema compliance
+- If changes are executable: Include PREHANDOVER_PROOF in PR
+
 **Constraint:** Governance Liaison does NOT determine what needs updating. FM or Governance Administrator provides complete specification.
 
-**Canonical Reference:** `governance/canon/ENFORCEMENT_DESIGN_NOTE.md` (coupling rule)
+**Canonical Reference:** `governance/canon/ENFORCEMENT_DESIGN_NOTE.md` (coupling rule)  
+**Execution Authority**: `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md`
 
 ---
 
@@ -302,7 +330,19 @@ The following activities are **explicitly and permanently prohibited** for Gover
 - ❌ Self-authorize scope expansion
 - ❌ Act outside declared scope
 
-**Canonical Reference:** `governance/canon/REPOSITORY_SEEDING_AND_ENFORCEMENT_ROLE_SEPARATION.md` Section 3.1.3
+#### 4.3.7 Execution Verification Bypasses (Prohibited)
+
+- ❌ Claim completion based only on documentation without execution
+- ❌ Hand over PRs without PREHANDOVER_PROOF (when required)
+- ❌ Skip execution verification "because it's simple"
+- ❌ Rely on CI to discover execution failures
+- ❌ Declare "I created the artifact" without local verification
+- ❌ Bypass prehandover proof requirement for "low-risk" changes
+- ❌ Attach placeholder prehandover proof ("will validate later")
+- ❌ Merge PRs with unknown gate status
+
+**Canonical Reference:** `governance/canon/REPOSITORY_SEEDING_AND_ENFORCEMENT_ROLE_SEPARATION.md` Section 3.1.3  
+**Execution Authority**: `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md` Section 11
 
 ---
 
@@ -399,7 +439,8 @@ Before a Governance Liaison Agent may be appointed, the following governance sta
 2. **Scope Violation** — Agent acts outside declared scope
 3. **Prohibited Activity** — Agent performs prohibited action
 4. **Governance Violation** — Agent bypasses STOP/ESCALATE discipline
-5. **Human Decision** — Johan or FM decides revocation necessary
+5. **Execution Verification Bypass** — Agent hands over without PREHANDOVER_PROOF when required
+6. **Human Decision** — Johan or FM decides revocation necessary
 
 **Revocation Process:**
 - FM invalidates agent contract
@@ -435,6 +476,11 @@ Governance Liaison agents MUST:
 - ✅ Request human authorization at required checkpoints
 - ✅ Document all activities in initialization evidence
 - ✅ Halt and escalate when encountering ambiguity or conflict
+- ✅ Follow 7-step Execution Bootstrap Protocol for all executable artifacts
+- ✅ Attach PREHANDOVER_PROOF to PRs requiring execution verification
+- ✅ Validate all gates in preflight before handover
+- ✅ Capture execution evidence with exit codes
+- ✅ Declare complete ONLY after local execution GREEN
 
 Governance Liaison agents MUST NOT:
 - ❌ Interpret or customize protocol steps
@@ -442,8 +488,13 @@ Governance Liaison agents MUST NOT:
 - ❌ Make architectural or product decisions
 - ❌ Proceed without required human authorization
 - ❌ Act outside declared scope
+- ❌ Hand over PRs without PREHANDOVER_PROOF when required
+- ❌ Rely on CI to discover execution failures
+- ❌ Skip execution verification for "simple" changes
+- ❌ Claim completion based only on documentation
 
-**Canonical Reference:** `governance/canon/REPOSITORY_SEEDING_AND_ENFORCEMENT_ROLE_SEPARATION.md` Section 3.1.4
+**Canonical Reference:** `governance/canon/REPOSITORY_SEEDING_AND_ENFORCEMENT_ROLE_SEPARATION.md` Section 3.1.4  
+**Execution Authority**: `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md`
 
 ### 7.2 STOP Discipline (Mandatory)
 
@@ -523,6 +574,45 @@ Governance Liaison MUST immediately STOP execution when ANY of the following occ
 
 **Canonical Reference:** `governance/escalation/ESCALATION_POLICY.md`
 
+### 7.4 Prehandover Verification Discipline (Mandatory)
+
+**When to Apply:**
+- ALL repository initialization phases
+- ALL governance artifact creation (workflows, schemas, contracts)
+- ALL PR handovers involving:
+  - Directory structure creation
+  - Workflow installation
+  - Agent contract deployment
+  - Gate implementation
+  - Configuration changes affecting CI/gates
+
+**7-Step Protocol:**
+1. **Document Requirements** — Clearly identify what must be created or changed
+2. **Create Actual Artifact** — Actually create the artifact (do NOT merely document intent)
+3. **Execute/Verify Locally** — Run validation, check directories, test workflows
+4. **Capture Output** — Save terminal logs showing success with exit codes
+5. **Validate Preflight** — Check all gates triggered by this change
+6. **Attach PREHANDOVER_PROOF** — Include in PR description (use template)
+7. **Declare Complete** — ONLY after execution GREEN locally
+
+**PREHANDOVER_PROOF Requirements:**
+- **Artifacts Created** — List with verification commands
+- **Execution Validation** — Commands run and outputs with exit codes (must be 0)
+- **Preflight Gate Status** — All gates enumerated and checked
+- **Execution Timestamp** — When validation performed
+- **Handover Guarantee** — Explicit statement that CI will confirm, not discover
+
+**Template**: `governance/templates/PREHANDOVER_PROOF_TEMPLATE.md`
+
+**Exemptions:**
+- Documentation-only changes (markdown content updates without CI impact)
+- Pure governance canon additions that do not create executable artifacts
+- RCA and incident documentation
+
+**When Uncertain:** Default to providing PREHANDOVER_PROOF.
+
+**Canonical Reference:** `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md`
+
 ---
 
 ## 8. Integration with Agent Recruitment
@@ -567,10 +657,18 @@ When recruiting Governance Liaison, agent contract MUST include:
 5. **Prohibited Activities**
    - List of prohibited activities (from Section 4.3)
    - Explicit statement: "This agent MUST NOT perform architecture, builder, enforcement, execution, or governance evolution activities"
+   - Explicit statement: "This agent MUST NOT bypass prehandover verification or hand over without PREHANDOVER_PROOF when required"
 
 6. **Escalation Requirements**
    - STOP conditions (from Section 7.2)
    - Escalation path (from Section 7.3)
+
+7. **Execution Verification Requirements**
+   - Reference to EXECUTION_BOOTSTRAP_PROTOCOL.md
+   - Obligation to attach PREHANDOVER_PROOF to PRs requiring execution verification
+   - Reference to PREHANDOVER_PROOF_TEMPLATE.md
+   - Obligation to validate all gates in preflight
+   - Obligation to capture execution evidence with exit codes
 
 **Canonical Reference:** `governance/canon/AGENT_RECRUITMENT.md` Section 5
 
@@ -615,6 +713,7 @@ A Governance Liaison appointment is considered **valid and legitimate** when:
 - Scope definition clear
 - Duration specified
 - Prohibited activities listed
+- Execution verification requirements included
 
 ✅ **FM Recruitment Followed** (Section 8.1)
 - FM recruited agent (or Johan overrode)
@@ -629,6 +728,12 @@ A Governance Liaison appointment is considered **valid and legitimate** when:
 - Agent acknowledges STOP conditions
 - Agent acknowledges escalation requirements
 - Agent commits to protocol compliance
+
+✅ **Execution Verification Discipline Acknowledged** (Section 7.4)
+- Agent acknowledges obligation to follow Execution Bootstrap Protocol
+- Agent acknowledges obligation to attach PREHANDOVER_PROOF when required
+- Agent acknowledges prohibition on bypassing execution verification
+- Agent commits to CI-confirmatory, not CI-diagnostic approach
 
 ---
 
@@ -778,6 +883,47 @@ The following scenarios are **explicitly prohibited** and constitute governance 
 
 **Canonical Reference:** `governance/canon/REPOSITORY_SEEDING_AND_ENFORCEMENT_ROLE_SEPARATION.md` Section 8.3
 
+### 11.6 Governance Liaison Bypassing Prehandover Verification
+
+**Scenario:** Governance Liaison hands over PR without PREHANDOVER_PROOF when execution verification is required.
+
+**Response:**
+1. Reviewer MUST reject PR immediately
+2. Reviewer MUST reference EXECUTION_BOOTSTRAP_PROTOCOL.md Section 5.2
+3. Governance Liaison MUST add PREHANDOVER_PROOF to PR description
+4. Governance Liaison MUST execute 7-step protocol before re-submission
+5. If pattern repeats, escalate to FM for agent revocation consideration
+
+**Outcome:** No PR merged without execution verification evidence.
+
+### 11.7 Governance Liaison Claiming Completion Without Execution
+
+**Scenario:** Governance Liaison documents "I created directories" but does not verify locally or capture evidence.
+
+**Response:**
+1. Governance Liaison MUST STOP immediately
+2. Governance Liaison MUST execute Step 3 (Execute/Verify Locally) of protocol
+3. Governance Liaison MUST execute Step 4 (Capture Output)
+4. Governance Liaison MUST complete all 7 steps before claiming completion
+5. If already handed over, PR MUST be updated with PREHANDOVER_PROOF
+
+**Outcome:** Documentation alone is insufficient; execution evidence mandatory.
+
+### 11.8 Governance Liaison Relying on CI for Discovery
+
+**Scenario:** Governance Liaison creates workflows but does not validate YAML syntax locally, relying on CI to catch errors.
+
+**Response:**
+1. If CI fails, Governance Liaison MUST perform RCA
+2. Governance Liaison MUST identify why preflight validation was incomplete
+3. Governance Liaison MUST add missing validation steps to PREHANDOVER_PROOF
+4. Governance Liaison MUST re-execute locally and capture evidence
+5. Pattern indicates violation of CI_CONFIRMATORY_NOT_DIAGNOSTIC.md
+
+**Outcome:** CI confirms success; does not discover failures. Preflight validation mandatory.
+
+**Canonical Reference:** `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md` Section 11
+
 ---
 
 ## 12. Enforcement and Consequences
@@ -789,6 +935,9 @@ The following scenarios are **explicitly prohibited** and constitute governance 
 - Missing scope declarations in agent contracts
 - Prohibited activity execution
 - STOP/ESCALATE discipline violations
+- PRs missing PREHANDOVER_PROOF when execution verification required
+- Completion claims without execution evidence
+- Gate validation incomplete or missing in preflight
 
 ### 12.2 Violation Classification
 
@@ -799,6 +948,9 @@ When Governance Liaison violation detected:
 - **Prohibited Activity** — Agent performed prohibited action (Section 4.3)
 - **Self-Governance** — Agent interpreted or customized without escalation
 - **STOP Discipline Failure** — Agent did not halt when required
+- **Prehandover Verification Bypass** — Agent handed over without PREHANDOVER_PROOF when required
+- **Execution Evidence Missing** — Agent claimed completion without local verification
+- **Gate Validation Incomplete** — Agent did not enumerate or validate gates in preflight
 
 ### 12.3 Violation Response
 
@@ -869,6 +1021,32 @@ All requirements derive from:
 
 ## 14. Version History
 
+### v1.1 (2026-01-11)
+
+**Status:** Execution Bootstrap Protocol Integration  
+**Authority:** Johan Ras (Human Authority)  
+**Trigger:** Issue — Update Governance Liaison Training Materials for Execution Bootstrap Protocol
+
+**Summary:** Integrated Execution Bootstrap Protocol requirements into Governance Liaison appointment and training standards.
+
+**Key Updates:**
+- Added Section 4.1.1(7): Prehandover verification obligations for repository initialization
+- Added Section 4.1.2(3): Prehandover verification obligations for governance coupling tasks
+- Added Section 4.3.7: Prohibited execution verification bypasses
+- Updated Section 6.3: Added execution verification bypass as revocation trigger
+- Updated Section 7.1: Added execution verification requirements to protocol compliance
+- Added Section 7.4: Prehandover Verification Discipline (new mandatory section)
+- Updated Section 8.2(7): Added execution verification requirements to agent contracts
+- Updated Section 9: Added execution verification discipline acknowledgment to success criteria
+- Added Section 11.6-11.8: Prohibited scenarios for prehandover verification failures
+- Updated Section 12.1-12.2: Added prehandover violation detection and classification
+
+**Effect:** Governance Liaison agents are now bound to EXECUTION_BOOTSTRAP_PROTOCOL.md. All repository initialization and governance coupling activities require prehandover proof. CI-confirmatory approach enforced.
+
+**Related Documents Added:**
+- `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md`
+- `governance/templates/PREHANDOVER_PROOF_TEMPLATE.md`
+
 ### v1.0 (2026-01-01)
 
 **Status:** Initial Release  
@@ -903,10 +1081,11 @@ Governance Liaison agents may be validly appointed when:
 3. ✅ FM recruitment followed (Section 8.1)
 4. ✅ Boundaries explicit (Section 3, Section 4)
 5. ✅ STOP/ESCALATE discipline acknowledged (Section 7)
+6. ✅ Execution verification discipline acknowledged (Section 7.4)
 
 **Appointment is structural, auditable, and revocable.**
 
-**This specification ensures Governance Liaison agents act within governance boundaries, escalate appropriately, and do not drift into prohibited activities.**
+**This specification ensures Governance Liaison agents act within governance boundaries, escalate appropriately, do not drift into prohibited activities, and execute with verification before handover.**
 
 ---
 
@@ -915,7 +1094,8 @@ Governance Liaison agents may be validly appointed when:
 ---
 
 **Document Metadata:**
-- Document ID: GOVERNANCE_LIAISON_MINIMUM_APPOINTMENT_REQUIREMENTS_V1.0
+- Document ID: GOVERNANCE_LIAISON_MINIMUM_APPOINTMENT_REQUIREMENTS_V1.1
 - Authority: Canonical Governance Standard
-- Integrates With: AGENT_RECRUITMENT.md, GOVERNANCE_LIAISON_ROLE_SURVEY.md, REPOSITORY_SEEDING_AND_ENFORCEMENT_ROLE_SEPARATION.md, FOREMAN_AUTHORITY_AND_SUPERVISION_MODEL.md
+- Version: 1.1 (2026-01-11)
+- Integrates With: AGENT_RECRUITMENT.md, GOVERNANCE_LIAISON_ROLE_SURVEY.md, REPOSITORY_SEEDING_AND_ENFORCEMENT_ROLE_SEPARATION.md, FOREMAN_AUTHORITY_AND_SUPERVISION_MODEL.md, EXECUTION_BOOTSTRAP_PROTOCOL.md, PREHANDOVER_PROOF_TEMPLATE.md
 - Enforcement: FM Recruitment Authority + Governance Administrator + Human Authority
