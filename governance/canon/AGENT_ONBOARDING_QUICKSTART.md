@@ -68,6 +68,7 @@ Regardless of your class, you MUST read and understand these documents:
 ### Execution Model (Builders and Overseers)
 - **BUILD_PHILOSOPHY.md** - One-Time Build Law, QA as proof, Zero Test Debt (root of repo)
 - **governance/opojd/OPOJD_DOCTRINE.md** - One-Prompt One-Job Doctrine, continuous execution mandate
+- **EXECUTION_BOOTSTRAP_PROTOCOL.md** - Mandatory 7-step execution verification, PREHANDOVER_PROOF requirement
 
 ### Your Profile
 - **governance/profiles/[your-class].v1.md** - Role-specific constraints and capabilities
@@ -85,15 +86,18 @@ Read these protocols before starting any build work:
 - **FM_BUILDER_APPOINTMENT_PROTOCOL.md** - How FM appoints you, what you must acknowledge
 - **BUILDER_FIRST_PR_MERGE_MODEL.md** - Your QA reports are canonical truth
 - **BUILDER_CONTRACT_BINDING_CHECKLIST.md** - Contract completeness requirements
+- **EXECUTION_BOOTSTRAP_PROTOCOL.md** - Mandatory 7-step execution verification before every PR handover
 
 ### For Reviewers
 Read these protocols before providing any advisory input:
 - **MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md** - Required enhancement capture at review completion
 - **MANDATORY_PROCESS_IMPROVEMENT_REFLECTION_PROTOCOL.md** - Required structured reflection for governance-repo work units
+- **EXECUTION_BOOTSTRAP_PROTOCOL.md** - Understanding execution verification for reviewing builder PRs
 
 ### For All Agents
 - **AGENT_CANONICAL_CONTEXT_SYNCHRONISATION_PROTOCOL.md** - How governance stays synchronized
 - **CROSS_REPOSITORY_LAYER_DOWN_PROTOCOL.md** - How changes propagate across repos
+- **EXECUTION_BOOTSTRAP_PROTOCOL.md** - How to verify execution before handover (applies to all execution-related work)
 
 ---
 
@@ -130,15 +134,64 @@ Every agent operates using this simple protocol:
 - Follow your profile constraints
 - Reference canonical governance for process questions
 - Document your work with required artifacts
+- **Apply Execution Bootstrap Protocol for all execution-related work**
 
 **If authority unclear**: HALT and escalate.
 
 ### 3. Capture & Report
-- Builders: Generate QA reports, capture enhancements
-- Reviewers: Provide advisory comments, capture enhancements
+- Builders: Generate QA reports, capture enhancements, **include PREHANDOVER_PROOF**
+- Reviewers: Provide advisory comments, capture enhancements, **validate PREHANDOVER_PROOF in builder PRs**
 - All: Report completion status using terminal states (COMPLETE/BLOCKED)
 
 **Required terminal states only**: No "progress" semantics, no partial acceptance.
+
+---
+
+## Step 6A: Execution Bootstrap Protocol (Critical for Builders and Governance Agents)
+
+**Mandatory Question Before Every PR Handover**: "Have I executed this locally and captured proof of success?"
+
+### The 7-Step Execution Verification Process
+
+For any work that creates executable artifacts (workflows, gates, contracts, configurations):
+
+1. **Document Requirements** - List what must be created/changed
+2. **Create Actual Artifact** - Actually create it (don't just document intent)
+3. **Execute/Verify Locally** - Run it in your environment
+4. **Capture Output** - Save terminal output, exit codes (must be 0)
+5. **Validate Preflight** - Confirm all PR gates would pass before creating PR
+6. **Attach PREHANDOVER_PROOF** - Include complete evidence in PR description
+7. **Declare Complete** - Only after steps 1-6 are GREEN
+
+### PREHANDOVER_PROOF Requirement
+
+**All agents creating executable artifacts MUST include PREHANDOVER_PROOF in PR descriptions.**
+
+PREHANDOVER_PROOF includes:
+- ✅ Artifacts created (with verification commands)
+- ✅ Execution validation (commands run, outputs, exit codes)
+- ✅ Preflight gate status (ALL gates enumerated and checked)
+- ✅ Execution timestamp and environment
+- ✅ Handover guarantee
+
+**Template**: `governance/templates/PREHANDOVER_PROOF_TEMPLATE.md`
+
+**When Required**:
+- Directory structure creation
+- Workflow installation/modification
+- Agent contract deployment
+- Gate implementation
+- Configuration changes affecting CI
+- Any artifact that can fail in CI
+
+**When Optional** (but recommended):
+- Documentation-only changes
+- Pure markdown content updates
+- RCA and incident reports
+
+**Prohibition**: Do NOT claim completion or hand over PRs without PREHANDOVER_PROOF if execution verification is mandatory for your changes.
+
+**Authority**: `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md`
 
 ---
 
@@ -152,6 +205,9 @@ Every agent operates using this simple protocol:
 - ✅ Surface ripples when canonical governance changes affect your work
 - ✅ Capture enhancements at work completion (reference MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md)
 - ✅ Complete process improvement reflection for governance-repo work units (reference MANDATORY_PROCESS_IMPROVEMENT_REFLECTION_PROTOCOL.md)
+- ✅ **Follow Execution Bootstrap Protocol for all execution-related work (7-step verification)**
+- ✅ **Include PREHANDOVER_PROOF in PR descriptions when required**
+- ✅ **Enumerate and validate ALL PR gates in preflight before handover**
 
 ### All Agents MUST NOT
 - ❌ Modify own `.agent` contract (escalate to higher authority)
@@ -160,6 +216,9 @@ Every agent operates using this simple protocol:
 - ❌ Duplicate governance doctrine in local files
 - ❌ Weaken or bypass QA gates
 - ❌ Introduce secrets or credentials
+- ❌ **Hand over PRs without PREHANDOVER_PROOF when execution verification is required**
+- ❌ **Claim completion based only on documentation (must prove execution)**
+- ❌ **Rely on CI to discover execution failures (preflight catches issues first)**
 
 ---
 
@@ -238,6 +297,15 @@ This means:
 ### ❌ "I made progress but it's not done yet..."
 **NO**. Use terminal states only: COMPLETE or BLOCKED. No partial progress acceptance.
 
+### ❌ "I created the workflow file, so I'm done..."
+**NO**. Must execute locally and include PREHANDOVER_PROOF. Creation without verification is incomplete.
+
+### ❌ "CI will catch any issues..."
+**NO**. Preflight validation is mandatory. CI confirms success, does not discover failures.
+
+### ❌ "I tested it, trust me..."
+**NO**. Must capture and include execution evidence in PREHANDOVER_PROOF. Verbal claims are insufficient.
+
 ---
 
 ## Success Criteria
@@ -251,34 +319,41 @@ You are successfully onboarded when you can answer:
 5. **What are terminal states?** (COMPLETE or BLOCKED, no progress semantics)
 6. **Can I modify my contract?** (No, must escalate)
 7. **Can I interpret governance?** (No, reference explicitly or escalate)
+8. **What is PREHANDOVER_PROOF?** (Evidence of local execution before PR handover)
+9. **When do I need execution verification?** (For all executable artifacts: workflows, gates, contracts, configs)
+10. **What are the 7 steps of execution bootstrap?** (Document → Create → Execute → Capture → Validate → Attach Proof → Declare Complete)
 
-If you can answer all seven, you are ready to operate.
+If you can answer all ten, you are ready to operate.
 
 ---
 
 ## Quick Reference Card
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│ AGENT QUICK REFERENCE                                        │
-├─────────────────────────────────────────────────────────────┤
-│ My Role:        Check .agent "agent.class"                  │
-│ My Profile:     governance/profiles/[class].v1.md           │
-│ My Bindings:    Check .agent "governance.bindings"          │
-│ My Scope:       Check .agent "scope" section                │
-│                                                              │
-│ Escalate To:    Foreman (FM) - for most agents              │
-│                 Up chain if you ARE FM or Gov Agent         │
-│                                                              │
-│ Terminal States: COMPLETE or BLOCKED (no progress)          │
-│                                                              │
-│ Can I Modify:   Only files in "allowed_paths"               │
-│ Can't Touch:    governance/**, .agent, .github/** (usually) │
-│                                                              │
-│ When Stuck:     HALT → Escalate → Do NOT guess             │
-│                                                              │
-│ On Completion:  Generate artifacts, capture enhancements    │
-└─────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│ AGENT QUICK REFERENCE                                         │
+├──────────────────────────────────────────────────────────────┤
+│ My Role:        Check .agent "agent.class"                   │
+│ My Profile:     governance/profiles/[class].v1.md            │
+│ My Bindings:    Check .agent "governance.bindings"           │
+│ My Scope:       Check .agent "scope" section                 │
+│                                                               │
+│ Escalate To:    Foreman (FM) - for most agents               │
+│                 Up chain if you ARE FM or Gov Agent          │
+│                                                               │
+│ Terminal States: COMPLETE or BLOCKED (no progress)           │
+│                                                               │
+│ Can I Modify:   Only files in "allowed_paths"                │
+│ Can't Touch:    governance/**, .agent, .github/** (usually)  │
+│                                                               │
+│ When Stuck:     HALT → Escalate → Do NOT guess              │
+│                                                               │
+│ Before PR:      Execute locally → Capture proof → Attach     │
+│ Handover:       PREHANDOVER_PROOF required for executables   │
+│                                                               │
+│ On Completion:  Generate artifacts, capture enhancements     │
+│                 Include PREHANDOVER_PROOF if required        │
+└──────────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -308,6 +383,7 @@ Comprehensive list of canonical governance documents available in `governance/ca
 - FM_BUILDER_APPOINTMENT_PROTOCOL.md
 - CROSS_REPOSITORY_LAYER_DOWN_PROTOCOL.md
 - IN_BETWEEN_WAVE_RECONCILIATION.md
+- EXECUTION_BOOTSTRAP_PROTOCOL.md
 
 ### Learning & Enhancement
 - BOOTSTRAP_EXECUTION_LEARNINGS.md

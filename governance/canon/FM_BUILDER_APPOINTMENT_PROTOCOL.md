@@ -1,10 +1,10 @@
 # FM Builder Appointment Protocol
 
 **Status**: Canonical Governance Protocol  
-**Version**: 1.1.0  
+**Version**: 1.2.0  
 **Authority**: Supreme - Canonical  
 **Effective Date**: 2026-01-03  
-**Last Updated**: 2026-01-08  
+**Last Updated**: 2026-01-11  
 **Owner**: Maturion Engineering Leadership (Johan Ras)  
 **Precedence**: Implements BL-0007 requirement for governed appointment protocol  
 **Applies To**: All Foreman Instances, All Builder Appointments, All Repositories
@@ -240,12 +240,13 @@ FM MUST execute ALL steps in sequence. Omitting ANY step constitutes incomplete 
 3. **OPOJD Execution Model** (EXPLICIT)
 4. **One-Time Build Law** (EXPLICIT)
 5. **Terminal-State Execution Requirements** (EXPLICIT)
-6. **Prohibited Behaviors** (EXPLICIT)
-7. **Escalation Triggers and STOP Conditions**
-8. **Evidence Requirements**
-9. **Acceptance Criteria**
+6. **Execution Bootstrap Protocol** (EXPLICIT)
+7. **Prohibited Behaviors** (EXPLICIT)
+8. **Escalation Triggers and STOP Conditions**
+9. **Evidence Requirements**
+10. **Acceptance Criteria**
 
-**Key Emphasis**: Sections 3-6 (OPOJD, One-Time Build, Terminal-State, Prohibited) MUST be communicated explicitly and prominently. These are NOT optional or implicit.
+**Key Emphasis**: Sections 3-7 (OPOJD, One-Time Build, Terminal-State, Execution Bootstrap, Prohibited) MUST be communicated explicitly and prominently. These are NOT optional or implicit.
 
 #### 3.2 Explicitly Communicate OPOJD Continuous Execution
 
@@ -325,6 +326,40 @@ FM MUST execute ALL steps in sequence. Omitting ANY step constitutes incomplete 
 
 **Rationale**: Defines clear STOP conditions, preventing builder from "pushing through" blockers.
 
+#### 3.7 Explicitly Communicate Execution Bootstrap Protocol
+
+**Requirement**: FM MUST explicitly communicate the mandatory 7-step execution verification process and PREHANDOVER_PROOF requirement.
+
+**Mandatory Communication** (verbatim or equivalent):
+
+> "Before handing over any PR with executable artifacts (workflows, gates, contracts, configurations), you MUST follow the Execution Bootstrap Protocol (governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md):
+>
+> **7-Step Execution Verification Process**:
+> 1. **Document Requirements** - List what must be created/changed
+> 2. **Create Actual Artifact** - Actually create it (don't just document intent)
+> 3. **Execute/Verify Locally** - Run it in your environment
+> 4. **Capture Output** - Save terminal output, exit codes (must be 0)
+> 5. **Validate Preflight** - Confirm ALL PR gates would pass before creating PR
+> 6. **Attach PREHANDOVER_PROOF** - Include complete evidence in PR description
+> 7. **Declare Complete** - Only after steps 1-6 are GREEN
+>
+> **PREHANDOVER_PROOF Requirement**:
+> - You MUST include PREHANDOVER_PROOF in PR description for all executable artifacts
+> - PREHANDOVER_PROOF includes: artifacts created, execution validation, preflight gate status, timestamp, handover guarantee
+> - Template: governance/templates/PREHANDOVER_PROOF_TEMPLATE.md
+>
+> **Critical Principle**: CI confirms success, does NOT discover failures. You MUST catch all execution issues in preflight validation.
+>
+> You MUST NOT:
+> - Hand over PRs without PREHANDOVER_PROOF when required
+> - Claim completion based only on artifact creation (must prove execution)
+> - Rely on CI to discover execution failures
+> - Skip gate enumeration or preflight validation"
+
+**Rationale**: Prevents "documented but not executed" failures (R_Roster PR #8 pattern, INCIDENT-2026-01-08-PR895).
+
+**Authority**: `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md` v1.0.0
+
 ---
 
 ### STEP 4: Builder Mindset Verification (MANDATORY)
@@ -344,6 +379,7 @@ FM MUST execute ALL steps in sequence. Omitting ANY step constitutes incomplete 
 > 2. Terminal-state execution model (BLOCKED or COMPLETE only)
 > 3. One-Time Build Law (100% GREEN on first delivery, no partial work)
 > 4. Escalation triggers and STOP conditions (when you MUST escalate)
+> 5. Execution Bootstrap Protocol (7-step verification, PREHANDOVER_PROOF for executable artifacts)
 >
 > Respond with explicit acknowledgment of each requirement."
 
@@ -354,6 +390,7 @@ FM MUST execute ALL steps in sequence. Omitting ANY step constitutes incomplete 
 > 2. Terminal-state execution model (BLOCKED or COMPLETE only)
 > 3. One-Time Build Law (100% GREEN on first delivery)
 > 4. Escalation triggers and STOP conditions (I will escalate when blocked)
+> 5. Execution Bootstrap Protocol (7-step verification, PREHANDOVER_PROOF required)
 >
 > I understand these are constitutional requirements, not preferences. I am ready to proceed."
 
@@ -370,6 +407,8 @@ FM MUST execute ALL steps in sequence. Omitting ANY step constitutes incomplete 
   - **Correct Answer**: "This is TOTAL FAILURE (Zero Test Debt). I STOP, FIX, RE-RUN, VERIFY 100% GREEN. I do NOT deliver partial pass."
 - "What do you do if architecture is ambiguous about a component contract?"
   - **Correct Answer**: "I escalate immediately (Architecture Missing or Incomplete). I do NOT guess or infer intent."
+- "What do you do after creating a workflow file?"
+  - **Correct Answer**: "I execute it locally, capture output with exit codes, validate all PR gates in preflight, and attach PREHANDOVER_PROOF to my PR. I do NOT just create the file and claim completion."
 
 **If Builder Answers Incorrectly**: FM MUST repeat constitutional onboarding and re-verify understanding.
 
@@ -776,6 +815,20 @@ If conflict exists, higher authority prevails:
 - Defines terminal-state execution enforcement
 - Establishes builder mindset verification requirement
 
+**v1.1.0 (2026-01-08):**
+- Added mandatory enhancement and improvement capture requirements
+- Updated builder contract binding requirements (Section A.12)
+- Enhanced builder acknowledgment requirements
+
+**v1.2.0 (2026-01-11):**
+- Added Section 3.7: Execution Bootstrap Protocol requirement
+- Added 7-step execution verification to constitutional onboarding
+- Added PREHANDOVER_PROOF requirement for executable artifacts
+- Updated builder acknowledgment to include Execution Bootstrap Protocol (5 commitments)
+- Added verification question for execution bootstrap compliance
+- Updated mandatory template sections (added section 6: Execution Bootstrap Protocol)
+- Authority: governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md v1.0.0
+
 **Future Evolution**: This protocol may be enhanced based on appointment failure patterns (per Section 10.2 Learning Promotion). Enhancements are additive and non-regressive.
 
 ---
@@ -795,4 +848,4 @@ This protocol ensures appointment is NEVER incorrect.
 
 ---
 
-**END OF FM_BUILDER_APPOINTMENT_PROTOCOL.md v1.0.0**
+**END OF FM_BUILDER_APPOINTMENT_PROTOCOL.md v1.2.0**

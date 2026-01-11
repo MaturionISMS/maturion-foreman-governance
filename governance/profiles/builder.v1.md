@@ -1,11 +1,11 @@
-# BUILDER GOVERNANCE PROFILE — v1.1
+# BUILDER GOVERNANCE PROFILE — v1.2
 
 ## Status
 Governance Profile (Derived)  
-Version: v1.1  
+Version: v1.2  
 Authority: Foreman (FM)  
 Derived From: /governance/canon/AGENT_RECRUITMENT.md  
-Last Updated: 2026-01-08
+Last Updated: 2026-01-11
 
 ---
 
@@ -102,12 +102,61 @@ Builders MUST escalate to the Foreman when encountering:
 - Missing authorization
 - Ambiguous scope boundaries
 - Required changes outside declared scope
+- Gate failures during preflight validation that indicate governance defects
 
 Escalation is a success condition, not a failure.
 
 ---
 
-## 8. Temporary Authorization
+## 8. Execution Bootstrap Protocol Compliance
+
+**Authority**: `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md`
+
+Before handing over any PR with executable artifacts, Builders MUST:
+
+### 8.1 Follow 7-Step Execution Verification
+
+1. **Document Requirements** - List what must be created/changed
+2. **Create Actual Artifact** - Actually create it (don't just document intent)
+3. **Execute/Verify Locally** - Run it in your environment
+4. **Capture Output** - Save terminal output, exit codes (must be 0)
+5. **Validate Preflight** - Confirm all PR gates would pass before creating PR
+6. **Attach PREHANDOVER_PROOF** - Include complete evidence in PR description
+7. **Declare Complete** - Only after steps 1-6 are GREEN
+
+### 8.2 Include PREHANDOVER_PROOF
+
+**Mandatory For**:
+- Directory structure creation
+- Workflow installation/modification
+- Agent contract deployment
+- Gate implementation
+- Configuration changes affecting CI
+- Any artifact that can fail in CI
+
+**PREHANDOVER_PROOF Must Include**:
+- ✅ Artifacts created (with verification commands)
+- ✅ Execution validation (commands run, outputs, exit codes)
+- ✅ Preflight gate status (ALL gates enumerated and checked)
+- ✅ Execution timestamp and environment
+- ✅ Handover guarantee
+
+**Template**: `governance/templates/PREHANDOVER_PROOF_TEMPLATE.md`
+
+### 8.3 Prohibitions
+
+Builders MUST NOT:
+- ❌ Hand over PRs without PREHANDOVER_PROOF when execution verification is required
+- ❌ Claim completion based only on artifact creation without execution
+- ❌ Rely on CI to discover execution failures (preflight catches issues first)
+- ❌ Skip gate enumeration or preflight validation
+- ❌ Declare "complete" without local validation success
+
+**Violation of execution bootstrap protocol constitutes incomplete work delivery.**
+
+---
+
+## 9. Temporary Authorization
 
 Builders may receive temporary, task-scoped authorization to operate on
 otherwise restricted paths.
@@ -121,7 +170,7 @@ Temporary authorization does not modify this profile.
 
 ---
 
-## 9. Enforcement and Invalidity
+## 10. Enforcement and Invalidity
 
 Builder actions are valid only if:
 
@@ -136,7 +185,7 @@ Foreman enforcement supersedes outcomes.
 
 ---
 
-## 10. Mandatory Enhancement & Improvement Capture
+## 11. Mandatory Enhancement & Improvement Capture
 
 At the conclusion of any completed work unit (issue, PR, build task), this Builder agent MUST perform BOTH:
 
@@ -191,7 +240,7 @@ Failure to comply with both feature enhancement review AND process improvement r
 
 ---
 
-## 11. Revocation
+## 12. Revocation
 
 The Foreman may revoke a Builder agent by:
 
@@ -205,7 +254,7 @@ All actions taken after revocation are invalid.
 
 ---
 
-## 12. Profile Precedence
+## 13. Profile Precedence
 
 If this profile conflicts with any non-canonical artifact, this profile
 prevails.
@@ -215,7 +264,7 @@ prevails.
 
 ---
 
-End of BUILDER GOVERNANCE PROFILE — v1.1
+End of BUILDER GOVERNANCE PROFILE — v1.2
 
 **Version History**:
 - **v1.0** (2025-12-31): Initial release
@@ -223,3 +272,9 @@ End of BUILDER GOVERNANCE PROFILE — v1.1
   - Section 10.2: Process improvement reflection with 5 required questions
   - Updated prohibitions to include process reflection violations
   - Canonical reference updated to MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md v2.0.0
+- **v1.2** (2026-01-11): Added Execution Bootstrap Protocol compliance
+  - Section 8: Execution Bootstrap Protocol Compliance
+  - Mandatory 7-step execution verification before PR handover
+  - PREHANDOVER_PROOF requirement for all executable artifacts
+  - Updated section numbering (8→9, 9→10, 10→11, 11→12, 12→13)
+  - Authority: governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md

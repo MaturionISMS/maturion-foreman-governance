@@ -3,8 +3,8 @@
 ## Status
 **Type**: PR Gate Release Checklist (Canonical Documentation)  
 **Authority**: Governance (Canonical)  
-**Version**: 1.0.0  
-**Effective Date**: 2025-12-22  
+**Version**: 1.1.0  
+**Effective Date**: 2026-01-11  
 **Agent Role**: FM (Foreman) Agent  
 **Canonical Reference**: `governance/canon/AGENT_ROLE_GATE_APPLICABILITY.md`
 
@@ -109,7 +109,32 @@ FM agents may act in different capacities:
 
 ---
 
-### Category 4: Gates That DO NOT Apply (When Acting as Orchestrator)
+### Category 4: Builder PREHANDOVER_PROOF Validation
+
+**Gate**: PREHANDOVER_PROOF review for builder PRs  
+**Canonical Reference**: `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md`
+
+**Purpose**: FM must validate PREHANDOVER_PROOF completeness when reviewing builder PRs containing executable artifacts
+
+**Applicability**: When FM reviews builder PRs (not when FM creates own PRs)
+
+#### PREHANDOVER_PROOF Review Checklist
+- [ ] **4.1** Builder PR includes executable artifacts → PREHANDOVER_PROOF required
+- [ ] **4.2** PREHANDOVER_PROOF section present in builder PR description
+- [ ] **4.3** All 7 steps documented (Document → Create → Execute → Capture → Validate → Attach → Declare)
+- [ ] **4.4** Artifacts created with verification evidence
+- [ ] **4.5** Execution validation with exit codes (all 0)
+- [ ] **4.6** ALL gates enumerated and validated (no gaps)
+- [ ] **4.7** Execution timestamp and environment documented
+- [ ] **4.8** Handover guarantee included
+
+**FM Validation Responsibility**: FM MUST verify PREHANDOVER_PROOF completeness before approving builder PRs. If PREHANDOVER_PROOF is incomplete or missing for executable artifacts, FM MUST request builder to provide it.
+
+**Note**: This requirement applies when FM reviews builder work. When FM creates own PRs with executable artifacts, FM must provide PREHANDOVER_PROOF (same requirement as builders).
+
+---
+
+### Category 5: Gates That DO NOT Apply (When Acting as Orchestrator)
 
 **Confirmation**: The following builder-specific gates are **NOT REQUIRED** for FM agents acting as orchestrators:
 
@@ -125,7 +150,7 @@ FM agents may act in different capacities:
 
 ---
 
-### Category 5: When FM Acts as Builder
+### Category 6: When FM Acts as Builder
 
 **Rule**: If FM PR includes application code changes (not just orchestration/governance):
 - FM must satisfy **Builder Agent checklist** in addition to FM-specific requirements
@@ -203,10 +228,18 @@ Gate logic must:
 - `governance/canon/GOVERNANCE_PURPOSE_AND_SCOPE.md` - FM role definition (Section 4.2)
 - `GOVERNANCE_GATE_CANON.md` - Constitutional safeguards (CS1, CS3, CS4, CS5, CS6)
 - `PR_GATE_RELEASE_CHECKLIST_BUILDER.md` - Builder checklist (use when FM acts as builder)
+- `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md` - Execution Bootstrap Protocol (Category 4)
+- `governance/templates/PREHANDOVER_PROOF_TEMPLATE.md` - PREHANDOVER_PROOF template
 
 ---
 
 ## Versioning
+
+### v1.1.0 (2026-01-11)
+- Added Category 4: Builder PREHANDOVER_PROOF Validation
+- FM must validate PREHANDOVER_PROOF completeness when reviewing builder PRs
+- Updated category numbering (4→5, 5→6)
+- Reference to EXECUTION_BOOTSTRAP_PROTOCOL.md
 
 ### v1.0.0 (2025-12-22)
 - Initial release

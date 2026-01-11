@@ -3,8 +3,8 @@
 ## Status
 **Type**: PR Gate Release Checklist (Canonical Documentation)  
 **Authority**: Governance (Canonical)  
-**Version**: 1.0.0  
-**Effective Date**: 2025-12-22  
+**Version**: 1.1.0  
+**Effective Date**: 2026-01-11  
 **Agent Role**: Governance Administrator Agent  
 **Canonical Reference**: `governance/canon/AGENT_ROLE_GATE_APPLICABILITY.md`
 
@@ -81,7 +81,39 @@ If a PR satisfies all items but still fails, that is a **governance defect**, no
 
 ---
 
-### Category 4: Gates That DO NOT Apply
+### Category 4: Execution Bootstrap Protocol (for Executable Artifacts)
+
+**Gate**: PREHANDOVER_PROOF enforcement  
+**Canonical Reference**: `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md`
+
+**Purpose**: Governance administrators creating executable artifacts (workflows, gates, contracts) must provide PREHANDOVER_PROOF
+
+**Applicability**: REQUIRED when PR includes:
+- Workflow files (`.github/workflows/*.yml`)
+- Gate implementation changes
+- Agent contract deployment
+- Configuration affecting CI
+- Any artifact that can fail in CI
+
+**Optional** (but recommended) for:
+- Documentation-only changes
+- Pure markdown governance content
+- Schema additions without enforcement logic
+
+#### PREHANDOVER_PROOF Requirements (when applicable)
+- [ ] **4.1** PREHANDOVER_PROOF section present in PR description
+- [ ] **4.2** All 7 steps documented (Document → Create → Execute → Capture → Validate → Attach → Declare)
+- [ ] **4.3** Artifacts created with verification evidence
+- [ ] **4.4** Execution validation with exit codes (all 0)
+- [ ] **4.5** ALL gates enumerated and validated (no gaps)
+- [ ] **4.6** Execution timestamp and environment documented
+- [ ] **4.7** Handover guarantee included
+
+**Note**: Governance administrators have the SAME execution verification obligation as builders when creating executable artifacts. Documentation-only governance changes may skip PREHANDOVER_PROOF.
+
+---
+
+### Category 5: Gates That DO NOT Apply
 
 **Confirmation**: The following builder-specific gates are **NOT REQUIRED** for Governance Administrator agents:
 
@@ -122,8 +154,10 @@ Before creating a PR or requesting review:
 2. Verify each applicable item is satisfied
 3. Ensure governance artifacts are valid and complete
 4. If modifying enforcement: Verify alignment with canon (Category 2)
-5. Confirm no builder-specific requirements are being applied
-6. Submit PR when all applicable items are checked
+5. **If creating executable artifacts: Follow Execution Bootstrap Protocol (Category 4)**
+6. **If required: Attach PREHANDOVER_PROOF to PR description**
+7. Confirm no builder-specific requirements are being applied
+8. Submit PR when all applicable items are checked
 
 ### For PR Gate Implementation
 
@@ -167,10 +201,19 @@ Gate logic must:
 - `governance/canon/GOVERNANCE_PURPOSE_AND_SCOPE.md` - Role definitions
 - `GOVERNANCE_GATE_CANON.md` - Constitutional safeguards
 - `governance/agents/governance-administrator.agent.md` - Agent contract
+- `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md` - Execution Bootstrap Protocol (Category 4)
+- `governance/templates/PREHANDOVER_PROOF_TEMPLATE.md` - PREHANDOVER_PROOF template
 
 ---
 
 ## Versioning
+
+### v1.1.0 (2026-01-11)
+- Added Category 4: Execution Bootstrap Protocol (for Executable Artifacts)
+- Governance administrators must provide PREHANDOVER_PROOF for workflows, gates, contracts
+- Updated category numbering (4→5)
+- Updated usage instructions
+- Reference to EXECUTION_BOOTSTRAP_PROTOCOL.md
 
 ### v1.0.0 (2025-12-22)
 - Initial release

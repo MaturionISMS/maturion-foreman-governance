@@ -3,8 +3,8 @@
 ## Status
 **Type**: PR Gate Release Checklist (Canonical Documentation)  
 **Authority**: Governance (Canonical)  
-**Version**: 1.1.0  
-**Effective Date**: 2026-01-09  
+**Version**: 1.2.0  
+**Effective Date**: 2026-01-11  
 **Agent Role**: Builder Agent  
 **Canonical Reference**: `governance/canon/AGENT_ROLE_GATE_APPLICABILITY.md`
 
@@ -183,6 +183,53 @@ If a PR satisfies all items but still fails, that is a **governance defect**, no
 
 ---
 
+### Category 8: Execution Bootstrap Protocol (PREHANDOVER_PROOF)
+
+**Gate**: Execution verification enforcement  
+**Canonical Reference**: `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md`
+
+**Purpose**: Verify builder followed 7-step execution verification before PR handover
+
+**Applicability**: REQUIRED for PRs containing executable artifacts (workflows, gates, contracts, configurations). OPTIONAL (but recommended) for documentation-only changes.
+
+#### PREHANDOVER_PROOF Presence
+- [ ] **8.1** PREHANDOVER_PROOF section present in PR description (if executable artifacts included)
+- [ ] **8.2** PREHANDOVER_PROOF follows canonical template (governance/templates/PREHANDOVER_PROOF_TEMPLATE.md)
+
+#### Artifacts Created (Step 2)
+- [ ] **8.3** Artifacts documented with verification commands
+- [ ] **8.4** Verification output included (ls, cat, tree, or equivalent)
+- [ ] **8.5** Status marked as VERIFIED
+
+#### Execution Validation (Steps 3-4)
+- [ ] **8.6** Commands executed locally documented
+- [ ] **8.7** Command outputs included
+- [ ] **8.8** Exit codes captured (all must be 0 for success)
+- [ ] **8.9** Status marked as ALL GREEN (or failures explained and resolved)
+
+#### Preflight Gate Status (Step 5)
+- [ ] **8.10** ALL gates triggered by PR changes enumerated
+- [ ] **8.11** Each gate has validation method documented
+- [ ] **8.12** Each gate has evidence provided
+- [ ] **8.13** All applicable gates show PASS or SKIP (no FAIL at handover)
+- [ ] **8.14** Gate enumeration method documented (how gates were identified)
+
+#### Execution Timestamp and Environment
+- [ ] **8.15** Validation timestamp included (YYYY-MM-DD HH:MM:SS UTC)
+- [ ] **8.16** Environment details documented (OS, shell, tool versions)
+- [ ] **8.17** Validator identified (agent name or human name)
+
+#### Handover Guarantee
+- [ ] **8.18** Explicit guarantee statement included
+- [ ] **8.19** Known environment differences documented (or "None known")
+- [ ] **8.20** Root cause commitment included (RCA if CI fails)
+
+**Prohibition**: PRs with executable artifacts MUST NOT be handed over without complete PREHANDOVER_PROOF.
+
+**Note**: If PREHANDOVER_PROOF is incomplete or missing for executable artifacts, this is a protocol violation. Builder must add PREHANDOVER_PROOF before handover.
+
+---
+
 ## Predictability Invariant
 
 > **If all checklist items above are satisfied, the PR gate MUST pass.**
@@ -203,8 +250,10 @@ Before creating a PR or requesting review:
 2. Verify each item is satisfied
 3. Generate all required artifacts (Category 3)
 4. Run full QA suite (Category 4)
-5. Optionally: Run GPCA (Gate-Predictive Compliance Analysis) for prediction
-6. Only submit PR when all items are checked
+5. **Follow Execution Bootstrap Protocol for executable artifacts (Category 8)**
+6. **Attach PREHANDOVER_PROOF to PR description if required**
+7. Optionally: Run GPCA (Gate-Predictive Compliance Analysis) for prediction
+8. Only submit PR when all items are checked
 
 ### For PR Gate Implementation
 
@@ -226,10 +275,18 @@ Gate logic must:
 - `governance/canon/GATE_PREDICTIVE_COMPLIANCE_ANALYSIS.md` - GPCA model
 - `governance/canon/CONSTITUTIONAL_SANDBOX_PATTERN.md` - Constitutional vs Procedural hierarchy (BL-024)
 - `governance/canon/BOOTSTRAP_EXECUTION_LEARNINGS.md` - BL-024 (Constitutional Sandbox discovery)
+- `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md` - 7-step execution verification (Category 8)
+- `governance/templates/PREHANDOVER_PROOF_TEMPLATE.md` - PREHANDOVER_PROOF template
 
 ---
 
 ## Versioning
+
+### v1.2.0 (2026-01-11)
+- Added Category 8: Execution Bootstrap Protocol (PREHANDOVER_PROOF)
+- Added 20 PREHANDOVER_PROOF validation items (8.1-8.20)
+- Added execution verification enforcement for executable artifacts
+- Reference to EXECUTION_BOOTSTRAP_PROTOCOL.md and PREHANDOVER_PROOF_TEMPLATE.md
 
 ### v1.1.0 (2026-01-09)
 - Added Category 7: Constitutional Sandbox Compliance (BL-024)

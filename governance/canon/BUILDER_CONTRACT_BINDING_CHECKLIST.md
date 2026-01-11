@@ -1,10 +1,10 @@
 # BUILDER CONTRACT BINDING CHECKLIST
 
 **Status**: Canonical Governance Validation Checklist  
-**Version**: 1.1.0  
+**Version**: 1.2.0  
 **Authority**: Maturion Engineering Leadership (Johan Ras)  
 **Created**: 2026-01-01  
-**Last Updated**: 2026-01-08  
+**Last Updated**: 2026-01-11  
 **Purpose**: Machine-checkable checklist of what MUST appear in every builder contract to be considered constitutionally bound
 
 ---
@@ -683,6 +683,74 @@ Each item includes:
 
 ---
 
+### A.13 Execution Bootstrap Protocol Binding
+
+#### A.13.1 7-Step Execution Verification Commitment
+
+- **Element**: `execution_bootstrap_protocol` or explicit clause
+- **Requirement**: MANDATORY
+- **Validation**: 
+  - Field exists OR explicit section in contract text
+  - Acknowledges requirement to follow 7-step execution verification process
+  - References EXECUTION_BOOTSTRAP_PROTOCOL.md
+  - Commits to local execution before PR handover
+- **Canonical Reference**: `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md` v1.0.0
+- **Severity if Missing**: CRITICAL - Execution verification obligation unclear, risk of "documented but not executed" failures
+- **Format**:
+  ```yaml
+  execution_bootstrap_protocol:
+    binding: "MANDATORY"
+    seven_step_verification: true
+    local_execution_required: true
+  ```
+
+#### A.13.2 PREHANDOVER_PROOF Requirement
+
+- **Element**: `prehandover_proof` or explicit clause
+- **Requirement**: MANDATORY
+- **Validation**: 
+  - Field exists OR explicit section in contract text
+  - States builder MUST include PREHANDOVER_PROOF for executable artifacts
+  - References template at governance/templates/PREHANDOVER_PROOF_TEMPLATE.md
+  - Specifies when PREHANDOVER_PROOF is required (workflows, gates, contracts, configs)
+- **Canonical Reference**: `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md` v1.0.0 sections 4-6
+- **Severity if Missing**: CRITICAL - PR handover without execution evidence permitted
+- **Format**:
+  ```yaml
+  prehandover_proof:
+    required_for_executable_artifacts: true
+    template: "governance/templates/PREHANDOVER_PROOF_TEMPLATE.md"
+    includes:
+      - artifacts_created
+      - execution_validation
+      - preflight_gate_status
+      - timestamp_and_environment
+      - handover_guarantee
+  ```
+
+#### A.13.3 Preflight Gate Validation Requirement
+
+- **Element**: `preflight_gate_validation` or explicit clause
+- **Requirement**: MANDATORY
+- **Validation**: 
+  - Field exists OR explicit section in contract text
+  - Builder MUST enumerate ALL gates triggered by PR
+  - Builder MUST validate gates in preflight (before PR creation)
+  - Builder MUST document gate validation evidence
+  - Prohibits relying on CI for discovery of failures
+- **Canonical Reference**: `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md` v1.0.0 section 3 (Step 5), `governance/canon/CI_CONFIRMATORY_NOT_DIAGNOSTIC.md`
+- **Severity if Missing**: CRITICAL - CI becomes diagnostic instead of confirmatory
+- **Format**:
+  ```yaml
+  preflight_gate_validation:
+    enumerate_all_gates: true
+    validate_before_handover: true
+    document_validation_evidence: true
+    ci_confirmatory_not_diagnostic: true
+  ```
+
+---
+
 ## SECTION B: ROLE-SPECIFIC REQUIREMENTS
 
 ### B.1 UI Builder Specific
@@ -1243,6 +1311,15 @@ In PR gates:
 
 ## VERSION HISTORY
 
+### v1.2.0 (2026-01-11)
+- **Added**: Section A.13 — Execution Bootstrap Protocol Binding (3 new mandatory items)
+  - A.13.1: 7-Step Execution Verification Commitment
+  - A.13.2: PREHANDOVER_PROOF Requirement
+  - A.13.3: Preflight Gate Validation Requirement
+- **Severity**: All A.13.x items are CRITICAL
+- **Rationale**: Implements EXECUTION_BOOTSTRAP_PROTOCOL.md v1.0.0 — prevents "documented but not executed" failures (R_Roster PR #8 pattern, INCIDENT-2026-01-08-PR895)
+- **Impact**: Builders MUST prove local execution before PR handover
+
 ### v1.1.0 (2026-01-08)
 - **Added**: Section A.12.2 — Mandatory Process Improvement Reflection requirement (5 mandatory questions)
 - **Added**: Section A.12.3 — Process Improvement → BL Promotion Awareness requirement
@@ -1303,4 +1380,4 @@ This checklist provides:
 
 ---
 
-**END OF BUILDER CONTRACT BINDING CHECKLIST v1.0.0**
+**END OF BUILDER CONTRACT BINDING CHECKLIST v1.2.0**
