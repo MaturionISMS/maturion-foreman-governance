@@ -3,7 +3,7 @@
 ## Status
 **Type**: PR Gate Release Checklist (Canonical Documentation)  
 **Authority**: Governance (Canonical)  
-**Version**: 1.1.0  
+**Version**: 2.0.0  
 **Effective Date**: 2026-01-11  
 **Agent Role**: FM (Foreman) Agent  
 **Canonical Reference**: `governance/canon/AGENT_ROLE_GATE_APPLICABILITY.md`
@@ -44,6 +44,31 @@ FM agents may act in different capacities:
 ---
 
 ## Complete PR Gate Checklist for FM Agents (Orchestrator Role)
+
+### Category 0: Execution Bootstrap Protocol (MANDATORY)
+
+**Gate**: Execution verification before handover  
+**Canonical Reference**: `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md`
+
+**MANDATORY FOR**: All PRs involving workflows, gates, contracts, configurations, or any artifact that can fail in CI.  
+**OPTIONAL FOR**: Pure documentation changes without CI impact.
+
+#### 7-Step Execution Bootstrap Protocol
+- [ ] **0.1** Step 1: Requirements documented (clear list of what must be created/changed)
+- [ ] **0.2** Step 2: Actual artifacts created (not just documented, actually created)
+- [ ] **0.3** Step 3: Executed/verified locally (run validation, check directories, test workflows)
+- [ ] **0.4** Step 4: Output captured (terminal logs, exit codes, timestamps recorded)
+- [ ] **0.5** Step 5: Preflight validated (all gates triggered by PR enumerated and checked)
+- [ ] **0.6** Step 6: PREHANDOVER_PROOF attached (complete proof in PR description per template)
+- [ ] **0.7** Step 7: Completion declared (only after Steps 1-6 complete and execution GREEN)
+
+**Template**: `governance/templates/PREHANDOVER_PROOF_TEMPLATE.md`
+
+**Prohibition**: Do NOT hand over PRs without PREHANDOVER_PROOF when execution verification is required.
+
+**Authority**: Mandatory per `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md` (Effective: 2026-01-11)
+
+---
 
 ### Category 1: FM-Scoped Governance Requirements
 
@@ -179,13 +204,20 @@ If a PR satisfies all items but the gate fails:
 ### For FM Agents (Pre-Handover)
 
 Before creating a PR or requesting review:
-1. Determine role for this PR: **Orchestrator** or **Builder**
+1. **Determine execution verification requirement**
+   - Required: PRs with workflows, gates, contracts, configurations, CI-impacting changes
+   - Optional: Pure documentation changes
+2. **Complete Execution Bootstrap Protocol (Category 0)** if required
+   - Follow all 7 steps
+   - Attach PREHANDOVER_PROOF to PR description
+   - Validate preflight gates
+3. Determine role for this PR: **Orchestrator** or **Builder**
    - Orchestrator: Managing governance, learning, failures, workflows
    - Builder: Building application code
-2. Review applicable checklist(s)
-3. Verify each applicable item is satisfied
-4. Generate required artifacts (if any)
-5. Submit PR when all applicable items are checked
+4. Review applicable checklist(s)
+5. Verify each applicable item is satisfied
+6. Generate required artifacts (if any)
+7. Submit PR when all applicable items are checked
 
 ### For PR Gate Implementation
 
@@ -222,6 +254,8 @@ Gate logic must:
 
 ## Related Documents
 
+- `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md` - **NEW: Mandatory execution verification (v2.0.0)**
+- `governance/templates/PREHANDOVER_PROOF_TEMPLATE.md` - **NEW: PREHANDOVER_PROOF template (v2.0.0)**
 - `governance/canon/AGENT_ROLE_GATE_APPLICABILITY.md` - Agent role gate definitions
 - `governance/canon/LEARNING_PROMOTION_RULE.md` - Learning promotion requirements
 - `governance/canon/FAILURE_PROMOTION_RULE.md` - Failure promotion requirements
@@ -235,11 +269,12 @@ Gate logic must:
 
 ## Versioning
 
-### v1.1.0 (2026-01-11)
-- Added Category 4: Builder PREHANDOVER_PROOF Validation
-- FM must validate PREHANDOVER_PROOF completeness when reviewing builder PRs
-- Updated category numbering (4→5, 5→6)
-- Reference to EXECUTION_BOOTSTRAP_PROTOCOL.md
+### v2.0.0 (2026-01-11)
+- **BREAKING**: Added mandatory Category 0: Execution Bootstrap Protocol
+- Added PREHANDOVER_PROOF requirement for execution-verified PRs
+- Updated pre-handover instructions to include 7-step protocol
+- Added references to EXECUTION_BOOTSTRAP_PROTOCOL.md and PREHANDOVER_PROOF_TEMPLATE.md
+- Ripple from Issue: "Ripple Execution Bootstrap Protocol to FM Orchestration & Builder PR Requirements"
 
 ### v1.0.0 (2025-12-22)
 - Initial release

@@ -3,7 +3,7 @@
 ## Status
 **Type**: PR Gate Release Checklist (Canonical Documentation)  
 **Authority**: Governance (Canonical)  
-**Version**: 1.2.0  
+**Version**: 2.0.0  
 **Effective Date**: 2026-01-11  
 **Agent Role**: Builder Agent  
 **Canonical Reference**: `governance/canon/AGENT_ROLE_GATE_APPLICABILITY.md`
@@ -35,6 +35,36 @@ If a PR satisfies all items but still fails, that is a **governance defect**, no
 ---
 
 ## Complete PR Gate Checklist for Builder Agents
+
+### Category 0: Execution Bootstrap Protocol (MANDATORY)
+
+**Gate**: Execution verification before handover  
+**Canonical Reference**: `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md`
+
+**MANDATORY FOR**: All Builder PRs involving build artifacts, tests, configuration changes, or any changes that can fail in CI.  
+**OPTIONAL FOR**: Pure documentation changes without CI impact (rare for builders).
+
+#### 7-Step Execution Bootstrap Protocol
+- [ ] **0.1** Step 1: Requirements documented (clear list of features, tests, changes)
+- [ ] **0.2** Step 2: Actual artifacts created (code, tests, configs actually created)
+- [ ] **0.3** Step 3: Executed/verified locally (build run, tests executed, linting passed)
+- [ ] **0.4** Step 4: Output captured (build logs, test output, exit codes recorded)
+- [ ] **0.5** Step 5: Preflight validated (all gates triggered by PR enumerated and checked)
+- [ ] **0.6** Step 6: PREHANDOVER_PROOF attached (complete proof in PR description per template)
+- [ ] **0.7** Step 7: Completion declared (only after Steps 1-6 complete and execution GREEN)
+
+**Template**: `governance/templates/PREHANDOVER_PROOF_TEMPLATE.md`
+
+**Builder-Specific Requirements**:
+- Step 3 MUST include: Full build execution, complete test suite run, linting, type checking
+- Step 4 MUST include: Build logs showing 100% GREEN, zero test failures, zero warnings
+- Step 5 MUST include: BUILD_QA_REPORT.json validation, GOVERNANCE_COMPLIANCE_REPORT.json validation
+
+**Prohibition**: Do NOT hand over Builder PRs without PREHANDOVER_PROOF demonstrating local Build-to-Green completion.
+
+**Authority**: Mandatory per `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md` (Effective: 2026-01-11)
+
+---
 
 ### Category 1: Build-to-Green Enforcement
 
@@ -246,14 +276,18 @@ If a PR satisfies all items but the gate fails:
 ### For Builder Agents (Pre-Handover)
 
 Before creating a PR or requesting review:
-1. Review this checklist completely
-2. Verify each item is satisfied
-3. Generate all required artifacts (Category 3)
-4. Run full QA suite (Category 4)
-5. **Follow Execution Bootstrap Protocol for executable artifacts (Category 8)**
-6. **Attach PREHANDOVER_PROOF to PR description if required**
-7. Optionally: Run GPCA (Gate-Predictive Compliance Analysis) for prediction
-8. Only submit PR when all items are checked
+1. **Complete Execution Bootstrap Protocol (Category 0)** — MANDATORY for all Builder PRs
+   - Follow all 7 steps
+   - Run full local build and test suite
+   - Capture build logs and test output
+   - Attach PREHANDOVER_PROOF to PR description
+   - Validate preflight gates
+2. Review this checklist completely
+3. Verify each item is satisfied
+4. Generate all required artifacts (Category 3)
+5. Run full QA suite (Category 4)
+6. Optionally: Run GPCA (Gate-Predictive Compliance Analysis) for prediction
+7. Only submit PR when all items are checked AND PREHANDOVER_PROOF attached
 
 ### For PR Gate Implementation
 
@@ -268,6 +302,8 @@ Gate logic must:
 
 ## Related Documents
 
+- `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md` - **NEW: Mandatory execution verification (v2.0.0)**
+- `governance/templates/PREHANDOVER_PROOF_TEMPLATE.md` - **NEW: PREHANDOVER_PROOF template (v2.0.0)**
 - `governance/canon/AGENT_ROLE_GATE_APPLICABILITY.md` - Agent role gate definitions
 - `BUILD_PHILOSOPHY.md` - Build-to-Green, One-Time Build Law, Constitutional Sandbox Pattern
 - `governance/canon/BUILDER_FIRST_PR_MERGE_MODEL.md` - Builder QA contracts
@@ -282,11 +318,12 @@ Gate logic must:
 
 ## Versioning
 
-### v1.2.0 (2026-01-11)
-- Added Category 8: Execution Bootstrap Protocol (PREHANDOVER_PROOF)
-- Added 20 PREHANDOVER_PROOF validation items (8.1-8.20)
-- Added execution verification enforcement for executable artifacts
-- Reference to EXECUTION_BOOTSTRAP_PROTOCOL.md and PREHANDOVER_PROOF_TEMPLATE.md
+### v2.0.0 (2026-01-11)
+- **BREAKING**: Added mandatory Category 0: Execution Bootstrap Protocol
+- Added PREHANDOVER_PROOF requirement for all Builder PRs
+- Updated pre-handover instructions to include 7-step protocol with builder-specific requirements
+- Added references to EXECUTION_BOOTSTRAP_PROTOCOL.md and PREHANDOVER_PROOF_TEMPLATE.md
+- Ripple from Issue: "Ripple Execution Bootstrap Protocol to FM Orchestration & Builder PR Requirements"
 
 ### v1.1.0 (2026-01-09)
 - Added Category 7: Constitutional Sandbox Compliance (BL-024)
