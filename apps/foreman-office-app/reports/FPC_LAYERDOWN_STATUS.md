@@ -13,8 +13,10 @@
 
 **FPC Layer-Down Status**: ✅ **COMPLETE**  
 **Completion Date**: 2026-01-11  
-**Governance Version Applied**: `7dc8110`  
+**Governance Version Applied**: `7dc8110` (commit hash from governance repository)  
 **Reference PR**: APGI-cmy/maturion-foreman-office-app#538
+
+**Note on Governance Versioning**: The governance repository uses commit hashes as version identifiers to ensure precise traceability to canonical governance state at time of layer-down. This aligns with `CROSS_REPOSITORY_LAYER_DOWN_PROTOCOL.md` requirements for version synchronization.
 
 ---
 
@@ -140,9 +142,10 @@ The following artifacts were created/updated during FPC layer-down completion in
 ## Governance Version Tracking
 
 **Canonical Governance Repository**: `maturion-foreman-governance`  
-**Governance Version at Layer-Down**: `7dc8110`  
-**Commit Reference**: Main branch, commit `7dc8110`  
+**Governance Commit Hash**: `7dc8110` (main branch)  
 **Layer-Down Date**: 2026-01-11
+
+**Version Strategy**: Commit hash provides immutable reference to exact governance state applied during layer-down, enabling precise drift detection and alignment verification.
 
 **Governance Files Referenced**:
 - `governance/canon/FPC_REPOSITORY_LAYERDOWN_GUIDE.md`
@@ -174,9 +177,9 @@ The following artifacts were created/updated during FPC layer-down completion in
 
 ## Cross-Reference
 
-**Governance Repository Entry**: `apps/foreman-office-app/reports/FPC_LAYERDOWN_STATUS.md` (this document)  
+**Canonical Location**: `maturion-foreman-governance/apps/foreman-office-app/reports/FPC_LAYERDOWN_STATUS.md`  
 **Application Repository PR**: APGI-cmy/maturion-foreman-office-app#538  
-**Governance Repository Version**: `7dc8110`
+**Governance Commit**: `7dc8110`
 
 ---
 
