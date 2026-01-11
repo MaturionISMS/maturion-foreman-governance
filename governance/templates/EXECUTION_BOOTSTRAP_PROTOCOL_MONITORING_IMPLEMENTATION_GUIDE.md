@@ -220,7 +220,10 @@ jobs:
       
       - name: Download validation script
         run: |
-          curl -O https://raw.githubusercontent.com/APGI-cmy/maturion-foreman-governance/main/governance/templates/workflows/validate-prehandover-proof.sh
+          # Download from governance repository
+          # Note: Requires governance repository to be public or appropriate access configured
+          curl -O https://raw.githubusercontent.com/APGI-cmy/maturion-foreman-governance/main/governance/templates/workflows/validate-prehandover-proof.sh || \
+            echo "ERROR: Could not download validation script. Ensure governance repository is accessible." && exit 1
           chmod +x validate-prehandover-proof.sh
       
       - name: Get PR body
@@ -240,12 +243,19 @@ jobs:
           echo "${{ steps.pr.outputs.result }}" > pr_body.txt
           
           # Determine if PREHANDOVER_PROOF required
-          # Check if PR modifies execution-related files
+          # Check if PR modifies execution-related files (code, workflows, configs)
           REQUIRES_PROOF=false
           
-          if git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -qE '\.(yml|yaml|ts|tsx|js|jsx)$'; then
+          # Check for execution-related file extensions
+          # Covers: workflows, code files, configs, scripts, tests
+          if git diff --name-only origin/${{ github.base_ref }}...HEAD | \
+             grep -qE '\.(yml|yaml|ts|tsx|js|jsx|py|go|rs|java|sh|bash|json|toml|lock|sql|tf|hcl)$' || \
+             git diff --name-only origin/${{ github.base_ref }}...HEAD | \
+             grep -qE '\.github/(workflows|agents)/'; then
             REQUIRES_PROOF=true
           fi
+          
+          # For comprehensive check, see EXECUTION_BOOTSTRAP_PROTOCOL.md Section 2
           
           if [ "$REQUIRES_PROOF" = "true" ]; then
             echo "PR requires PREHANDOVER_PROOF - validating..."
