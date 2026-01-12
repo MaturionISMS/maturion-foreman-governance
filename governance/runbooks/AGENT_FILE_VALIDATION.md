@@ -132,9 +132,19 @@ yq eval '.id' .agent
 
 **Expected Output**: Repository ID printed (not error)
 
-**Alternative** (using Python):
+**Alternative** (using Python for robust YAML parsing):
 ```bash
-python3 -c "import yaml; yaml.safe_load(open('.agent').read().split('---')[1])"
+python3 -c "
+import yaml
+with open('.agent', 'r') as f:
+    content = f.read()
+    # Split on --- delimiters and get YAML section
+    parts = content.split('---')
+    if len(parts) >= 3:
+        yaml_content = parts[1]
+        data = yaml.safe_load(yaml_content)
+        print(data)
+" || echo "ERROR: YAML parsing failed"
 ```
 
 **Expected Output**: No syntax errors

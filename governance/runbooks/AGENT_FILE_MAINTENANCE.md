@@ -511,9 +511,17 @@ If `.agent` file change causes failures:
 2. **ASSESS**: Determine scope of failure (agents affected, operations blocked)
 3. **ROLLBACK**: Revert `.agent` file to last known good state:
    ```bash
+   # First, find the last good commit (replace <previous-commit-sha> with actual SHA)
    git log -n 5 --oneline .agent
-   git checkout <previous-commit-sha> .agent
-   git commit -m "Emergency rollback: .agent file to <previous-commit-sha>"
+   
+   # Example output:
+   # abc1234 Update .agent file: add new binding (BROKEN)
+   # def5678 Update .agent file: version update (LAST GOOD)
+   # ghi9012 Initial .agent file creation
+   
+   # Revert to last good commit (e.g., def5678)
+   git checkout def5678 .agent
+   git commit -m "Emergency rollback: .agent file to def5678 (last known good state)"
    git push
    ```
 4. **VERIFY**: Validate rolled-back `.agent` file

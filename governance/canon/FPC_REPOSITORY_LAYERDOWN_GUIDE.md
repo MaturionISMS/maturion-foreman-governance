@@ -341,7 +341,16 @@ yq eval '.constraints' .agent
 yq eval '.enforcement' .agent
 
 # Verify exactly one of agent/agents present
-yq eval 'has("agent") or has("agents")' .agent  # Must be true
+HAS_AGENT=$(yq eval 'has("agent")' .agent)
+HAS_AGENTS=$(yq eval 'has("agents")' .agent)
+# Exactly one must be true (mutual exclusivity)
+if [ "$HAS_AGENT" = "true" ] && [ "$HAS_AGENTS" = "false" ]; then
+  echo "Valid: Single agent declared"
+elif [ "$HAS_AGENT" = "false" ] && [ "$HAS_AGENTS" = "true" ]; then
+  echo "Valid: Agent roster declared"
+else
+  echo "ERROR: Must have exactly one of 'agent' or 'agents'"
+fi
 
 # Verify mandatory constraints
 yq eval '.constraints.governance_interpretation' .agent  # Must be "forbidden"
