@@ -22,6 +22,8 @@ This clarification eliminates ambiguity that previously existed regarding agent 
 
 **Critical Context**: This model has always been **implied** in governance canon. This document makes it **explicit and auditable**.
 
+**IMPORTANT UPDATE (2026-01-13)**: Contract update authority has been superseded by the **Agent Contract Management Protocol** (`AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md`). All `.agent` file modifications now go through the dedicated Agent Contract Administrator with CS2 approval. This document remains authoritative for recruitment authority only.
+
 **For Agent Onboarding**: New agents should read **AGENT_ONBOARDING_QUICKSTART.md** first for a streamlined introduction to the governance framework, then reference this document for detailed authority clarification.
 
 ---
@@ -32,6 +34,7 @@ This model derives authority from and synthesizes:
 - **GOVERNANCE_PURPOSE_AND_SCOPE.md** — Supreme governance authority and role definitions
 - **AGENT_RECRUITMENT.md** — Agent classes, legitimacy, and recruitment process
 - **AGENT_CANONICAL_CONTEXT_SYNCHRONISATION_PROTOCOL.md** — Authority to synchronize agent contracts
+- **AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md** — Single-writer pattern for all `.agent` file modifications (supersedes previous contract update authority)
 - **RIPPLE_INTELLIGENCE_LAYER.md** — Ripple propagation and cross-boundary awareness
 - **AGENT_RIPPLE_AWARENESS_OBLIGATION.md** — Agent obligation to surface ripple effects
 - **FOREMAN_AUTHORITY_AND_SUPERVISION_MODEL.md** — FM managerial and supervisory authority
@@ -93,6 +96,31 @@ This document defines **authority and responsibility**, not **implementation or 
 │ - Escalates: ALL contract/recruitment questions to FM      │
 └─────────────────────────────────────────────────────────────┘
 ```
+
+**NOTE (2026-01-13)**: The contract update authority model described above has been **superseded** by `AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md`. All `.agent` file modifications now follow the single-writer pattern:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ CS2 (Johan Ras / Maturion) — Supreme Authority              │
+│ - ONLY actor who may modify agent-contract-administrator    │
+│ - Approves ALL contract modification instructions           │
+└─────────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────────┐
+│ Agent Contract Administrator — Single Writer                │
+│ - ONLY agent authorized to write to .agent files            │
+│ - Operates via CS2-approved instructions only               │
+│ - Cannot self-modify                                        │
+└─────────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────────┐
+│ ALL OTHER AGENTS — No Contract Write Authority              │
+│ - FORBIDDEN from writing to any .agent file                 │
+│ - May draft instruction proposals for CS2 review            │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Recruitment authority** (Levels 1-4 above) remains **unchanged**. Only contract modification authority has changed.
 
 ---
 
