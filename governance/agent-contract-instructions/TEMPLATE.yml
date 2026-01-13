@@ -1,0 +1,180 @@
+---
+# AGENT CONTRACT MODIFICATION INSTRUCTION TEMPLATE
+# Copy this file to pending/<instruction-id>.yml and fill in all fields
+# Authority: governance/canon/AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md
+
+id: INST-YYYY-MM-DD-NNN          # Format: INST-<YYYY>-<MM>-<DD>-<NNN> (e.g., INST-2026-01-13-001)
+title: <short-description>        # Brief description of what this instruction does
+status: pending                   # draft | pending | approved | applied | rejected
+created_date: YYYY-MM-DD          # Date instruction was created
+created_by: <agent-id-or-cs2>     # Who created this instruction (e.g., "governance-repo-administrator", "Johan Ras")
+
+# Filled in when CS2 approves
+approved_date: null               # Date CS2 approved (YYYY-MM-DD)
+approved_by: null                 # CS2 name ("Johan Ras" or "Maturion")
+
+# Filled in when Agent Contract Administrator applies
+applied_date: null                # Date changes were applied (YYYY-MM-DD)
+applied_by: null                  # Should be "agent-contract-administrator"
+
+authority:
+  source: <governance-canon-reference>  # Which canonical document requires/authorizes this change?
+                                         # e.g., "AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md"
+  reason: <justification>                # Why is this change necessary? What governance need does it address?
+  ripple_triggered: false                # true if this is triggered by a canon change ripple, false otherwise
+
+targets:
+  - repository: <org/repo>               # e.g., "MaturionISMS/maturion-foreman-governance"
+    path: <path-to-.agent-file>          # e.g., ".github/agents/governance-repo-administrator.agent.md"
+    current_version: <version>           # Current version (e.g., "2.1.0")
+    target_version: <version>            # Target version after change (e.g., "2.2.0")
+    
+changes:
+  - type: <add|update|remove>            # Type of change: add new content, update existing, or remove
+    section: <section-identifier>        # Which section of the contract? (e.g., "governance.bindings", "body-markdown")
+    content: |
+      <exact-content-to-add-or-new-content>
+      # For 'add' type: Provide exact content to add
+      # For 'update' type: Provide new content that will replace old_content
+      # For 'remove' type: Leave empty or specify what triggers removal
+    old_content: |                       # For 'update' type ONLY: exact content to replace
+      <exact-content-to-replace>
+      # Must match existing content exactly (whitespace, formatting, etc.)
+    rationale: <why-this-specific-change> # Why this particular change at this location?
+
+validation:
+  schema_compliance: required            # Must verify .agent.schema.md compliance
+  governance_canon_check: required       # Must verify governance canon alignment
+  gap_detection: required                # Must detect any gaps or missing bindings
+  diff_inspection: required              # Must inspect exact diff before applying
+
+rollback:
+  supported: true                        # true if rollback is possible, false if not
+  instructions: |
+    <how-to-rollback-if-needed>
+    # Provide clear steps to reverse this change if necessary
+    # Include git commands, file operations, version changes
+---
+
+# Context
+
+<Provide detailed context about why this change is needed>
+
+**Background**:
+- What governance gap or requirement triggered this instruction?
+- What canonical document or principle requires this change?
+- Is this part of a larger governance ripple or standalone?
+
+**Scope**:
+- Which agent contracts are affected?
+- Are there downstream ripple effects to consider?
+- Does this affect other systems or repos?
+
+**Urgency**:
+- Is this blocking critical work?
+- What happens if this is delayed?
+
+---
+
+# Changes Summary
+
+<Provide a high-level summary of what will change>
+
+**Before**:
+- What is the current state of the contract?
+- What authority or bindings are missing or incorrect?
+
+**After**:
+- What will the contract contain after this change?
+- What new authority or bindings will be present?
+- How does this align with governance canon?
+
+**Impact**:
+- Will this affect agent behavior?
+- Are there any breaking changes?
+- Do other contracts need similar updates?
+
+---
+
+# Approval Evidence
+
+<Link to CS2 approval>
+
+**Approval Method**:
+- [ ] CS2 moved this instruction from pending/ to approved/
+- [ ] CS2 commented "APPROVED: <instruction-id>" on PR #___
+- [ ] CS2 commented "APPROVED: <instruction-id>" on Issue #___
+- [ ] CS2 directly committed this instruction to approved/
+- [ ] Explicit authorization in canonical governance document: <reference>
+
+**CS2 Approval Checklist** (for CS2 to verify):
+- [ ] Governance canon alignment verified
+- [ ] Valid authority source confirmed
+- [ ] Minimal and precise changes
+- [ ] No privilege escalation
+- [ ] Appropriate versioning
+- [ ] Rollback plan exists and is viable
+- [ ] No self-modification of administrator (except by CS2)
+- [ ] Downstream ripples identified and planned
+
+---
+
+# Application Notes
+
+<Special considerations for Agent Contract Administrator>
+
+**Pre-Application Checks**:
+- Verify contract file exists at specified path
+- Confirm current version matches instruction
+- Run schema validation before any changes
+- Check for conflicts with other pending instructions
+
+**Application Steps**:
+1. Read target contract file
+2. Locate exact section to modify
+3. Apply change precisely as specified (no interpretation)
+4. Update version field in YAML header
+5. Add changelog entry to contract
+6. Commit with message: "Apply <instruction-id>: <title>"
+7. Move instruction to applied/ directory
+8. Update instruction status to 'applied'
+9. Create changelog entry in changelog/
+
+**Post-Application Verification**:
+- Re-run schema validation
+- Verify version incremented correctly
+- Check git diff matches expected changes only
+- Confirm no unintended side effects
+- Document application completion
+
+**Rollback Trigger Conditions**:
+- CI/build failures caused by contract change
+- Governance conflict discovered post-application
+- CS2-directed rollback
+- Schema validation failure after application
+
+---
+
+# Additional Notes
+
+<Any other relevant information>
+
+**Related Instructions**:
+- List any other instructions that are related or dependent
+- Note any sequencing requirements
+
+**Testing Considerations**:
+- How can the change be verified?
+- Are there specific CI gates that will validate this?
+- What evidence confirms successful application?
+
+**Future Work**:
+- Are there follow-up instructions needed?
+- Does this trigger ripples to other repos?
+- Are there enhancement opportunities identified?
+
+---
+
+**Template Version**: 1.0.0  
+**Template Authority**: governance/canon/AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md  
+**Template Last Updated**: 2026-01-13

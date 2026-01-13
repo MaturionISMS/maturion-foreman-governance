@@ -27,6 +27,9 @@ governance:
     - id: agent-recruitment-authority-model
       path: governance/canon/AGENT_RECRUITMENT_AND_CONTRACT_AUTHORITY_MODEL.md
       role: recruitment-and-contract-authority
+    - id: agent-contract-management-protocol
+      path: governance/canon/AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md
+      role: contract-modification-authority-and-prohibition
 
     # Ripple and cross-repo propagation
     - id: governance-ripple-model

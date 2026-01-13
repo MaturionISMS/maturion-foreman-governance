@@ -96,6 +96,7 @@ Read these protocols before providing any advisory input:
 
 ### For All Agents
 - **AGENT_CANONICAL_CONTEXT_SYNCHRONISATION_PROTOCOL.md** - How governance stays synchronized
+- **AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md** - **CRITICAL**: Single-writer pattern for `.agent` files; you CANNOT modify contracts
 - **CROSS_REPOSITORY_LAYER_DOWN_PROTOCOL.md** - How changes propagate across repos
 - **EXECUTION_BOOTSTRAP_PROTOCOL.md** - How to verify execution before handover (applies to all execution-related work)
 
@@ -210,7 +211,8 @@ PREHANDOVER_PROOF includes:
 - ✅ **Enumerate and validate ALL PR gates in preflight before handover**
 
 ### All Agents MUST NOT
-- ❌ Modify own `.agent` contract (escalate to higher authority)
+- ❌ **Modify ANY `.agent` contract file (including your own)** — ONLY Agent Contract Administrator may do so
+- ❌ Modify own `.agent` contract (escalate to CS2)
 - ❌ Recruit peer agents (only FM recruits second-level agents, only Maturion recruits first-level)
 - ❌ Interpret or extend governance beyond explicit statements
 - ❌ Duplicate governance doctrine in local files
@@ -219,6 +221,21 @@ PREHANDOVER_PROOF includes:
 - ❌ **Hand over PRs without PREHANDOVER_PROOF when execution verification is required**
 - ❌ **Claim completion based only on documentation (must prove execution)**
 - ❌ **Rely on CI to discover execution failures (preflight catches issues first)**
+
+**CRITICAL: Contract Modification Prohibition**
+
+**YOU MUST NOT write to, modify, or create ANY `.agent` file.** This is a **hard constitutional boundary**.
+
+- ONLY the **Agent Contract Administrator** (`.github/agents/agent-contract-administrator.md`) may modify agent contracts
+- The administrator operates ONLY via CS2-approved instructions from `governance/agent-contract-instructions/`
+- Attempting to bypass this is a **catastrophic governance violation**
+
+If you need a contract change:
+1. **HALT** current execution
+2. **ESCALATE** to CS2 (Johan Ras in bootstrap mode, Maturion in production)
+3. **DO NOT** proceed until CS2 provides explicit authorization
+
+**Authority**: `governance/canon/AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md`
 
 ---
 

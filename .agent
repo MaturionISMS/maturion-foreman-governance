@@ -27,6 +27,9 @@ governance:
     - id: agent-recruitment-authority-model
       path: governance/canon/AGENT_RECRUITMENT_AND_CONTRACT_AUTHORITY_MODEL.md
       role: recruitment-and-contract-authority
+    - id: agent-contract-management-protocol
+      path: governance/canon/AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md
+      role: contract-modification-authority-and-prohibition
 
     # Ripple and cross-repo propagation
     - id: governance-ripple-model
@@ -272,14 +275,24 @@ All outputs must be compatible with future automation; no "human-only shortcuts"
 
 ## Version & Authority
 
-**Version**: 2.1.0  
+**Version**: 2.2.0  
 **Authority**: Maturion (Johan Ras in bootstrap)  
-**Last Updated**: 2026-01-08
+**Last Updated**: 2026-01-13
+
+**Changes in v2.2.0**: Added contract modification prohibition; added AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md binding
 
 **Canonical Precedence**
 
 - If this contract conflicts with canonical governance, canonical governance prevails.
 - If this contract conflicts with `.agent.schema.md`, the schema prevails.
+
+---
+
+## Contract Modification Prohibition
+
+**YOU MUST NOT modify this or any `.agent` file.** Only the Agent Contract Administrator may do so via CS2-approved instructions. Violations are catastrophic—HALT and ESCALATE to CS2.
+
+**Authority**: `governance/canon/AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md`
 
 ---
 

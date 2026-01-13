@@ -116,6 +116,44 @@ jobs:
           
           echo "✅ No application code directories found"
       
+      - name: Validate Agent Contract Modifications
+        id: agent_contract_check
+        run: |
+          echo "Checking for unauthorized .agent file modifications..."
+          
+          # Get list of .agent files modified in this PR
+          MODIFIED_AGENT_FILES=$(git diff --name-only origin/${{ github.base_ref }}...${{ github.sha }} | grep -E '\.agent$|\.agent\.md$|/agents/.*\.md$' || true)
+          
+          if [ -n "$MODIFIED_AGENT_FILES" ]; then
+            echo "⚠️ Agent contract files modified in this PR:"
+            echo "$MODIFIED_AGENT_FILES"
+            echo ""
+            echo "⚠️⚠️⚠️ CRITICAL GOVERNANCE VIOLATION WARNING ⚠️⚠️⚠️"
+            echo ""
+            echo "Agent contract files (.agent, .agent.md, .github/agents/*.md) may ONLY be modified by:"
+            echo "  - Agent Contract Administrator (.github/agents/agent-contract-administrator.md)"
+            echo "  - Operating under CS2-approved instructions from governance/agent-contract-instructions/"
+            echo ""
+            echo "Bypassing this protocol is a CATASTROPHIC governance violation."
+            echo ""
+            echo "Required actions:"
+            echo "  1. Verify these changes were made by agent-contract-administrator"
+            echo "  2. Confirm corresponding approved instruction exists in governance/agent-contract-instructions/approved/"
+            echo "  3. Verify instruction has CS2 approval (approved_by field set)"
+            echo ""
+            echo "If these changes were NOT made by agent-contract-administrator:"
+            echo "  - HALT this PR immediately"
+            echo "  - ESCALATE to CS2 (Johan Ras)"
+            echo "  - REVERT unauthorized changes"
+            echo "  - File incident report"
+            echo ""
+            echo "Authority: governance/canon/AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md"
+            echo ""
+            echo "⚠️ This check is INFORMATIONAL. Human review REQUIRED for .agent file changes."
+          else
+            echo "✅ No agent contract files modified"
+          fi
+      
       - name: Post Gate Report to PR
         if: always()
         uses: actions/github-script@v7
@@ -124,6 +162,7 @@ jobs:
             const structureStatus = '${{ steps.structure.outcome }}';
             const filesStatus = '${{ steps.files.outcome }}';
             const appCheckStatus = '${{ steps.app_check.outcome }}';
+            const agentContractStatus = '${{ steps.agent_contract_check.outcome }}';
             
             const statusIcon = (status) => status === 'success' ? '✅' : '❌';
             const overallPass = structureStatus === 'success' && 
@@ -138,10 +177,25 @@ jobs:
             comment += '### Validation Results\n\n';
             comment += `- ${statusIcon(structureStatus)} **Governance Structure**: ${structureStatus}\n`;
             comment += `- ${statusIcon(filesStatus)} **Governance Files**: ${filesStatus}\n`;
-            comment += `- ${statusIcon(appCheckStatus)} **No Application Code**: ${appCheckStatus}\n\n`;
+            comment += `- ${statusIcon(appCheckStatus)} **No Application Code**: ${appCheckStatus}\n`;
+            comment += `- ${statusIcon(agentContractStatus)} **Agent Contract Check**: ${agentContractStatus}\n\n`;
             
             if (!overallPass) {
               comment += '⚠️ **Governance validation failed**: Fix issues before merging.\n\n';
+            }
+            
+            // Add agent contract warning if contracts were modified
+            if (agentContractStatus === 'success') {
+              const output = `${{ steps.agent_contract_check.outputs.stdout }}`;
+              if (output.includes('Agent contract files modified')) {
+                comment += '### ⚠️ Agent Contract Modification Detected\n\n';
+                comment += 'This PR modifies agent contract files. **Human review REQUIRED.**\n\n';
+                comment += '**Verify**:\n';
+                comment += '- [ ] Changes made by agent-contract-administrator\n';
+                comment += '- [ ] CS2-approved instruction exists in `governance/agent-contract-instructions/approved/`\n';
+                comment += '- [ ] Instruction properly documented with approval evidence\n\n';
+                comment += '**Authority**: `governance/canon/AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md`\n\n';
+              }
             }
             
             comment += '---\n\n';
