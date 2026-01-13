@@ -64,6 +64,13 @@ governance:
     - id: execution-bootstrap-protocol
       path: governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md
       role: execution-verification-before-handover
+    - id: combined-testing-pattern
+      path: governance/canon/COMBINED_TESTING_PATTERN.md
+      role: cst-validation-requirements
+    - id: prehandover-proof-template
+      path: governance/templates/PREHANDOVER_PROOF_TEMPLATE.md
+      role: handover-verification-template
+      version: 2.0.0
     # NOTE: AGENT_HANDOVER_VERIFICATION_PROTOCOL.md is planned from the incident;
     # when created, add as a binding here.
 
@@ -334,6 +341,70 @@ Requirement stems from `INCIDENT-2026-01-08-PR895-CATASTROPHIC-HANDOVER-FAILURE`
 
 ---
 
+## PREHANDOVER_PROOF v2.0.0 Requirements
+
+**Template Authority**: `governance/templates/PREHANDOVER_PROOF_TEMPLATE.md` v2.0.0  
+**Canonical Reference**: `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md` v2.0.0+
+
+**Mandatory For All Work Units**: When completing governance work involving workflows, gates, contracts, or configurations, this agent MUST produce PREHANDOVER_PROOF documentation with the following sections:
+
+### Section 0: Embedded Governance Artifacts (MANDATORY)
+
+All work units MUST include **all four (4) governance artifacts**:
+
+1. **Governance Scan** - Pre-work governance discovery and gap analysis
+2. **Risk Assessment** - Risk categories, likelihood, impact, and mitigation
+3. **Change Record** - Detailed documentation of all changes applied
+4. **Completion Summary** - Requirements checklist and validation summary
+
+**Options**: Artifacts may be embedded in PREHANDOVER_PROOF or created as separate files in `.agent-admin/` with cross-references.
+
+**Authority**: `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md` v2.0.0, Section 0
+
+### Section 9: CST Validation Attestation (MANDATORY)
+
+All work units MUST include **CST applicability determination**:
+
+- Complete CST Decision Framework checklist (5 criteria)
+- **If CST Required**: Provide validation attestation with integration scenarios tested, results, and evidence
+- **If CST Not Required**: Provide justification with decision framework criteria
+
+**Decision Framework Criteria**:
+1. Multiple subwaves converge and must integrate
+2. Cross-module dependencies reach integration readiness
+3. Architectural boundaries crossed
+4. Significant feature complexity requires mid-wave validation
+5. Integration failure cost is high
+
+**Authority**: `governance/canon/COMBINED_TESTING_PATTERN.md` v1.0.0, Section 4
+
+### Section 11: FAQ Reference (RESOURCE)
+
+When questions arise about PREHANDOVER_PROOF requirements, consult Section 11 (FAQ) of the template, which includes 22 questions covering:
+- Documentation-only changes
+- Local gate validation methods
+- Gate failure discovery and resolution
+- CI failure post-handover procedures
+- Governance artifact embedding vs. separate files
+- CST applicability determination
+
+**Authority**: `governance/templates/PREHANDOVER_PROOF_TEMPLATE.md` v2.0.0, Section 11
+
+### Completion Checklist Enforcement
+
+Before handover, verify:
+- [ ] All 4 governance artifacts present (embedded or cross-referenced)
+- [ ] CST applicability determination completed with checklist
+- [ ] CST validation attestation OR justification documented
+- [ ] All exit codes are 0 (success) or failures explained and resolved
+- [ ] All applicable gates show ✅ PASS or ⊘ SKIP (no ❌ FAIL at handover)
+- [ ] Handover guarantee statement included
+- [ ] Root cause commitment documented
+
+**No partial handovers permitted.** If blockers prevent completion, HALT and escalate to Maturion.
+
+---
+
 ## Incident Handling & RCA Protocol
 
 **Open incidents** under `governance/incidents/` for: CI/gate failures, handover violations, contract conflicts, governance gaps, systemic patterns.
@@ -344,13 +415,78 @@ Requirement stems from `INCIDENT-2026-01-08-PR895-CATASTROPHIC-HANDOVER-FAILURE`
 
 ---
 
-## Future Improvements & Parking
+## Mandatory Enhancement & Improvement Capture (COMPULSORY)
 
-**Mandatory at work unit conclusion**: Produce either (1) enhancement proposal marked `PARKED — NOT AUTHORIZED FOR EXECUTION` or (2) explicit declaration: "No enhancement proposals identified."
+**Authority**: `governance/canon/MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md` v2.0.0  
+**Enforcement**: MANDATORY for all work units - no exceptions
 
-**Enhancement requirements**: Plain language (1-3 paragraphs), no implementation detail, route to `governance/parking-station/`. Parking station is non-executable; review only when authorized by FM/Maturion.
+At the conclusion of **every completed work unit**, this agent MUST explicitly perform **BOTH**:
 
-**Authority**: `governance/canon/MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md`. Enhancement capture is mandatory; execution is always optional.
+1. **Feature Enhancement Review** — Product features, architectural improvements, or technical optimizations
+2. **Process Improvement Reflection** — Build process, governance compliance, tooling gaps, workflow issues, or systematic failures
+
+**Silence is NOT permitted for either category.**
+
+### Required Outcomes
+
+#### 1. Feature Enhancement Review
+
+The agent MUST produce **exactly one** of the following:
+
+1. **Feature Enhancement Proposal** marked `PARKED — NOT AUTHORIZED FOR EXECUTION`, OR
+2. An explicit declaration: `No feature enhancement proposals identified for this work unit.`
+
+#### 2. Process Improvement Reflection (MANDATORY)
+
+For **governance-repo work units specifically**, this agent MUST answer **all five mandatory questions** per `MANDATORY_PROCESS_IMPROVEMENT_REFLECTION_PROTOCOL.md`:
+
+1. What governance gaps or ambiguities were exposed during this work?
+2. What process inefficiencies or friction points were encountered?
+3. What documentation or tooling improvements would prevent future issues?
+4. What learnings should be captured for future governance work?
+5. What systematic patterns indicate broader governance improvements needed?
+
+After reflection, produce **either**:
+- **Process Improvement Proposal(s)** based on reflection, OR
+- Explicit declaration: `No process improvement proposals identified for this work unit.` (only after ALL mandatory questions answered)
+
+### Routing & Storage
+
+**Enhancement proposals MUST be routed to**:
+- Governance improvements: `governance/parking-station/`
+- Cross-repo improvements: Document in parking station with repo context
+
+**Enhancement requirements**:
+- Plain language (1-3 paragraphs)
+- No implementation detail
+- Non-executable until authorized by FM/Maturion
+
+### Prohibitions
+
+This agent MUST NOT:
+- Implement enhancements without authorization
+- Execute enhancement work outside current scope
+- Convert enhancement ideas into tasks without authorization
+- Escalate enhancements as blockers (unless blocking current work)
+- Skip reflection questions (all five must be answered for governance work)
+
+### Parking Station Access
+
+**Parking station is non-executable**; review only when authorized by FM/Maturion.
+
+Enhancement capture is **mandatory**; execution is always optional and requires explicit authorization.
+
+### Link to FM Parking Station
+
+For tracking improvements across all repositories: `governance/parking-station/`
+
+**Constitutional Principle**: Continuous improvement is mandatory (Principle #5). Every work unit yields learnings.
+
+---
+
+## Future Improvements & Parking (DEPRECATED - See Above)
+
+**Note**: This section is superseded by "Mandatory Enhancement & Improvement Capture (COMPULSORY)" above. The above section provides comprehensive requirements per MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md v2.0.0.
 
 ---
 
@@ -403,9 +539,17 @@ All outputs must be compatible with future automation; no “human-only shortcut
 
 ## Version & Authority
 
-**Version**: 2.3.0  
+**Version**: 2.4.0  
 **Authority**: Maturion (Johan Ras in bootstrap)  
 **Last Updated**: 2026-01-13
+
+**Changes in v2.4.0** (2026-01-13):
+- Added PREHANDOVER_PROOF v2.0.0 template requirements with Section 0 (4 governance artifacts), Section 9 (CST validation attestation), and Section 11 (FAQ) references
+- Enhanced Mandatory Enhancement & Improvement Capture section to COMPULSORY status with explicit dual requirement (feature enhancement + process improvement reflection)
+- Added binding for COMBINED_TESTING_PATTERN.md and PREHANDOVER_PROOF_TEMPLATE.md v2.0.0
+- Added completion checklist enforcement for v2.0.0 compliance
+- Aligned with MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md v2.0.0 dual reflection requirements
+- Authority: APGI-cmy/maturion-foreman-governance issue (Agent file alignment with v2.0.0 template)
 
 **Changes in v2.3.0** (2026-01-13):
 - Added Constitutional Prohibition section with scope clarification and instruction system process
