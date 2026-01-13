@@ -1,6 +1,7 @@
 # PREHANDOVER_PROOF Template
 
 **Purpose**: Standard template for documenting execution verification before PR handover.  
+**Version**: 2.0.0  
 **Authority**: `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md`  
 **Mandatory For**: All PRs requiring execution verification (workflows, gates, contracts, configurations)  
 **Optional For**: Documentation-only changes (recommended but not required)
@@ -800,13 +801,14 @@ CST is checkpoint-based, not every-PR-based.
 ---
 
 **Status**: Active Template  
+**Version**: 2.0.0  
+**Last Updated**: 2026-01-13  
 **Authority**: EXECUTION_BOOTSTRAP_PROTOCOL.md v2.0.0+, COMBINED_TESTING_PATTERN.md v1.0.0  
-**Owner**: Governance Administrator  
-**Last Updated**: 2026-01-13
+**Owner**: Governance Administrator
 
 **Changelog**:
-- **2026-01-13**: Added Embedded Governance Artifacts section and CST Validation Attestation section per Subwave 3.3 learnings
-- **2026-01-11**: Initial template creation with core PREHANDOVER_PROOF sections
+- **v2.0.0** (2026-01-13): Added Embedded Governance Artifacts section and CST Validation Attestation section per Subwave 3.3 learnings
+- **v1.0.0** (2026-01-11): Initial template creation with core PREHANDOVER_PROOF sections
 
 ---
 
