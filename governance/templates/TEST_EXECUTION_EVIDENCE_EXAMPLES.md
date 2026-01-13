@@ -13,6 +13,8 @@
 
 This document provides **concrete examples** of test execution evidence to include in PREHANDOVER_PROOF. Use these examples as templates for your own test evidence.
 
+**Note**: Each example shows the complete markdown you would include in your PR description. The nested code blocks (marked with triple backticks) are part of the example and should be included as shown.
+
 ---
 
 ## Example 1: Node.js Application with Jest
