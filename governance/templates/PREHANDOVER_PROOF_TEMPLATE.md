@@ -65,6 +65,54 @@ Copy this template into your PR description and fill in all sections:
 
 ---
 
+### Test Execution Validation
+
+**Requirement**: [Describe what tests were supposed to pass - e.g., "All unit tests for Dashboard component must pass"]
+
+**Applicability**: 
+- ✅ Required for PRs with code changes that have associated tests
+- ⊘ Not applicable for documentation-only changes or governance-only changes
+- ⚠️ Exception documented below (if applicable)
+
+**Test Command Executed**:
+```
+[Exact command used to run tests, e.g., npm test, pytest, cargo test]
+```
+
+**Execution Details**:
+- **Date**: [YYYY-MM-DD HH:MM:SS UTC]
+- **Environment**: [OS, Runtime version, Package manager, Test runner version]
+- **Exit Code**: [0 = SUCCESS, non-zero = FAILURE]
+
+**Test Results Summary**:
+```
+[Test execution output showing all tests passed]
+[Include: test suites passed/total, tests passed/total, duration, final status]
+[Full output OR abbreviated summary with key metrics]
+```
+
+**Status**: ✅ ALL GREEN | ❌ FAILURES PRESENT | ⊘ NOT APPLICABLE | ⚠️ EXCEPTION
+
+**Iterations** (if any):
+- [Describe any test failures encountered and how they were resolved]
+- [Include "All tests GREEN on final run" confirmation]
+- [If no iterations: "Tests passed on first execution"]
+
+**Exception Documentation** (if applicable):
+```
+**Exception Category**: [Environment Impossibility | Emergency Hotfix | Test Infrastructure Gap]
+**Justification**: [Why test execution protocol cannot be followed]
+**Alternative Validation**: [What validation was done instead]
+**Authorization**: [Authorized by X on YYYY-MM-DD with evidence: link]
+**Remediation Plan**: [How will test execution be achieved in future]
+```
+
+**Guarantee**: All tests passed locally before PR creation. CI will confirm success, not discover test failures.
+
+**Authority**: `governance/runbooks/AGENT_TEST_EXECUTION_PROTOCOL.md`
+
+---
+
 ### Preflight Gate Status
 
 **Gates Triggered by This PR**:

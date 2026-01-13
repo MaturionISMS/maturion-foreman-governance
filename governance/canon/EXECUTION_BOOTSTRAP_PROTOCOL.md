@@ -120,6 +120,18 @@ mkdir -p governance/evidence/initialization
 - Simulate CI gate execution
 - Run preflight validation commands
 
+**For Application Repositories with Tests**:
+
+In addition to standard execution verification, **test execution is mandatory** per `AGENT_TEST_EXECUTION_PROTOCOL.md`:
+
+1. ✅ Run test suite in agent environment
+2. ✅ Achieve GREEN test state (exit code 0, all tests passed)
+3. ✅ Capture test execution output
+4. ✅ Include test evidence in PREHANDOVER_PROOF
+5. ✅ Do NOT create PR until tests GREEN locally
+
+**Reference**: `governance/runbooks/AGENT_TEST_EXECUTION_PROTOCOL.md`
+
 **Prohibition**: Do NOT skip this step and rely on CI to discover failures.
 
 **Example**:
@@ -133,6 +145,10 @@ yq eval '.on.pull_request.paths' .github/workflows/governance-gate.yml
 # Verify directory structure
 ls -la governance/alignment
 ls -la governance/evidence/initialization
+
+# For application repos: Run tests
+npm test  # or pytest, cargo test, etc.
+# Exit code: 0 (all tests passed)
 ```
 
 ---
