@@ -163,6 +163,217 @@ Copy this template into your PR description and fill in all sections:
 - [If none: "None known"]
 
 **Root Cause Commitment**: If CI fails, I will perform RCA to determine whether failure was due to incomplete preflight validation or governance defect, and will document findings in incident report if pattern indicates systemic issue.
+
+---
+
+### Embedded Governance Artifacts
+
+**Purpose**: Document all governance artifacts required for this work unit.
+
+**Authority**: `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md`
+
+**Artifact Options**: Builders MAY choose ONE of the following approaches:
+1. **Embed artifacts in this PREHANDOVER_PROOF** (use sections below)
+2. **Create separate artifact files** in `.agent-admin/` directory and provide cross-references below
+
+**Cross-Reference Format** (if using separate files):
+```markdown
+- **Governance Scan**: See `.agent-admin/scans/scan_YYYYMMDD_HHMMSS.md`
+- **Risk Assessment**: See `.agent-admin/risk-assessments/risk_NNN_YYYYMMDD.md`
+- **Change Record**: See `.agent-admin/changes/change_NNN_YYYYMMDD.md`
+- **Completion Summary**: See `.agent-admin/COMPLETION_SUMMARY.md`
+```
+
+---
+
+#### Artifact 1: Governance Scan
+
+**Scan ID**: [scan_YYYYMMDD_HHMMSS]  
+**Timestamp**: [YYYY-MM-DD HH:MM:SS UTC]  
+**Agent**: [agent-name]  
+**Purpose**: [Brief description of pre-work governance scan purpose]
+
+**Repository Context**:
+- Current Repository: [owner/repo-name]
+- Repository Type: [governance source / application repo / etc.]
+- Branch: [branch-name]
+- Status: [✅/⚠️/❌ with brief explanation]
+
+**Governance Documents Discovered**:
+- [Key canonical documents relevant to this work]
+- [Binding governance policies and protocols]
+- [Authority references for this work unit]
+
+**Gap Analysis**:
+- [Identified gaps or conflicts in governance coverage]
+- [Required updates or clarifications]
+
+**Scan Conclusion**: [✅ Ready to proceed / ⚠️ Proceed with caution / ❌ Blockers identified]
+
+---
+
+#### Artifact 2: Risk Assessment
+
+**Risk Assessment ID**: [risk_NNN_YYYYMMDD]  
+**Date**: [YYYY-MM-DD]  
+**Agent**: [agent-name]  
+**Task**: [Brief task description]
+
+**Risk Categories Assessed**:
+
+1. **[Risk Category 1]**
+   - **Risk**: [Description]
+   - **Likelihood**: [HIGH/MEDIUM/LOW/VERY LOW]
+   - **Impact**: [CATASTROPHIC/HIGH/MEDIUM/LOW]
+   - **Mitigation**: [Mitigation strategies]
+   - **Residual Risk**: [Assessment after mitigation]
+
+2. **[Risk Category 2]**
+   - [Same structure as above]
+
+[Add all relevant risk categories]
+
+**Overall Risk Level**: [CATASTROPHIC/HIGH/MEDIUM/LOW/MINIMAL]
+
+**Recommendation**: [PROCEED / PROCEED WITH CAUTION / HALT AND ESCALATE]
+
+---
+
+#### Artifact 3: Change Record
+
+**Change ID**: [change_NNN_YYYYMMDD]  
+**Date**: [YYYY-MM-DD]  
+**Agent**: [agent-name]  
+**Task**: [Brief task description]
+
+**Change Summary**: [High-level summary of all changes applied]
+
+**Changes Applied**:
+
+1. **[File/Component 1]**
+   - **Sections Added**: [List new sections]
+   - **Sections Modified**: [List modified sections]
+   - **Lines Changed**: [Approximate line count]
+   - **Rationale**: [Why these changes were made]
+
+2. **[File/Component 2]**
+   - [Same structure as above]
+
+[Document all significant changes]
+
+**Validation Results**:
+- ✅ Pre-change validation complete
+- ✅ Post-change validation complete
+- ✅ No conflicts introduced
+- ✅ All requirements met
+
+**Compliance Matrix**: [Optional table showing requirement compliance]
+
+---
+
+#### Artifact 4: Completion Summary
+
+**Task**: [Full task description]  
+**Agent**: [agent-name]  
+**Date**: [YYYY-MM-DD]  
+**Status**: [✅ COMPLETE / ⚠️ PARTIAL / ❌ INCOMPLETE]  
+**Exit Code**: [0 for success, non-zero for issues]
+
+**Task Requirements Checklist**:
+- [ ] [Requirement 1] - [✅/⚠️/❌ Status]
+- [ ] [Requirement 2] - [✅/⚠️/❌ Status]
+- [ ] [Requirement N] - [✅/⚠️/❌ Status]
+
+**Changes Summary**: [Brief overview of changes made]
+
+**Validation Summary**: [Summary of all validations performed]
+
+**Impact Analysis**:
+- **Immediate Impact**: [What changed immediately]
+- **Downstream Impact**: [What downstream systems/repos are affected]
+- **Risk Mitigation**: [How risks were addressed]
+
+**Artifacts Created**:
+- [List all artifacts created during this work unit]
+
+**Completion Status**: [✅ COMPLETE with detailed justification]
+
+---
+
+### CST Validation Attestation
+
+**Purpose**: Document Combined Subwave Testing (CST) validation when applicable.
+
+**Authority**: `governance/canon/COMBINED_TESTING_PATTERN.md`
+
+**CST Applicability Determination**:
+
+Complete the following checklist to determine if CST is required for this work unit:
+
+- [ ] **Multiple subwaves converge and must integrate** (e.g., UI + API)
+- [ ] **Cross-module dependencies reach integration readiness** (e.g., Frontend ↔ Backend)
+- [ ] **Architectural boundaries crossed** (e.g., Client ↔ Server, Service ↔ Database)
+- [ ] **Significant feature complexity requires mid-wave validation**
+- [ ] **Integration failure cost is high** (late detection would require extensive rework)
+
+**CST Decision**: [✅ CST REQUIRED / ⊘ CST NOT REQUIRED]
+
+---
+
+#### If CST Required: Validation Attestation
+
+**CST Checkpoint ID**: [CST-Wave-N-Subwave-X or similar identifier]  
+**CST Validator**: [Name/Role of person or agent who performed CST validation]  
+**Validation Date**: [YYYY-MM-DD HH:MM:SS UTC]  
+**CST Result**: [✅ PASS / ❌ FAIL / ⚠️ PARTIAL]
+
+**Integration Scenarios Tested**:
+1. [Scenario 1 description]
+   - **Test Method**: [How scenario was tested]
+   - **Result**: [✅ PASS / ❌ FAIL]
+   - **Evidence**: [Link to test output, logs, or detailed results]
+
+2. [Scenario 2 description]
+   - [Same structure]
+
+[Document all integration scenarios tested]
+
+**CST Acceptance Criteria Checklist**:
+- [ ] All identified integration points validated
+- [ ] Cross-module data flow verified
+- [ ] Architectural boundary interactions confirmed
+- [ ] Integration test results documented with evidence
+- [ ] All CST failures resolved before handover
+- [ ] Integration scenarios align with wave planning documents
+
+**CST Evidence Location**: [Path to detailed test results, logs, or validation artifacts]
+
+**Authority Reference**: `governance/canon/COMBINED_TESTING_PATTERN.md` v1.0.0, Section 4 (CST Requirements)
+
+**CST Validator Signature**: [Validator name and role]  
+**CST Approval**: ✅ CST validation complete, integration scenarios PASS, handover approved
+
+---
+
+#### If CST Not Required: Justification
+
+**CST Not Required Because**:
+
+Select all that apply:
+- [ ] ⊘ Subwaves are isolated and independent (no integration dependencies)
+- [ ] ⊘ No architectural boundaries crossed (single-module work)
+- [ ] ⊘ Integration risk is low (simple, well-understood patterns)
+- [ ] ⊘ Cumulative regression provides sufficient coverage (integration already validated)
+- [ ] ⊘ Documentation-only changes (no runtime integration)
+- [ ] ⊘ Configuration-only changes (no cross-module interaction)
+
+**Justification**: [2-3 sentences explaining why CST is not applicable to this work unit]
+
+**Governance-Only Work Indicator**: [If applicable: "This work unit modifies governance documentation only and does not create or modify application code, integration points, or runtime behavior."]
+
+**Authority Reference**: `governance/canon/COMBINED_TESTING_PATTERN.md` v1.0.0, Section 4.2 (CST Decision Framework)
+
+**Validator Confirmation**: [Validator name] confirms CST is not required per decision framework criteria above.
 ```
 
 ---
@@ -177,6 +388,15 @@ Before submitting PR with PREHANDOVER_PROOF, verify:
 - [ ] Each gate has validation method and evidence
 - [ ] **Execution Timestamp** includes date, time, environment details
 - [ ] **Handover Guarantee** section complete with explicit guarantee statement
+- [ ] **Embedded Governance Artifacts** section complete (embedded OR cross-referenced)
+  - [ ] Governance Scan documented with repository context and gap analysis
+  - [ ] Risk Assessment documented with risk categories and mitigation strategies
+  - [ ] Change Record documented with detailed changes and validation results
+  - [ ] Completion Summary documented with requirements checklist and impact analysis
+- [ ] **CST Validation Attestation** section complete
+  - [ ] CST applicability determination completed with checklist
+  - [ ] If CST required: validation attestation complete with all scenarios tested
+  - [ ] If CST not required: justification documented with decision framework criteria
 - [ ] All exit codes are 0 (success) OR failures are explained and resolved
 - [ ] All applicable gates show ✅ PASS or ⊘ SKIP (no ❌ FAIL allowed at handover)
 
@@ -534,11 +754,45 @@ Document findings in incident report if pattern is systemic.
 
 **A**: Text output is strongly preferred (copy-paste from terminal). Screenshots are acceptable if terminal output is not available, but must be readable and include all relevant information (command, output, exit code, timestamp).
 
+### Q: Should I embed governance artifacts in PREHANDOVER_PROOF or create separate files?
+
+**A**: Either approach is acceptable:
+- **Embedded** (in PREHANDOVER_PROOF): Best for smaller work units, simple changes, or when artifacts are concise
+- **Separate files** (in `.agent-admin/`): Best for complex work units, large changes, or when artifacts need to be referenced independently
+
+If using separate files, provide clear cross-references in the Embedded Governance Artifacts section. Consistency within a repository is recommended.
+
+### Q: What if my work unit doesn't require all 4 governance artifacts?
+
+**A**: All 4 artifacts (scan, risk, change, completion) are required for governance compliance. However:
+- For **simple changes**, artifacts may be brief (1-2 paragraphs each)
+- For **documentation-only changes**, focus may shift (e.g., lower risk, minimal change complexity)
+- **Never skip artifacts** — brevity is acceptable, absence is not
+
+### Q: How do I know if CST validation is required for my work unit?
+
+**A**: Use the CST Decision Framework in the template:
+- **CST Required** if: Multiple subwaves integrate, architectural boundaries crossed, or integration failure cost is high
+- **CST Not Required** if: Isolated work, no architectural boundaries, or governance-only changes
+
+When uncertain, consult `governance/canon/COMBINED_TESTING_PATTERN.md` Section 4.2 or ask your Foreman.
+
+### Q: What if CST was identified in wave planning but I'm only doing a small subwave?
+
+**A**: CST validation may be deferred to a convergence checkpoint (not every subwave PR):
+- Document in **CST Not Required** section: "CST checkpoint planned for [future milestone]"
+- Reference wave planning documents showing CST checkpoint location
+- Include: "This subwave completes in isolation; CST validation occurs at [checkpoint]"
+
+CST is checkpoint-based, not every-PR-based.
+
 ---
 
 ## Related Documents
 
-- `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md` — Full protocol specification
+- `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md` — Full protocol specification and governance artifacts requirements
+- `governance/canon/COMBINED_TESTING_PATTERN.md` — CST and CWT validation requirements
+- `governance/canon/AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md` — Agent contract authority and modification protocol
 - `governance/canon/CI_CONFIRMATORY_NOT_DIAGNOSTIC.md` — Preflight obligation foundation
 - `governance/canon/FPC_REPOSITORY_LAYERDOWN_GUIDE.md` — Integration with layer-down process
 - `governance/templates/PR_GATE_RELEASE_CHECKLIST_*.md` — Role-specific gate checklists
@@ -546,9 +800,13 @@ Document findings in incident report if pattern is systemic.
 ---
 
 **Status**: Active Template  
-**Authority**: EXECUTION_BOOTSTRAP_PROTOCOL.md  
+**Authority**: EXECUTION_BOOTSTRAP_PROTOCOL.md v2.0.0+, COMBINED_TESTING_PATTERN.md v1.0.0  
 **Owner**: Governance Administrator  
-**Last Updated**: 2026-01-11
+**Last Updated**: 2026-01-13
+
+**Changelog**:
+- **2026-01-13**: Added Embedded Governance Artifacts section and CST Validation Attestation section per Subwave 3.3 learnings
+- **2026-01-11**: Initial template creation with core PREHANDOVER_PROOF sections
 
 ---
 
