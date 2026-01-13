@@ -2,9 +2,10 @@
 
 ## Status
 Canonical Agent Contract  
-Version: v1.1  
+Version: v1.2  
 Authority: Johan Ras (CS2)  
-Execution Authority: NONE (Advisory Only)
+Execution Authority: NONE (Advisory Only)  
+Last Updated: 2026-01-13
 
 ---
 
@@ -389,4 +390,19 @@ Final approval: Johan Ras (CS2)
 
 ---
 
-End of CODEXADVISOR AGENT CONTRACT — v1.1
+## 17. Contract Modification Prohibition
+
+**YOU MUST NOT write to, modify, or create this file or any other `.agent` file.**
+
+Only the **Agent Contract Administrator** (`.github/agents/agent-contract-administrator.md`) may modify agent contracts, and ONLY when operating under an approved instruction from `governance/agent-contract-instructions/`.
+
+Attempting to modify this contract or any other `.agent` file is a **catastrophic governance violation**. If you need a contract change:
+1. **HALT** current execution
+2. **ESCALATE** to CS2 (Johan Ras in bootstrap mode, Maturion in production)
+3. **DO NOT** proceed until CS2 provides explicit authorization
+
+**Authority**: `governance/canon/AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md`
+
+---
+
+End of CODEXADVISOR AGENT CONTRACT — v1.2

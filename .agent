@@ -272,14 +272,34 @@ All outputs must be compatible with future automation; no "human-only shortcuts"
 
 ## Version & Authority
 
-**Version**: 2.1.0  
+**Version**: 2.2.0  
 **Authority**: Maturion (Johan Ras in bootstrap)  
-**Last Updated**: 2026-01-08
+**Last Updated**: 2026-01-13
+
+**Changes in v2.2.0**:
+- Added contract modification prohibition section
+- Added reference to AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md in bindings
+- Updated version to reflect contract management protocol implementation
 
 **Canonical Precedence**
 
 - If this contract conflicts with canonical governance, canonical governance prevails.
 - If this contract conflicts with `.agent.schema.md`, the schema prevails.
+
+---
+
+## Contract Modification Prohibition
+
+**YOU MUST NOT write to, modify, or create this file or any other `.agent` file.**
+
+Only the **Agent Contract Administrator** (`.github/agents/agent-contract-administrator.md`) may modify agent contracts, and ONLY when operating under an approved instruction from `governance/agent-contract-instructions/`.
+
+Attempting to modify this contract or any other `.agent` file is a **catastrophic governance violation**. If you need a contract change:
+1. **HALT** current execution
+2. **ESCALATE** to CS2 (Johan Ras in bootstrap mode, Maturion in production)
+3. **DO NOT** proceed until CS2 provides explicit authorization
+
+**Authority**: `governance/canon/AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md`
 
 ---
 
