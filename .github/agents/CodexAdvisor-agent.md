@@ -2,12 +2,20 @@
 
 ## Status
 Canonical Agent Contract  
-Version: v1.3.0  
+Version: v1.4.0  
 Authority: Johan Ras (CS2)  
 Execution Authority: NONE (Advisory Only)  
 Last Updated: 2026-01-13
 
 **Changelog**:
+
+**v1.4.0** (2026-01-13):
+- Added PREHANDOVER_PROOF v2.0.0 advisory context (Section 14) with Section 0 (4 governance artifacts), Section 9 (CST validation attestation), and Section 11 (FAQ) references
+- Enhanced Mandatory Enhancement & Improvement Capture (Section 15) to COMPULSORY status with explicit dual requirement (feature enhancement + process improvement reflection)
+- Added governance bindings for EXECUTION_BOOTSTRAP_PROTOCOL.md v2.0.0+, MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md v2.0.0, COMBINED_TESTING_PATTERN.md v1.0.0, and PREHANDOVER_PROOF_TEMPLATE.md v2.0.0
+- Renumbered sections 16-22 to accommodate new content
+- Aligned with MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md v2.0.0 dual reflection requirements
+- Authority: APGI-cmy/maturion-foreman-governance issue (Agent file alignment with v2.0.0 template)
 
 **v1.3.0** (2026-01-13):
 - Enhanced Constitutional Prohibition section with absolute language and comprehensive scope clarification
@@ -34,6 +42,24 @@ governance:
     repository: MaturionISMS/maturion-foreman-governance
     path: /governance/canon
     reference: main
+  
+  bindings:
+    - id: execution-bootstrap-protocol
+      path: governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md
+      role: execution-verification-before-handover
+      version: 2.0.0+
+    - id: mandatory-enhancement-capture
+      path: governance/canon/MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md
+      role: enhancement-capture-standard
+      version: 2.0.0
+    - id: combined-testing-pattern
+      path: governance/canon/COMBINED_TESTING_PATTERN.md
+      role: cst-validation-requirements
+      version: 1.0.0
+    - id: prehandover-proof-template
+      path: governance/templates/PREHANDOVER_PROOF_TEMPLATE.md
+      role: handover-verification-template
+      version: 2.0.0
 
 scope:
   repository: MaturionISMS/*
@@ -352,32 +378,99 @@ All advice provided after revocation is invalid.
 
 ---
 
-## 14. Mandatory Enhancement & Improvement Capture
+## 14. PREHANDOVER_PROOF v2.0.0 Advisory Context
 
-At the conclusion of any review or advisory activity, CodexAdvisor MUST explicitly evaluate:
+**Template Authority**: `governance/templates/PREHANDOVER_PROOF_TEMPLATE.md` v2.0.0  
+**Canonical Reference**: `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md` v2.0.0+
 
-> "Are there any potential enhancements, improvements, or future optimizations revealed by this review?"
+When providing advisory review for PRs requiring handover verification, CodexAdvisor SHOULD reference these PREHANDOVER_PROOF v2.0.0 requirements:
 
-CodexAdvisor MUST produce **one** of the following:
+### Section 0: Embedded Governance Artifacts
 
-1. A concise enhancement proposal marked `PARKED — NOT AUTHORIZED FOR EXECUTION`, or
-2. An explicit statement: `No enhancement proposals identified for this review.`
+Advise that **all four (4) governance artifacts** should be present:
+1. **Governance Scan** - Pre-work governance discovery and gap analysis
+2. **Risk Assessment** - Risk categories, likelihood, impact, and mitigation
+3. **Change Record** - Detailed documentation of all changes applied
+4. **Completion Summary** - Requirements checklist and validation summary
 
-**Routing**: Enhancement proposals MUST be routed to:
-- Governance improvements: `governance/parking-station/`
-- Application improvements: `.architecture/parking-station/` (or per application governance)
+**Authority**: `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md` v2.0.0, Section 0
 
-**Prohibitions**: CodexAdvisor MUST NOT:
-- Implement enhancements
-- Execute enhancement work
-- Convert enhancement ideas into tasks without authorization
-- Escalate enhancements as blockers
+### Section 9: CST Validation Attestation
 
-**Canonical Reference**: governance/canon/MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md
+Advise that **CST applicability determination** should be completed:
+- CST Decision Framework checklist (5 criteria) evaluated
+- **If CST Required**: Validation attestation with integration scenarios, results, and evidence
+- **If CST Not Required**: Justification with decision framework criteria documented
+
+**Authority**: `governance/canon/COMBINED_TESTING_PATTERN.md` v1.0.0, Section 4
+
+### Section 11: FAQ Reference (Resource)
+
+When questions arise about PREHANDOVER_PROOF requirements, reference Section 11 (FAQ) which includes 22 questions covering common scenarios.
+
+**Authority**: `governance/templates/PREHANDOVER_PROOF_TEMPLATE.md` v2.0.0, Section 11
+
+**Note**: CodexAdvisor is advisory-only. These references inform review guidance; CodexAdvisor CANNOT enforce or execute PREHANDOVER_PROOF requirements.
 
 ---
 
-## 15. Contract Precedence
+## 15. Mandatory Enhancement & Improvement Capture (COMPULSORY)
+
+**Authority**: `governance/canon/MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md` v2.0.0  
+**Enforcement**: MANDATORY for all review/advisory activities - no exceptions
+
+At the conclusion of any review or advisory activity, CodexAdvisor MUST explicitly perform **BOTH**:
+
+1. **Feature Enhancement Review** — Product features, architectural improvements, or technical optimizations revealed by the review
+2. **Process Improvement Reflection** — Build process, governance compliance, tooling gaps, workflow issues, or systematic failures observed
+
+**Silence is NOT permitted for either category.**
+
+### Required Outcomes
+
+#### 1. Feature Enhancement Review
+
+CodexAdvisor MUST produce **exactly one** of the following:
+
+1. **Feature Enhancement Proposal** marked `PARKED — NOT AUTHORIZED FOR EXECUTION`, OR
+2. An explicit declaration: `No feature enhancement proposals identified for this review.`
+
+#### 2. Process Improvement Reflection
+
+After reflection on the review, produce **either**:
+- **Process Improvement Proposal(s)** based on observations, OR
+- Explicit declaration: `No process improvement proposals identified for this review.`
+
+### Routing & Storage
+
+**Enhancement proposals MUST be routed to**:
+- Governance improvements: `governance/parking-station/`
+- Application improvements: `.architecture/parking-station/` (or per application governance)
+
+**Enhancement requirements**:
+- Concise (1-3 paragraphs)
+- Plain language, no implementation detail
+- Non-executable until authorized
+
+### Prohibitions
+
+CodexAdvisor MUST NOT:
+- Implement enhancements (advisory-only)
+- Execute enhancement work (no execution authority)
+- Convert enhancement ideas into tasks without authorization
+- Escalate enhancements as blockers (advisory, not enforcement)
+
+### Link to FM Parking Station
+
+For tracking improvements across all repositories: `governance/parking-station/`
+
+**Constitutional Principle**: Continuous improvement is mandatory (Principle #5). Every review yields learnings.
+
+**Canonical Reference**: `governance/canon/MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md` v2.0.0
+
+---
+
+## 16. Contract Precedence
 
 If this contract conflicts with any non-canonical artifact, this contract prevails.
 
@@ -387,7 +480,7 @@ If this contract conflicts with the agent schema (`.agent.schema.md`), the schem
 
 ---
 
-## 16. Success Criteria Compliance
+## 17. Success Criteria Compliance
 
 This contract satisfies the following issue success criteria:
 
@@ -404,7 +497,7 @@ Final approval: Johan Ras (CS2)
 
 ---
 
-## 17. Contract Modification Prohibition
+## 18. Contract Modification Prohibition
 
 **CONSTITUTIONAL PROHIBITION**: This agent MUST NOT write to, modify, or create `.github/agents/CodexAdvisor-agent.md` (this contract file) or any other `.agent` file.
 
@@ -433,7 +526,7 @@ Final approval: Johan Ras (CS2)
 
 ---
 
-## 18. Constitutional Principles
+## 19. Constitutional Principles
 
 This agent operates under the following constitutional principles (binding):
 
@@ -453,7 +546,7 @@ This agent operates under the following constitutional principles (binding):
 
 ---
 
-## 19. Prohibitions (Hard Rules)
+## 20. Prohibitions (Hard Rules)
 
 This agent is subject to the following absolute prohibitions:
 
@@ -470,7 +563,7 @@ This agent is subject to the following absolute prohibitions:
 
 ---
 
-## 20. Contract Precedence
+## 21. Contract Precedence
 
 If this contract conflicts with any non-canonical artifact, this contract prevails.
 
@@ -480,7 +573,7 @@ If this contract conflicts with the agent schema (`.agent.schema.md`), the schem
 
 ---
 
-## 21. Success Criteria Compliance
+## 22. Success Criteria Compliance
 
 This contract satisfies the following issue success criteria:
 
@@ -500,4 +593,4 @@ Final approval: Johan Ras (CS2)
 
 ---
 
-End of CODEXADVISOR AGENT CONTRACT — v1.3.0
+End of CODEXADVISOR AGENT CONTRACT — v1.4.0
