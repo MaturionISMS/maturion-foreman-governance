@@ -339,12 +339,12 @@ Complete the following checklist to determine if CST is required for this work u
 [Document all integration scenarios tested]
 
 **CST Acceptance Criteria Checklist**:
-- [ ] ✅ All identified integration points validated
-- [ ] ✅ Cross-module data flow verified
-- [ ] ✅ Architectural boundary interactions confirmed
-- [ ] ✅ Integration test results documented with evidence
-- [ ] ✅ All CST failures resolved before handover
-- [ ] ✅ Integration scenarios align with wave planning documents
+- [ ] All identified integration points validated
+- [ ] Cross-module data flow verified
+- [ ] Architectural boundary interactions confirmed
+- [ ] Integration test results documented with evidence
+- [ ] All CST failures resolved before handover
+- [ ] Integration scenarios align with wave planning documents
 
 **CST Evidence Location**: [Path to detailed test results, logs, or validation artifacts]
 
