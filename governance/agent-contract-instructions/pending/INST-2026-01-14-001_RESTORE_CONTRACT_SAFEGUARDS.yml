@@ -1,0 +1,140 @@
+---
+id: INST-2026-01-14-001
+title: Restore Immutable Sections and Pre-Gate Handover Safeguards to governance-repo-administrator.agent.md
+status: pending
+created_date: 2026-01-14
+created_by: governance-repo-administrator
+approved_date: null
+approved_by: null
+applied_date: null
+applied_by: null
+
+authority:
+  source:
+    - AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md
+    - EXECUTION_BOOTSTRAP_PROTOCOL.md
+    - Emergency Self-Review Issue (2026-01-14)
+  reason: |
+    Emergency self-review identified critical gaps in contract protection mechanisms:
+    1. No explicit "no removal" rule preventing deletion of critical safeguards
+    2. No LOCKED metadata protecting constitutional sections from unauthorized modification
+    3. No audit trail requirements for changes to protected sections
+    4. No enumeration of which sections are constitutionally critical
+    
+    Without these protections, future contract modifications could remove or weaken
+    critical safeguards (Handover Verification Protocol, PREHANDOVER_PROOF requirements,
+    Constitutional Prohibition) through instruction system, bypassing governance oversight.
+    
+    This instruction restores protection mechanisms to prevent catastrophic governance
+    circumvention.
+  ripple_triggered: false
+  incident_reference: INCIDENT-2026-01-08-PR895-CATASTROPHIC-HANDOVER-FAILURE
+
+target:
+  repository: APGI-cmy/maturion-foreman-governance
+  contract_file: .github/agents/governance-repo-administrator.agent.md
+  current_version: 2.5.0
+  target_version: 2.6.0
+
+changes:
+  - change_id: CHANGE-001
+    change_type: addition
+    section_affected: NEW - "Protection Against Removal or Weakening of Safeguards"
+    insert_location: after_line_207
+    insert_after_section: "Constitutional Prohibition: Contract Modification"
+    locked_section: true
+    change_authority: CS2
+    
+    description: |
+      Add comprehensive "Protection Against Removal or Weakening of Safeguards" section
+      establishing explicit rule that critical safeguards cannot be removed, weakened,
+      or bypassed without CS2 approval and documented governance justification.
+      
+      This section creates "no removal" governance rule addressing Gap #1 from self-review.
+    
+    constitutional_justification: |
+      AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md establishes single-writer pattern (only Agent
+      Contract Administrator can modify contracts) but does NOT specify what modifications
+      are prohibited. This creates ambiguity allowing approved instructions to remove
+      critical safeguards.
+      
+      EXECUTION_BOOTSTRAP_PROTOCOL.md requires handover verification but doesn't protect
+      those requirements from future removal.
+      
+      Emergency Self-Review Issue requires explicit "no removal without formal change
+      management" rule to prevent silent deletion of safeguards during contract updates.
+    
+    safeguard_impact: PROTECTIVE - Adds new safeguard, does not weaken existing
+    
+    content_reference: |
+      See .agent-admin/EMERGENCY_SELF_REVIEW_FINDINGS.md
+      Section: "Change 1: Add Protection Against Removal or Weakening of Safeguards Section"
+
+  - change_id: CHANGE-002
+    change_type: modification
+    section_affected: Multiple LOCKED sections (6 total)
+    sections_list:
+      - "Constitutional Prohibition: Contract Modification" (line 182)
+      - "Prohibitions (Hard Rules)" (line 329)
+      - "Required Decision Language" (line 407)
+      - "Handover Verification Protocol" (line 419)
+      - "PREHANDOVER_PROOF v2.0.0 Requirements" (line 435)
+      - "Mandatory Enhancement & Improvement Capture (COMPULSORY)" (line 509)
+    locked_section: true
+    change_authority: CS2
+    
+    description: |
+      Add LOCKED metadata HTML comments to 6 critical sections marking them as requiring
+      elevated change authority and CS2 approval for modifications.
+      
+      Metadata format: <!-- LOCKED: true | CHANGE_AUTHORITY: CS2 | LAST_REVIEW: YYYY-MM-DD | [CONTEXT] -->
+    
+    constitutional_justification: |
+      Emergency Self-Review Issue explicitly requires LOCKED: true metadata block to
+      permanently protect critical sections until/unless change-managed.
+    
+    safeguard_impact: PROTECTIVE - Adds protection metadata, does not modify section content
+    
+    content_reference: |
+      See .agent-admin/EMERGENCY_SELF_REVIEW_FINDINGS.md
+      Section: "Change 2: Add LOCKED Metadata to 6 Critical Sections"
+
+  - change_id: CHANGE-003
+    change_type: addition
+    section_affected: NEW - "Protected Sections Registry"
+    insert_location: after_line_675
+    insert_after_section: "End of Governance Repo Administrator Agent Contract"
+    locked_section: true
+    change_authority: CS2
+    
+    description: |
+      Add comprehensive "Protected Sections Registry" section enumerating all LOCKED
+      sections with lock reasons, authority references, and audit trail requirements.
+    
+    constitutional_justification: |
+      Emergency Self-Review Issue requires permanent change tracking and audit trail
+      for all future edits to locked sections.
+    
+    safeguard_impact: PROTECTIVE - Creates audit trail and tracking mechanism
+    
+    content_reference: |
+      See .agent-admin/EMERGENCY_SELF_REVIEW_FINDINGS.md
+      Section: "Change 3: Add Protected Sections Registry Section"
+
+version_update:
+  current_version: 2.5.0
+  new_version: 2.6.0
+  
+  changelog_entry: |
+    **Changes in v2.6.0** (2026-01-14):
+    - Added "Protection Against Removal or Weakening of Safeguards" section
+    - Added LOCKED metadata to 6 critical sections
+    - Added "Protected Sections Registry" section
+    - Authority: AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md, EXECUTION_BOOTSTRAP_PROTOCOL.md
+    - CS2 Approval: [PENDING]
+
+cs2_approval:
+  approval_required: true
+  approver: Johan Ras (CS2)
+  approval_status: AWAITING
+---
