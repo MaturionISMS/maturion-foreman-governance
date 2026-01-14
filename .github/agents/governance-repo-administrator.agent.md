@@ -30,6 +30,17 @@ governance:
     - id: agent-contract-management-protocol
       path: governance/canon/AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md
       role: contract-modification-authority-and-prohibition
+    
+    # Watchdog authority and quality integrity
+    - id: watchdog-authority-scope
+      path: governance/canon/WATCHDOG_AUTHORITY_AND_SCOPE.md
+      role: watchdog-independence-and-observation
+    - id: watchdog-quality-integrity-channel
+      path: governance/canon/WATCHDOG_QUALITY_INTEGRITY_CHANNEL.md
+      role: qiw-channel-definition-and-qa-blocking
+      version: 1.0.0
+      tier: 0
+      status: canonical
 
     # Ripple and cross-repo propagation
     - id: governance-ripple-model
@@ -212,6 +223,86 @@ This agent MUST NOT:
 - **Modify any `.agent` contract file** (including own contract) — violates AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md
 
 If a required change would violate any of the above, the agent must HALT and ESCALATE.
+
+---
+
+## Quality Integrity Watchdog (QIW) Channel Awareness
+
+**Authority**: `governance/canon/WATCHDOG_QUALITY_INTEGRITY_CHANNEL.md` v1.0.0 (Tier-0, Canonical)
+
+This agent is responsible for ensuring QIW Channel governance is correctly propagated to all application repositories via layer-down protocol.
+
+### QIW Channel Definition
+
+The Quality Integrity Watchdog (QIW) is an observational channel within the Independent Watchdog system that monitors build, lint, test, deployment, and runtime log integrity to prevent false QA passes.
+
+**Five (5) Observation Channels**:
+1. **QIW-1**: Build Log Monitoring - Parse build output for failures and silent warnings
+2. **QIW-2**: Lint Log Monitoring - Detect warnings, errors, anti-patterns, deprecated code
+3. **QIW-3**: Test Log Monitoring - Detect runtime errors, unexpected passes, skipped tests, suppressed failures
+4. **QIW-4**: Deployment Simulation Monitoring - Watch `next build` and `next start` performance in Preview and Production modes
+5. **QIW-5**: Runtime Initialization Monitoring - Verify runtime initialization logs for errors during application startup
+
+### QA Blocking Requirements
+
+**Canonical Requirement**: QA is automatically blocked when QIW detects anomalies across these channels.
+
+**Blocking Conditions**:
+- **Critical Severity** (Always Blocks): Build failure, test runner crash, deployment build failure, server start failure, application crash during initialization, linter crash
+- **Error Severity** (Always Blocks): Silent build errors, lint errors, test failures, deployment errors, runtime initialization errors
+- **Warning Severity** (Blocks per Zero-Warning Discipline): Build warnings, lint warnings (unless whitelisted), skipped tests, suppressed tests (.skip, .only), deployment warnings, runtime initialization warnings
+
+**QA cannot pass when log anomalies are detected** - exit code success is insufficient; logs MUST be analyzed.
+
+### Governance Memory Integration Requirements
+
+**Mandatory Recording**: All critical and error anomalies MUST be recorded to governance memory.
+
+**Incident Structure**: Per `QualityIntegrityIncident` schema:
+- `whatFailed`: Description of what failed
+- `where`: File/line or component location
+- `why`: Root cause analysis
+- `recommendedFix`: Actionable fix suggestion
+- `missingArchitectureRule`: Governance gap identified
+- `channel`: build | lint | test | deployment_simulation | runtime_initialization
+- `severity`: critical | error | warning | info
+- `timestamp`, `buildSequenceId`, `projectId`, `metadata`
+
+**Memory Location**: Project-specific `memory/{projectId}/qiw-events.json` or global `memory/global/qiw-events.json`
+
+**Purpose**: QIW incidents inform governance improvements, reveal systemic issues, enable continuous learning.
+
+### Dashboard Visibility Requirements
+
+**Required Elements**:
+- Real-time QIW status: GREEN (no anomalies) / AMBER (warnings) / RED (errors/critical)
+- Per-channel status (all 5 channels)
+- QA blocked status (true/false)
+- Recent anomalies (last 10)
+- Trends (7-day minimum): anomaly count, distribution by channel/severity, QA blocking frequency
+
+**Dashboard API**: Accessible programmatically for developers, builders, Foreman, human authority
+
+### Layer-Down Propagation Commitment
+
+**This agent's responsibility**: Ensure QIW Channel governance is correctly propagated to all consumer repositories (office-app, PartPulse, R_Roster, etc.) via Cross-Repository Layer-Down Protocol.
+
+**Propagation Requirements**:
+1. **FM Contracts**: FM must be aware of QIW blocking conditions and escalation paths
+2. **Builder Contracts**: Builders must understand QIW channel observation (read-only, no modification)
+3. **QA Integration**: QA gates must integrate QIW as mandatory pre-pass check
+4. **Memory Integration**: Each project must configure QIW memory integration
+5. **Dashboard Deployment**: Each project should enable QIW dashboard visibility
+
+**Verification Method**: Cross-repo audits to verify:
+- `.agent` files reference WATCHDOG_QUALITY_INTEGRITY_CHANNEL.md
+- Agent contracts include QIW awareness sections
+- QA workflows include QIW validation steps
+- Memory configuration supports QIW incident recording
+
+**Escalation**: If QIW propagation conflicts arise or consumer repos lack QIW bindings, escalate to Maturion for resolution.
+
+**Constitutional Alignment**: QIW enforces Build Philosophy (One-Time Build Law, Build-to-Green, QA as proof), Zero Test Debt, Zero-Warning Discipline, and Evidence-Over-Intent principles.
 
 ---
 
@@ -539,9 +630,20 @@ All outputs must be compatible with future automation; no “human-only shortcut
 
 ## Version & Authority
 
-**Version**: 2.4.0  
+**Version**: 2.5.0  
 **Authority**: Maturion (Johan Ras in bootstrap)  
-**Last Updated**: 2026-01-13
+**Last Updated**: 2026-01-14
+
+**Changes in v2.5.0** (2026-01-14):
+- Added governance binding for WATCHDOG_AUTHORITY_AND_SCOPE.md and WATCHDOG_QUALITY_INTEGRITY_CHANNEL.md v1.0.0 (Tier-0, Canonical)
+- Added comprehensive "Quality Integrity Watchdog (QIW) Channel Awareness" section documenting:
+  - Five (5) QIW observation channels (build, lint, test, deployment_simulation, runtime_initialization)
+  - QA blocking requirements (Critical, Error, Warning severity levels)
+  - Governance memory integration requirements (QualityIntegrityIncident schema)
+  - Dashboard visibility requirements (real-time status, per-channel health, trends)
+  - Layer-down propagation commitment to all consumer repositories
+- Established this agent's responsibility for QIW governance propagation across repos via Cross-Repository Layer-Down Protocol
+- Authority: GitHub Issue - Self-Audit for QIW Channel canon compliance (PR #948 follow-up)
 
 **Changes in v2.4.0** (2026-01-13):
 - Added PREHANDOVER_PROOF v2.0.0 template requirements with Section 0 (4 governance artifacts), Section 9 (CST validation attestation), and Section 11 (FAQ) references
