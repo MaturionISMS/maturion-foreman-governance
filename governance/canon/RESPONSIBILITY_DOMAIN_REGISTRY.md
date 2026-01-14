@@ -182,6 +182,38 @@ Test harnesses, fixtures, and test-only utilities.
 
 ---
 
+
+### DOMAIN: Governance Administration
+
+**Description**  
+Governance policy files, agent contracts, profiles, and administrative artifacts in the governance repository.
+
+**Allowed Paths**
+- `.agent`
+- `.agent-admin/**`
+- `.github/agents/**`
+- `.github/workflows/**`
+- `governance/**`
+
+**Forbidden Paths**
+- `app/**`
+- `src/**`
+- `components/**`
+- `lib/**`
+
+**Typical Failure Signatures**
+- Missing governance binding
+- Agent contract schema violation
+- Policy versioning mismatch
+- Unauthorized canon modification
+
+**Valid PR Names**
+- "Update governance agent files for Pre-Implementation Behavior Review Protocol"
+- "Layer down Pre-Implementation Behavior Review Protocol"
+- "Agent contract administration updates"
+
+---
+
 ## 5. Adding a New Responsibility Domain
 
 New domains may only be added via governance change management.

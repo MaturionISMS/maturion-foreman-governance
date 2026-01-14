@@ -1,4 +1,25 @@
-  - name: Enforce scope-to-diff via registry
+name: Governance Scope-to-Diff Enforcement
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  scope-to-diff-validation:
+    name: Validate Scope Declaration Matches Diff
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Enforce scope-to-diff via registry
         run: |
           DOMAIN=$(grep "RESPONSIBILITY_DOMAIN:" governance/scope-declaration.md | cut -d':' -f2 | xargs)
 
@@ -18,7 +39,10 @@
 
           for FILE in $FILES; do
             for BAD in $FORBIDDEN; do
-              if [[ "$FILE" == $BAD* ]]; then
+              # Strip backticks and handle /** pattern
+              BAD_CLEAN=$(echo "$BAD" | tr -d '`')
+              BAD_CLEAN="${BAD_CLEAN%/**}"
+              if [[ "$FILE" == $BAD_CLEAN* ]]; then
                 echo "❌ SCOPE VIOLATION: $FILE forbidden for domain $DOMAIN"
                 exit 1
               fi
@@ -26,7 +50,10 @@
 
             MATCHED=false
             for OK in $ALLOWED; do
-              if [[ "$FILE" == $OK* ]]; then
+              # Strip backticks and handle /** pattern
+              OK_CLEAN=$(echo "$OK" | tr -d '`')
+              OK_CLEAN="${OK_CLEAN%/**}"
+              if [[ "$FILE" == $OK_CLEAN* ]]; then
                 MATCHED=true
               fi
             done
