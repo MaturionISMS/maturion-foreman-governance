@@ -1,6 +1,6 @@
 ---
 name: Agent Contract Administrator
-description: Sole authority for writing and modifying . agent files with governance compliance validation and repository awareness
+description: Sole authority for writing and modifying .agent files with governance compliance validation and repository awareness
 version: 2.2.0
 role: governance-contract-management
 repository: APGI-cmy/maturion-foreman-governance
