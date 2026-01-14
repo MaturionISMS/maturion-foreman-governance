@@ -581,7 +581,46 @@ Hard stops MUST NOT:
 
 ---
 
-### 5.6 Cost and Performance Anomaly Reporting
+### 5.6 Quality Integrity (QIW Channel)
+
+**What the Watchdog Observes**:
+- Build log integrity (errors, warnings, silent failures)
+- Lint log compliance (errors, warnings, anti-patterns, deprecated code)
+- Test log integrity (runtime errors, unexpected passes, skipped tests, suppressed failures)
+- Deployment simulation logs (next build, next start performance)
+- Runtime initialization logs (startup errors, component failures)
+
+**Detection Indicators**:
+- Build succeeds but errors logged (silent failures)
+- Lint warnings or errors present (zero-warning discipline violation)
+- Test failures, skipped tests, or suppressed tests (.skip, .only)
+- Deployment simulation failures or warnings
+- Runtime initialization errors or component failures
+
+**Escalation Trigger**:
+- Soft stop: Warnings requiring resolution or whitelisting
+- Hard stop: Critical failures (build crash, test runner crash, deployment failure)
+- QA Blocking: Automatic blocking on critical, error, or warning severity per zero-warning discipline
+- Governance Memory: All critical/error anomalies recorded for learning
+
+**Authority**: WATCHDOG_QUALITY_INTEGRITY_CHANNEL.md
+
+**Channels**:
+1. **QIW-1**: Build Log Monitoring - Parse build output, detect failures + silent warnings
+2. **QIW-2**: Lint Log Monitoring - Detect warnings, errors, anti-patterns, deprecated code
+3. **QIW-3**: Test Log Monitoring - Detect runtime errors, unexpected passes, skipped tests
+4. **QIW-4**: Deployment Simulation Monitoring - Watch next build/start in Preview + Production
+5. **QIW-5**: Runtime Initialization Monitoring - Verify initialization logs for errors
+
+**QA Blocking Enforcement**:
+- QIW runs as mandatory QA gate step (before QA pass decision)
+- QA automatically blocked when anomalies detected
+- Blocking cannot be overridden without governance approval
+- Dashboard exposes QIW status and recent anomalies
+
+---
+
+### 5.7 Cost and Performance Anomaly Reporting
 
 **What the Watchdog Observes** (Informational Only - No Enforcement):
 - Unusual patterns in resource consumption
@@ -609,7 +648,7 @@ Hard stops MUST NOT:
 
 ---
 
-### 5.7 Non-Interference & Independence Guarantees
+### 5.8 Non-Interference & Independence Guarantees
 
 **Purpose**: Prevent recursive governance collapse by ensuring Watchdog independence and non-interference with cognitive systems.
 
@@ -617,7 +656,7 @@ Hard stops MUST NOT:
 
 ---
 
-#### 5.7.1 Watchdog Must Not Modify Cognitive Systems
+#### 5.8.1 Watchdog Must Not Modify Cognitive Systems
 
 **Principle**: Watchdog observes cognitive systems (including CHP) but does not control, modify, or execute their operations.
 
@@ -648,7 +687,7 @@ Hard stops MUST NOT:
 
 ---
 
-#### 5.7.2 Watchdog Must Not Suppress Cognition
+#### 5.8.2 Watchdog Must Not Suppress Cognition
 
 **Principle**: Watchdog must not suppress, censor, or filter cognition or findings from cognitive systems.
 
@@ -681,7 +720,7 @@ Hard stops MUST NOT:
 
 ---
 
-#### 5.7.3 Watchdog Must Not Authorize Decisions
+#### 5.8.3 Watchdog Must Not Authorize Decisions
 
 **Principle**: Watchdog does not authorize, approve, or make decisions for cognitive systems or any monitored systems.
 
@@ -715,7 +754,7 @@ Hard stops MUST NOT:
 
 ---
 
-#### 5.7.4 Independence Preservation
+#### 5.8.4 Independence Preservation
 
 **Principle**: Watchdog independence is absolute and must not be compromised by any monitored system.
 
@@ -748,7 +787,7 @@ Hard stops MUST NOT:
 
 ---
 
-#### 5.7.5 Recursive Governance Collapse Prevention
+#### 5.8.5 Recursive Governance Collapse Prevention
 
 **Problem**: Without clear non-interference boundaries, Watchdog could create recursive governance loops that undermine system stability and governance integrity.
 
@@ -1015,6 +1054,13 @@ The Watchdog MUST NOT:
 - Watchdog escalations to Foreman within delegated authority
 - Watchdog escalations to human for strategic decisions
 - Watchdog respects "overseeing intelligence one level higher" principle
+
+### 9.6 WATCHDOG_QUALITY_INTEGRITY_CHANNEL.md
+- Watchdog QIW Channel monitors 5 log sources for quality integrity
+- QIW enforces Quality Integrity Contract (QIC) across all repositories
+- QIW blocks QA when log anomalies detected (build, lint, test, deployment, runtime)
+- QIW integrates quality incidents into governance memory for learning
+- QIW implements zero-warning discipline and silent failure detection
 
 ---
 

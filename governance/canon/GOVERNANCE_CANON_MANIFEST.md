@@ -197,8 +197,9 @@ It serves to:
 |-----------|---------|-------------------|------------------|--------------|
 | `FM_RUNTIME_ENFORCEMENT_AND_AWARENESS_MODEL.md` | 1.0.0 | PUBLIC_API | FM App | 2026-01-05 |
 | `MATURION_RUNTIME_EXECUTION_MONITOR_SPEC.md` | 1.0.0 | PUBLIC_API | FM App | 2026-01-05 |
-| `WATCHDOG_AUTHORITY_AND_SCOPE.md` | 1.0.0 | OPTIONAL | FM App | 2026-01-05 |
+| `WATCHDOG_AUTHORITY_AND_SCOPE.md` | 1.0.0 | OPTIONAL | FM App | 2026-01-13 |
 | `WATCHDOG_COGNITIVE_OBSERVATION_PROTOCOL.md` | 1.0.0 | OPTIONAL | FM App | 2026-01-05 |
+| `WATCHDOG_QUALITY_INTEGRITY_CHANNEL.md` | 1.0.0 | PUBLIC_API | FM App, All Repos | 2026-01-13 |
 
 ### 3.13 Schema, Template, and Survey Files (INTERNAL)
 
