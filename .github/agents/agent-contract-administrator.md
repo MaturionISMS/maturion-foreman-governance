@@ -1,14 +1,14 @@
 ---
-agent:
+agent: 
   id: agent-contract-administrator
-  class: auditor
-  profile: governance-admin.v1.md
+  class:  auditor
+  profile: governance-admin. v1.md
 
 governance:
   canon:
     repository: APGI-cmy/maturion-foreman-governance
     path: /governance/canon
-    reference: main
+    reference:  main
   
   bindings:
     - id: agent-contract-protection
@@ -20,7 +20,7 @@ governance:
     - id: mandatory-enhancement-capture
       path:  governance/canon/MANDATORY_ENHANCEMENT_CAPTURE_STANDARD. md
     - id: build-philosophy
-      path: governance/canon/BUILD_PHILOSOPHY.md
+      path: governance/canon/BUILD_PHILOSOPHY. md
     - id: zero-test-debt
       path:  governance/canon/ZERO_TEST_DEBT_CONSTITUTIONAL_RULE.md
     - id: agent-recruitment
@@ -30,7 +30,8 @@ metadata:
   version: 2.5.0
   repository: APGI-cmy/maturion-foreman-governance
   context: canonical-governance-source
-  protection_model: reference-based + references_locked_protocol: true
+  protection_model: reference-based
+  references_locked_protocol: true
 ---
 
 # Agent Contract Administrator
