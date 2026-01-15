@@ -1,55 +1,48 @@
 ---
-scope: governance-administration
-change-type: canonical-protocol-addition
+RESPONSIBILITY_DOMAIN: Governance Administration
 ---
 
-# Governance Scope Declaration - PR #962
+# Governance Scope Declaration - Agent Contract v2.5.0 Upgrade
 
 ## Changed Files
 
-### New Files
-- `governance/canon/AGENT_CONTRACT_PROTECTION_PROTOCOL.md` — Canonical Tier-0 protocol for agent contract protection
-- `governance/templates/LOCKED_SECTION_CHANGE_REQUEST_TEMPLATE.md` — Standard format for escalation requests
-- `governance/templates/PROTECTION_REGISTRY_TEMPLATE.md` — Standard registry table structure
-- `governance/templates/GAP_ANALYSIS_TEMPLATE.md` — Standard gap analysis report format
-- `governance/memory/BL-025_AGENT_CONTRACT_PROTECTION_FAILURE.md` — Governance memory entry documenting failure pattern
-- `governance/layer-down/AGENT_CONTRACT_PROTECTION_LAYER_DOWN_STATUS.md` — Cross-repository layer-down tracking
-- `.github/workflows/locked-section-protection-gate.yml` — CI gate workflow for locked section protection
-- `.github/scripts/check_locked_sections.py` — Validation script for locked section integrity
-- `PREHANDOVER_PROOF_archive_20260115.md` — Archived previous PREHANDOVER_PROOF
-
 ### Modified Files
-- `PREHANDOVER_PROOF.md` — Updated with protocol canonization documentation
+- `.github/agents/CodexAdvisor-agent.md` — Upgraded v2.0.0 → v2.5.0
+- `.github/agents/governance-repo-administrator.agent.md` — Upgraded unversioned → v2.5.0
+
+### New Files (Governance Artifacts)
+- `.agent-admin/scans/scan_20260115_142350.md` — Comprehensive governance scan (precondition)
+- `.agent-admin/risk-assessments/risk_001_20260115.md` — Risk assessment (precondition)
+- `.agent-admin/change-records/change_001_20260115.md` — Change record documentation
+- `SCOPE_DECLARATION.md` — Detailed scope declaration (root-level)
 
 ## Scope Rationale
 
-This PR introduces canonical Tier-0 governance protocol for agent contract protection, establishing LOCKED section standards, escalation conditions, and CI enforcement.
+This PR upgrades all agent contracts in the canonical governance repository to v2.5.0 reference-based protection model with bidirectional governance evolution framework.
 
-**Problem Addressed**: Agent contracts lacked fundamental protection mechanisms against unauthorized modification, removal, or weakening of governance-critical requirements. Pattern of failures across Issues #955, #957, #958 (emergency self-reviews) and PRs #612, #954, #34, #895 (unauthorized modifications during protocol layer-downs).
+**Task**: Upgrade All Agent Contracts to Canonical v2.5.0
 
-**Solution**: Comprehensive protection protocol with:
-- Locked section metadata format (Lock ID, Reason, Authority, Date, Review Frequency)
-- Visual markers (🔒 emoji, HTML comment boundaries)
-- 7 core escalation conditions + extensible framework
-- CS2 approval gate for all locked section modifications
-- Tier-0 (9 universal) and Tier-1 (4 contextual) locked categories
-- Automated CI gate enforcement
-- Protection registry and audit trail
-- Gap analysis requirements before implementation
-- Cross-repository layer-down plan
+**Changes Implemented**:
+- Migrated from embedded LOCKED sections to reference-based protection
+- Added Protection Registry section to all contracts
+- Added bidirectional governance evolution framework
+- Added cross-repository agent benchmarking requirements
+- Added self-assessment and improvement proposal generation
+- Reduced line counts: CodexAdvisor (856→407, 52%), governance-repo-administrator (930→422, 55%)
+- Updated YAML metadata with `protection_model: reference-based` and `references_locked_protocol: true`
 
-**Impact**: 
-- Prevents future governance erosion across all repositories
-- Establishes change management process for constitutional requirements
-- Provides audit trail and protection registry
-- Enables automated enforcement via CI gates
-- Documents historical failures and prevention mechanism (BL-025)
+**Authority**:
+- Task instruction: "Upgrade All Agent Contracts to Canonical v2.5.0"
+- AGENT_CONTRACT_PROTECTION_PROTOCOL.md (Tier-0)
+- GOVERNANCE_RIPPLE_MODEL.md (Canonical)
+- MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md v2.0.0
 
-**Authority**: 
-- BUILD_PHILOSOPHY.md (Constitutional)
-- AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md (Tier-0)
-- EXECUTION_BOOTSTRAP_PROTOCOL.md (Canonical)
+**Impact**:
+- Establishes canonical v2.5.0 reference model for all repositories
+- Enables agent-driven governance evolution (back-to-front feedback loop)
+- Reduces contract maintenance burden through reference-based approach
+- Maintains full protection coverage through canonical protocol references
 
-**Blocks**: Issue #959 (Agent Contract Administrator implementation)
-
-**Unblocks**: Gap analysis and lockdown application to agent contracts
+**Consumer Repo Impact**:
+- office-app, PartPulse, R_Roster will require separate v2.5.0 upgrade tasks
+- This PR establishes the canonical model for those upgrades
