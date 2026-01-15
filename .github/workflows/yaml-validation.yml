@@ -34,10 +34,17 @@ jobs:
       - name: Validate YAML syntax (warnings allowed)
         run: |
           set -euo pipefail
-          targets=(.github/workflows/*.yml .github/agents/*.md .agent)
+          targets=(.github/workflows/*.yml .github/agents/*.md)
+          if [ -f .agent ]; then
+            targets+=(.agent)
+          fi
+
           fix_command_agents="yamllint --fix .github/agents/*.md"
           fix_command_all="yamllint --fix .github/workflows/*.yml"
-          fix_command_all+=" .github/agents/*.md .agent"
+          fix_command_all+=" .github/agents/*.md"
+          if [ -f .agent ]; then
+            fix_command_all+=" .agent"
+          fi
           output=$(yamllint -f parsable "${targets[@]}" || true)
 
           if [ -n "$output" ]; then
@@ -46,8 +53,8 @@ jobs:
 
           if echo "$output" | grep -q '(syntax)'; then
             echo "❌ YAML syntax errors detected."
-            echo "Fix command: $fix_command_agents"
-            echo "Fix command (all targets): $fix_command_all"
+            echo "Manual fix command: $fix_command_agents"
+            echo "Manual fix command (all targets): $fix_command_all"
             exit 1
           fi
 
@@ -56,5 +63,5 @@ jobs:
           else
             echo "✅ yamllint found no issues."
           fi
-          echo "Fix command: $fix_command_agents"
-          echo "Fix command (all targets): $fix_command_all"
+          echo "Manual fix command: $fix_command_agents"
+          echo "Manual fix command (all targets): $fix_command_all"

@@ -12,7 +12,7 @@ if [ ! -f "$SCOPE_FILE" ]; then
   {
     echo "# Scope Declaration"
     echo ""
-    echo "_Auto-generated on $(date -u +"%Y-%m-%dT%H:%M:%SZ") from git diff --name-status $BASE_REF"
+    echo "_Auto-generated on $(date -u +"%Y-%m-%dT%H:%M:%SZ") from git diff --name-status \"$BASE_REF\""
     echo ""
     echo "## Changed Files"
     echo ""
@@ -30,7 +30,11 @@ fi
 
 missing_entries=()
 while IFS=$'\t' read -r status path_a path_b; do
-  for path in "$path_a" "$path_b"; do
+  paths=("$path_a")
+  if [[ "$status" == R* || "$status" == C* ]]; then
+    paths+=("$path_b")
+  fi
+  for path in "${paths[@]}"; do
     [ -z "$path" ] && continue
     if ! grep -Fq "$path" "$SCOPE_FILE"; then
       missing_entries+=("$status $path")
