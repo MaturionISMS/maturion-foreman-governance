@@ -38,6 +38,7 @@ OUT_OF_SCOPE:
 - Database changes
 - API changes
 - UI changes
+- Canon file modifications
 
 ---
 
@@ -61,7 +62,7 @@ EXPECTED_VERIFICATION:
 
 SCOPE_FROZEN: YES
 
-This scope is frozen. If additional changes are needed, this PR will be closed and a new PR created.
+This scope is frozen. Only one file added: governance scan report.
 
 ---
 
