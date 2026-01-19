@@ -140,7 +140,7 @@ It serves to:
 
 | Canon File | Version | Layer-Down Status | Downstream Repos | Last Updated |
 |-----------|---------|-------------------|------------------|--------------|
-| `BOOTSTRAP_EXECUTION_LEARNINGS.md` | 1.0.0 | INTERNAL | N/A | 2026-01-04 |
+| `BOOTSTRAP_EXECUTION_LEARNINGS.md` | 1.0.0 | PUBLIC_API | All Repos | 2026-01-19 |
 | `LEARNING_INTAKE_AND_PROMOTION_MODEL.md` | 1.0.0 | PUBLIC_API | FM App, SlotMaster | 2026-01-05 |
 | `LEARNING_PROMOTION_RULE.md` | 1.0.0 | PUBLIC_API | FM App, SlotMaster | 2026-01-05 |
 | `MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md` | 1.0.0 | PUBLIC_API | FM App, SlotMaster | 2026-01-05 |
@@ -250,9 +250,9 @@ These policies are located in `governance/policy/` and establish constitutional 
 **Total Canon Files**: 88  
 **Total Policy Files**: 9  
 **Combined Total**: 97  
-**PUBLIC_API**: 67 files (69%)  
+**PUBLIC_API**: 68 files (70%)  
 **OPTIONAL**: 16 files (16%)  
-**INTERNAL**: 14 files (14%)  
+**INTERNAL**: 13 files (13%)  
 **DEPRECATED**: 0 files (0%)
 
 ### 4.1 Critical Path Canon (Must-Have for Downstream Repos)
@@ -324,6 +324,7 @@ When a breaking change is required:
 | 2026-01-08 | Added Section 3.14 (Governance Policies) including POLICY-NO-ONLY-LANGUAGE | Governance Administrator Agent |
 | 2026-01-11 | Added AUTOMATED_DEPRECATION_DETECTION_GATE policy to Section 3.14, updated totals | Governance Administrator Agent |
 | 2026-01-14 | Added COMBINED_TESTING_PATTERN.md and PRE_IMPLEMENTATION_BEHAVIOR_REVIEW_PROTOCOL.md to Section 3.2, updated totals | Governance Administrator Agent |
+| 2026-01-19 | BOOTSTRAP_EXECUTION_LEARNINGS.md → PUBLIC_API (All Repos), updated totals | Agent Contract Administrator |
 
 ### 7.2 Layer-Down Completion Tracking
 
