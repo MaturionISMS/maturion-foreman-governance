@@ -1,52 +1,53 @@
 ---
-RESPONSIBILITY_DOMAIN: Governance Administration
+RESPONSIBILITY_DOMAIN: Governance Infrastructure
 ---
 
-# Governance Scope Declaration - Canon Gap Analysis
+# Governance Scope Declaration - Governance Inventory Template
 
-**PR Branch**: copilot/perform-gap-analysis-on-canons  
+**PR Branch**: copilot/create-governance-inventory-template  
 **Date**: 2026-01-19  
 **Agent**: governance-repo-administrator  
-**Repository**: APGI-cmy/maturion-foreman-governance  
-**Base Commit**: 23cab90
+**Repository**: APGI-cmy/maturion-foreman-governance
 
 ## Changed Files
 
-### Added Files (1 total)
-A governance/scans/GOVERNANCE_CANON_LAYER_DOWN_GAP_ANALYSIS.md
+### Modified Files (1 total)
+M .gitignore
 
-**Total Files**: 1
+### Added Files (3 total)
+A governance/runbooks/GOVERNANCE_INVENTORY_MAINTENANCE.md
+A governance/templates/GOVERNANCE_ALIGNMENT_INVENTORY_TEMPLATE.json
+A scripts/sync_repo_inventory.py
+
+**Total Files**: 4
 
 ## Scope Rationale
 
-This PR creates a comprehensive canon gap analysis report that:
+This PR creates governance inventory infrastructure for consumer repositories:
 
-1. **Inventories all 105 canon files** in the governance repository
-2. **Cross-references against all consumer repositories**:
-   - PartPulse (APGI-cmy/PartPulse)
-   - maturion-foreman-office-app (APGI-cmy/maturion-foreman-office-app)
-   - R_Roster (APGI-cmy/R_Roster)
-   - maturion-ai-foreman (APGI-cmy/maturion-ai-foreman - not yet created)
-3. **Identifies coverage gaps** and missing canons per repository
-4. **Provides remediation recommendations** with priority-based action plans
+1. **Template file**: JSON schema for repo-specific governance alignment inventories
+2. **Sync script**: Python utility to generate/update inventories by comparing local canons against central inventory
+3. **Runbook**: Complete maintenance documentation for initialization, sync, validation, and CI integration
+4. **Scripts directory**: New infrastructure directory for governance tooling
 
 ### Purpose
-- Fulfills Issue requirement for comprehensive canon gap analysis
-- Enables tracking of governance propagation across ecosystem
-- Provides evidence-based remediation roadmap
-- Establishes baseline for governance health monitoring
+- Enables consumer repositories to track governance alignment
+- Provides automated compliance reporting
+- Identifies missing mandatory canons
+- Detects version drift through SHA256 hashing
+- Supports self-healing governance mandate
 
 ### Authority
-- Issue: [SCAN] Canon Gap Analysis Across Consumer Repositories
-- GOVERNANCE_RIPPLE_MODEL.md
-- CROSS_REPOSITORY_LAYER_DOWN_PROTOCOL.md
-- FPC_REPOSITORY_LAYERDOWN_GUIDE.md
-- BOOTSTRAP_EXECUTION_LEARNINGS.md (BL-015, BL-027, BL-028, BL-029)
+- Issue: [INFRASTRUCTURE] Create Repo-Specific Governance Inventory Template
+- PR APGI-cmy/maturion-foreman-governance#983 gap analysis
+- Self-healing governance mandate
+- Automated compliance requirement
 
 ### Validation
 - ✅ Scope declaration exists (this file - BL-027)
-- ✅ Only one file added (governance scan report)
-- ✅ No unrelated changes
-- ✅ Report format: Markdown with tables and evidence trail
+- ✅ All infrastructure deliverables complete
+- ✅ Script tested successfully (100% coverage on governance repo)
+- ✅ No canon modifications
+- ✅ No agent contract modifications
 
 **Ready for gate validation.**
