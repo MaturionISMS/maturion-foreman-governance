@@ -324,7 +324,7 @@ When a breaking change is required:
 | 2026-01-08 | Added Section 3.14 (Governance Policies) including POLICY-NO-ONLY-LANGUAGE | Governance Administrator Agent |
 | 2026-01-11 | Added AUTOMATED_DEPRECATION_DETECTION_GATE policy to Section 3.14, updated totals | Governance Administrator Agent |
 | 2026-01-14 | Added COMBINED_TESTING_PATTERN.md and PRE_IMPLEMENTATION_BEHAVIOR_REVIEW_PROTOCOL.md to Section 3.2, updated totals | Governance Administrator Agent |
-| 2026-01-19 | Changed BOOTSTRAP_EXECUTION_LEARNINGS.md from INTERNAL to PUBLIC_API for All Repos (BL-027/028 awareness), updated totals | Agent Contract Administrator |
+| 2026-01-19 | BOOTSTRAP_EXECUTION_LEARNINGS.md → PUBLIC_API (All Repos), updated totals | Agent Contract Administrator |
 
 ### 7.2 Layer-Down Completion Tracking
 
