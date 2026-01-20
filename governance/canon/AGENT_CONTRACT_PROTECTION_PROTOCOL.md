@@ -65,7 +65,7 @@ This protocol establishes protection for contract content that implements consti
 
 ❌ **NOT covered by this protocol**:
 - Implementation details of specific locked requirements (see canonical source documents)
-- Agent Contract Administrator operational procedures (see AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md)
+- CS2 operational procedures for agent contract modifications (see AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md)
 - General agent contract content not requiring protection
 - Governance canon document protection (separate authority)
 - CI/CD workflow modification authority (CS2-controlled)
@@ -255,10 +255,9 @@ See: `governance/templates/GAP_ANALYSIS_TEMPLATE.md`
 
 ### 7.1 Locked Section Modification Authority
 
-**ONLY the following may modify locked sections**:
-1. **CS2** (Johan Ras in bootstrap, Maturion in production) — Supreme authority
-2. **Agent Contract Administrator** — Only when executing CS2-approved instructions
-3. **NO OTHER AGENTS** — Prohibited absolutely
+**ONLY CS2 may modify locked sections**:
+1. **CS2** (Johan Ras in bootstrap, Maturion in production) — Exclusive authority
+2. **NO AGENTS** — All agents prohibited absolutely from modifying locked sections
 
 ### 7.2 Modification Request Process
 
@@ -269,8 +268,9 @@ To request modification of a locked section:
    - Specify: Lock ID, current content, proposed change, justification, escalation condition, impact analysis
 
 2. **Submit to CS2**
-   - Place request in `governance/agent-contract-instructions/pending/`
+   - Place recommendation in `governance/proposals/agent-file-recommendations/`
    - Add label: `locked-section-modification`
+   - Escalate to CS2 with clear justification
    - Await CS2 review and approval
 
 3. **CS2 Review**
@@ -278,9 +278,8 @@ To request modification of a locked section:
    - Validates justification and impact analysis
    - Approves, requests revision, or rejects
 
-4. **Execution (if approved)**
-   - CS2 moves request to `governance/agent-contract-instructions/approved/`
-   - Agent Contract Administrator executes modification
+4. **CS2 Implementation (if approved)**
+   - CS2 implements modification directly
    - Protection registry updated with audit trail
 
 5. **Verification**
@@ -557,9 +556,8 @@ Each consumer repository MUST:
 
 ### 11.4 Layer-Down Timeline
 
-**Phase 1**: Governance repository (IMMEDIATE - 2026-01-15)
+**Phase 1**: Governance repository (IMMEDIATE - 2026-01-20)
 - Apply to governance-repo-administrator contract
-- Apply to agent-contract-administrator contract
 - Apply to CodexAdvisor contract
 
 **Phase 2**: Primary application repository (2026-01-30)
@@ -622,9 +620,8 @@ Each consumer repository MUST:
 This protocol extends and complements:
 
 - **AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md** (Tier-0)
-  - Single-writer authority model
-  - Instruction system for contract modifications
-  - Agent Contract Administrator responsibilities
+  - CS2 direct authority model
+  - Agent recommendation system for contract changes
   - **This protocol adds**: Protection for specific contract content
 
 - **EXECUTION_BOOTSTRAP_PROTOCOL.md** (Canonical)
