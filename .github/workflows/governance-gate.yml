@@ -1,15 +1,1 @@
-# This file is used for governance gate workflows and contains scripts necessary for our governance processes
-
-# Other workflow definitions...
-
-echo "Starting governance gate check..."
-
-# Define directories to be checked for application code
-for dir in app components lib types tests foreman swarm; do
-    if [ -d "$dir" ]; then
-        echo "Checking application code in $dir"
-        # Do the application code check
-    fi
-done
-
-# Further instructions for governance gate...
+          for dir in app components lib types tests foreman swarm; do
