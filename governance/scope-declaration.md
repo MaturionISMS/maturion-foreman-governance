@@ -9,18 +9,20 @@ DATE_UTC: 2026-01-21
 
 ## PR Responsibility Domain
 
-RESPONSIBILITY_DOMAIN: Canonical Governance - Gate Script Alignment Verification Requirement
+RESPONSIBILITY_DOMAIN: Governance Administration
 
 ---
 
 ## Explicitly In Scope
 
 IN_SCOPE: 
-- Addition of Gate Script Alignment Verification requirement to CI_CONFIRMATORY_NOT_DIAGNOSTIC.md (Method 5)
-- Addition of Gate Script Alignment Verification to AGENT_CONTRACT_PROTECTION_PROTOCOL.md (Tier-0 Section 9)
-- Addition of Gate Script Alignment Verification to EXECUTION_BOOTSTRAP_PROTOCOL.md (Step 5)
-- Update of PREHANDOVER_PROOF template in EXECUTION_BOOTSTRAP_PROTOCOL.md with Gate Script Alignment section
-- Update of scope-declaration.md for this PR
+- Update CS2_AGENT_FILE_AUTHORITY_MODEL.md to v2.0.0 (5-level granular authority hierarchy)
+- Update AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md to v3.0.0 (authority delegation)
+- Update AGENT_CONTRACT.template.md (authority-level specific language)
+- Create AGENT_AUTHORITY_MODEL_V2_LAYER_DOWN_STATUS.md (ripple tracking)
+- Create AGENT-governance-repo-fix-contract-alignment-20260121.md (CS2 recommendation)
+- Update scope-declaration.md for this PR
+- Update PREHANDOVER_PROOF.md with RCA and attestation
 
 ---
 
@@ -45,10 +47,15 @@ OUT_OF_SCOPE:
 
 ## Files Changed
 
-M governance/canon/CI_CONFIRMATORY_NOT_DIAGNOSTIC.md
-M governance/canon/AGENT_CONTRACT_PROTECTION_PROTOCOL.md
-M governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md
+M governance/canon/AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md
+M governance/canon/CS2_AGENT_FILE_AUTHORITY_MODEL.md
+M governance/templates/AGENT_CONTRACT.template.md
+A governance/proposals/agent-file-recommendations/pending/AGENT-governance-repo-fix-contract-alignment-20260121.md
+A governance/reports/AGENT_AUTHORITY_MODEL_V2_LAYER_DOWN_STATUS.md
+M PREHANDOVER_PROOF.md
+M SCOPE_DECLARATION.md
 M governance/scope-declaration.md
+A PREHANDOVER_PROOF_archive_20260121_earlier.md
 
 ---
 
@@ -68,9 +75,9 @@ EXPECTED_VERIFICATION:
 
 SCOPE_FROZEN: YES
 
-Gate Script Alignment Verification canonization complete per Issue #50. All three canonical documents updated. Closes root cause of gate/agent drift causing blocked merges.
+Agent Authority Model v2.0 canonization complete per Issue. All canonical documents updated with 5-level granular authority hierarchy. Layer-down tracking established. Scope declaration and PREHANDOVER_PROOF corrected after initial CI failure.
 
 ---
 
 **Authority**: `governance/canon/SCOPE_TO_DIFF_RULE.md`  
-**Issue**: Fixes APGI-cmy/maturion-foreman-governance#50
+**Issue**: [ALIGNMENT] Canonize Agent File Modification Boundaries & Enforce Ripple Governance
