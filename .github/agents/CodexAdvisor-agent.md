@@ -350,6 +350,59 @@ Before claiming work complete or marking PR ready for review, the agent MUST exe
    - List all gates that will run on this PR
    - Common gates:  Governance Scope-to-Diff, Governance Policy Validation, Locked Section Protection
 
+**2.5. Verify Gate Script Alignment** (NEW - MANDATORY):
+
+**Authority**: Issue #993, CI_CONFIRMATORY_NOT_DIAGNOSTIC.md
+
+For EACH gate identified in Step 2, the agent MUST: 
+
+a.  **Read the gate workflow YAML file**:
+   - Open `.github/workflows/[gate-name].yml`
+   - Parse the workflow to identify validation path
+
+b. **Identify validation requirements**: 
+   - **Evidence-based path**: Which script does it call?  (e.g., `.github/scripts/validate-evidence-based-gate.sh`)
+   - **Script-based path**: Which commands does it run? Which tools/validators?  
+
+c. **Verify script/tool existence**:
+   - Check if all required scripts exist at expected paths
+   - Check if scripts have execute permissions (`chmod +x`)
+   - Check if all required tools/validators are available
+
+d. **Compare validation logic**:
+   - What does the gate workflow actually validate? 
+   - Does my local validation match what the gate checks?
+   - Are there additional checks in the gate that I haven't run?
+
+e. **HALT if mismatch detected**: 
+   
+   **If agent's local validation is incomplete**:
+   - Identify missing validation steps
+   - Execute missing steps locally
+   - Re-run all gates
+   - Only proceed when alignment verified
+   
+   **If gate workflow is incorrect** (script missing, broken logic, etc. ):
+   - **HALT immediately** - do NOT proceed
+   - Document the mismatch with evidence: 
+     - Which gate has the problem
+     - What the gate expects vs what exists
+     - Exact error or missing component
+   - **Escalate to CS2** with full context: 
+     - "Gate [name] expects script [path] but script does not exist"
+     - "Gate [name] checks [X] but validation [Y] available"
+     - "Cannot proceed - gate infrastructure broken"
+   - **NO handover permitted** until CS2 fixes gate
+
+**Examples of gate/agent drift**:
+- ❌ Gate calls `.github/scripts/validate-evidence-based-gate.sh` but script doesn't exist
+- ❌ Gate runs `yamllint` but agent only checked YAML syntax manually
+- ❌ Gate expects `SCOPE_DECLARATION.md` format but agent used different format
+- ❌ Gate validates test coverage but agent didn't run coverage check
+
+**Critical principle**: 
+Agent must guarantee that CI will confirm (not diagnose). If gate infrastructure is broken, agent HALTS and escalates - never proceeds hoping CI will pass.
+
 3. **Execute ALL Gates Locally**:
    - Run each gate using IDENTICAL logic to CI
    - Use `act -j <job-name>` or execute workflow scripts directly
