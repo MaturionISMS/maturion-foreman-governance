@@ -187,8 +187,56 @@ Exit code: 0
 - Use GPCA (Gate Predictive Compliance Analysis) if available
 - Enumerate all gates triggered by your changes
 - Test each gate individually
+- **NEW - MANDATORY**: Verify Gate Script Alignment (see below)
 
-**Prohibition**: Do NOT hand over with unknown gate status or known gate failures.
+**Gate Script Alignment Verification** (MANDATORY):
+
+Before handover, agent MUST verify that local validation aligns with CI gate workflow expectations:
+
+1. **Read CI Workflow Files**:
+   - Parse all `.github/workflows/*.yml` files that will run on this PR
+   - Identify which gates will be triggered by PR changes
+
+2. **Identify Expected Scripts/Checks**:
+   - For each gate workflow, extract:
+     - Validation script paths (e.g., `.github/scripts/validate-*.sh`)
+     - Check commands or validation logic (e.g., `yamllint`, `grep`, `diff` commands)
+     - Required files or artifacts (e.g., `SCOPE_DECLARATION.md`, `PREHANDOVER_PROOF.md`)
+   - **Examples of validation logic to extract**:
+     - Script execution: `bash .github/scripts/validate-scope-to-diff.sh`
+     - Inline checks: `test -f governance/scope-declaration.md`
+     - Command validation: `yamllint .github/workflows/*.yml`
+     - Python scripts: `python3 .github/scripts/check_locked_sections.py --mode detect-modifications`
+
+3. **Verify Script Existence and Executability**:
+   - Confirm all referenced scripts exist in repository
+   - Verify scripts are executable (`chmod +x` if needed)
+   - Check scripts match expected validation logic
+
+4. **Validate Local Proof Alignment**:
+   - Ensure local validation covers exactly what CI gate expects
+   - Verify command syntax matches between local and CI
+   - Confirm file paths and artifact names match
+
+5. **Handle Mismatches**:
+   - **If agent's proof incomplete**: Fix before handover, re-run all gates
+   - **If gate workflow is wrong** (script missing, logic mismatch): **HALT and escalate to CS2/owner for urgent correction**
+     - **Escalation procedure**: 
+       - Create GitHub issue with title: `[URGENT] Gate/Agent Drift Detected: [gate-name]`
+       - Label: `gate-drift`, `escalation`, `cs2-required`
+       - Include: Workflow file path, missing/incorrect script, evidence of mismatch
+       - Notify CS2 via issue mention: `@APGI-cmy` (or repository owner)
+       - DO NOT proceed with handover until drift resolved
+   - **NO handover permitted** with gate drift/misalignment
+
+6. **Document Alignment**:
+   - Include gate script alignment verification in PREHANDOVER_PROOF
+   - List all gates checked and alignment status
+   - Document any scripts verified or mismatches resolved
+
+**Authority**: CI_CONFIRMATORY_NOT_DIAGNOSTIC.md Method 5, AGENT_CONTRACT_PROTECTION_PROTOCOL.md Tier-0 Section 9
+
+**Prohibition**: Do NOT hand over with unknown gate status, known gate failures, or gate/agent drift.
 
 **Output**: List of gates checked and their status (all must be PASS or SKIP).
 
@@ -302,6 +350,22 @@ Every PR requiring execution verification MUST include this section in the PR de
 3. [Gate Name 3] — ⊘ SKIP (reason: [why not applicable])
 
 **Summary**: All applicable gates GREEN before handover.
+
+---
+
+### Gate Script Alignment Verification (MANDATORY)
+
+**CI Workflow Files Reviewed**:
+1. `.github/workflows/[workflow-1].yml` — ✅ REVIEWED
+2. `.github/workflows/[workflow-2].yml` — ✅ REVIEWED
+
+**Expected Scripts/Checks Validated**:
+1. `.github/scripts/[script-1].sh` — ✅ EXISTS, EXECUTABLE, LOGIC VERIFIED
+2. [Check command or validation logic] — ✅ LOCAL VALIDATION MATCHES
+
+**Alignment Status**: ✅ LOCAL VALIDATION ALIGNS WITH ALL CI GATE EXPECTATIONS
+
+**Mismatch Resolution** (if any): [Document any mismatches found and how resolved]
 
 ---
 

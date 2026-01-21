@@ -1,7 +1,7 @@
 # SCOPE DECLARATION
 
 SCOPE_SCHEMA_VERSION: v1
-PR_ID: #992
+PR_ID: TBD
 OWNER: governance-repo-administrator
 DATE_UTC: 2026-01-21
 
@@ -9,33 +9,27 @@ DATE_UTC: 2026-01-21
 
 ## PR Responsibility Domain
 
-RESPONSIBILITY_DOMAIN: Governance Policy Integration - Inventory Maintenance Enforcement
+RESPONSIBILITY_DOMAIN: Canonical Governance - Gate Script Alignment Verification Requirement
 
 ---
 
 ## Explicitly In Scope
 
 IN_SCOPE: 
-- Integration of inventory maintenance into GOVERNANCE_RIPPLE_MODEL.md (Section 4.3, 8.3, 10.1)
-- Update of governance-repo-administrator agent contract with inventory maintenance mandate
-- Addition of inventory maintenance runbook binding to agent contract
-- Creation of comprehensive CANON_CREATION_AND_PROPAGATION_CHECKLIST.md workflow (7 stages)
-- Creation of INVENTORY_INTEGRATION_VERIFICATION_REPORT.md (verification status)
-- Creation of INVENTORY_INTEGRATION_IMPLEMENTATION_COMPLETE.md (completion report)
-- Update of GOVERNANCE_ARTIFACT_INVENTORY.md with new checklist template reference
-- Version bump of GOVERNANCE_INVENTORY_MAINTENANCE.md runbook (1.0.0 → 1.1.0)
-- Archive of outdated PREHANDOVER_PROOF.md (rename to archive file)
+- Addition of Gate Script Alignment Verification requirement to CI_CONFIRMATORY_NOT_DIAGNOSTIC.md (Method 5)
+- Addition of Gate Script Alignment Verification to AGENT_CONTRACT_PROTECTION_PROTOCOL.md (Tier-0 Section 9)
+- Addition of Gate Script Alignment Verification to EXECUTION_BOOTSTRAP_PROTOCOL.md (Step 5)
+- Update of PREHANDOVER_PROOF template in EXECUTION_BOOTSTRAP_PROTOCOL.md with Gate Script Alignment section
+- Update of scope-declaration.md for this PR
 
 ---
 
 ## Explicitly Out of Scope
 
 OUT_OF_SCOPE:
-- CI gate workflow implementation (.github/workflows/governance-inventory-validation.yml) - Specification provided, implementation deferred to separate issue
-- Consumer repository inventory audits (office-app, PartPulse, R_Roster) - Separate issue recommended
-- Cross-repository coverage dashboard - Future enhancement
-- Hash validation script (scripts/validate_inventory_hashes.py) - Future implementation
-- Agent contract files for other agents (builder, FM, etc.)
+- Agent contract files (.github/agents/*.md) - CS2 authority only, will update separately
+- CI gate workflow implementation - No new gates required, existing gates sufficient
+- Consumer repository updates (office-app, PartPulse, R_Roster) - Layer-down follows after canon approval
 - Tests (no test infrastructure for governance canon)
 - Migrations
 - Email
@@ -51,15 +45,10 @@ OUT_OF_SCOPE:
 
 ## Files Changed
 
-M .github/agents/governance-repo-administrator.agent.md
-M GOVERNANCE_ARTIFACT_INVENTORY.md
-M governance/canon/GOVERNANCE_RIPPLE_MODEL.md
+M governance/canon/CI_CONFIRMATORY_NOT_DIAGNOSTIC.md
+M governance/canon/AGENT_CONTRACT_PROTECTION_PROTOCOL.md
+M governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md
 M governance/scope-declaration.md
-M governance/runbooks/GOVERNANCE_INVENTORY_MAINTENANCE.md
-A governance/reports/INVENTORY_INTEGRATION_IMPLEMENTATION_COMPLETE.md
-A governance/reports/INVENTORY_INTEGRATION_VERIFICATION_REPORT.md
-A governance/templates/CANON_CREATION_AND_PROPAGATION_CHECKLIST.md
-A PREHANDOVER_PROOF_archive_20260121.md
 
 ---
 
@@ -79,9 +68,9 @@ EXPECTED_VERIFICATION:
 
 SCOPE_FROZEN: YES
 
-Governance inventory integration complete per Issue #991. All acceptance criteria met. Central governance enforcement loop closed.
+Gate Script Alignment Verification canonization complete per Issue #50. All three canonical documents updated. Closes root cause of gate/agent drift causing blocked merges.
 
 ---
 
 **Authority**: `governance/canon/SCOPE_TO_DIFF_RULE.md`  
-**Issue**: Fixes APGI-cmy/maturion-foreman-governance#991
+**Issue**: Fixes APGI-cmy/maturion-foreman-governance#50
