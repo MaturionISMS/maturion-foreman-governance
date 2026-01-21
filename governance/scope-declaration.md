@@ -1,65 +1,76 @@
 # SCOPE DECLARATION
 
 SCOPE_SCHEMA_VERSION: v1
-PR_ID: TBD (CS2 Direct Authority Model Implementation)
+PR_ID: #992
 OWNER: governance-repo-administrator
-DATE_UTC: 2026-01-20
+DATE_UTC: 2026-01-21
 
 ---
 
 ## PR Responsibility Domain
 
-RESPONSIBILITY_DOMAIN: Governance Canon
+RESPONSIBILITY_DOMAIN: Governance Policy Integration - Inventory Maintenance Enforcement
 
 ---
 
 ## Explicitly In Scope
 
-IN_SCOPE:
-- Complete rewrite of AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md
-- Removal of agent-contract-administrator intermediary layer
-- Implementation of CS2 Direct Authority Model
-- Replacement of instruction system with recommendation system
-- Simplification of authority hierarchy from 3 levels to 2 levels
-- Update of all prohibition language to reference CS2 only
-- Version increment to 2.0.0
+IN_SCOPE: 
+- Integration of inventory maintenance into GOVERNANCE_RIPPLE_MODEL.md (Section 4.3, 8.3, 10.1)
+- Update of governance-repo-administrator agent contract with inventory maintenance mandate
+- Addition of inventory maintenance runbook binding to agent contract
+- Creation of comprehensive CANON_CREATION_AND_PROPAGATION_CHECKLIST.md workflow (7 stages)
+- Creation of INVENTORY_INTEGRATION_VERIFICATION_REPORT.md (verification status)
+- Creation of INVENTORY_INTEGRATION_IMPLEMENTATION_COMPLETE.md (completion report)
+- Update of GOVERNANCE_ARTIFACT_INVENTORY.md with new checklist template reference
+- Version bump of GOVERNANCE_INVENTORY_MAINTENANCE.md runbook (1.0.0 → 1.1.0)
+- Archive of outdated PREHANDOVER_PROOF.md (rename to archive file)
 
 ---
 
 ## Explicitly Out of Scope
 
 OUT_OF_SCOPE:
-- Agent contract modifications (will be done by CS2 separately)
-- Consumer repository updates (layer-down will follow)
-- CI workflow changes
+- CI gate workflow implementation (.github/workflows/governance-inventory-validation.yml) - Specification provided, implementation deferred to separate issue
+- Consumer repository inventory audits (office-app, PartPulse, R_Roster) - Separate issue recommended
+- Cross-repository coverage dashboard - Future enhancement
+- Hash validation script (scripts/validate_inventory_hashes.py) - Future implementation
+- Agent contract files for other agents (builder, FM, etc.)
 - Tests (no test infrastructure for governance canon)
 - Migrations
 - Email
 - Logging
-- Audit
+- Audit (beyond documentation)
 - Deployment
 - Application code
 - Database changes
 - API changes
 - UI changes
-- Agent file modifications (.github/agents/**/*.md)
 
 ---
 
 ## Files Changed
 
-M SCOPE_DECLARATION.md
-M governance/scope-declaration.md
-M governance/canon/AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md
+M .github/agents/governance-repo-administrator.agent.md
+M GOVERNANCE_ARTIFACT_INVENTORY.md
+M governance/canon/GOVERNANCE_RIPPLE_MODEL.md
+M governance/runbooks/GOVERNANCE_INVENTORY_MAINTENANCE.md
+A governance/reports/INVENTORY_INTEGRATION_IMPLEMENTATION_COMPLETE.md
+A governance/reports/INVENTORY_INTEGRATION_VERIFICATION_REPORT.md
+A governance/templates/CANON_CREATION_AND_PROPAGATION_CHECKLIST.md
+R PREHANDOVER_PROOF.md → PREHANDOVER_PROOF_archive_20260121.md
 
 ---
 
 ## Expected Verification Signal
 
-EXPECTED_VERIFICATION:
-- CI: GREEN (governance-scope-to-diff-gate, governance-gate)
+EXPECTED_VERIFICATION: 
+- CI: GREEN (all governance gates must pass)
 - TESTS: NOT APPLICABLE (no test infrastructure for governance canon)
-- GOVERNANCE_GATES: GREEN (scope-to-diff validation)
+- GOVERNANCE_GATES: GREEN
+  - Governance Scope-to-Diff Enforcement (must match this scope declaration)
+  - Governance Policy Validation
+  - Locked Section Protection Gate
 
 ---
 
@@ -67,8 +78,9 @@ EXPECTED_VERIFICATION:
 
 SCOPE_FROZEN: YES
 
-This scope is frozen. Canonical governance rewrite complete per CS2 strategic decision 2026-01-20.
+Governance inventory integration complete per Issue #991. All acceptance criteria met. Central governance enforcement loop closed.
 
 ---
 
-**Authority**: `governance/canon/SCOPE_DECLARATION_SCHEMA.md` v1
+**Authority**: `governance/canon/SCOPE_TO_DIFF_RULE.md`  
+**Issue**: Fixes APGI-cmy/maturion-foreman-governance#991
