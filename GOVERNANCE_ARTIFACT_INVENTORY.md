@@ -729,6 +729,70 @@ Implementation completion reports (not canonical governance, but records impleme
 
 ---
 
+## Active Session Context (Interim Memory)
+
+**Purpose**: Preserve context across Copilot sessions until FM memory system is activated.   
+**Authority**: Interim solution per memory governance canons.  
+**Maintenance**: Updated at end of significant sessions. 
+
+### Current Session Focus
+
+**Date**: 2026-01-21  
+**Session Topic**: PR #992 Gate Failure - Root Cause Analysis and Remediation  
+
+**Primary Objective**: Fix catastrophic failure where agent handed over PR with failing gates.
+
+**Key Decisions Made**:
+1. Agent contract updated (main branch) with "Pre-Handover Gate Validation (MANDATORY)" section
+2. Identified root cause: PR branch didn't have updated contract (created before contract update)
+3. Decided to create `AGENT_LOCAL_GATE_VALIDATION_PROTOCOL. md` as new canon
+4. Decided to create failure record `FAILURE-001-PR992-SCOPE-GATE-FAILURE.md`
+
+**Context for Next Session**:
+- PR #992 merged successfully after scope declaration fix
+- Agent contract on main now includes gate validation requirements
+- **Pending**: Create 2 governance canons (protocol + failure record)
+- **Pending**:  Rollout gate validation mandate to all agent contracts (phased, 3 weeks)
+- **Learning captured**: Agents must run merge gates locally using IDENTICAL logic to CI
+
+**Related Artifacts**:
+- Issue #991: Integrate Governance Inventory Maintenance into Ripple Workflow (✅ CLOSED)
+- PR #992: Enforce inventory maintenance in ripple propagation workflow (✅ MERGED)
+- PR #990: Remove agent-contract-administrator intermediary (✅ MERGED)
+
+**Technical Debt**:
+- AGENT_LOCAL_GATE_VALIDATION_PROTOCOL.md not yet created
+- FAILURE-001-PR992-SCOPE-GATE-FAILURE.md not yet created
+- Gate validation not yet rolled out to builder/FM agents
+
+---
+
+### Session History (Recent)
+
+**2026-01-21**:  PR #992 gate failure RCA - Root cause:  agent ran old contract without gate validation mandate.  Fixed by updating scope declaration and merging latest main into PR branch.
+
+**2026-01-20**:  Merged PR #990 - Removed agent-contract-administrator, implemented CS2 direct authority model.
+
+---
+
+### Important Decisions Index
+
+1. **CS2 Direct Authority Model** (2026-01-20): Eliminated agent-contract-administrator intermediary.  CS2 creates/modifies all agent files directly.
+
+2. **Mandatory Gate Validation** (2026-01-21): All agents must run merge gates locally before handover. CI is confirmatory only.
+
+3. **Evidence-Based Validation** (2026-01-19): Merge gates skip re-validation when PREHANDOVER_PROOF documents gate execution.
+
+---
+
+**Maintenance Protocol**:
+- Update "Current Session Focus" at end of each significant session
+- Move completed sessions to "Session History"
+- Add major decisions to "Important Decisions Index"
+- Commit changes with message: `[MEMORY] Update active session context - [topic]`
+
+---
+
 **Completion Status**: CURRENT  
 **Last Updated**: 2026-01-08
 **Next Phase**: Gap analysis (Phase 1.2 - requires separate authorization)
