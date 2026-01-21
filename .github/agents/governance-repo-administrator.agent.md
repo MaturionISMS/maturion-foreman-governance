@@ -220,6 +220,28 @@ yamllint . github/agents/*. md
 # BL-028: Warnings ARE errors (not "stylistic" or "non-blocking")
 # ALL warnings must be fixed - no rationalization permitted
 ```
+**Code Quality Validation** (MANDATORY):
+```bash
+# 1. Markdown syntax validation
+echo "Validating Markdown files..."
+if command -v markdownlint &> /dev/null; then
+    markdownlint governance/**/*.md --config .markdownlint.json || echo "WARNING: markdownlint not installed, skipping"
+fi
+
+# 2. JSON syntax validation  
+echo "Validating JSON files..."
+for json_file in $(find governance -name "*.json"); do
+    echo "Checking $json_file"
+    jq empty "$json_file" || exit 1
+done
+
+# 3. File format checks
+echo "Checking for trailing spaces and line endings..."
+git diff --check origin/main... HEAD || exit 1
+
+# Exit code MUST be 0 for ALL checks
+echo "✓ All code quality checks passed"
+```
 
 #### 3. HALT if ANY gate fails
 - Fix issue completely
