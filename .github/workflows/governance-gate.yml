@@ -1,28 +1,8 @@
-# This workflow manages governance checks
+# This file is used for governance gates in the CI/CD pipeline.
 
-name: Governance Gate
-
-on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-
-jobs:
-  governance:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-
-    - name: Lint
-      run: | 
-        for dir in app components lib types tests foreman swarm; do
-          # Lint the directory
-          echo "Linting directory: $dir"
-        done
-
-    - name: Test
-      run: |
-        for dir in app components lib types tests foreman swarm; do
-          # Test the directory
-          echo "Testing directory: $dir"
-        done
+# List of banned directories for governance validation
+for dir in app components lib types tests foreman swarm; do
+    # Logic to handle the banned directories
+    echo "Checking directory: $dir"
+    # You can add more logic here based on your requirements
+done
