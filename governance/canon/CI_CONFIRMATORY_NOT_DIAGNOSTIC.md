@@ -161,7 +161,21 @@ Agents MUST use one or more of these methods to evaluate gates before handover:
 - Agent validates artifact schemas and completeness
 - Agent includes artifacts in PR
 
-**Guarantee**: If agent completes preflight evaluation successfully, CI MUST pass (unless governance defect exists).
+**Method 5: Gate Script Alignment Verification (NEW - MANDATORY)**
+- Agent reads and parses all CI gate workflow files (`.github/workflows/*.yml`) that will run on their PR
+- For each gate workflow, agent identifies:
+  - Which validation script(s) or check(s) that workflow expects
+  - Whether any script/file called in CI (e.g., `.github/scripts/validate-*.sh`) actually exists and is executable
+  - Whether local validation/proof covers exactly what the CI gate expects (commands, syntax, files)
+- If mismatch detected:
+  - If agent's proof incomplete: Agent fixes before handover, re-runs all gates
+  - If gate workflow is wrong (script missing, logic mismatch, etc.): **HALT and escalate to CS2/owner for urgent correction before any handover**
+  - NO handover permitted with gate drift/misalignment
+- Agent documents gate script alignment verification in PREHANDOVER_PROOF
+- **Authority**: Closes root cause of blocked merges due to gate/agent drift
+- **Reference**: See issue APGI-cmy/maturion-foreman-governance#50
+
+**Guarantee**: If agent completes preflight evaluation successfully (including gate script alignment verification), CI MUST pass (unless governance defect exists).
 
 ### 5.3 Preflight Failure Handling
 

@@ -407,7 +407,12 @@ These requirements MUST be locked in ALL agent contracts across ALL repositories
    - Authority: EXECUTION_BOOTSTRAP_PROTOCOL.md
    - Rationale: Enforces proof-over-claim principle
 
-9. **Governance Bindings**
+9. **Gate Script Alignment Verification** (NEW - MANDATORY)
+   - Requirement: Verify local validation matches CI gate workflow scripts
+   - Authority: CI_CONFIRMATORY_NOT_DIAGNOSTIC.md, EXECUTION_BOOTSTRAP_PROTOCOL.md
+   - Rationale: Prevents gate/agent drift causing blocked merges
+
+10. **Governance Bindings**
    - Requirement: Explicit canonical governance references
    - Authority: GOVERNANCE_PURPOSE_AND_SCOPE.md
    - Rationale: Maintains governance traceability
