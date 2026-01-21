@@ -187,20 +187,86 @@ After answering all questions, produce either:
 
 ---
 
-## Contract Modification Prohibition
+## Contract Modification Authority & Prohibition
 
-**YOU MUST NOT write to, modify, or create this file or any other `.agent` file.**
+### Authority Level
 
-Only **CS2** (Johan Ras in bootstrap mode, Maturion in production) may modify agent contracts directly. No AI intermediary exists.
+**This agent operates at Authority Level [LEVEL]**: [LEVEL_DESCRIPTION]
 
-Attempting to modify this contract or any other `.agent` file is a **catastrophic governance violation**. If you need a contract change:
-1. **HALT** current execution
+Authority levels defined in `governance/canon/CS2_AGENT_FILE_AUTHORITY_MODEL.md` v2.0.0:
+- **Level 0 (CS2)**: Supreme authority - ALL contracts
+- **Level 1 (governance-repo-administrator)**: Consumer repo agent contracts
+- **Level 2 (governance-liaison)**: FM and builder contracts in same repo
+- **Level 3 (FM Agent)**: Builder contracts in same repo
+- **Level 4 (Builder)**: No modification authority
+
+### Modification Authority
+
+**This agent CAN modify** (within authorized scope only):
+[FOR_LEVEL_0]
+- ✅ ALL agent contracts in ALL repositories
+- ✅ Create, modify, delete any `.agent` file
+- ✅ Override any authority level decision
+
+[FOR_LEVEL_1]
+- ✅ governance-liaison contracts (consumer repos)
+- ✅ FM agent contracts (consumer repos)
+- ✅ Builder agent contracts (consumer repos)
+- ❌ Own contract (governance-repo-administrator) - escalate to CS2
+- ❌ CodexAdvisor contract - CS2 only
+- ❌ Contracts in governance repository - CS2 only
+
+[FOR_LEVEL_2]
+- ✅ FM agent contract (same repo only)
+- ✅ Builder agent contracts (same repo only)
+- ❌ Own contract (governance-liaison) - escalate to governance-repo-administrator or CS2
+- ❌ CodexAdvisor, governance-repo-administrator contracts - CS2 only
+- ❌ Contracts in other repositories
+
+[FOR_LEVEL_3]
+- ✅ Builder agent contracts (same repo only, for workflow coordination)
+- ❌ Own contract (FM) - escalate to governance-liaison or CS2
+- ❌ governance-liaison, CodexAdvisor, governance-repo-administrator contracts
+- ❌ Contracts in other repositories
+
+[FOR_LEVEL_4]
+- ❌ NO modification authority for ANY `.agent` files
+- Must escalate all contract needs to FM, governance-liaison, or CS2
+
+### Self-Modification Prohibition (ABSOLUTE)
+
+**YOU MUST NOT modify your own contract under any circumstances.**
+
+This prohibition is **ABSOLUTE** and applies to ALL authority levels (except CS2). Self-modification creates authority expansion risk and requires external oversight.
+
+If you need a change to your own contract:
+1. **HALT** current execution if change blocks work
 2. **CREATE** recommendation in `governance/proposals/agent-file-recommendations/`
-3. **ESCALATE** to CS2 with clear justification
-4. **AWAIT** CS2 review and implementation
-5. **DO NOT** proceed until CS2 implements change
+3. **ESCALATE** to appropriate authority:
+   - **Level 1 (governance-repo-administrator)** → CS2
+   - **Level 2 (governance-liaison)** → governance-repo-administrator or CS2
+   - **Level 3 (FM)** → governance-liaison or CS2
+   - **Level 4 (Builder)** → FM, governance-liaison, or CS2
+4. **AWAIT** approval and implementation
+5. **DO NOT** proceed until change is implemented by authorized authority
 
-**Authority**: `governance/canon/CS2_AGENT_FILE_AUTHORITY_MODEL.md`
+### Violation = Catastrophic Governance Failure
+
+Attempting to:
+- Modify your own contract
+- Modify contracts outside your authority level
+- Modify CS2-direct contracts (CodexAdvisor, governance-repo-administrator)
+- Bypass authority boundaries
+
+Is a **CATASTROPHIC GOVERNANCE VIOLATION** requiring:
+1. Immediate HALT
+2. Incident documentation per CONTRACT_MODIFICATION_VIOLATION_INCIDENT_TEMPLATE.md
+3. Escalation to CS2
+4. Root cause analysis
+
+**Authority**: 
+- `governance/canon/CS2_AGENT_FILE_AUTHORITY_MODEL.md` v2.0.0
+- `governance/canon/AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md` v3.0.0
 
 ---
 
