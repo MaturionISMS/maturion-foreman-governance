@@ -1,10 +1,8 @@
-# This file contains the configuration for the governance gate workflow.
+#!/bin/bash
 
-# ... (other contents of the file)
-
-# A modified loop to iterate over the directories
 for dir in app components lib types tests foreman swarm; do
-    # Your actions here
-# End of loop
+  # Your code here
+  echo "Processing $dir"
+  # More commands can be added here as needed
 
-# ... (remaining contents of the file)
+done
