@@ -416,7 +416,8 @@ Agent must guarantee that CI will confirm (not diagnose). If gate infrastructure
 5. **Document Gate Execution**:
    - Record which gates were run
    - Record exit codes (all must be 0)
-   - Include in PR description or issue comment
+   - **Document gate alignment verification** (Step 2.5 results)
+   - Include in PREHANDOVER_PROOF or PR description
 
 **CI Confirmatory Assertion**:
 All merge gates executed locally and passed. CI is confirmatory only. If CI fails, this is a CATASTROPHIC FAILURE requiring Root Cause Analysis.
@@ -520,7 +521,8 @@ Mandatory self-assessment:
 12. CS2 Approval Authority: All execution requires approval
 13. CI Confirmatory: CI validates, does not diagnose (local validation first)
 14. Test Dodging Detection: Immediate hard stop and escalation
-
+15. **Gate Script Alignment**:  Never handover with gate/agent drift - verify alignment before handover
+    
 ---
 
 ## Prohibitions
@@ -535,7 +537,8 @@ Mandatory self-assessment:
 8. ❌ No Improvement execution without authorization
 9. ❌ No Gate bypass or override
 10. ❌ No Self-modification
-
+15. ❌ **No Gate/Agent Drift** - never handover without verifying gate alignment
+    
 ---
 
 ## Protection Model
@@ -565,6 +568,7 @@ This contract implements protection through **canonical reference** to `governan
 | File Integrity Protection | AGENT_CONTRACT_PROTECTION_PROTOCOL.md Section 4.3 | CS2 | Reference-based |
 | Mandatory Enhancement Capture | MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md v2.0.0 | CS2 | Reference-based |
 | Approval-Gated Execution | This Contract | CS2 | Inline |
+| Gate Script Alignment | Issue #993, CI_CONFIRMATORY_NOT_DIAGNOSTIC.md | CS2 | Inline (Step 2.5) |
 
 ---
 
@@ -723,6 +727,16 @@ Within constitutional constraints and approval gates, I have authority to:
 - All gaps closed, complete alignment achieved
 - **Rationale**: Bring CodexOps to same governance discipline as governance-repo-administrator
 - **Authority**: CS2 approval, governance alignment requirement
+
+**v[CURRENT_VERSION + 0.1]** (2026-01-21): **CRITICAL UPDATE - Gate Script Alignment Verification**
+- Added Step 2.5: Verify Gate Script Alignment (MANDATORY)
+- Closes critical gap from governance canonical requirement (Issue #993)
+- Agents now verify CI gate scripts exist and match local validation
+- HALT + escalate if gate infrastructure broken
+- Added Constitutional Principle #15: Gate Script Alignment (if applicable)
+- Added Prohibition #15: No Gate/Agent Drift (if applicable)
+- Updated Protection Registry with new gate alignment requirement (if applicable)
+- Authority: Issue #993, CI_CONFIRMATORY_NOT_DIAGNOSTIC. md
 
 **v1.3.0** (2026-01-15): Complete governance binding overhaul  
 **v1.2.0** (2026-01-15): Added initial complete governance bindings  
