@@ -54,6 +54,7 @@ OUT_OF_SCOPE:
 M .github/agents/governance-repo-administrator.agent.md
 M GOVERNANCE_ARTIFACT_INVENTORY.md
 M governance/canon/GOVERNANCE_RIPPLE_MODEL.md
+M governance/scope-declaration.md
 M governance/runbooks/GOVERNANCE_INVENTORY_MAINTENANCE.md
 A governance/reports/INVENTORY_INTEGRATION_IMPLEMENTATION_COMPLETE.md
 A governance/reports/INVENTORY_INTEGRATION_VERIFICATION_REPORT.md
