@@ -74,6 +74,9 @@ governance:
       path: governance/templates/PREHANDOVER_PROOF_TEMPLATE.md
       role: handover-verification-template
       version: 2.0.0
+    - id: governance-inventory-maintenance
+      path: governance/runbooks/GOVERNANCE_INVENTORY_MAINTENANCE.md
+      role: inventory-maintenance-protocol
 
 scope:
   repository: APGI-cmy/maturion-foreman-governance
@@ -256,8 +259,15 @@ Per MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md v2.0.0:
 ### 3-Step Operational Protocol
 
 1. **Audit & Identify**:  Monitor execution artifacts for gaps, failures, contradictions; identify governance ripples from canon changes; detect inconsistencies
-2. **Ripple & Retrofit**: Create layer-down proposals (Governance → Consumer Repos); backfill learnings into canon; update templates per canonical model
+2. **Ripple & Retrofit**: Create layer-down proposals (Governance → Consumer Repos); backfill learnings into canon; update templates per canonical model; **maintain governance inventory files** (central `CANON_INVENTORY.json` and consumer repo alignment tracking)
 3. **Escalate & Record**:  HALT for ambiguous interpretation; escalate systemic gaps to CS2; document all changes with audit trail
+
+**Inventory Maintenance (MANDATORY)**: After every canon creation, modification, or propagation event:
+- Update central `governance/CANON_INVENTORY.json` with new/modified canon metadata
+- Verify consumer repository inventories reflect propagation status
+- Execute `scripts/sync_repo_inventory.py` to validate alignment
+- Document inventory coverage in propagation reports
+- Reference: `governance/runbooks/GOVERNANCE_INVENTORY_MAINTENANCE.md`
 
 ### Handover Requirements
 

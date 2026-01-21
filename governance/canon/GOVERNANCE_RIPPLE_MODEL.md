@@ -155,6 +155,10 @@ Every downward propagation must:
 - ✅ Document affected repositories
 - ✅ Include validation criteria
 - ✅ Maintain audit trail
+- ✅ **Update governance inventory files** (central `CANON_INVENTORY.json` and consumer `GOVERNANCE_ALIGNMENT_INVENTORY.json`)
+- ✅ **Validate inventory coverage** post-propagation using `scripts/sync_repo_inventory.py`
+
+**Inventory Maintenance**: Per `governance/runbooks/GOVERNANCE_INVENTORY_MAINTENANCE.md`, all canon creation, modification, or propagation events MUST trigger inventory updates to maintain alignment tracking across central and consumer repositories.
 
 ### 4.4 Breaking vs Non-Breaking Changes
 
@@ -421,6 +425,8 @@ Downward propagation must be tracked:
 - Validation status
 - Completion status
 - Outstanding issues
+- **Inventory file update status** (central and consumer inventories synchronized)
+- **Coverage percentage** post-propagation (target: 100% for production repos)
 
 ### 8.4 Learning Archive
 
@@ -482,6 +488,8 @@ Upward learning must be archived:
 - Create propagation PRs
 - Validate propagation success
 - Document changes
+- **Update central `CANON_INVENTORY.json`** after canon creation/modification
+- **Verify consumer repository inventory alignment** post-propagation
 
 **Upward Ripple**:
 - Review promotion proposals
@@ -494,6 +502,7 @@ Upward learning must be archived:
 - Ensure auditability
 - Monitor metrics
 - Report to Johan
+- **Maintain governance inventory integrity** across central and consumer repos
 
 ### 10.2 Foreman (FM)
 
