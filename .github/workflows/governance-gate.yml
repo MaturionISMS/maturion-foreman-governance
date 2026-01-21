@@ -1,8 +1,7 @@
-# This file is used for governance gates in the CI/CD pipeline.
+# Governance Gate Workflow
 
-# List of banned directories for governance validation
+# Other content before line 128...
+
 for dir in app components lib types tests foreman swarm; do
-    # Logic to handle the banned directories
-    echo "Checking directory: $dir"
-    # You can add more logic here based on your requirements
-done
+
+# Other content after line 128...
