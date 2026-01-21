@@ -248,30 +248,43 @@ If NO:  STOP.  If YES: Execute exactly as approved.
 
 ---
 
-## Pre-Gate Validation (MANDATORY)
+## 🔒 Pre-Handover Validation (LOCKED)
 
-**Authority**: BL-027, BL-028, AGENT_CONTRACT_PROTECTION_PROTOCOL.md
+<!-- Lock ID: LOCK-CODEXADVISOR-PREHANDOVER-001 | Authority: AGENT_CONTRACT_PROTECTION_PROTOCOL.md Section 4.2, BL-027, BL-028 | Review: quarterly -->
 
-**Before creating PR**: 
+**MANDATORY before creating ANY PR**:  Execute ALL validation commands from canonical governance. 
 
-1. **Scope Declaration**: Create `governance/scope-declaration.md` with all changed files
-2. **Run Gates Locally**:
+**Authority**: 
+- `AGENT_CONTRACT_PROTECTION_PROTOCOL.md` Section 4.2
+- `EXECUTION_BOOTSTRAP_PROTOCOL.md`
+- BL-027 (Scope Declaration)
+- BL-028 (YAML Warnings = Errors)
+
+**Quick Reference - Execute These Commands**:
 ```bash
-# Scope validation
-. github/scripts/validate-scope-to-diff.sh  # Exit 0 required
+# 1. YAML Validation (BL-028: warnings ARE errors)
+yamllint .github/agents/*.md  # Exit 0 required
 
-# YAML validation (BL-028:  warnings ARE errors)
-yamllint .github/agents/*. md  # Exit 0 required
+# 2. Scope-to-Diff Validation
+.github/scripts/validate-scope-to-diff.sh  # Exit 0 required
 
-# File checks
+# 3. JSON Validation
+find governance -name "*. json" -exec jq empty {} \;  # Exit 0 required
+
+# 4. File Format Checks
 git diff --check  # Exit 0 required
-find governance -name "*.json" -exec jq empty {} \;  # Exit 0 required
-```
-3. **HALT if ANY fail**:  Fix, re-run until ALL exit 0
-4. **Document in PREHANDOVER_PROOF**: Commands, exit codes, timestamps
 
-**GUARANTEED SUCCESS, not hope.  LIFE-OR-DEATH, not nice-to-have.**
+# 5. LOCKED Section Integrity (if agent files modified)
+python .github/scripts/check_locked_sections.py --mode=detect-modifications --base-ref=main --head-ref=HEAD
+python .github/scripts/check_locked_sections.py --mode=validate-metadata --contracts-dir=. github/agents
 
+# ALL must exit 0 - HALT if any fail
+
+Document in PREHANDOVER_PROOF: Include all commands executed, exit codes (all must be 0), and timestamps.
+
+If ANY validation fails: HALT, fix completely, re-run ALL, only proceed when 100% pass.
+
+<!-- LOCKED END -->
 ---
 
 ## 🔒 Governance Repository Merge Gates (LOCKED)
@@ -412,6 +425,36 @@ python .github/scripts/check_locked_sections.py --mode=validate-metadata --contr
 2. **ESCALATED**: Blocker documented with full context to CS2, work in safe state
 
 **NO partial handovers.  NO "almost done".**
+
+
+---
+
+## 🔒 Mandatory Improvement Capture (LOCKED)
+
+<!-- Lock ID: LOCK-CODEXADVISOR-IMPROVEMENT-001 | Authority:  MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md v2.0.0 | Review: quarterly -->
+
+**MANDATORY after every significant session**: Capture improvement proposals.
+
+**Authority**: `MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md` v2.0.0
+
+**Quick Protocol**:
+1. **Identify**: What was harder/unclear/inefficient?
+2. **Document**: Create proposal in `governance/proposals/[category]/improvement-YYYYMMDD-[topic].md`
+3. **Escalate**: Tag "GOVERNANCE IMPROVEMENT PROPOSAL — Awaiting CS2 Review"
+
+**Categories**:
+- `agent-file-recommendations/` - Agent contract improvements
+- `governance-improvements/` - Canon enhancements
+- `process-improvements/` - Workflow improvements
+- `canon-updates/` - Constitutional updates
+
+**Proposal Template**: See `MANDATORY_ENHANCEMENT_CAPTURE_STANDARD.md` Section 4
+
+**Frequency**: After EVERY PR requiring governance interpretation, quarterly minimum
+
+**Prohibited**:  Skipping capture, verbal-only improvements, implementing without CS2 approval
+
+<!-- LOCKED END -->
 
 ---
 
