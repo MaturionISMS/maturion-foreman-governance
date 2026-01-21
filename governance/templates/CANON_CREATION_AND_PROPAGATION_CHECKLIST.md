@@ -71,7 +71,7 @@ This checklist enforces the complete workflow for creating, modifying, and propa
   - [ ] Document scope and applicability
 
 - [ ] **Calculate and record SHA256 hash**
-  - [ ] Generate hash: `sha256sum governance/canon/<CANON_FILE>.md`
+  - [ ] Generate hash: `sha256sum governance/canon/<CANON_FILE>.md` (Unix/Linux) or `Get-FileHash` (PowerShell)
   - [ ] Record hash in inventory entry
   - [ ] Document hash purpose (drift detection)
 
@@ -176,9 +176,10 @@ This checklist enforces the complete workflow for creating, modifying, and propa
 
 - [ ] **Run inventory sync script for each repository**
   ```bash
+  # Run from governance repository root
   python scripts/sync_repo_inventory.py \
     --repo-root /path/to/consumer-repo \
-    --governance-source /path/to/governance-repo \
+    --governance-source . \
     --repo-name "APGI-cmy/<repo-name>"
   ```
 
@@ -360,8 +361,8 @@ jobs:
               exit 1
             fi
             
-            # Validate hash integrity (requires Python script)
-            python scripts/validate_inventory_hashes.py
+            # TODO: Create scripts/validate_inventory_hashes.py to verify hash integrity
+            # For now, just verify inventory file was modified
             
             echo "✓ Inventory validation passed"
           else
