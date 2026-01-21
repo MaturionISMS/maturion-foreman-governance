@@ -3,8 +3,8 @@
 ## Status
 **Type**: Constitutional Governance Rule  
 **Authority**: Supreme - Canonical  
-**Version**: 2.0.0  
-**Effective Date**: 2026-01-20  
+**Version**: 3.0.0  
+**Effective Date**: 2026-01-21  
 **Owner**: CS2 (Johan Ras in bootstrap mode, Maturion in production)  
 **Precedence**: Subordinate to GOVERNANCE_PURPOSE_AND_SCOPE.md  
 **Part of**: Agent Contract Authority Infrastructure
@@ -13,20 +13,27 @@
 
 ## 1. Purpose
 
-This protocol establishes **CS2 direct authority** for all `.agent` contract files across the Maturion ecosystem. CS2 (Johan Ras in bootstrap mode, Maturion in production) creates and modifies ALL agent files directly, with no AI intermediary layer:
+This protocol establishes a **granular authority hierarchy** for `.agent` contract files across the Maturion ecosystem. CS2 (Johan Ras in bootstrap mode, Maturion in production) retains **supreme authority** over ALL agent contracts, with delegated modification authority to specific agents for governance alignment and operational efficiency.
 
-**Benefits of CS2 Direct Authority:**
-- **Zero AI Intermediary**: No agent between CS2 and agent contracts
-- **Direct Control**: CS2 maintains hands-on understanding of agent capabilities
-- **Faster Iteration**: No approval chain, instant implementation
-- **Perfect Fidelity**: CS2 implements exactly what's needed without interpretation
-- **Clear Accountability**: CS2 directly responsible for all agent behavior
-- **Simple Authority Model**: Two levels only (CS2 → All Agents)
-- **Traceability**: Every contract change directly traceable to CS2
+**Benefits of Granular Authority Model:**
+- **CS2 Supreme Authority**: CS2 can modify ANY contract, override any decision
+- **Governance Automation**: Enables canonical governance propagation to consumer repos
+- **Operational Efficiency**: FM can adjust builder contracts for workflow needs
+- **Constitutional Protection**: Self-modification prohibited, CS2-direct contracts protected
+- **Clear Boundaries**: Each authority level has explicit permissions and prohibitions
+- **Auditability**: All modifications traceable through authority hierarchy
+- **Controlled Delegation**: Authority delegated only where governance-justified
 
-**Agents provide recommendations only.** CS2 implements all changes directly.
+**Authority Levels:**
+- **Level 0 (CS2)**: Ultimate authority - ALL contracts
+- **Level 1 (governance-repo-administrator)**: Consumer repo agent contracts
+- **Level 2 (governance-liaison)**: FM and builder contracts in same repo
+- **Level 3 (FM Agent)**: Builder contracts in same repo
+- **Level 4 (Builders)**: No modification authority
 
-**This is a hard enforcement boundary**: Any agent that writes to a `.agent` file is in **catastrophic violation** of governance and must be immediately halted and escalated to CS2.
+**Self-Modification Prohibition**: ABSOLUTE for ALL agents - no agent can modify own contract.
+
+**This is a hard enforcement boundary**: Any agent that violates their authority boundaries is in **catastrophic violation** of governance and must be immediately halted and escalated.
 
 ---
 
@@ -34,11 +41,14 @@ This protocol establishes **CS2 direct authority** for all `.agent` contract fil
 
 This protocol derives authority from and extends:
 - **GOVERNANCE_PURPOSE_AND_SCOPE.md** — Supreme governance authority
-- **AGENT_RECRUITMENT_AND_CONTRACT_AUTHORITY_MODEL.md** — Agent recruitment and contract update authority hierarchy
+- **CS2_AGENT_FILE_AUTHORITY_MODEL.md** v2.0.0 — Granular authority hierarchy definition
+- **AGENT_RECRUITMENT_AND_CONTRACT_AUTHORITY_MODEL.md** — Agent recruitment and contract authority
 - **AGENT_CANONICAL_CONTEXT_SYNCHRONISATION_PROTOCOL.md** — Contract synchronization requirements
 - **.agent.schema.md** — Agent contract schema and validity requirements
+- **GOVERNANCE_RIPPLE_MODEL.md** — Bidirectional governance evolution
+- **CROSS_REPOSITORY_LAYER_DOWN_PROTOCOL.md** — Cross-repo governance propagation
 
-This protocol supersedes any previous implied or explicit authority for agents to modify their own or other agents' contracts.
+This protocol v3.0.0 supersedes v2.0.0 (CS2 exclusive authority) and implements the granular authority delegation model defined in CS2_AGENT_FILE_AUTHORITY_MODEL.md v2.0.0.
 
 ---
 
@@ -47,10 +57,11 @@ This protocol supersedes any previous implied or explicit authority for agents t
 ### 3.1 In Scope
 - All `.agent` files in all Maturion repositories
 - All agent contract files (`.github/agents/*.agent.md`, `.github/agents/*.md`)
-- CS2 direct authority for all agent file creation and modification
-- Agent recommendation system (agents propose, CS2 implements)
+- Granular authority hierarchy (5 levels: CS2, governance-repo-admin, governance-liaison, FM, builders)
+- Agent modification authority boundaries and delegation rules
+- Recommendation system (agents propose, authorized agents or CS2 implement)
 - Versioning and changelog requirements
-- Violation detection and escalation
+- Violation detection and escalation (authority boundary enforcement)
 
 ### 3.2 Out of Scope
 - Governance canon documents (separate authority per GOVERNANCE_PURPOSE_AND_SCOPE.md)
@@ -60,59 +71,93 @@ This protocol supersedes any previous implied or explicit authority for agents t
 
 ---
 
-## 4. CS2 Direct Authority Model
+## 4. Granular Authority Model
 
-### 4.1 The Hard Rule
+### 4.1 Authority Hierarchy Overview
 
-**ONLY CS2 may write to, create, or modify any `.agent` file.**
-
-This rule is **absolute and non-negotiable**. No exceptions exist for:
-- ❌ Self-modification by any agent
-- ❌ Agent-to-agent contract modifications
-- ❌ "Emergency" contract updates
-- ❌ "Minor" or "non-breaking" changes
-- ❌ Ripple-triggered updates (must be implemented by CS2)
-- ❌ FM authority over builder contracts
-- ❌ Governance administrator authority over agent contracts
-
-**CS2 is the ONLY authority** for all agent contract operations.
-
-### 4.2 Authority Hierarchy
+The authority hierarchy for agent contract modification consists of **five levels**, each with explicit permissions and prohibitions:
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│ Level 0: CS2 (Johan Ras / Maturion)                         │
-│ - ONLY actor who may create/modify ANY .agent file          │
-│ - Implements all agent contract changes directly            │
-│ - Reviews agent recommendations and implements if approved  │
-│ - Authority NEVER transfers or delegates                    │
-└─────────────────────────────────────────────────────────────┘
-                             ↓
-┌─────────────────────────────────────────────────────────────┐
-│ Level 1: ALL AGENTS (No Write Authority)                    │
-│ - FORBIDDEN from writing to any .agent file                 │
-│ - May create recommendations for CS2 review                 │
-│ - Must escalate all contract needs to CS2                   │
-│ - Violation is catastrophic, requires immediate halt        │
-└─────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────┐
+│ Level 0: CS2 (Johan Ras / Maturion) - SUPREME AUTHORITY            │
+│ - Can modify ANY agent contract in ANY repository                   │
+│ - Can override any authority level decision                         │
+│ - Reviews recommendations and implements OR delegates               │
+│ - Authority NEVER fully transfers (always retains override)         │
+└────────────────────────────────────────────────────────────────────┘
+                                 ↓
+┌────────────────────────────────────────────────────────────────────┐
+│ Level 1: governance-repo-administrator (Governance Repo)            │
+│ - Can modify consumer repo agent contracts (governance-liaison,    │
+│   FM, builders)                                                     │
+│ - CANNOT modify: own contract, CodexAdvisor, governance repo agents│
+│ - Must escalate own contract changes to CS2                         │
+└────────────────────────────────────────────────────────────────────┘
+                                 ↓
+┌────────────────────────────────────────────────────────────────────┐
+│ Level 2: governance-liaison (Consumer Repos)                        │
+│ - Can modify FM and builder contracts in SAME repo                 │
+│ - CANNOT modify: own contract, governance-repo-administrator,      │
+│   CodexAdvisor, contracts in other repos                            │
+│ - Must escalate own contract changes to governance-repo-admin or CS2│
+└────────────────────────────────────────────────────────────────────┘
+                                 ↓
+┌────────────────────────────────────────────────────────────────────┐
+│ Level 3: FM Agent (Consumer Repos)                                  │
+│ - Can modify builder contracts in SAME repo (workflow coordination)│
+│ - CANNOT modify: own contract, governance-liaison, higher levels   │
+│ - Must escalate own contract changes to governance-liaison or CS2  │
+└────────────────────────────────────────────────────────────────────┘
+                                 ↓
+┌────────────────────────────────────────────────────────────────────┐
+│ Level 4: Builder Agents (No Modification Authority)                 │
+│ - CANNOT modify any .agent files                                   │
+│ - Must create recommendations for FM, governance-liaison, or CS2   │
+│ - Must escalate all contract needs up authority chain              │
+└────────────────────────────────────────────────────────────────────┘
 ```
 
-**Simplified Model**: Two levels only. No AI intermediary. CS2 implements everything directly.
+**Authority Delegation**: CS2 delegates modification authority to specific agents while retaining supreme override authority. Delegation enables governance automation without compromising constitutional control.
 
-### 4.3 Enforcement
+**Reference**: CS2_AGENT_FILE_AUTHORITY_MODEL.md v2.0.0 for detailed authority definitions.
 
-Any agent detected writing to a `.agent` file is:
-1. **Immediately halted** (execution stops)
-2. **Escalated to CS2** (incident report required)
-3. **Considered out-of-governance** (all work suspect, potentially rolled back)
-4. **Subject to contract review** (why was violation attempted?)
+### 4.2 Self-Modification Prohibition (Universal)
 
-Detection mechanisms:
-- Git history inspection (who committed `.agent` changes?)
-- PR review gates (governance-gate.yml must verify)
-- Audit logs (track all `.agent` file modifications)
-- Agent self-reporting (agents must acknowledge prohibition)
+**ABSOLUTE PROHIBITION**: NO agent can modify their own contract.
 
+This prohibition applies to ALL authority levels (0-4), including:
+- ✅ CS2 can modify ANY agent contract (including own) - EXCEPTION for supreme authority
+- ❌ governance-repo-administrator CANNOT modify own contract - must escalate to CS2
+- ❌ governance-liaison CANNOT modify own contract - must escalate to governance-repo-admin or CS2
+- ❌ FM agent CANNOT modify own contract - must escalate to governance-liaison or CS2
+- ❌ Builders CANNOT modify own contract - must escalate up chain
+
+**Rationale**: Self-modification creates authority expansion risk. All contract changes require external oversight.
+
+### 4.3 CS2-Direct Contracts (Protected)
+
+**Only CS2 can modify**:
+- CodexAdvisor contract (ecosystem overseer)
+- governance-repo-administrator contract (canonical governance maintainer)
+
+**Rationale**: These contracts protect ecosystem-level oversight and canonical governance source from capture or unauthorized modification.
+
+### 4.4 Enforcement
+
+Any agent that violates authority boundaries (writes to `.agent` file outside authorized scope) must:
+1. **HALT** execution immediately
+2. **ESCALATE** to appropriate authority level (FM → governance-liaison → governance-repo-administrator → CS2)
+3. **AWAIT** verdict (GO/HOLD/FAIL)
+4. **DOCUMENT** incident per CONTRACT_MODIFICATION_VIOLATION_INCIDENT_TEMPLATE.md
+
+**Violation Severity**: CATASTROPHIC - requires immediate response and root cause analysis.
+
+**Detection Mechanisms**:
+- Git history inspection (who committed `.agent` changes? authorized?)
+- PR review gates (governance-gate.yml verifies authority boundaries)
+- Audit logs (track all `.agent` file modifications with authority validation)
+- Agent self-reporting (agents must acknowledge their authority level)
+- Authority boundary validation in CI/CD pipelines
 ---
 
 ## 5. Agent Recommendation System
@@ -436,13 +481,20 @@ Any previous multi-level authority grants for agent contract modification are **
 ### 11.2 Ripple Propagation
 
 When governance canon changes trigger contract updates (ripple):
-1. Any agent **identifies** the ripple need
-2. Agent **drafts** recommendation in `governance/proposals/agent-file-recommendations/`
-3. Agent **escalates** to CS2
-4. CS2 **reviews and implements** changes directly
-5. Agent **verifies** ripple completion (if requested by CS2)
+1. **Governance-repo-administrator** identifies ripple need from canon changes
+2. For consumer repos: **governance-repo-administrator** modifies consumer repo agent contracts directly (within authority)
+3. For governance-liaison/FM contracts outside authority: create recommendation, escalate to CS2
+4. **governance-liaison** in consumer repos propagates to local FM/builder contracts (within authority)
+5. **FM agent** in consumer repos adjusts builder contracts as needed (within authority)
+6. All modifications tracked and auditable through git history
 
-**No agent applies contract changes directly, even if ripple-triggered.**
+**Authority-based ripple**: Agents apply changes within their authority level. Changes outside authority escalate up the chain.
+
+**Governance-repo-administrator authority**: Can modify governance-liaison, FM, and builder contracts in consumer repos.
+
+**governance-liaison authority**: Can modify FM and builder contracts in same repo.
+
+**FM authority**: Can modify builder contracts in same repo.
 
 ### 11.3 Updates Required
 
@@ -471,41 +523,65 @@ These enhancements are **parked** pending future authorization and resource allo
 
 ## 13. Summary
 
-**Core Principle**: CS2 direct authority for all `.agent` files.
+**Core Principle**: Granular authority hierarchy with CS2 supreme authority.
 
-**Who Can Write**: ONLY CS2 (Johan Ras in bootstrap, Maturion in production).
+**Authority Levels**: 5-level hierarchy (CS2 → governance-repo-admin → governance-liaison → FM → builders)
 
-**How Changes Happen**: Agents create recommendations → CS2 reviews → CS2 implements directly.
+**Who Can Write**: 
+- CS2: ALL contracts
+- governance-repo-administrator: Consumer repo contracts (governance-liaison, FM, builders)
+- governance-liaison: FM and builder contracts (same repo)
+- FM agent: Builder contracts (same repo)
+- Builders: None
 
-**No AI Intermediary**: Zero layers between CS2 and agent contracts.
+**Self-Modification**: PROHIBITED for ALL agents (must escalate up chain)
 
-**Enforcement**: Hard prohibition in all contracts, CI validation, incident response.
+**CS2-Direct Contracts**: CodexAdvisor and governance-repo-administrator (CS2 only)
 
-**Traceability**: Every change traceable to CS2 implementation.
+**How Changes Happen**: 
+- Changes within authority: Agent modifies directly
+- Changes outside authority: Agent creates recommendation → escalates up chain
+- CS2 retains override authority at all levels
 
-**Non-Negotiable**: No exceptions, no emergencies, no "minor" changes bypass this system.
+**Enforcement**: Authority boundary validation in contracts, CI gates, audit logs, incident response.
+
+**Traceability**: Every change traceable through git history with authority validation.
+
+**Non-Negotiable**: Self-modification prohibited. CS2-direct contracts protected. Authority boundaries enforced.
 
 ---
 
 ## 14. Version and Authority
 
-**Version**: 2.0.0  
+**Version**: 3.0.0  
 **Authority**: CS2 (Johan Ras in bootstrap mode, Maturion in production)  
-**Effective Date**: 2026-01-20  
-**Previous Version**: 1.0.0 (2026-01-13) - Agent Contract Administrator intermediary model  
+**Effective Date**: 2026-01-21  
+**Previous Versions**: 
+- v2.0.0 (2026-01-20) - CS2 exclusive authority, no agent delegation
+- v1.0.0 (2026-01-13) - Agent Contract Administrator intermediary model  
 **Next Review**: Upon transition to Maturion as CS2
 
-**Major Changes from v1.0.0**:
+**Major Changes from v2.0.0**:
+- Introduced granular 5-level authority hierarchy
+- Delegated modification authority to governance-repo-administrator (Level 1)
+- Delegated modification authority to governance-liaison (Level 2)
+- Delegated modification authority to FM agent (Level 3)
+- Maintained self-modification prohibition for ALL agents
+- Protected CS2-direct contracts (CodexAdvisor, governance-repo-administrator)
+- Enabled governance alignment automation while preserving constitutional control
+- Authority: CS2 strategic decision 2026-01-21, closes alignment automation issue
+
+**Major Changes from v1.0.0 (v2.0.0)**:
 - Removed Agent Contract Administrator intermediary layer
 - Replaced instruction system with recommendation system
-- Simplified authority hierarchy from 3 levels to 2 levels
-- CS2 now implements all changes directly
-- Agents create recommendations only, no write authority
+- Simplified from 3 levels to 2 levels (v2.0.0), then expanded to 5 levels (v3.0.0)
+- CS2 retains supreme authority across all versions
 
 **Canonical Precedence**:
 - If this protocol conflicts with GOVERNANCE_PURPOSE_AND_SCOPE.md, that document prevails
-- If this protocol conflicts with CONSTITUTION.md, that document prevails
-- This protocol supersedes any previous contract update authority grants
+- If this protocol conflicts with CONSTITUTION.md (if exists), that document prevails
+- This protocol v3.0.0 supersedes v2.0.0 and all previous contract authority models
+- CS2_AGENT_FILE_AUTHORITY_MODEL.md v2.0.0 provides detailed authority definitions
 
 ---
 
