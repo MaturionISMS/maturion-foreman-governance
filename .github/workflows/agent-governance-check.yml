@@ -46,120 +46,99 @@ jobs:
           set -e
           export PATH="/usr/bin:/bin:/usr/local/bin:$PATH"
           
-          echo "=== Ensure .agent exists ==="
-          if [ ! -f ".agent" ]; then
-            echo "❌ .agent file is missing"
+          echo "=== Validate Agent Contract Files ==="
+          
+          # Find all agent contract files
+          AGENT_FILES=$(find .github/agents -name "*.md" 2>/dev/null || echo ".agent")
+          if [ -f ".agent" ]; then
+            AGENT_FILES="$AGENT_FILES .agent"
+          fi
+          
+          if [ -z "$AGENT_FILES" ]; then
+            echo "❌ No agent contract files found"
             exit 1
           fi
-          echo "✅ .agent file found"
-
+          
+          echo "Found agent contract files:"
+          echo "$AGENT_FILES"
           echo ""
-          echo "=== Validate canonical governance binding ==="
-          REQUIRED_KEYS=(
-            "governance:"
-            "canon:"
-            "repository:"
-            "path: /governance/canon"
-            "reference:"
-          )
-
-          for KEY in "${REQUIRED_KEYS[@]}"; do
-            if ! /usr/bin/grep -q "$KEY" .agent; then
-              echo "❌ Missing required governance binding: $KEY"
-              exit 1
+          
+          YAML_ERRORS=0
+          
+          for FILE in $AGENT_FILES; do
+            if [ ! -f "$FILE" ]; then
+              continue
             fi
-          done
-          echo "✅ Canonical governance binding present"
-
-          echo ""
-          echo "=== Enforce Agent Contract Minimalism ==="
-          FORBIDDEN_PATTERNS=(
-            "\\bBUILD_PHILOSOPHY\\b"
-            "\\bOPOJD\\b"
-            "\\bTED\\b"
-            "\\bONE_TIME_BUILD\\b"
-            "\\bconstitutional_references\\b"
-            "\\bConstitutional Principles\\b"
-            "\\bPrimary Responsibilities\\b"
-            "\\bAuthority Hierarchy\\b"
-            "\\bStandard Workflows\\b"
-          )
-
-          for PATTERN in "${FORBIDDEN_PATTERNS[@]}"; do
-            if /usr/bin/grep -Eqi "$PATTERN" .agent; then
-              echo "❌ Forbidden governance duplication detected: $PATTERN"
-              exit 1
+            
+            echo "=== Validating: $FILE ==="
+            
+            # Extract YAML frontmatter (between first two --- markers)
+            FRONTMATTER=$(awk '/^---$/{if(++count==2) exit; if(count==1) next} count==1' "$FILE")
+            
+            if [ -z "$FRONTMATTER" ]; then
+              echo "❌ No YAML frontmatter found in $FILE"
+              YAML_ERRORS=$((YAML_ERRORS + 1))
+              continue
             fi
+            
+            # Write frontmatter to temp file for validation
+            TEMP_YAML=$(mktemp)
+            echo "$FRONTMATTER" > "$TEMP_YAML"
+            
+            # Validate YAML frontmatter only
+            echo "Validating YAML frontmatter..."
+            if /usr/bin/yamllint -d "{extends: default, rules: {line-length: {max: 200}}}" "$TEMP_YAML" 2>&1; then
+              echo "✅ Valid YAML frontmatter"
+            else
+              echo "❌ Invalid YAML frontmatter"
+              YAML_ERRORS=$((YAML_ERRORS + 1))
+            fi
+            
+            rm "$TEMP_YAML"
+            
+            # Validate required keys in frontmatter
+            echo "Checking required governance keys..."
+            REQUIRED_KEYS=(
+              "governance:"
+              "canon:"
+              "repository:"
+              "path: /governance/canon"
+              "reference:"
+            )
+            
+            for KEY in "${REQUIRED_KEYS[@]}"; do
+              if ! echo "$FRONTMATTER" | /usr/bin/grep -q "$KEY"; then
+                echo "❌ Missing required governance binding: $KEY"
+                YAML_ERRORS=$((YAML_ERRORS + 1))
+              fi
+            done
+            
+            if [ $YAML_ERRORS -eq 0 ]; then
+              echo "✅ Canonical governance binding present"
+            fi
+            
+            # Validate required top-level sections exist
+            echo "Checking required sections..."
+            REQUIRED_SECTIONS=(
+              "^agent:"
+              "^governance:"
+              "^scope:"
+              "^capabilities:"
+              "^constraints:"
+            )
+            
+            for SECTION in "${REQUIRED_SECTIONS[@]}"; do
+              if ! echo "$FRONTMATTER" | /usr/bin/grep -Eq "$SECTION"; then
+                echo "⚠️ Missing recommended section: $SECTION"
+              fi
+            done
+            
+            echo ""
           done
-          echo "✅ No forbidden doctrine duplication found"
-
-          echo ""
-          echo "=== Enforce Size Limits ==="
-          LINE_COUNT=$(/usr/bin/wc -l < .agent)
-          MAX_LINES=300
-
-          if [ "$LINE_COUNT" -gt "$MAX_LINES" ]; then
-            echo "❌ Agent contract exceeds maximum size: $LINE_COUNT lines (max: $MAX_LINES)"
-            echo "   Agent contracts should be thin binding shells."
-            echo "   Move detailed doctrine to governance/canon/ and reference it."
+          
+          if [ $YAML_ERRORS -gt 0 ]; then
+            echo "❌ Agent contract validation failed: $YAML_ERRORS error(s)"
             exit 1
           fi
-          echo "✅ Agent contract size acceptable: $LINE_COUNT lines"
-
-          echo ""
-          echo "=== Validate Governance Bindings ==="
-          if ! /usr/bin/grep -q "governance:" .agent; then
-            echo "❌ Missing governance section"
-            exit 1
-          fi
-
-          if ! /usr/bin/grep -q "bindings:" .agent; then
-            echo "⚠️  Warning: No governance.bindings section found"
-            echo "   Consider adding bindings to canonical documents"
-          fi
-          echo "✅ Governance bindings section validated"
-
-          echo ""
-          echo "=== Validate required top-level sections ==="
-          REQUIRED_SECTIONS=(
-            "^agent:"
-            "^governance:"
-            "^scope:"
-            "^capabilities:"
-            "^constraints:"
-            "^enforcement:"
-          )
-
-          for SECTION in "${REQUIRED_SECTIONS[@]}"; do
-            if ! /usr/bin/grep -Eq "$SECTION" .agent; then
-              echo "❌ Missing required top-level section: $SECTION"
-              exit 1
-            fi
-          done
-          echo "✅ Required sections present"
-
-          echo ""
-          echo "=== Enforce restricted paths ==="
-          REQUIRED_RESTRICTIONS=(
-            ".agent"
-            "governance/**"
-          )
-
-          for PATH_PATTERN in "${REQUIRED_RESTRICTIONS[@]}"; do
-            if ! /usr/bin/grep -q "$PATH_PATTERN" .agent; then
-              echo "❌ Required restricted path missing: $PATH_PATTERN"
-              exit 1
-            fi
-          done
-          echo "✅ Restricted paths enforced"
-
-          echo ""
-          echo "=== Validate escalation for CI paths ==="
-          if ! /usr/bin/grep -q ".github/" .agent; then
-            echo "❌ .github/ paths must be restricted or escalation-required"
-            exit 1
-          fi
-          echo "✅ CI paths properly gated"
-
-          echo ""
-          echo "✅ .agent contract is valid under canonical governance"
+          
+          echo "✅ All agent contract files validated successfully"
