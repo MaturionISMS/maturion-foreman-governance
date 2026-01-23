@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-01-19",
-  "total_canons": 113,
+  "last_updated": "2026-01-23",
+  "total_canons": 114,
   "generation_timestamp": "2026-01-19T17:02:23.129424",
   "canons": [
     {
@@ -942,6 +942,16 @@
       "description": "This rule enforces alignment between a PR’s declared scope\nand the files actually modified in the PR.",
       "type": "canon",
       "path": "governance/canon/SCOPE_TO_DIFF_RULE.md",
+      "layer_down_status": "PUBLIC_API"
+    },
+    {
+      "filename": "STOP_AND_FIX_DOCTRINE.md",
+      "version": "1.0.0",
+      "file_hash": "new",
+      "effective_date": "2026-01-23",
+      "description": "Tier-0 constitutional doctrine establishing zero tolerance for technical debt, test failures, errors, and safety violations. Mandates immediate remediation regardless of origin, universal responsibility for quality, and no partial handovers.",
+      "type": "canon",
+      "path": "governance/canon/STOP_AND_FIX_DOCTRINE.md",
       "layer_down_status": "PUBLIC_API"
     },
     {

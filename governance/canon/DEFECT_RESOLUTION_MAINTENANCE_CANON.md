@@ -1,12 +1,12 @@
 # DEFECT RESOLUTION AND MAINTENANCE CANON
 
 ## Status
-**Type**: Canonical Governance Protocol  
-**Authority**: Supreme - Canonical  
-**Version**: 1.0.0  
-**Effective Date**: 2026-01-09  
-**Owner**: Maturion Engineering Leadership (Johan Ras)  
-**Layer-Down Status**: PUBLIC_API  
+**Type**: Canonical Governance Protocol
+**Authority**: Supreme - Canonical
+**Version**: 1.0.0
+**Effective Date**: 2026-01-09
+**Owner**: Maturion Engineering Leadership (Johan Ras)
+**Layer-Down Status**: PUBLIC_API
 **Applies To**: All Foreman Instances, All Application Repositories, All Maintenance Cycles
 
 ---
@@ -32,6 +32,7 @@ It exists to ensure that:
 This canon derives authority from and extends:
 
 - **BUILD_PHILOSOPHY.md** - One-Time Build Law, 100% GREEN philosophy, Zero Test Debt
+- **STOP_AND_FIX_DOCTRINE.md** - Universal responsibility for quality, immediate remediation, no partial handovers
 - **OPOJD_DOCTRINE.md** - Continuous execution mandate applies to fix cycles
 - **QA_POLICY_MASTER.md** - QA coverage, verification, and failure handling
 - **FM_ROLE_CANON.md** - FM authority over architecture, QA, and build orchestration
@@ -43,6 +44,8 @@ This canon derives authority from and extends:
 
 **Integration Principle**: This canon does NOT replace existing governance; it extends existing build lifecycle governance to cover post-production maintenance cycles.
 
+**Stop-and-Fix Integration**: Defect resolution work is subject to Stop-and-Fix doctrine—if discovering additional issues during fix work, those must be resolved before completing the fix. Maintenance work hands over in GOOD STATE (100% GREEN) or escalates.
+
 ---
 
 ## 3. Core Principles
@@ -51,7 +54,7 @@ This canon derives authority from and extends:
 
 **Principle**: Defect fixes, patches, and maintenance changes MUST meet identical quality standards as initial builds.
 
-**Rationale**: 
+**Rationale**:
 - Production code touches real users and business value
 - Rushed fixes create cascading technical debt
 - "Quick fixes" bypass testing and create hidden failures
@@ -83,7 +86,7 @@ This canon derives authority from and extends:
 - Fix must pass all tests (new and existing) on first merge
 - Fix must be deployable immediately after merge
 
-**Enforcement**: 
+**Enforcement**:
 - Failed fixes trigger root cause analysis (same as failed builds)
 - Repeated fix attempts for same defect are governance violations
 - Fix regressions are escalated as critical governance failures
@@ -321,7 +324,7 @@ All steps must be documented and linked.
    - Rollback procedure defined
    - Verification steps listed
 
-**Architecture Approval**: 
+**Architecture Approval**:
 - Standard fixes: FM self-approval permitted
 - Protected file changes: CS2 Architecture Approval required (same as new builds)
 - Critical production systems: Human owner approval required
@@ -431,7 +434,7 @@ All steps must be documented and linked.
    - Merge via standard PR process
    - Deploy when convenient
 
-**Branch Naming Convention**: 
+**Branch Naming Convention**:
 ```
 {type}/{issue-number}-{short-description}
 
@@ -624,7 +627,7 @@ If builder discovers existing test debt while fixing defect:
 
 ### 9.2 Fix Evidence Storage
 
-**Evidence Location**: 
+**Evidence Location**:
 - Primary: GitHub issue comments and PR description/comments
 - Secondary: `/evidence/fixes/{issue-number}/` directory (for large artifacts)
 - Audit: Version control history (git log, tags, branches)
@@ -1337,8 +1340,8 @@ This canon provides:
 
 ### Version 1.0.0 - 2026-01-09 (Initial Release)
 
-**Created By**: Governance Administrator Agent  
-**Approved By**: Maturion Engineering Leadership (Johan Ras)  
+**Created By**: Governance Administrator Agent
+**Approved By**: Maturion Engineering Leadership (Johan Ras)
 **Effective Date**: 2026-01-09
 
 **Summary**: Initial canonical protocol for defect resolution and maintenance covering complete lifecycle from defect discovery through production deployment and closure.
