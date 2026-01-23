@@ -1,12 +1,12 @@
 # STOP-AND-FIX DOCTRINE
 
 ## Status
-**Type**: Tier-0 Constitutional Canon  
-**Authority**: Supreme - Constitutional  
-**Version**: 1.0.0  
-**Effective Date**: 2026-01-23  
-**Owner**: Maturion Engineering Leadership (Johan Ras)  
-**Layer-Down Status**: PUBLIC_API  
+**Type**: Tier-0 Constitutional Canon
+**Authority**: Supreme - Constitutional
+**Version**: 1.0.0
+**Effective Date**: 2026-01-23
+**Owner**: Maturion Engineering Leadership (Johan Ras)
+**Layer-Down Status**: PUBLIC_API
 **Applies To**: All Agents, All Builders, All Foreman Instances, All Work, All Repositories
 
 ---
@@ -60,7 +60,7 @@ This doctrine derives supreme authority from and integrates with:
 - ❌ Performance regressions (when detected)
 - ❌ Incomplete test infrastructure (stub helpers, broken fixtures)
 
-**Rationale**: 
+**Rationale**:
 - Allowing ANY defect to pass downstream creates systemic risk
 - Technical debt compounds exponentially if not immediately addressed
 - "Small" issues cascade into critical failures
@@ -496,41 +496,41 @@ Stop-and-Fix embodies the Boy Scout Rule:
 
 ## 11. FAQ
 
-**Q: What if fixing the issue takes longer than my original task?**  
+**Q: What if fixing the issue takes longer than my original task?**
 A: Fix it anyway. Preventing technical debt is ALWAYS more valuable than new features. If time is a concern, escalate to CS2 for prioritization guidance.
 
-**Q: What if I don't understand the failing code?**  
+**Q: What if I don't understand the failing code?**
 A: Investigate and learn. If truly beyond your expertise, document thoroughly and escalate. But first, make a genuine attempt to understand and fix.
 
-**Q: What if the baseline was already broken when I started?**  
+**Q: What if the baseline was already broken when I started?**
 A: Fix it. Stop-and-Fix applies to ALL issues you encounter, regardless of origin. Establish 100% GREEN baseline before starting your work.
 
-**Q: What if there are 100+ failing tests?**  
+**Q: What if there are 100+ failing tests?**
 A: This is a systemic failure requiring escalation. Document the situation, ensure the system is in a safe state, and escalate to CS2 for guidance. Do NOT attempt to fix all 100 yourself if it will take days.
 
-**Q: What if the fix requires changing architecture?**  
+**Q: What if the fix requires changing architecture?**
 A: Escalate. Architecture changes require FM/CS2 approval. Document the issue, explain why architecture change is needed, and wait for guidance.
 
-**Q: What if I'm just investigating/researching?**  
+**Q: What if I'm just investigating/researching?**
 A: Stop-and-Fix still applies. If you discover issues during investigation, fix them before completing your research.
 
-**Q: Can I defer a fix if it's "low priority"?**  
+**Q: Can I defer a fix if it's "low priority"?**
 A: No. Priority is irrelevant—if you see it, fix it. The whole point is to prevent prioritization debates that allow debt to accumulate.
 
-**Q: What if CI is broken and I can't run tests locally?**  
+**Q: What if CI is broken and I can't run tests locally?**
 A: This is a blocker. CI must work. Escalate CI issues immediately—broken CI prevents all Stop-and-Fix validation.
 
 ---
 
 ## 12. Summary
 
-**Stop-and-Fix in One Sentence:**  
+**Stop-and-Fix in One Sentence:**
 When you encounter ANY error, failure, debt, or violation during work, STOP immediately, FIX it completely, VERIFY 100% GREEN, DOCUMENT the remediation, and ONLY THEN continue.
 
-**The Golden Rule:**  
+**The Golden Rule:**
 Every handover must be in a GOOD STATE (100% GREEN, zero debt, all gates passing) or escalated to CS2 with full context. No partial handovers, no deferred fixes, no exceptions.
 
-**The Responsibility Principle:**  
+**The Responsibility Principle:**
 Quality is everyone's responsibility. "If you see it, you own it." No "not my job," no "file a bug," no "will fix later."
 
 ---

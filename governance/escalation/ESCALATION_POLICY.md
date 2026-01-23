@@ -1,9 +1,9 @@
 # AI Model Usage Escalation Policy
 
-**Status**: ACTIVE — Operational Governance  
-**Authority**: Canonical  
-**Effective Date**: 2026-01-03  
-**Integration**: COGNITIVE_CAPABILITY_ORCHESTRATION_MODEL.md, FM_ROLE_CANON.md  
+**Status**: ACTIVE — Operational Governance
+**Authority**: Canonical
+**Effective Date**: 2026-01-03
+**Integration**: COGNITIVE_CAPABILITY_ORCHESTRATION_MODEL.md, FM_ROLE_CANON.md
 
 ---
 
