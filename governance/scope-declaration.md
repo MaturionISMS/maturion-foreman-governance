@@ -1,62 +1,52 @@
 # SCOPE DECLARATION
 
 SCOPE_SCHEMA_VERSION: v1
-PR_ID: TBD
+PR_ID: #1007
 OWNER: governance-repo-administrator
-DATE_UTC: 2026-01-21
+DATE_UTC: 2026-01-23
 
 ---
 
 ## PR Responsibility Domain
 
-RESPONSIBILITY_DOMAIN: Governance Administration
+RESPONSIBILITY_DOMAIN: Stop-and-Fix Canonization + Catastrophic Failure Recovery + ONE-TIME Gate Fix (CS2 Authorized)
 
 ---
 
 ## Explicitly In Scope
 
 IN_SCOPE: 
-- Create governance/canon/AGENT_SELF_GOVERNANCE_PROTOCOL.md (canonical protocol)
-- Create governance/diagrams/ directory
-- Create governance/diagrams/agent-self-governance-check-workflow.md
-- Create governance/diagrams/inventory-ripple-process-workflow.md
-- Create governance/diagrams/error-drift-handling-workflow.md
-- Create governance/diagrams/agent-authority-hierarchy-diagram.md
-- Update GOVERNANCE_ARTIFACT_INVENTORY.md (add new canon file and diagrams)
-- Create governance/reports/ripple-agent-self-governance-protocol-2026-01-21.md (ripple tracking)
-- Update governance/scope-declaration.md for this PR
+- Update governance/philosophy/BYG_DOCTRINE.md (integrate Stop-and-Fix doctrine)
+- Update .github/agents/governance-repo-administrator.agent.md (fix file paths, remove trailing spaces, fix colons)
+- Create .yamllint config (per CS2 recommendation to reduce false positives)
+- Create RCA_PR_1007_FAILED_MERGE_GATE.md (root cause analysis for catastrophic failure)
+- Update .github/workflows/agent-governance-check.yml (ONE-TIME CS2 authorized gate fix to extract YAML frontmatter)
+- Update governance/scope-declaration.md (this file)
+- Create PREHANDOVER_PROOF.md (complete handover documentation)
 
 ---
 
 ## Explicitly Out of Scope
 
 OUT_OF_SCOPE:
-- Agent contract files (.github/agents/*.md) - No modifications in this PR
-- CI gate workflow implementation - No changes to .github/workflows/
+- CodexAdvisor-agent.md modifications (CS2-only file, authority conflict documented)
 - Consumer repository updates (office-app, PartPulse, R_Roster) - Ripple occurs after canonical PR merge
-- Script modifications (.github/scripts/) - No changes
+- Other CI gate workflows - Only agent-governance-check.yml modified per CS2 authorization
 - Tests (no test infrastructure for governance canon)
-- Migrations
-- Email
-- Logging
-- Audit (beyond documentation)
-- Deployment
-- Application code
-- Database changes
-- API changes
-- UI changes
+- STOP_AND_FIX_DOCTRINE.md creation (already exists from PR #1005)
+- BUILD_PHILOSOPHY.md integration (already complete from PR #1005)
 
 ---
 
 ## Files Changed
 
-A governance/canon/AGENT_SELF_GOVERNANCE_PROTOCOL.md
-A governance/diagrams/agent-self-governance-check-workflow.md
-A governance/diagrams/inventory-ripple-process-workflow.md
-A governance/diagrams/error-drift-handling-workflow.md
-A governance/diagrams/agent-authority-hierarchy-diagram.md
-A governance/reports/ripple-agent-self-governance-protocol-2026-01-21.md
-M GOVERNANCE_ARTIFACT_INVENTORY.md
+M governance/philosophy/BYG_DOCTRINE.md
+M .github/agents/governance-repo-administrator.agent.md
+M .github/workflows/agent-governance-check.yml
+A .yamllint
+A RCA_PR_1007_FAILED_MERGE_GATE.md
+A PREHANDOVER_PROOF.md
+R PREHANDOVER_PROOF.md PREHANDOVER_PROOF_archive_20260123_previous.md
 M governance/scope-declaration.md
 
 ---
@@ -68,9 +58,9 @@ EXPECTED_VERIFICATION:
 - TESTS: NOT APPLICABLE (no test infrastructure for governance canon)
 - GOVERNANCE_GATES: GREEN
   - Governance Scope-to-Diff Enforcement (must match this scope declaration)
+  - Agent Governance Check (YAML frontmatter extraction implemented)
   - Governance Policy Validation
   - Locked Section Protection Gate
-  - Agent Governance Check (no agent contract changes)
 
 ---
 
@@ -78,9 +68,10 @@ EXPECTED_VERIFICATION:
 
 SCOPE_FROZEN: YES
 
-The canonical Agent Self-Governance Protocol has been implemented per issue requirements, including universal self-governance check workflow, agent-specific alignment rules, mandatory attestation requirements, and supporting diagrams. The inventory has been updated with new artifacts and timestamps. Ripple tracking has been established for all consumer repos (office-app, PartPulse, R_Roster).
+Stop-and-Fix doctrine has been integrated into BYG_DOCTRINE.md. Agent contract file path errors fixed and yamllint errors within authority resolved. RCA completed for catastrophic failure. CS2-authorized ONE-TIME gate fix applied to extract YAML frontmatter before validation. Authority conflicts documented and escalated.
 
 ---
 
-**Authority**: `governance/canon/SCOPE_TO_DIFF_RULE.md`  
-**Issue**: [CANON] Codify & Ripple Agent Self-Governance, Alignment, and Escalation Protocols
+**Authority**: `governance/canon/SCOPE_TO_DIFF_RULE.md`, `governance/canon/STOP_AND_FIX_DOCTRINE.md`  
+**Issue**: Canonize 'Stop-and-Fix': Zero Tolerance on Test Debt, Errors, and Safety Violations
+**CS2 Authorization**: Comment #3789883567 (ONE-TIME gate fix)
