@@ -86,14 +86,20 @@ BYG enforces compulsory learning.
 - First occurrence of a failure cause:
   - Allowed
   - Must be recorded as a Lesson Learned
+  - Must be fixed immediately (per STOP_AND_FIX_DOCTRINE.md)
 - Second occurrence of the same cause:
   - Catastrophic
   - Indicates governance or architectural negligence
+  - Triggers escalation (per STOP_AND_FIX_DOCTRINE.md Section 5)
 - Third occurrence:
   - Systemic failure
   - Triggers full process and governance review
 
 Unrecorded learning is a governance failure.
+
+**Stop-and-Fix Integration**: When failures, errors, or test debt are discovered, the Stop-and-Fix doctrine mandates immediate remediation regardless of origin. This ensures BYG's compulsory learning requirement is enforced through action, not just documentation.
+
+See: `governance/canon/STOP_AND_FIX_DOCTRINE.md`
 
 ---
 
@@ -130,6 +136,8 @@ BYG replaces patching with architectural evolution.
 - No bypassing QA
 - No authority ambiguity
 - No repeated failures without learning
+- No partial handovers (per Stop-and-Fix doctrine)
+- No deferred fixes (per Stop-and-Fix doctrine)
 
 ---
 

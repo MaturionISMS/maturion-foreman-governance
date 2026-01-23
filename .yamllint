@@ -1,0 +1,19 @@
+---
+extends: default
+
+rules:
+  line-length:
+    max: 150
+    level: warning
+  
+  comments:
+    min-spaces-from-content: 1
+  
+  trailing-spaces:
+    level: error
+  
+  colons:
+    max-spaces-after: 1
+  
+  document-start:
+    present: false
