@@ -45,8 +45,8 @@ M .github/agents/governance-repo-administrator.agent.md
 M .github/workflows/agent-governance-check.yml
 A .yamllint
 A RCA_PR_1007_FAILED_MERGE_GATE.md
-A PREHANDOVER_PROOF.md
-R PREHANDOVER_PROOF.md PREHANDOVER_PROOF_archive_20260123_previous.md
+M PREHANDOVER_PROOF.md
+A PREHANDOVER_PROOF_archive_20260123_previous.md
 M governance/scope-declaration.md
 
 ---
