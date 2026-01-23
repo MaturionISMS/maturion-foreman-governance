@@ -107,6 +107,36 @@ TEST DEBT DETECTED → STOP EXECUTION → FIX ALL DEBT → RE-RUN QA → VERIFY 
 
 See: `/foreman/governance/zero-test-debt-constitutional-rule.md`
 
+### Stop-and-Fix Doctrine
+
+**Constitutional Integration** (2026-01-23):
+
+**STOP-AND-FIX is the behavioral enforcement mechanism for 100% GREEN and Zero Test Debt.**
+
+Any agent or builder encountering errors, test failures, warnings, or governance violations MUST:
+1. **STOP** all forward progress immediately
+2. **FIX** the issue completely (regardless of who introduced it)
+3. **VERIFY** 100% GREEN restored (all tests, all gates)
+4. **DOCUMENT** the remediation in audit trail
+5. **CONTINUE** only after verification complete
+
+**Key Principles:**
+- ✅ **Universal Responsibility**: "If you see it, you own it" (not "file a bug")
+- ✅ **Zero Tolerance**: ANY defect triggers Stop-and-Fix (no exceptions)
+- ✅ **Immediate Remediation**: Fix now, not later (no deferral)
+- ✅ **Complete Fixes**: Root cause eliminated, not just symptoms
+- ✅ **No Partial Handovers**: Only COMPLETE or ESCALATED states allowed
+
+**Forbidden Responses:**
+- ❌ "Not my code" / "Not my job" (quality is everyone's job)
+- ❌ "Will fix in next PR" (fix it NOW)
+- ❌ "File a ticket" (fix it, then document)
+- ❌ "Already broken when I started" (doesn't matter—fix it)
+
+**Integration**: Stop-and-Fix ensures that 100% GREEN is not just a target but a continuously enforced reality. Every handover must be in a GOOD STATE.
+
+See: `governance/canon/STOP_AND_FIX_DOCTRINE.md`
+
 ### Governance Gaps Are Environmental Defects
 
 **If, during execution, a class of build failure is discovered that:**

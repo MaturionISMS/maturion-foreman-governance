@@ -102,6 +102,7 @@ Canon files define constitutional governance rules, models, and protocols.
 | `RESPONSIBILITY_DOMAIN_REGISTRY.md` | Registry of all responsibility domains | Readiness |
 | `SCOPE_DECLARATION_SCHEMA.md` | Schema for scope declarations | PR-gates |
 | `SCOPE_TO_DIFF_RULE.md` | Defines scope-to-diff validation rule | PR-gates |
+| `STOP_AND_FIX_DOCTRINE.md` | **NEW (2026-01-23)** - Tier-0 constitutional doctrine establishing zero tolerance for technical debt, errors, and safety violations. Mandates immediate remediation regardless of origin, universal responsibility for quality, and no partial handovers. Integrates with BUILD_PHILOSOPHY.md, BYG_DOCTRINE.md, DEFECT_RESOLUTION_MAINTENANCE_CANON.md, ESCALATION_POLICY.md | PR-gates, Readiness, Feedback/learning |
 | `SYSTEM_COMMISSIONING_AND_PROGRESSIVE_ACTIVATION_PROTOCOL.md` | Defines system commissioning phases | Readiness |
 | `VERSIONING_AND_EVOLUTION_GOVERNANCE.md` | Defines governance versioning rules | Layer-down |
 | `VISION_ALIGNMENT_AND_DRIFT_MODEL.md` | Defines vision drift detection and correction | Feedback/learning |

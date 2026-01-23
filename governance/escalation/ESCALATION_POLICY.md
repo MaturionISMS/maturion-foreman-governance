@@ -43,6 +43,26 @@ Escalate **after** failures occur when:
 - cross-repo changes required
 - **warning or test-debt discovery from prior work** (per QA_POLICY_MASTER.md Section 3.3)
 
+### Stop-and-Fix Escalation
+Escalate **during Stop-and-Fix remediation** when:
+- **Unresolvable issue**: Issue requires domain expertise agent lacks (database internals, network protocols, etc.)
+- **Authority boundary**: Issue requires changing code/architecture outside agent's authority
+- **External blocker**: Issue caused by external system, tool, or infrastructure failure beyond agent control
+- **Governance decision needed**: Issue requires governance policy interpretation or decision
+- **Prolonged investigation**: Issue cannot be resolved within reasonable time (> 4 hours investigation)
+- **Multiple fix attempts failed**: Root cause remains unclear after genuine remediation attempts
+
+**Stop-and-Fix Escalation Requirements**:
+- Provide complete issue description, reproduction steps, investigation summary
+- Document root cause hypothesis and blocker justification
+- Ensure work is in SAFE state (no broken builds, no data loss risk)
+- Commit work-in-progress on feature branch, wait for CS2 guidance
+- Tag escalation: "STOP-AND-FIX ESCALATION - Requires CS2 Intervention"
+
+See: `governance/canon/STOP_AND_FIX_DOCTRINE.md` Section 5
+
+**Note**: Stop-and-Fix escalation is NOT a failure—it is appropriate use of escalation path when remediation exceeds agent's capability or authority.
+
 ## FM Authority and Responsibility (ACTIVE)
 
 **FM SHALL**:

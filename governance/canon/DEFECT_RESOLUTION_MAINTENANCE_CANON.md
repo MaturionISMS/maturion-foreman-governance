@@ -32,6 +32,7 @@ It exists to ensure that:
 This canon derives authority from and extends:
 
 - **BUILD_PHILOSOPHY.md** - One-Time Build Law, 100% GREEN philosophy, Zero Test Debt
+- **STOP_AND_FIX_DOCTRINE.md** - Universal responsibility for quality, immediate remediation, no partial handovers
 - **OPOJD_DOCTRINE.md** - Continuous execution mandate applies to fix cycles
 - **QA_POLICY_MASTER.md** - QA coverage, verification, and failure handling
 - **FM_ROLE_CANON.md** - FM authority over architecture, QA, and build orchestration
@@ -42,6 +43,8 @@ This canon derives authority from and extends:
 - **GOVERNANCE_RIPPLE_MODEL.md** - Bidirectional governance evolution
 
 **Integration Principle**: This canon does NOT replace existing governance; it extends existing build lifecycle governance to cover post-production maintenance cycles.
+
+**Stop-and-Fix Integration**: Defect resolution work is subject to Stop-and-Fix doctrine—if discovering additional issues during fix work, those must be resolved before completing the fix. Maintenance work hands over in GOOD STATE (100% GREEN) or escalates.
 
 ---
 
