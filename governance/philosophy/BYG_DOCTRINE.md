@@ -86,11 +86,11 @@ BYG enforces compulsory learning.
 - First occurrence of a failure cause:
   - Allowed
   - Must be recorded as a Lesson Learned
-  - Must be fixed immediately per Stop-and-Fix doctrine
+  - Must be fixed immediately (per STOP_AND_FIX_DOCTRINE.md)
 - Second occurrence of the same cause:
   - Catastrophic
   - Indicates governance or architectural negligence
-  - Triggers escalation per Stop-and-Fix escalation path
+  - Triggers escalation (per STOP_AND_FIX_DOCTRINE.md Section 5)
 - Third occurrence:
   - Systemic failure
   - Triggers full process and governance review
