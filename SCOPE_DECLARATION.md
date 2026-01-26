@@ -1,7 +1,7 @@
 # SCOPE DECLARATION
 
-**PR**: Strengthen Governance - Zero-Warning Handover Enforcement (Post-PR #1009 Incident)  
-**Date**: 2026-01-26  
+**PR**: Strengthen Governance - Zero-Warning Handover Enforcement (Post-PR #1009 Incident)
+**Date**: 2026-01-26
 **Authority**: EXECUTION_BOOTSTRAP_PROTOCOL.md, STOP_AND_FIX_DOCTRINE.md, BUILD_PHILOSOPHY.md, INCIDENT_2026-01-26_PR_1009_INCOMPLETE_HANDOVER.md
 
 ---
@@ -27,8 +27,8 @@ M governance/templates/PREHANDOVER_PROOF_TEMPLATE.md
 
 ## Change Summary
 
-**Type**: Critical Governance Strengthening (Post-Incident)  
-**Breaking Change**: No (additive enforcement rules)  
+**Type**: Critical Governance Strengthening (Post-Incident)
+**Breaking Change**: No (additive enforcement rules)
 **Impact**: All agents in all repositories
 
 **Changes**:
@@ -45,8 +45,8 @@ M governance/templates/PREHANDOVER_PROOF_TEMPLATE.md
 
 ## Governance Compliance
 
-**Ripple Requirement**: YES - Must propagate to all consumer repositories  
-**Layer-Down Required**: YES - Per CROSS_REPOSITORY_LAYER_DOWN_PROTOCOL.md  
+**Ripple Requirement**: YES - Must propagate to all consumer repositories
+**Layer-Down Required**: YES - Per CROSS_REPOSITORY_LAYER_DOWN_PROTOCOL.md
 **Tracking**: Will be documented in GOVERNANCE_ARTIFACT_INVENTORY.md
 
 **Affected Repositories**:
@@ -61,8 +61,8 @@ M governance/templates/PREHANDOVER_PROOF_TEMPLATE.md
 
 ## Authority
 
-**Change Authority**: governance-repo-administrator (canonical governance updates)  
-**Implementation**: governance-repo-administrator agent  
+**Change Authority**: governance-repo-administrator (canonical governance updates)
+**Implementation**: governance-repo-administrator agent
 **Approval Status**: Implementing per AGENT_CONTRACT_PROTECTION_PROTOCOL.md formal change process
 
 **Escalation Note**: CodexAdvisor-agent.md zero-warning enforcement addition requires CS2 intervention (no authority to modify CS2-controlled agent contracts)

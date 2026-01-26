@@ -551,7 +551,7 @@ originates here. All consumer repos MUST layer down governance from this repo.
 Post-PR #1009 incident, added mandatory zero-warning rule prohibiting handover with
 ANY warning or exit code != 0. Prohibits "will validate in CI" and "pre-existing
 issues" exemptions. Requires STOP_AND_FIX_DOCTRINE.md compliance on ANY warning.
-Authority: INCIDENT_2026-01-26_PR_1009_INCOMPLETE_HANDOVER.md, 
+Authority: INCIDENT_2026-01-26_PR_1009_INCOMPLETE_HANDOVER.md,
 EXECUTION_BOOTSTRAP_PROTOCOL.md Section 5.5, STOP_AND_FIX_DOCTRINE.md.
 
 **v4.1.0** (2026-01-21): Added Self-Governance Execution Commands section with
