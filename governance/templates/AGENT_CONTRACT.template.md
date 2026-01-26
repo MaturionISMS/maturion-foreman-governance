@@ -175,6 +175,56 @@ After answering all questions, produce either:
 
 ---
 
+## LOCKED Sections
+
+**Purpose**: Protect governance-critical requirements from unauthorized modification.
+
+**Authority**: `governance/canon/AGENT_CONTRACT_PROTECTION_PROTOCOL.md`, `governance/templates/AGENT_FILE_LOCKED_SECTIONS_TEMPLATE.md`
+
+### Universal LOCKED Sections
+
+All agent contracts MUST include these LOCKED sections (copy from canonical template):
+
+1. **🔒 Pre-Gate Release Validation (LOCKED)**
+   - Mandatory local gate execution before every handover
+   - Source: AGENT_FILE_LOCKED_SECTIONS_TEMPLATE.md Section 3.1
+
+2. **🔒 Zero-Warning Handover Enforcement (LOCKED)**
+   - Mandatory zero-warning validation per EXECUTION_BOOTSTRAP_PROTOCOL.md v1.1.0 Section 5.1
+   - Implements STOP_AND_FIX_DOCTRINE.md for all validation issues
+   - Source: AGENT_FILE_LOCKED_SECTIONS_TEMPLATE.md Section 3.2 (or governance-repo-administrator.agent.md v4.2.0 for canonical version)
+
+### Agent-Specific LOCKED Sections
+
+Depending on agent class, additional LOCKED sections may be required:
+
+- **FM agents**: See AGENT_FILE_LOCKED_SECTIONS_TEMPLATE.md Section 4
+- **Builder agents**: See AGENT_FILE_LOCKED_SECTIONS_TEMPLATE.md Section 5
+- **Liaison agents**: See AGENT_FILE_LOCKED_SECTIONS_TEMPLATE.md Section 6
+- **Administrator agents**: Per CS2 approval
+
+### LOCKED Section Format
+
+Each LOCKED section MUST include:
+- Complete metadata (Lock ID, Lock Reason, Lock Authority, Lock Date, Last Reviewed, Review Frequency)
+- Visual markers: 🔒 emoji, "(LOCKED)" suffix, HTML comment boundaries
+- Content exactly as specified in canonical template (no modifications without CS2 approval)
+
+### Modification of LOCKED Sections
+
+**LOCKED sections CANNOT be modified without CS2 approval.**
+
+To request LOCKED section modification:
+1. Use `governance/templates/LOCKED_SECTION_CHANGE_REQUEST_TEMPLATE.md`
+2. Provide governance justification
+3. Escalate to CS2
+4. Await approval before implementation
+5. Update protection registry after approved change
+
+**Violation of LOCKED section protection = CATASTROPHIC GOVERNANCE VIOLATION** requiring immediate incident documentation and escalation.
+
+---
+
 ## Version & Authority
 
 **Version**: [VERSION]  

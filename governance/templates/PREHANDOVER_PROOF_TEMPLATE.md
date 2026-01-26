@@ -1,8 +1,8 @@
 # PREHANDOVER_PROOF Template
 
 **Purpose**: Standard template for documenting execution verification before PR handover.  
-**Version**: 2.0.0  
-**Authority**: `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md`  
+**Version**: 2.1.0  
+**Authority**: `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md` (including Section 5.1 Zero-Warning Enforcement)  
 **Mandatory For**: All PRs requiring execution verification (workflows, gates, contracts, configurations)  
 **Optional For**: Documentation-only changes (recommended but not required)
 
@@ -135,6 +135,127 @@ Copy this template into your PR description and fill in all sections:
 **Summary**: [X applicable gates GREEN, Y gates SKIP, Z gates FAIL]
 
 **Gate Enumeration Method**: [How you identified all applicable gates, e.g., "Checked .github/workflows/ for triggers matching modified paths"]
+
+---
+
+### Zero-Warning Validation
+
+**Purpose**: Document zero-warning enforcement compliance per EXECUTION_BOOTSTRAP_PROTOCOL.md Section 5.1.
+
+**Authority**: `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md` v1.1.0 Section 5.1, `governance/canon/STOP_AND_FIX_DOCTRINE.md`, `BUILD_PHILOSOPHY.md` (Warnings = Errors)
+
+**Critical Requirements**:
+- ✅ ALL validation commands must exit 0 with ZERO warnings
+- ✅ ALL changes committed BEFORE running validation (especially scope-to-diff)
+- ✅ If ANY warning detected: HALT, fix completely, re-run ALL gates
+- ✅ Local validation is MANDATORY (CI is confirmatory, not diagnostic)
+- ✅ Apply STOP_AND_FIX_DOCTRINE.md to ALL issues encountered
+
+**Prohibited Actions**:
+- ❌ Handing over with ANY warning in validation output
+- ❌ Handing over with "skipped" validations due to uncommitted changes
+- ❌ Stating "will validate in CI" to defer validation
+- ❌ Exit codes != 0 for any validation command
+- ❌ Treating "pre-existing issues" as exemption from remediation
+- ❌ Partial handovers with known issues
+
+---
+
+#### Pre-Validation Checklist
+
+- [ ] All changes reviewed and ready for commit
+- [ ] All changes committed with descriptive commit message
+- [ ] Working directory clean (`git status` shows no uncommitted changes)
+- [ ] Ready to execute validation with committed state
+
+**Commit Verification**:
+```
+[Paste output from: git status]
+[Should show: "nothing to commit, working tree clean"]
+```
+
+---
+
+#### Validation Execution
+
+**All validation commands executed with committed changes**:
+
+1. **YAML Validation**
+   ```
+   $ yamllint .github/agents/*.md
+   [Paste output]
+   Exit code: [MUST be 0]
+   ```
+
+2. **File Structure Validation**
+   ```
+   $ for f in governance/philosophy/BYG_DOCTRINE.md governance/CONSTITUTION.md governance/escalation/ESCALATION_POLICY.md .github/CODEOWNERS; do [ -f "$f" ] || exit 1; done
+   [Paste output]
+   Exit code: [MUST be 0]
+   ```
+
+3. **Scope-to-Diff Validation** (if applicable)
+   ```
+   $ .github/scripts/validate-scope-to-diff.sh main
+   [Paste output]
+   Exit code: [MUST be 0]
+   ```
+
+4. **Locked Section Validation** (if agent contracts modified)
+   ```
+   $ python .github/scripts/check_locked_sections.py --mode=detect-modifications --base-ref=main --head-ref=HEAD
+   [Paste output]
+   Exit code: [MUST be 0]
+   
+   $ python .github/scripts/check_locked_sections.py --mode=validate-metadata --contracts-dir=.github/agents
+   [Paste output]
+   Exit code: [MUST be 0]
+   ```
+
+5. **Additional Gate Validations**
+   ```
+   [Add any additional gate-specific validations here]
+   [Each must show: command executed, output, exit code = 0]
+   ```
+
+---
+
+#### Zero-Warning Attestation
+
+**Validation Results**:
+- ✅ ALL validation commands executed
+- ✅ ALL exit codes = 0 (no errors)
+- ✅ ZERO warnings detected in output
+- ✅ NO skipped validations
+- ✅ NO "will validate in CI" deferrals
+- ✅ Changes committed BEFORE validation
+- ✅ STOP_AND_FIX_DOCTRINE.md applied to all issues
+
+**Iterations** (if any issues encountered):
+```
+[Document any issues discovered during validation]
+[Document how each issue was remediated]
+[Document re-running ALL gates after fixes]
+[Final attestation: "All gates GREEN on final run with zero warnings"]
+```
+
+**If no iterations**: All validations passed on first execution with zero warnings.
+
+**Final Attestation**: 
+```
+I attest that:
+1. ALL validation gates were executed locally with committed changes
+2. ALL validation commands exited with code 0
+3. ZERO warnings were present in any validation output
+4. Any issues discovered were immediately fixed per STOP_AND_FIX_DOCTRINE.md
+5. All gates were re-run after fixes until 100% clean
+6. CI will confirm success, not discover warnings or failures
+
+Timestamp: [YYYY-MM-DD HH:MM:SS UTC]
+Validator: [Agent name or your name]
+```
+
+**Authority**: EXECUTION_BOOTSTRAP_PROTOCOL.md v1.1.0 Section 5.1, governance-repo-administrator.agent.md v4.2.0 (Zero-Warning Handover Enforcement LOCKED section)
 
 ---
 
@@ -385,8 +506,15 @@ Before submitting PR with PREHANDOVER_PROOF, verify:
 
 - [ ] **Artifacts Created** section complete with verification commands and output
 - [ ] **Execution Validation** section includes all commands with exit codes
+- [ ] **Test Execution Validation** section complete (if applicable) with all tests GREEN
 - [ ] **Preflight Gate Status** enumerates ALL gates triggered by PR changes
 - [ ] Each gate has validation method and evidence
+- [ ] **Zero-Warning Validation** section complete with:
+  - [ ] Pre-validation checklist confirming all changes committed
+  - [ ] All validation commands executed with output and exit codes = 0
+  - [ ] Zero-Warning Attestation completed
+  - [ ] Any iterations documented (issues found and fixed)
+  - [ ] Final attestation statement with timestamp
 - [ ] **Execution Timestamp** includes date, time, environment details
 - [ ] **Handover Guarantee** section complete with explicit guarantee statement
 - [ ] **Embedded Governance Artifacts** section complete (embedded OR cross-referenced)
@@ -400,6 +528,7 @@ Before submitting PR with PREHANDOVER_PROOF, verify:
   - [ ] If CST not required: justification documented with decision framework criteria
 - [ ] All exit codes are 0 (success) OR failures are explained and resolved
 - [ ] All applicable gates show ✅ PASS or ⊘ SKIP (no ❌ FAIL allowed at handover)
+- [ ] ZERO warnings in ANY validation output (mandatory per EXECUTION_BOOTSTRAP_PROTOCOL.md Section 5.1)
 
 ---
 
@@ -801,12 +930,13 @@ CST is checkpoint-based, not every-PR-based.
 ---
 
 **Status**: Active Template  
-**Version**: 2.0.0  
-**Last Updated**: 2026-01-13  
-**Authority**: EXECUTION_BOOTSTRAP_PROTOCOL.md v2.0.0+, COMBINED_TESTING_PATTERN.md v1.0.0  
+**Version**: 2.1.0  
+**Last Updated**: 2026-01-26  
+**Authority**: EXECUTION_BOOTSTRAP_PROTOCOL.md v1.1.0+ (including Section 5.1), COMBINED_TESTING_PATTERN.md v1.0.0  
 **Owner**: Governance Administrator
 
 **Changelog**:
+- **v2.1.0** (2026-01-26): Added Zero-Warning Validation section with comprehensive attestation per EXECUTION_BOOTSTRAP_PROTOCOL.md v1.1.0 Section 5.1. Implements mandatory zero-warning enforcement, STOP_AND_FIX_DOCTRINE.md application, and complete validation evidence requirements. Authority: PR #1015, Issue #1020 ripple actions.
 - **v2.0.0** (2026-01-13): Added Embedded Governance Artifacts section and CST Validation Attestation section per Subwave 3.3 learnings
 - **v1.0.0** (2026-01-11): Initial template creation with core PREHANDOVER_PROOF sections
 
