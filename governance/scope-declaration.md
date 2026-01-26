@@ -20,6 +20,8 @@ IN_SCOPE:
 - Update governance/canon/AGENT_CONTRACT_PROTECTION_PROTOCOL.md Section 11.2 (cross-reference new template)
 - Update GOVERNANCE_ARTIFACT_INVENTORY.md (document new template artifact)
 - Update governance/scope-declaration.md (this file - scope documentation)
+- Create PREHANDOVER_PROOF.md (handover evidence per EXECUTION_BOOTSTRAP_PROTOCOL.md)
+- Archive previous PREHANDOVER_PROOF.md (preserve previous PR evidence)
 
 ---
 
@@ -28,7 +30,6 @@ IN_SCOPE:
 OUT_OF_SCOPE:
 - Agent contract modifications (applying template to existing contracts - separate effort)
 - Consumer repository updates (office-app, PartPulse, R_Roster) - Not applicable for template creation
-- PREHANDOVER_PROOF.md creation - Will be created after validation passes
 - Tests - No test infrastructure for governance templates
 - CI gate workflows - No workflow modifications needed
 - Other template files or canonical documents
@@ -41,6 +42,8 @@ A governance/templates/AGENT_FILE_LOCKED_SECTIONS_TEMPLATE.md
 M governance/canon/AGENT_CONTRACT_PROTECTION_PROTOCOL.md
 M GOVERNANCE_ARTIFACT_INVENTORY.md
 M governance/scope-declaration.md
+A PREHANDOVER_PROOF.md
+A PREHANDOVER_PROOF_archive_20260126_previous_pr.md
 
 ---
 
