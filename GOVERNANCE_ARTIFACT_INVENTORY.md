@@ -69,6 +69,7 @@ Canon files define constitutional governance rules, models, and protocols.
 | `DOMAIN_OWNERSHIP_ACCOUNTABILITY.md` | Defines domain ownership and accountability rules | Readiness |
 | `DOMAIN_STATE_ENFORCEMENT_RULE.md` | Defines enforcement of domain state requirements | Readiness |
 | `ENVIRONMENT_PROVISIONING_PROCESS.md` | Defines environment setup and provisioning | Readiness |
+| `EXECUTION_BOOTSTRAP_PROTOCOL.md` | **UPDATED v1.1.0 (2026-01-26)** - Mandatory execution verification protocol with zero-warning enforcement, agent contract propagation wait, and STOP-AND-FIX integration | PR-gates, Readiness |
 | `FAILURE_PROMOTION_RULE.md` | Defines when failures must be escalated/promoted | Feedback/learning |
 | `FM_GOVERNANCE_LOADING_PROTOCOL.md` | Protocol for loading governance into FM context | Layer-down, Readiness |
 | `FOREMAN_AUTHORITY_AND_SUPERVISION_MODEL.md` | Defines FM authority boundaries and supervision rules | Readiness |
@@ -199,7 +200,7 @@ Agent contract files define agent roles, authority, and responsibilities.
 | File | Purpose | Categories |
 |------|---------|------------|
 | `governance/agents/governance-administrator.agent.md` | Governance Administrator agent contract | Readiness |
-| `.github/agents/governance-repo-administrator.agent.md` | Repository-scoped Governance Administrator agent contract | Readiness |
+| `.github/agents/governance-repo-administrator.agent.md` | **UPDATED v4.2.0 (2026-01-26)** - Repository-scoped Governance Administrator agent contract with zero-warning handover enforcement | Readiness |
 
 ---
 
