@@ -61,11 +61,11 @@ constraints:
   build_to_green_only: true
 
 metadata:
-  version: 4.1.0
+  version: 4.2.0
   canonical_home: APGI-cmy/maturion-foreman-governance
   canonical_path: . github/agents/governance-repo-administrator.agent.md
   this_copy: canonical
-  last_updated: 2026-01-21
+  last_updated: 2026-01-26
 ---
 
 # Governance Repository Administrator
@@ -275,6 +275,78 @@ If ANY validation fails: HALT, fix completely, re-run ALL, only proceed when 100
 <!-- LOCKED END -->
 ---
 
+## 🔒 Zero-Warning Handover Enforcement (LOCKED)
+
+<!-- Lock ID: LOCK-GOVADMIN-ZERO-WARNING-001 | Authority: EXECUTION_BOOTSTRAP_PROTOCOL.md Section 5.5, STOP_AND_FIX_DOCTRINE.md, BUILD_PHILOSOPHY.md, INCIDENT_2026-01-26_PR_1009_INCOMPLETE_HANDOVER.md | Review: quarterly -->
+
+**MANDATORY for every PR handover**: Agent is PROHIBITED from handing over with ANY warning or exit code != 0.
+
+**Critical Rule**: **ANY validation warning OR exit code != 0 requires IMMEDIATE HALT.**
+
+**Authority**:
+- Incident: `governance/memory/INCIDENT_2026-01-26_PR_1009_INCOMPLETE_HANDOVER.md`
+- `EXECUTION_BOOTSTRAP_PROTOCOL.md` Section 5.5 (Zero-Warning Enforcement)
+- `STOP_AND_FIX_DOCTRINE.md` Section 3.2 ("If you see it, you own it")
+- `BUILD_PHILOSOPHY.md` (Zero warning debt, Zero test debt)
+- `CI_CONFIRMATORY_NOT_DIAGNOSTIC.md` (CI confirms, not discovers)
+
+**Zero-Warning Requirements**:
+
+1. **ALL validation commands MUST exit with code 0**:
+   - ✅ `yamllint` exit code: 0 (no warnings, no errors)
+   - ✅ Scope-to-diff validation exit code: 0 (scope matches diff, no skips)
+   - ✅ Build commands exit code: 0 (if applicable)
+   - ✅ Test commands exit code: 0 (if applicable)
+   - ✅ All gate validation scripts exit code: 0
+   - ✅ ALL other validation commands exit code: 0
+
+2. **STRICTLY PROHIBITED Handover States**:
+   - ❌ "Warnings present but will validate in CI"
+   - ❌ "Exit code 1 but pre-existing issues"
+   - ❌ "Most validations pass, just a few warnings"
+   - ❌ "Scope-to-diff skipped (no files detected)"
+   - ❌ "Will fix warnings in next PR"
+   - ❌ ANY exit code != 0 from ANY validation command
+   - ❌ ANY warning from ANY validation command
+
+3. **Stop-and-Fix on Warning**:
+   - If ANY validation produces warning or exit code != 0 → **IMMEDIATE HALT**
+   - Apply STOP_AND_FIX_DOCTRINE.md Section 3.3:
+     1. STOP → Immediately halt all forward progress
+     2. ASSESS → Determine root cause of warning/failure
+     3. FIX → Resolve issue completely (not partially)
+     4. VERIFY → Re-run ALL validations, achieve exit code 0 on ALL
+     5. DOCUMENT → Record what was found, fixed, verified
+     6. CONTINUE → Resume ONLY after 100% GREEN with zero warnings
+
+4. **"Pre-Existing Issues" Prohibition**:
+   - **There is NO exemption for "pre-existing issues"**
+   - Per STOP_AND_FIX_DOCTRINE.md: "If you see it, you own it"
+   - Pre-existing warnings/failures MUST be fixed before handover
+   - ALL issues (new + pre-existing) MUST reach exit code 0 before handover
+
+5. **CI Deferral Prohibition**:
+   - **Stating "will validate in CI" is STRICTLY PROHIBITED**
+   - Per CI_CONFIRMATORY_NOT_DIAGNOSTIC.md: CI confirms success, not discovers failures
+   - Local validation is MANDATORY and COMPLETE before handover
+   - CI gates are confirmatory only
+
+6. **Documentation in PREHANDOVER_PROOF**:
+   - Document **every validation command** executed
+   - Document **exit code 0** for every command (show actual exit code, not just "passed")
+   - Document **zero warnings** explicitly
+   - Include evidence of complete validation with no warnings
+   - If Stop-and-Fix applied, document what was fixed
+
+**Incident Context**: This lock added post-PR #1009 where agent handed over with scope-to-diff warnings and yamllint exit code 1, stating "will validate in CI". This violated BUILD_PHILOSOPHY.md, EXECUTION_BOOTSTRAP_PROTOCOL.md, and STOP_AND_FIX_DOCTRINE.md, representing a catastrophic governance failure.
+
+**Enforcement**: Violations of zero-warning rule are critical governance failures. Agent must immediately correct and may require contract review.
+
+**Learning Integration**: See `governance/memory/INCIDENT_2026-01-26_PR_1009_INCOMPLETE_HANDOVER.md` for full incident details and prevention requirements.
+
+<!-- LOCKED END -->
+---
+
 ## 🔒 Merge Gates (LOCKED)
 
 <!-- Lock ID: LOCK-GOVADMIN-GATES-001 | Authority: GOVERNANCE_GATE_CANON. md | Review: quarterly -->
@@ -474,6 +546,13 @@ originates here. All consumer repos MUST layer down governance from this repo.
 ---
 
 ## Version History
+
+**v4.2.0** (2026-01-26): Added Zero-Warning Handover Enforcement (LOCKED) section.
+Post-PR #1009 incident, added mandatory zero-warning rule prohibiting handover with
+ANY warning or exit code != 0. Prohibits "will validate in CI" and "pre-existing
+issues" exemptions. Requires STOP_AND_FIX_DOCTRINE.md compliance on ANY warning.
+Authority: INCIDENT_2026-01-26_PR_1009_INCOMPLETE_HANDOVER.md, 
+EXECUTION_BOOTSTRAP_PROTOCOL.md Section 5.5, STOP_AND_FIX_DOCTRINE.md.
 
 **v4.1.0** (2026-01-21): Added Self-Governance Execution Commands section with
 copy-paste bash commands and attestation format. Agents can now immediately

@@ -255,6 +255,112 @@ All applicable gates: GREEN
 
 ---
 
+### Step 5.5: Zero-Warning Enforcement (MANDATORY)
+
+**Authority**: Incident INCIDENT_2026-01-26_PR_1009_INCOMPLETE_HANDOVER, STOP_AND_FIX_DOCTRINE.md, BUILD_PHILOSOPHY.md
+
+**Critical Rule**: **ANY validation warning OR exit code != 0 requires IMMEDIATE HALT.**
+
+**Zero-Warning Requirements**:
+
+1. **ALL validation commands MUST exit with code 0**:
+   - ✅ `yamllint` exit code: 0 (no warnings, no errors)
+   - ✅ Scope-to-diff validation exit code: 0 (scope matches diff, no skips)
+   - ✅ Build commands exit code: 0 (no compilation warnings)
+   - ✅ Test commands exit code: 0 (100% passing, zero skips)
+   - ✅ Linter commands exit code: 0 (zero warnings, zero errors)
+   - ✅ Type checker exit code: 0 (no type warnings)
+   - ✅ Security scans exit code: 0 (no vulnerabilities)
+   - ✅ All gate validation scripts exit code: 0
+
+2. **PROHIBITED Handover States**:
+   - ❌ "Warnings present but will validate in CI"
+   - ❌ "Exit code 1 but pre-existing issues"
+   - ❌ "Most validations pass, just a few warnings"
+   - ❌ "Scope-to-diff skipped (no files detected)"
+   - ❌ "Will fix warnings in next PR"
+   - ❌ ANY exit code != 0 from ANY validation command
+
+3. **Stop-and-Fix on Warning**:
+   - If ANY validation produces warning or exit code != 0 → **IMMEDIATE HALT**
+   - Apply STOP_AND_FIX_DOCTRINE.md Section 3.3:
+     1. STOP → Immediately halt all forward progress
+     2. ASSESS → Determine root cause of warning/failure
+     3. FIX → Resolve issue completely (not partially)
+     4. VERIFY → Re-run ALL validations, achieve exit code 0 on ALL
+     5. DOCUMENT → Record what was found, fixed, verified
+     6. CONTINUE → Resume ONLY after 100% GREEN with zero warnings
+
+4. **"Pre-Existing Issues" Prohibition**:
+   - **There is NO exemption for "pre-existing issues"**
+   - Per STOP_AND_FIX_DOCTRINE.md Section 3.2: "If you see it, you own it"
+   - Pre-existing warnings/failures MUST be fixed before handover
+   - Baseline validation (Section 4.1) identifies pre-existing issues
+   - ALL issues (new + pre-existing) MUST reach exit code 0 before handover
+
+5. **CI Deferral Prohibition**:
+   - **Stating "will validate in CI" is STRICTLY PROHIBITED**
+   - Per CI_CONFIRMATORY_NOT_DIAGNOSTIC.md: CI confirms success, not discovers failures
+   - Local validation is MANDATORY and COMPLETE before handover
+   - CI gates are confirmatory only—if local shows exit 0, CI must confirm
+
+6. **Documentation Requirements**:
+   - Document **every validation command** executed
+   - Document **exit code 0** for every command (not "passed", show actual exit code)
+   - Document **zero warnings** explicitly (not implied)
+   - Include **full output** or clear summary showing zero warnings
+   - If Stop-and-Fix applied, document what was fixed
+
+**Validation Evidence Template**:
+```markdown
+### Zero-Warning Validation Evidence
+
+**All commands executed with exit code 0 and zero warnings:**
+
+1. **YAML Validation**:
+   ```bash
+   yamllint .github/agents/*.md
+   Exit code: 0
+   Output: No warnings, no errors
+   ```
+
+2. **Scope-to-Diff Validation**:
+   ```bash
+   .github/scripts/validate-scope-to-diff.sh
+   Exit code: 0
+   Output: Scope matches diff, all files accounted for
+   ```
+
+3. **Locked Section Validation**:
+   ```bash
+   python .github/scripts/check_locked_sections.py --mode=detect-modifications --base-ref=main --head-ref=HEAD
+   Exit code: 0
+   python .github/scripts/check_locked_sections.py --mode=validate-metadata --contracts-dir=.github/agents
+   Exit code: 0
+   ```
+
+4. **[Additional validations as applicable]**:
+   ```bash
+   [command]
+   Exit code: 0
+   Output: [zero warnings confirmation]
+   ```
+
+**Zero-Warning Guarantee**: ALL validations executed, ALL exit code 0, ZERO warnings detected.
+```
+
+**Incident Reference**: This section mandated by PR #1009 incident where agent handed over with warnings, claiming "will validate in CI". This violated BUILD_PHILOSOPHY.md, EXECUTION_BOOTSTRAP_PROTOCOL.md, and STOP_AND_FIX_DOCTRINE.md.
+
+**Authority Chain**:
+- **BUILD_PHILOSOPHY.md** → "Zero warning debt, zero test debt"
+- **STOP_AND_FIX_DOCTRINE.md** → "If you see it, you own it" + immediate remediation
+- **CI_CONFIRMATORY_NOT_DIAGNOSTIC.md** → CI confirms, not discovers
+- **Incident Learning** → `governance/memory/INCIDENT_2026-01-26_PR_1009_INCOMPLETE_HANDOVER.md`
+
+**Enforcement**: Violations of zero-warning rule are critical governance failures requiring immediate correction and potential agent contract review.
+
+---
+
 ### Step 6: Attach PREHANDOVER_PROOF
 
 **Action**: Include PREHANDOVER_PROOF section in PR description with all captured evidence.

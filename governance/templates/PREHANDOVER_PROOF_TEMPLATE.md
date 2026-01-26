@@ -146,6 +146,85 @@ Copy this template into your PR description and fill in all sections:
 
 ---
 
+### Zero-Warning Verification (MANDATORY)
+
+**Authority**: `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md` Section 5.5, `governance/memory/INCIDENT_2026-01-26_PR_1009_INCOMPLETE_HANDOVER.md`
+
+**Critical Rule**: ALL validation commands MUST exit with code 0 and produce ZERO warnings.
+
+**Zero-Warning Checklist**:
+- [ ] ALL validation commands executed
+- [ ] ALL validation commands exited with code 0 (not just "passed")
+- [ ] ZERO warnings from any validation command
+- [ ] No "pre-existing issues" exemptions claimed
+- [ ] No "will validate in CI" statements
+- [ ] Stop-and-Fix applied if any warnings encountered
+- [ ] Complete re-validation after any Stop-and-Fix
+
+**Validation Evidence**:
+
+1. **YAML Validation** (if agent files or workflows modified):
+   ```bash
+   yamllint .github/agents/*.md .github/workflows/*.yml
+   Exit code: 0
+   Output: [Show zero warnings confirmation]
+   ```
+
+2. **Scope-to-Diff Validation** (if applicable):
+   ```bash
+   .github/scripts/validate-scope-to-diff.sh
+   Exit code: 0
+   Output: [Show scope matches diff, no skips]
+   ```
+
+3. **Locked Section Validation** (if agent files modified):
+   ```bash
+   python .github/scripts/check_locked_sections.py --mode=detect-modifications --base-ref=main --head-ref=HEAD
+   Exit code: 0
+   python .github/scripts/check_locked_sections.py --mode=validate-metadata --contracts-dir=.github/agents
+   Exit code: 0
+   ```
+
+4. **Build/Lint/Test Validation** (if applicable):
+   ```bash
+   [Build command, e.g., npm run build]
+   Exit code: 0
+   Output: [Zero warnings]
+   
+   [Lint command, e.g., npm run lint]
+   Exit code: 0
+   Output: [Zero warnings]
+   
+   [Test command, e.g., npm test]
+   Exit code: 0
+   Output: [All tests passed, zero skips]
+   ```
+
+5. **Additional Validations** (as applicable):
+   ```bash
+   [Any other validation commands required for this PR]
+   Exit code: 0
+   Output: [Zero warnings confirmation]
+   ```
+
+**Stop-and-Fix Documentation** (if any warnings were encountered):
+```markdown
+### Issue 1: [Warning/failure description]
+- **Discovered**: [When/where warning was found]
+- **Root Cause**: [What caused the warning]
+- **Fix Applied**: [How it was fixed completely]
+- **Re-Validation**: [Command re-run with exit code 0]
+
+### Issue 2: [If applicable]
+[Same structure as Issue 1]
+
+**Final State**: ALL issues fixed, ALL validations re-run, ALL exit code 0, ZERO warnings.
+```
+
+**Zero-Warning Guarantee**: I guarantee that ALL validation commands executed with exit code 0 and produced ZERO warnings. No warnings were deferred to CI. All pre-existing issues discovered were fixed. Stop-and-Fix doctrine was applied immediately to any warnings encountered.
+
+---
+
 ### Handover Guarantee
 
 **I guarantee**:

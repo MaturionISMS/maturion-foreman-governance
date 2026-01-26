@@ -68,7 +68,15 @@ Regardless of your class, you MUST read and understand these documents:
 ### Execution Model (Builders and Overseers)
 - **BUILD_PHILOSOPHY.md** - One-Time Build Law, QA as proof, Zero Test Debt (root of repo)
 - **governance/opojd/OPOJD_DOCTRINE.md** - One-Prompt One-Job Doctrine, continuous execution mandate
-- **EXECUTION_BOOTSTRAP_PROTOCOL.md** - Mandatory 7-step execution verification, PREHANDOVER_PROOF requirement
+- **EXECUTION_BOOTSTRAP_PROTOCOL.md** - Mandatory 7-step execution verification, PREHANDOVER_PROOF requirement, **ZERO-WARNING ENFORCEMENT** (Section 5.5)
+- **STOP_AND_FIX_DOCTRINE.md** - Zero tolerance for technical debt, "If you see it, you own it" principle
+
+### Critical Quality Rules (All Agents)
+- **ZERO-WARNING HANDOVER RULE**: ANY validation warning or exit code != 0 requires IMMEDIATE HALT. Stating "will validate in CI" is STRICTLY PROHIBITED.
+- **NO "Pre-Existing Issues" Exemption**: All issues discovered (new + pre-existing) must be fixed before handover.
+- **Stop-and-Fix Compliance**: Apply STOP_AND_FIX_DOCTRINE.md Section 3.3 on ANY warning.
+- **Exit Code 0 Requirement**: ALL validation commands must exit 0 with zero warnings before handover.
+- **Incident Learning**: See `governance/memory/INCIDENT_2026-01-26_PR_1009_INCOMPLETE_HANDOVER.md` for catastrophic failure example.
 
 ### Your Profile
 - **governance/profiles/[your-class].v1.md** - Role-specific constraints and capabilities
