@@ -1,12 +1,13 @@
 # AGENT CONTRACT PROTECTION PROTOCOL
 
 ## Status
-**Type**: Constitutional Governance Rule — Tier-0  
-**Authority**: Supreme - Canonical  
-**Version**: 1.0.0  
-**Effective Date**: 2026-01-15  
-**Owner**: CS2 (Johan Ras in bootstrap mode, Maturion in production)  
-**Precedence**: Subordinate to GOVERNANCE_PURPOSE_AND_SCOPE.md, extends AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md  
+**Type**: Constitutional Governance Rule — Tier-0
+**Authority**: Supreme - Canonical
+**Version**: 1.1.0
+**Effective Date**: 2026-01-15
+**Last Updated**: 2026-01-26
+**Owner**: CS2 (Johan Ras in bootstrap mode, Maturion in production)
+**Precedence**: Subordinate to GOVERNANCE_PURPOSE_AND_SCOPE.md, extends AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md
 **Part of**: Agent Contract Authority Infrastructure
 
 ---
@@ -519,6 +520,8 @@ This protocol applies to:
 
 ### 11.2 Layer-Down Requirements
 
+**⚠️ CRITICAL**: Layer-down is NOT complete until all agent files have canonical LOCKED sections applied per the contained protocol. **Layer-down is one atomic batch** — agent contracts and protocol must be updated together, never in separate steps. Layering down the protocol without applying LOCKED sections to agent files creates a governance violation and leaves contracts unprotected.
+
 Each consumer repository MUST:
 
 1. **Adopt Protocol**
@@ -535,15 +538,18 @@ Each consumer repository MUST:
    - Document findings using gap analysis template
    - Submit to CS2 for review
 
-4. **Apply Lockdown**
+4. **Apply Lockdown** ⚠️ **MUST BE IN SAME PR/BATCH AS PROTOCOL**
    - Implement locked sections per gap analysis recommendations
    - Create protection registry with all locked sections
    - Update all agent contracts with locked section metadata
+   - Reference templates: See Section 4.2 (Locked Section Metadata Format) and `governance/templates/AGENT_CONTRACT.template.md`
+   - Cross-reference: `governance/templates/LOCKED_SECTION_CHANGE_REQUEST_TEMPLATE.md` for future modifications
 
 5. **Document Completion**
    - Record layer-down completion in `governance/layer-down/AGENT_CONTRACT_PROTECTION_LAYER_DOWN_STATUS.md`
    - Link completion evidence (PR numbers, gate execution proof)
    - Confirm CS2 approval of gap analysis and lockdown
+   - Verify all agent contracts in scope have LOCKED sections applied (not protocol-only layer-down)
 
 ### 11.3 Layer-Down Tracking
 
@@ -720,6 +726,16 @@ This protocol is subject to evolution as governance matures:
 ---
 
 ## Version History
+
+**v1.1.0** (2026-01-26):
+- **CRITICAL UPDATE**: Section 11.2 — Clarified atomic layer-down compliance requirement
+- Added explicit note: Layer-down NOT complete until all agent files have LOCKED sections applied
+- Emphasized atomic batch requirement: agent contracts and protocol must be updated together
+- Added cross-references to Section 4.2 (Locked Section Metadata Format)
+- Added cross-references to `governance/templates/AGENT_CONTRACT.template.md`
+- Added cross-references to `governance/templates/LOCKED_SECTION_CHANGE_REQUEST_TEMPLATE.md`
+- Enhanced Step 4 (Apply Lockdown) with template references and batch requirement
+- Enhanced Step 5 (Document Completion) with verification requirement
 
 **v1.0.0** (2026-01-15):
 - Initial canonical protocol creation

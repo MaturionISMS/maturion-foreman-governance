@@ -1,8 +1,9 @@
 # Governance Artifact Inventory
 
-**Purpose**: Complete inventory of all governance artifacts in the maturion-foreman-governance repository  
-**Created**: 2025-12-31  
-**Authority**: Phase 1.1 — Platform Readiness Reset & Build Initiation Plan  
+**Purpose**: Complete inventory of all governance artifacts in the maturion-foreman-governance repository
+**Created**: 2025-12-31
+**Last Updated**: 2026-01-26
+**Authority**: Phase 1.1 — Platform Readiness Reset & Build Initiation Plan
 **Scope**: Inventory only — no interpretation, correction, or gap analysis
 
 ---
@@ -42,6 +43,7 @@ Canon files define constitutional governance rules, models, and protocols.
 | `.agent.schema.md` | Schema definition for agent contracts | PR-gates |
 | `ACTIVATION_STATE_MODEL.md` | Defines agent/system activation lifecycle states | Readiness |
 | `AGENT_CANONICAL_CONTEXT_SYNCHRONISATION_PROTOCOL.md` | Protocol for keeping agent context synchronized with canon | Layer-down |
+| `AGENT_CONTRACT_PROTECTION_PROTOCOL.md` | **UPDATED v1.1.0 (2026-01-26)** - Defines locked section protection for agent contracts, layer-down atomic batch requirements, and contract modification authority | PR-gates, Layer-down, Readiness |
 | `AGENT_RECRUITMENT.md` | Defines rules for recruiting and activating agents | Readiness |
 | `AGENT_ROLE_GATE_APPLICABILITY.md` | Maps which PR gates apply to which agent roles | PR-gates |
 | `AGENT_SELF_GOVERNANCE_PROTOCOL.md` | **NEW (2026-01-21)** - Defines universal agent self-governance check before every job, agent-specific alignment rules, and mandatory attestation requirements | Layer-down, Readiness, PR-gates |
