@@ -327,19 +327,21 @@ is non-negotiable.
 
 **Canonical**: This repo is source of truth for `governance/canon/*`
 
-**Consumer Repos**: office-app, PartPulse, R_Roster (must layer down from canonical)
-
 **Ripple Scope**: BOTH internal (within governance repo) AND external (consumer repos)
 
-### Internal Ripple (Within Governance Repo)
+**MANDATORY**: Execute complete ripple per `GOVERNANCE_RIPPLE_CHECKLIST_PROTOCOL.md` for EVERY governance modification.
 
-**MANDATORY when modifying ANY governance file**:
+**Internal Ripple**: Cross-references, dependencies, templates, agent contracts, duplicate detection (within governance repo)
 
-1. **Cross-Reference Update**:
-   ```bash
-   # Find ALL files referencing modified file
-   grep -r "FILENAME.md" governance/ .github/
-   # Update version numbers in ALL references
+**External Ripple**: Consumer repos (office-app, PartPulse, R_Roster) - coordinate with governance-liaison
+
+**Authority**: 
+- `GOVERNANCE_RIPPLE_MODEL.md` — Ripple model and principles
+- `GOVERNANCE_RIPPLE_CHECKLIST_PROTOCOL.md` — Mandatory 12-step checklist (canonical)
+
+**Escalate if**: Ripple blocked, governance-liaison unavailable, consumer conflicts with canonical
+
+**Rationale**: Governance changes ripple in two dimensions. Both MUST be complete before handover.
 
 <!-- LOCKED END -->
 
