@@ -211,8 +211,8 @@ echo "✅ SELF-GOVERNANCE CHECK PASSED - Proceeding with task"
 
 **CANNOT MODIFY (Under ANY Circumstances)**:
 - ❌ `.github/agents/CodexAdvisor-agent.md` (self - CS2 only)
-- ❌ `.github/agents/governance-repo-administrator.agent.md` (CS2 only)
-- ❌ ANY `.agent` or `.agent.md` files in ANY repository
+- ❌ `.github/agents/governance-repo-administrator.agentt.md` (CS2 only)
+- ❌ ANY `.agentt` or `.agentt.md` files in ANY repository
 
 **CAN DO (Advisory Role)**:
 - ✅ Read all agent contracts
@@ -236,17 +236,17 @@ echo "✅ SELF-GOVERNANCE CHECK PASSED - Proceeding with task"
 
 ## 🔒 Agent File Creation & Modification Protocol (LOCKED)
 
-<!-- Lock ID: LOCK-CODEXADVISOR-AGENTFILE-001 | Authority: .agent.schema.md, AGENT_CONTRACT_MINIMALISM_PRINCIPLE | Review: quarterly -->
+<!-- Lock ID: LOCK-CODEXADVISOR-AGENTFILE-001 | Authority: .agentt.schema.md, AGENT_CONTRACT_MINIMALISM_PRINCIPLE | Review: quarterly -->
 
 **When advising on or proposing ANY agent contract files**:
-- Follow `.agent.schema.md` Section 6 (Agent Contract Minimalism Principle)
+- Follow `.agentt.schema.md` Section 6 (Agent Contract Minimalism Principle)
 - Use `governance/templates/AGENT_CONTRACT.template.md` (when created per Issue #1010)
 - Reference canonical governance, don't duplicate
 - Keep files under 15,000 characters
 
 **Prohibited**: Verbose duplications, philosophy recitations, copying canon content into agent files
 
-**Authority**: `.agent.schema.md`, `AGENT_CONTRACT_MINIMALISM_PRINCIPLE`
+**Authority**: `.agentt.schema.md`, `AGENT_CONTRACT_MINIMALISM_PRINCIPLE`
 
 <!-- LOCKED END -->
 
@@ -331,7 +331,7 @@ If NO: STOP. If YES: Execute exactly as approved.
 
 **Incident Context**: This lock added post-PR #1009 where agent handed over with scope-to-diff warnings and yamllint exit code 1, stating "will validate in CI". This violated BUILD_PHILOSOPHY.md, EXECUTION_BOOTSTRAP_PROTOCOL.md, and STOP_AND_FIX_DOCTRINE.md, representing a catastrophic governance failure.
 
-**Enforcement**: Violations of zero-warning rule are critical governance failures. Agent must immediately correct and may require contract review.
+**Enforcement**: Violations of zero-warning rule are critical governance failures.agent must immediately correct and may require contract review.
 
 **Learning Integration**: See `governance/memory/INCIDENT_2026-01-26_PR_1009_INCOMPLETE_HANDOVER.md` for full incident details and prevention requirements.
 
@@ -659,7 +659,7 @@ Per BUILD_PHILOSOPHY.md:
 
 **v4.2.0** (2026-01-26): Added Zero-Warning Handover Enforcement (LOCKED) section post-PR #1009 incident. Added Gate Alignment Verification (LOCKED) section. Fixed all YAML spacing errors. Removed non-existent ZERO_TEST_DEBT_CONSTITUTIONAL_RULE.md binding. Added STOP_AND_FIX_DOCTRINE.md binding. Updated PREHANDOVER_PROOF_TEMPLATE version to 2.1.0. Updated all path references (removed spaces). Character count: ~17,500 (58% of limit).
 
-**v4.1.0** (2026-01-21): Added Self-Governance Execution Commands section with copy-paste bash commands and attestation format. Agents can now immediately execute self-governance check with concrete commands.
+**v4.1.0** (2026-01-21): Added Self-Governance Execution Commands section with copy-paste bash commands and attestation format.agents can now immediately execute self-governance check with concrete commands.
 
 **v4.0.0** (2026-01-21): Complete rewrite for governance alignment. Added: Pre-Job Self-Governance (LOCKED), Agent File Authority (LOCKED), Complete Gate Inventory (LOCKED), Step 2.5 Gate Alignment, Layer-Down & Ripple Protocol (LOCKED), Issue #999 Cross-Repo Coordination (LOCKED). Aligned with governance-repo-administrator v4.0.0, AGENT_SELF_GOVERNANCE_PROTOCOL.md, CS2_AGENT_FILE_AUTHORITY_MODEL.md. All bindings reference-based per Agent Contract Minimalism Principle.
 

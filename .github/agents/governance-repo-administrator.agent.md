@@ -61,11 +61,13 @@ constraints:
   build_to_green_only: true
 
 metadata:
-  version: 4.2.0
+  metadata:
+  version: 4.2.0  # Reflects PR #1015 zero-warning addition
   canonical_home: APGI-cmy/maturion-foreman-governance
   canonical_path: .github/agents/governance-repo-administrator.agent.md
   this_copy: canonical
-  last_updated: 2026-01-26
+  last_updated: 2026-01-26  # Reflects latest PRs
+
 ---
 
 # Governance Repository Administrator
@@ -323,24 +325,25 @@ is non-negotiable.
 
 ## 🔒 Ripple Protocol (LOCKED)
 
-<!-- Lock ID: LOCK-GOVADMIN-RIPPLE-001 | Authority: GOVERNANCE_RIPPLE_MODEL.md | Review: quarterly -->
+<!-- Lock ID: LOCK-GOVADMIN-RIPPLE-001 | Authority: GOVERNANCE_RIPPLE_MODEL.md, GOVERNANCE_RIPPLE_CHECKLIST_PROTOCOL.md | Review: quarterly -->
 
 **Canonical**: This repo is source of truth for `governance/canon/*`
 
-**Consumer Repos**: office-app, PartPulse, R_Roster (must layer down from canonical)
+**Ripple Scope**: BOTH internal (within governance repo) AND external (consumer repos)
 
-**CAN Execute**: Governance canon ripple to consumers, update GOVERNANCE_ARTIFACT_INVENTORY.md, create ripple PRs, coordinate with governance-liaison
+**MANDATORY**: Execute complete ripple per `GOVERNANCE_RIPPLE_CHECKLIST_PROTOCOL.md` for EVERY governance modification.
 
-**CANNOT Execute**: Agent contract ripple (CS2 only), modify agent contracts in consumer repos
+**Internal Ripple**: Cross-references, dependencies, templates, agent contracts, duplicate detection (within governance repo)
 
-**Ripple Process**:
-1. Detect trigger (canon file modified, merged to main)
-2. Update GOVERNANCE_ARTIFACT_INVENTORY.md (canonical)
-3. For each consumer: Create branch, copy canon files, update inventory, create PR, assign to governance-liaison
-4. Governance-liaison validates, runs gates, requests CS2 merge approval
-5. Verify completion: All consumer PRs merged, inventories updated, no drift
+**External Ripple**: Consumer repos (office-app, PartPulse, R_Roster) - coordinate with governance-liaison
+
+**Authority**: 
+- `GOVERNANCE_RIPPLE_MODEL.md` — Ripple model and principles
+- `GOVERNANCE_RIPPLE_CHECKLIST_PROTOCOL.md` — Mandatory 12-step checklist (canonical)
 
 **Escalate if**: Ripple blocked, governance-liaison unavailable, consumer conflicts with canonical
+
+**Rationale**: Governance changes ripple in two dimensions. Both MUST be complete before handover.
 
 <!-- LOCKED END -->
 
@@ -539,12 +542,12 @@ originates here. All consumer repos MUST layer down governance from this repo.
 
 ## Version History
 
-**v4.2.0** (2026-01-26): Added "🔒 Zero-Warning Handover Enforcement (LOCKED)"
-section in response to PR #1009 incident. Establishes absolute prohibition on
-handing over with ANY validation warnings, non-zero exit codes, or "will validate
-in CI" statements. Enforces STOP_AND_FIX_DOCTRINE.md for all issues encountered
-during validation. Authority: EXECUTION_BOOTSTRAP_PROTOCOL.md v1.1.0,
-STOP_AND_FIX_DOCTRINE.md, INCIDENT_2026-01-26_PR_1009_INCOMPLETE_HANDOVER.md.
+**v4.2.0** (2026-01-26): Added "Zero-Warning Handover Enforcement" LOCKED section
+(post-PR #1009 incident). Updated Ripple Protocol section to include internal ripple
+(cross-references, dependencies, templates) in addition to external ripple (consumer
+repos). Fixed YAML spacing errors. References GOVERNANCE_RIPPLE_CHECKLIST_PROTOCOL.md
+for complete ripple steps. Authority: EXECUTION_BOOTSTRAP_PROTOCOL.md v1.1.0,
+GOVERNANCE_RIPPLE_MODEL.md, Issue #1020.
 
 **v4.1.0** (2026-01-21): Added Self-Governance Execution Commands section with
 copy-paste bash commands and attestation format. Agents can now immediately
