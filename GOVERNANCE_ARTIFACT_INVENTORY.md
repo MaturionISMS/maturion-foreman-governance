@@ -167,6 +167,7 @@ Template files provide reusable structures for governance artifacts.
 
 | File | Purpose | Categories |
 |------|---------|------------|
+| `AGENT_FILE_LOCKED_SECTIONS_TEMPLATE.md` | **NEW (2026-01-26)** - Canonical template with copy-paste LOCKED sections for FM, Builder, and Liaison agent contracts with complete metadata and layer-down guidance | PR-gates, Layer-down, Readiness |
 | `BUILDER_TASK_TEMPLATE.md` | Template for builder task definitions | Readiness |
 | `CANON_CREATION_AND_PROPAGATION_CHECKLIST.md` | Comprehensive workflow checklist for canon creation and propagation with mandatory inventory maintenance | Layer-down, Feedback/learning |
 | `PLATFORM_READINESS_CHECKLIST.template.md` | Template for platform readiness checklists | Readiness |

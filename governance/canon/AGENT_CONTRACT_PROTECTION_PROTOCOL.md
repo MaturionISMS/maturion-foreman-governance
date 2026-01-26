@@ -544,7 +544,10 @@ Each consumer repository MUST:
    - Implement locked sections per gap analysis recommendations
    - Create protection registry with all locked sections
    - Update all agent contracts with locked section metadata
-   - Reference templates: See Section 4.2 (Locked Section Metadata Format) and `governance/templates/AGENT_CONTRACT.template.md`
+   - Reference templates:
+     - **Copy-Paste Sections**: `governance/templates/AGENT_FILE_LOCKED_SECTIONS_TEMPLATE.md` (canonical template with role-specific sections for FM, Builder, Liaison)
+     - **Metadata Format**: Section 4.2 (Locked Section Metadata Format)
+     - **General Contract**: `governance/templates/AGENT_CONTRACT.template.md`
    - Cross-reference: `governance/templates/LOCKED_SECTION_CHANGE_REQUEST_TEMPLATE.md` for future modifications
 
 5. **Document Completion**

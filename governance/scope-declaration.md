@@ -1,7 +1,7 @@
 # SCOPE DECLARATION
 
 SCOPE_SCHEMA_VERSION: v1
-PR_ID: TBD (enforce-zero-warning-handover)
+PR_ID: create-canonical-agent-template
 OWNER: governance-repo-administrator
 DATE_UTC: 2026-01-26
 
@@ -9,39 +9,41 @@ DATE_UTC: 2026-01-26
 
 ## PR Responsibility Domain
 
-RESPONSIBILITY_DOMAIN: Post-PR #1009 Incident - Strengthen Zero-Warning Handover Enforcement
+RESPONSIBILITY_DOMAIN: Create canonical AGENT_FILE_LOCKED_SECTIONS_TEMPLATE.md with copy-paste sections for FM, Builder, and Liaison agents
 
 ---
 
 ## Explicitly In Scope
 
 IN_SCOPE:
-- Update governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md (add Step 5.1 zero-warning enforcement, Section 11.3 agent contract propagation wait, update prohibitions)
-- Update .github/agents/governance-repo-administrator.agent.md (add LOCKED section for zero-warning handover enforcement, update version to v4.2.0)
-- Update GOVERNANCE_ARTIFACT_INVENTORY.md (document protocol and agent contract updates)
-- Create governance/proposals/agent-file-recommendations/CS2_PROPOSAL_CODEXADVISOR_ZERO_WARNING_ENFORCEMENT.md (CS2 proposal for CodexAdvisor update)
+- Create governance/templates/AGENT_FILE_LOCKED_SECTIONS_TEMPLATE.md (canonical template with Universal Tier-0 and role-specific Tier-1 LOCKED sections)
+- Update governance/canon/AGENT_CONTRACT_PROTECTION_PROTOCOL.md Section 11.2 (cross-reference new template)
+- Update GOVERNANCE_ARTIFACT_INVENTORY.md (document new template artifact)
 - Update governance/scope-declaration.md (this file - scope documentation)
+- Create PREHANDOVER_PROOF.md (handover evidence per EXECUTION_BOOTSTRAP_PROTOCOL.md)
+- Archive previous PREHANDOVER_PROOF.md (preserve previous PR evidence)
 
 ---
 
 ## Explicitly Out of Scope
 
 OUT_OF_SCOPE:
-- CodexAdvisor-agent.md modifications (CS2 authority only - proposal created instead)
-- Consumer repository updates (office-app, PartPulse, R_Roster) - Not applicable for this governance enhancement
-- PREHANDOVER_PROOF.md creation - Will be created after validation passes
-- Tests - No test infrastructure for governance canon
+- Agent contract modifications (applying template to existing contracts - separate effort)
+- Consumer repository updates (office-app, PartPulse, R_Roster) - Not applicable for template creation
+- Tests - No test infrastructure for governance templates
 - CI gate workflows - No workflow modifications needed
+- Other template files or canonical documents
 
 ---
 
 ## Files Changed
 
-M governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md
-M .github/agents/governance-repo-administrator.agent.md
+A governance/templates/AGENT_FILE_LOCKED_SECTIONS_TEMPLATE.md
+M governance/canon/AGENT_CONTRACT_PROTECTION_PROTOCOL.md
 M GOVERNANCE_ARTIFACT_INVENTORY.md
 M governance/scope-declaration.md
-A governance/proposals/agent-file-recommendations/CS2_PROPOSAL_CODEXADVISOR_ZERO_WARNING_ENFORCEMENT.md
+A PREHANDOVER_PROOF.md
+A PREHANDOVER_PROOF_archive_20260126_previous_pr.md
 
 ---
 
@@ -49,10 +51,9 @@ A governance/proposals/agent-file-recommendations/CS2_PROPOSAL_CODEXADVISOR_ZERO
 
 EXPECTED_VERIFICATION:
 - CI: GREEN (all governance gates must pass)
-- TESTS: NOT APPLICABLE (no test infrastructure for governance canon)
+- TESTS: NOT APPLICABLE (no test infrastructure for governance templates)
 - GOVERNANCE_GATES: GREEN
   - Governance Scope-to-Diff Enforcement (must match this scope declaration)
-  - Agent Governance Check (YAML frontmatter validation - governance-repo-administrator only)
   - Governance Policy Validation
   - Locked Section Protection Gate
 
@@ -62,9 +63,9 @@ EXPECTED_VERIFICATION:
 
 SCOPE_FROZEN: YES
 
-**Summary**: Post-PR #1009 incident response. Added explicit zero-warning enforcement to EXECUTION_BOOTSTRAP_PROTOCOL.md v1.1.0 (new Step 5.1, Section 11.3 agent contract propagation wait, enhanced prohibitions). Added LOCKED section to governance-repo-administrator.agent.md v4.2.0 establishing absolute prohibition on handover with warnings. Created CS2 proposal for parallel CodexAdvisor update. Updated GOVERNANCE_ARTIFACT_INVENTORY.md. Authority: INCIDENT_2026-01-26_PR_1009_INCOMPLETE_HANDOVER.md, STOP_AND_FIX_DOCTRINE.md, BUILD_PHILOSOPHY.md.
+**Summary**: Created canonical AGENT_FILE_LOCKED_SECTIONS_TEMPLATE.md (v1.0.0) with copy-paste ready LOCKED sections for Universal (Tier-0), FM-specific (Tier-1), Builder-specific (Tier-1), and Liaison-specific (Tier-1) agent contracts. Updated AGENT_CONTRACT_PROTECTION_PROTOCOL.md Section 11.2 to cross-reference template. Updated GOVERNANCE_ARTIFACT_INVENTORY.md with new artifact. Authority: AGENT_CONTRACT_PROTECTION_PROTOCOL.md v1.1.0, Issue #[TBD].
 
 ---
 
-**Authority**: `governance/canon/SCOPE_TO_DIFF_RULE.md`, `EXECUTION_BOOTSTRAP_PROTOCOL.md` v1.1.0, `STOP_AND_FIX_DOCTRINE.md`
-**Issue**: Strengthen Governance: Enforce Zero-Warning Handover in Pre-Handover Validation (Post-PR #1009 Incident)
+**Authority**: `governance/canon/SCOPE_TO_DIFF_RULE.md`, `governance/canon/AGENT_CONTRACT_PROTECTION_PROTOCOL.md` v1.1.0
+**Issue**: Create: Canonical Agent File LOCKED Sections Template (FM, Builder, Liaison)
