@@ -1,9 +1,9 @@
 # AGENT FILE LOCKED SECTIONS TEMPLATE
 
-**Purpose**: Canonical template defining standard LOCKED sections, metadata headers, and compliance protocol for FM, Builder, and Liaison agent contracts  
-**Authority**: `governance/canon/AGENT_CONTRACT_PROTECTION_PROTOCOL.md` v1.1.0  
-**Version**: 1.0.0  
-**Last Updated**: 2026-01-26  
+**Purpose**: Canonical template defining standard LOCKED sections, metadata headers, and compliance protocol for FM, Builder, and Liaison agent contracts
+**Authority**: `governance/canon/AGENT_CONTRACT_PROTECTION_PROTOCOL.md` v1.1.0
+**Version**: 1.0.0
+**Last Updated**: 2026-01-26
 **Status**: Canonical Template
 
 ---
@@ -526,7 +526,8 @@ These sections apply specifically to **governance-liaison agents** coordinating 
 **MANDATORY for all governance layer-down operations**:
 
 ### Atomic Layer-Down Principle
-Governance canon and agent contract updates MUST be layered down together in ONE atomic batch. Never layer down protocol without agent file LOCKED sections.
+Governance canon and agent contract updates MUST be layered down together in ONE atomic batch.
+Never layer down protocol without agent file LOCKED sections.
 
 **Layer-Down Process**:
 1. **Receive Signal**: Governance-repo-administrator creates ripple signal
@@ -647,23 +648,23 @@ Include evidence:
 ## 8. Common Pitfalls and How to Avoid Them
 
 ### Pitfall 1: Incomplete Metadata
-**Problem**: Missing required metadata fields  
+**Problem**: Missing required metadata fields
 **Solution**: Always copy ENTIRE section including all metadata fields
 
 ### Pitfall 2: Duplicate Lock IDs
-**Problem**: Same Lock ID used in multiple contracts  
+**Problem**: Same Lock ID used in multiple contracts
 **Solution**: Customize Lock IDs per agent (add agent name prefix)
 
 ### Pitfall 3: Partial Layer-Down
-**Problem**: Layering down protocol without agent file LOCKED sections  
+**Problem**: Layering down protocol without agent file LOCKED sections
 **Solution**: Always update protocol AND agent contracts in SAME PR (atomic batch)
 
 ### Pitfall 4: Missing Protection Registry Entry
-**Problem**: Locked section exists but not registered  
+**Problem**: Locked section exists but not registered
 **Solution**: Update protection registry immediately after adding locked section
 
 ### Pitfall 5: Outdated Authority References
-**Problem**: Lock authority references old or non-existent documents  
+**Problem**: Lock authority references old or non-existent documents
 **Solution**: Verify canonical authority document exists before copy-paste
 
 ---
