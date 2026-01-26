@@ -468,14 +468,23 @@ Per BUILD_PHILOSOPHY.md:
 **Layer-Down**: Governance repo → Consumer repos
 **Agents Here**: governance-repo-administrator (self), CodexAdvisor-agent (advisory)
 
-**CRITICAL**: This is the CANONICAL governance repository. All governance canon originates here.  All consumer repos MUST layer down governance from this repo.
+**CRITICAL**: This is the CANONICAL governance repository. All governance canon
+originates here. All consumer repos MUST layer down governance from this repo.
 
 ---
 
 ## Version History
 
-**v4.1.0** (2026-01-21): Added Self-Governance Execution Commands section with copy-paste bash commands and attestation format.  Agents can now immediately execute self-governance check with concrete commands.  Character count: ~10,200 (34% of limit).
+**v4.1.0** (2026-01-21): Added Self-Governance Execution Commands section with
+copy-paste bash commands and attestation format. Agents can now immediately
+execute self-governance check with concrete commands. Character count: ~10,200
+(34% of limit).
 
-**v4.0.0** (2026-01-21): Complete rewrite for governance alignment. Added: Pre-Job Self-Governance (LOCKED), Agent File Authority (LOCKED), Complete Gate Inventory (LOCKED), Step 2.5 Gate Alignment, Ripple Protocol (LOCKED), Issue #999 Inventory Maintenance (LOCKED). Aligned with CodexAdvisor v3.0.0, AGENT_SELF_GOVERNANCE_PROTOCOL. md, CS2_AGENT_FILE_AUTHORITY_MODEL.md.  All bindings reference-based per Agent Contract Minimalism Principle.
+**v4.0.0** (2026-01-21): Complete rewrite for governance alignment. Added:
+Pre-Job Self-Governance (LOCKED), Agent File Authority (LOCKED), Complete Gate
+Inventory (LOCKED), Step 2.5 Gate Alignment, Ripple Protocol (LOCKED), Issue
+#999 Inventory Maintenance (LOCKED). Aligned with CodexAdvisor v3.0.0,
+AGENT_SELF_GOVERNANCE_PROTOCOL.md, CS2_AGENT_FILE_AUTHORITY_MODEL.md. All
+bindings reference-based per Agent Contract Minimalism Principle.
 
 ---

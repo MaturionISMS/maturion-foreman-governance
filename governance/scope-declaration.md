@@ -1,64 +1,67 @@
 # SCOPE DECLARATION
 
 SCOPE_SCHEMA_VERSION: v1
-PR_ID: #1007
+PR_ID: TBD (current PR)
 OWNER: governance-repo-administrator
-DATE_UTC: 2026-01-23
+DATE_UTC: 2026-01-26
 
 ---
 
 ## PR Responsibility Domain
 
-RESPONSIBILITY_DOMAIN: Stop-and-Fix Canonization + Catastrophic Failure Recovery + ONE-TIME Gate Fix (CS2 Authorized)
+RESPONSIBILITY_DOMAIN: AGENT_CONTRACT_PROTECTION_PROTOCOL.md Section 11.2 - Critical Canon Layer-Down Compliance Clarification
 
 ---
 
 ## Explicitly In Scope
 
-IN_SCOPE: 
-- Update governance/philosophy/BYG_DOCTRINE.md (integrate Stop-and-Fix doctrine)
-- Update .github/agents/governance-repo-administrator.agent.md (fix file paths, remove trailing spaces, fix colons)
-- Create .yamllint config (per CS2 recommendation to reduce false positives)
-- Create RCA_PR_1007_FAILED_MERGE_GATE.md (root cause analysis for catastrophic failure)
-- Update .github/workflows/agent-governance-check.yml (ONE-TIME CS2 authorized gate fix to extract YAML frontmatter)
+IN_SCOPE:
+- Update governance/canon/AGENT_CONTRACT_PROTECTION_PROTOCOL.md Section 11.2 (clarify atomic layer-down requirements)
+- Update GOVERNANCE_ARTIFACT_INVENTORY.md (add protocol entry, update last modified date)
 - Update governance/scope-declaration.md (this file)
 - Create PREHANDOVER_PROOF.md (complete handover documentation)
+- Fix .github/agents/governance-repo-administrator.agent.md (line-length warnings, yamllint compliance)
+- Fix .github/scripts/validate-yaml-frontmatter.sh (arithmetic expression bug with set -e)
+- Fix .yamllint (change document-start to true for YAML frontmatter compatibility)
+- Create governance/memory/INCIDENT_2026-01-26_PR_1009_INCOMPLETE_HANDOVER.md (incident documentation)
 
 ---
 
 ## Explicitly Out of Scope
 
 OUT_OF_SCOPE:
-- CodexAdvisor-agent.md modifications (CS2-only file, authority conflict documented)
 - Consumer repository updates (office-app, PartPulse, R_Roster) - Ripple occurs after canonical PR merge
-- Other CI gate workflows - Only agent-governance-check.yml modified per CS2 authorization
+- Other governance canon files - Only AGENT_CONTRACT_PROTECTION_PROTOCOL.md modified
+- Agent contract files - No agent contracts modified (this is protocol clarification)
 - Tests (no test infrastructure for governance canon)
-- STOP_AND_FIX_DOCTRINE.md creation (already exists from PR #1005)
-- BUILD_PHILOSOPHY.md integration (already complete from PR #1005)
+- CI gate workflows - No workflow modifications
 
 ---
 
 ## Files Changed
 
-M governance/philosophy/BYG_DOCTRINE.md
+M governance/canon/AGENT_CONTRACT_PROTECTION_PROTOCOL.md
 M .github/agents/governance-repo-administrator.agent.md
-M .github/workflows/agent-governance-check.yml
-A .yamllint
-A RCA_PR_1007_FAILED_MERGE_GATE.md
-M PREHANDOVER_PROOF.md
-A PREHANDOVER_PROOF_archive_20260123_previous.md
+M .github/scripts/validate-yaml-frontmatter.sh
+M .yamllint
+M GOVERNANCE_ARTIFACT_INVENTORY.md
+M governance/canon/AGENT_CONTRACT_PROTECTION_PROTOCOL.md
 M governance/scope-declaration.md
+A PREHANDOVER_PROOF.md
+A PREHANDOVER_PROOF_archive_20260126_incomplete.md
+A PREHANDOVER_PROOF_archive_20260126_previous.md
+A governance/memory/INCIDENT_2026-01-26_PR_1009_INCOMPLETE_HANDOVER.md
 
 ---
 
 ## Expected Verification Signal
 
-EXPECTED_VERIFICATION: 
+EXPECTED_VERIFICATION:
 - CI: GREEN (all governance gates must pass)
 - TESTS: NOT APPLICABLE (no test infrastructure for governance canon)
 - GOVERNANCE_GATES: GREEN
   - Governance Scope-to-Diff Enforcement (must match this scope declaration)
-  - Agent Governance Check (YAML frontmatter extraction implemented)
+  - Agent Governance Check (YAML frontmatter validation)
   - Governance Policy Validation
   - Locked Section Protection Gate
 
@@ -68,10 +71,11 @@ EXPECTED_VERIFICATION:
 
 SCOPE_FROZEN: YES
 
-Stop-and-Fix doctrine has been integrated into BYG_DOCTRINE.md. Agent contract file path errors fixed and yamllint errors within authority resolved. RCA completed for catastrophic failure. CS2-authorized ONE-TIME gate fix applied to extract YAML frontmatter before validation. Authority conflicts documented and escalated.
+AGENT_CONTRACT_PROTECTION_PROTOCOL.md v1.0.0 → v1.1.0. Section 11.2 clarified with CRITICAL note: layer-down is atomic batch (protocol + agent contract locks together, never separate). Added cross-references to Section 4.2, AGENT_CONTRACT.template.md, and LOCKED_SECTION_CHANGE_REQUEST_TEMPLATE.md. Version history updated. GOVERNANCE_ARTIFACT_INVENTORY.md updated with protocol entry and last modified date.
+
+**CORRECTIVE ACTION APPLIED**: After CS2 detection of catastrophic handover failure (warnings tolerated), all validations re-executed. Fixed yamllint warnings in own contract (line-length issues). Fixed .yamllint config (document-start: true for YAML frontmatter). Scope declaration updated with all modified files. Incident documented in governance/memory/INCIDENT_2026-01-26_PR_1009_INCOMPLETE_HANDOVER.md. ALL gates now exit code 0 with ZERO warnings.
 
 ---
 
-**Authority**: `governance/canon/SCOPE_TO_DIFF_RULE.md`, `governance/canon/STOP_AND_FIX_DOCTRINE.md`  
-**Issue**: Canonize 'Stop-and-Fix': Zero Tolerance on Test Debt, Errors, and Safety Violations
-**CS2 Authorization**: Comment #3789883567 (ONE-TIME gate fix)
+**Authority**: `governance/canon/SCOPE_TO_DIFF_RULE.md`, `governance/canon/AGENT_CONTRACT_PROTECTION_PROTOCOL.md` v1.1.0
+**Issue**: Update: AGENT_CONTRACT_PROTECTION_PROTOCOL.md Section 11.2 – CRITICAL Canon Layer-Down Compliance

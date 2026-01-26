@@ -73,20 +73,20 @@ SKIPPED_FILES=0
 for FILE in "$@"; do
     if [ ! -f "$FILE" ]; then
         echo -e "${YELLOW}⚠️  SKIP: File not found: $FILE${NC}"
-        ((SKIPPED_FILES++))
+        SKIPPED_FILES=$((SKIPPED_FILES + 1))
         continue
     fi
     
     echo "Validating: $FILE"
-    ((TOTAL_FILES++))
+    TOTAL_FILES=$((TOTAL_FILES + 1))
     
     # Extract YAML frontmatter (content between first two --- markers)
     YAML_CONTENT=$(awk '/^---$/{if(++n==2) exit} n>=1' "$FILE")
     
     if [ -z "$YAML_CONTENT" ]; then
         echo -e "${YELLOW}  ⚠️  No YAML frontmatter found (no --- markers)${NC}"
-        ((SKIPPED_FILES++))
-        ((TOTAL_FILES--))
+        SKIPPED_FILES=$((SKIPPED_FILES + 1))
+        TOTAL_FILES=$((TOTAL_FILES - 1))
         echo ""
         continue
     fi
@@ -106,7 +106,7 @@ for FILE in "$@"; do
         echo "  BL-028: Warnings ARE errors. All violations must be fixed."
         echo "  Fix the YAML frontmatter in $FILE and re-run."
         echo ""
-        ((FAILED_FILES++))
+        FAILED_FILES=$((FAILED_FILES + 1))
     fi
     
     rm -f "$TEMP_FILE"
