@@ -40,7 +40,7 @@ Canon files define constitutional governance rules, models, and protocols.
 
 | File | Purpose | Categories |
 |------|---------|------------|
-| `.agent.schema.md` | Schema definition for agent contracts | PR-gates |
+| `.agent.schema.md` | **UPDATED (2026-01-26)** - Schema definition for agent contracts with new Section 13 defining LOCKED sections requirements, protection protocol integration, and reference to AGENT_FILE_LOCKED_SECTIONS_TEMPLATE.md | PR-gates |
 | `ACTIVATION_STATE_MODEL.md` | Defines agent/system activation lifecycle states | Readiness |
 | `AGENT_CANONICAL_CONTEXT_SYNCHRONISATION_PROTOCOL.md` | Protocol for keeping agent context synchronized with canon | Layer-down |
 | `AGENT_CONTRACT_PROTECTION_PROTOCOL.md` | **UPDATED v1.1.0 (2026-01-26)** - Protocol for agent contract protection with locked sections and atomic layer-down requirements | PR-gates, Layer-down, Readiness |
@@ -79,6 +79,7 @@ Canon files define constitutional governance rules, models, and protocols.
 | `GOVERNANCE_LAYERDOWN_CONTRACT.md` | Authoritative definition of governance layer-down requirements | Layer-down |
 | `GOVERNANCE_PURPOSE_AND_SCOPE.md` | Constitutional definition of governance purpose and authority | Readiness |
 | `GOVERNANCE_RIPPLE_MODEL.md` | Defines governance change ripple effects and impact analysis | Layer-down |
+| `GOVERNANCE_RIPPLE_CHECKLIST_PROTOCOL.md` | **NEW v1.0.0 (2026-01-26)** - Mandatory systematic ripple checklist protocol for all governance changes. Defines 10-step execution process ensuring complete propagation across files, references, templates, agents, and consumer repos. Prevents drift, broken references, and incomplete ripple. Implements GOVERNANCE_RIPPLE_MODEL.md, AGENT_CONTRACT_PROTECTION_PROTOCOL.md, and EXECUTION_BOOTSTRAP_PROTOCOL.md zero-warning enforcement | Layer-down, PR-gates, Readiness |
 | `GOVERNANCE_VERSIONING_AND_SYNC_PROTOCOL.md` | Defines governance versioning and synchronization | Layer-down |
 | `AGENT_RIPPLE_AWARENESS_OBLIGATION.md` | Defines agent obligation to recognize and surface ripple effects (Wave 1.2) | Layer-down, Feedback/learning |
 | `ASSISTED_RIPPLE_SCAN_SCOPE.md` | Defines scope of assisted ripple scanning within single repository (Wave 2.1) | Layer-down, Feedback/learning |
@@ -167,9 +168,11 @@ Template files provide reusable structures for governance artifacts.
 
 | File | Purpose | Categories |
 |------|---------|------------|
+| `AGENT_CONTRACT.template.md` | **UPDATED (2026-01-26)** - Template for agent contracts with LOCKED sections guidance, cross-references to AGENT_FILE_LOCKED_SECTIONS_TEMPLATE.md, and complete metadata structure | PR-gates, Layer-down, Readiness |
 | `AGENT_FILE_LOCKED_SECTIONS_TEMPLATE.md` | **NEW (2026-01-26)** - Canonical template with copy-paste LOCKED sections for FM, Builder, and Liaison agent contracts with complete metadata and layer-down guidance | PR-gates, Layer-down, Readiness |
 | `BUILDER_TASK_TEMPLATE.md` | Template for builder task definitions | Readiness |
 | `CANON_CREATION_AND_PROPAGATION_CHECKLIST.md` | Comprehensive workflow checklist for canon creation and propagation with mandatory inventory maintenance | Layer-down, Feedback/learning |
+| `PREHANDOVER_PROOF_TEMPLATE.md` | **UPDATED v2.1.0 (2026-01-26)** - Template for execution verification documentation with new Zero-Warning Validation section implementing EXECUTION_BOOTSTRAP_PROTOCOL.md v1.1.0 Section 5.1. Includes comprehensive attestation, STOP_AND_FIX_DOCTRINE.md application requirements, and complete validation evidence checklist | PR-gates, Readiness |
 | `PLATFORM_READINESS_CHECKLIST.template.md` | Template for platform readiness checklists | Readiness |
 | `PR_GATE_RELEASE_CHECKLISTS_README.md` | Documentation for PR gate release checklists | PR-gates |
 | `PR_GATE_RELEASE_CHECKLIST_BUILDER.md` | Builder-specific PR gate release checklist | PR-gates |
@@ -731,6 +734,58 @@ Implementation completion reports (not canonical governance, but records impleme
 | File | Purpose | Categories |
 |------|---------|------------|
 | Multiple implementation completion reports | Various implementation completion documentation | (implementation status) |
+
+---
+
+## Ripple Requirements (PR #1020 - Issue #1020)
+
+**Date**: 2026-01-26  
+**Source**: PR #1015 and PR #1018 ripple actions  
+**Protocol Authority**: `governance/canon/GOVERNANCE_RIPPLE_CHECKLIST_PROTOCOL.md` v1.0.0
+
+### Completed in This Update
+
+✅ **Canonical Governance**:
+- Created `GOVERNANCE_RIPPLE_CHECKLIST_PROTOCOL.md` v1.0.0 in governance/canon/
+- Updated `EXECUTION_BOOTSTRAP_PROTOCOL.md` reference (already at v1.1.0 with Section 5.1)
+- Updated `.agent.schema.md` with Section 13 (LOCKED sections requirements)
+
+✅ **Templates**:
+- Updated `PREHANDOVER_PROOF_TEMPLATE.md` to v2.1.0 with Zero-Warning Validation section
+- Updated `AGENT_CONTRACT.template.md` with LOCKED sections guidance
+- `AGENT_FILE_LOCKED_SECTIONS_TEMPLATE.md` already exists (created in PR #1018)
+
+✅ **Agent Contracts (Governance Repo)**:
+- governance-repo-administrator.agent.md: Already has Zero-Warning LOCKED section (v4.2.0)
+- CodexAdvisor-agent.md: Already has Zero-Warning LOCKED section (v4.2.0)
+
+### Required Downstream Ripple (Consumer Repos)
+
+🔴 **Consumer Repositories Requiring Updates**:
+1. **office-app** (APGI-cmy/maturion-office-app)
+2. **PartPulse** (APGI-cmy/PartPulse)
+3. **R_Roster** (APGI-cmy/R_Roster)
+
+**Agent Contracts Requiring Zero-Warning LOCKED Section**:
+- [ ] governance-liaison.agent.md (all consumer repos)
+- [ ] FM agent contracts (all consumer repos)
+- [ ] Builder agent contracts (all consumer repos)
+
+**Files Requiring Layer-Down**:
+- [ ] governance/canon/GOVERNANCE_RIPPLE_CHECKLIST_PROTOCOL.md (copy to each consumer repo)
+- [ ] governance/templates/PREHANDOVER_PROOF_TEMPLATE.md v2.1.0 (layer down to each consumer repo)
+- [ ] governance/templates/AGENT_CONTRACT.template.md (layer down to each consumer repo)
+- [ ] governance/canon/.agent.schema.md (layer down to each consumer repo)
+
+**Tracking Issues**:
+- [ ] Create issue in office-app: "Governance Ripple: Zero-Warning Enforcement + LOCKED Sections"
+- [ ] Create issue in PartPulse: "Governance Ripple: Zero-Warning Enforcement + LOCKED Sections"
+- [ ] Create issue in R_Roster: "Governance Ripple: Zero-Warning Enforcement + LOCKED Sections"
+- [ ] Assign all issues to: @governance-liaison role
+
+**Target Completion**: Within 1 week of PR #1020 merge
+
+**Coordination**: CS2 approval required for agent contract modifications per AGENT_CONTRACT_PROTECTION_PROTOCOL.md
 
 ---
 
