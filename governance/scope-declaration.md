@@ -1,7 +1,7 @@
 # SCOPE DECLARATION
 
 SCOPE_SCHEMA_VERSION: v1
-PR_ID: TBD (current PR)
+PR_ID: TBD (enforce-zero-warning-handover)
 OWNER: governance-repo-administrator
 DATE_UTC: 2026-01-26
 
@@ -9,48 +9,39 @@ DATE_UTC: 2026-01-26
 
 ## PR Responsibility Domain
 
-RESPONSIBILITY_DOMAIN: AGENT_CONTRACT_PROTECTION_PROTOCOL.md Section 11.2 - Critical Canon Layer-Down Compliance Clarification
+RESPONSIBILITY_DOMAIN: Post-PR #1009 Incident - Strengthen Zero-Warning Handover Enforcement
 
 ---
 
 ## Explicitly In Scope
 
 IN_SCOPE:
-- Update governance/canon/AGENT_CONTRACT_PROTECTION_PROTOCOL.md Section 11.2 (clarify atomic layer-down requirements)
-- Update GOVERNANCE_ARTIFACT_INVENTORY.md (add protocol entry, update last modified date)
-- Update governance/scope-declaration.md (this file)
-- Create PREHANDOVER_PROOF.md (complete handover documentation)
-- Fix .github/agents/governance-repo-administrator.agent.md (line-length warnings, yamllint compliance)
-- Fix .github/scripts/validate-yaml-frontmatter.sh (arithmetic expression bug with set -e)
-- Fix .yamllint (change document-start to true for YAML frontmatter compatibility)
-- Create governance/memory/INCIDENT_2026-01-26_PR_1009_INCOMPLETE_HANDOVER.md (incident documentation)
+- Update governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md (add Step 5.1 zero-warning enforcement, Section 11.3 agent contract propagation wait, update prohibitions)
+- Update .github/agents/governance-repo-administrator.agent.md (add LOCKED section for zero-warning handover enforcement, update version to v4.2.0)
+- Update GOVERNANCE_ARTIFACT_INVENTORY.md (document protocol and agent contract updates)
+- Create governance/proposals/agent-file-recommendations/CS2_PROPOSAL_CODEXADVISOR_ZERO_WARNING_ENFORCEMENT.md (CS2 proposal for CodexAdvisor update)
+- Update governance/scope-declaration.md (this file - scope documentation)
 
 ---
 
 ## Explicitly Out of Scope
 
 OUT_OF_SCOPE:
-- Consumer repository updates (office-app, PartPulse, R_Roster) - Ripple occurs after canonical PR merge
-- Other governance canon files - Only AGENT_CONTRACT_PROTECTION_PROTOCOL.md modified
-- Agent contract files - No agent contracts modified (this is protocol clarification)
-- Tests (no test infrastructure for governance canon)
-- CI gate workflows - No workflow modifications
+- CodexAdvisor-agent.md modifications (CS2 authority only - proposal created instead)
+- Consumer repository updates (office-app, PartPulse, R_Roster) - Not applicable for this governance enhancement
+- PREHANDOVER_PROOF.md creation - Will be created after validation passes
+- Tests - No test infrastructure for governance canon
+- CI gate workflows - No workflow modifications needed
 
 ---
 
 ## Files Changed
 
-M governance/canon/AGENT_CONTRACT_PROTECTION_PROTOCOL.md
+M governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md
 M .github/agents/governance-repo-administrator.agent.md
-M .github/scripts/validate-yaml-frontmatter.sh
-M .yamllint
 M GOVERNANCE_ARTIFACT_INVENTORY.md
-M governance/canon/AGENT_CONTRACT_PROTECTION_PROTOCOL.md
 M governance/scope-declaration.md
-A PREHANDOVER_PROOF.md
-A PREHANDOVER_PROOF_archive_20260126_incomplete.md
-A PREHANDOVER_PROOF_archive_20260126_previous.md
-A governance/memory/INCIDENT_2026-01-26_PR_1009_INCOMPLETE_HANDOVER.md
+A governance/proposals/agent-file-recommendations/CS2_PROPOSAL_CODEXADVISOR_ZERO_WARNING_ENFORCEMENT.md
 
 ---
 
@@ -61,7 +52,7 @@ EXPECTED_VERIFICATION:
 - TESTS: NOT APPLICABLE (no test infrastructure for governance canon)
 - GOVERNANCE_GATES: GREEN
   - Governance Scope-to-Diff Enforcement (must match this scope declaration)
-  - Agent Governance Check (YAML frontmatter validation)
+  - Agent Governance Check (YAML frontmatter validation - governance-repo-administrator only)
   - Governance Policy Validation
   - Locked Section Protection Gate
 
@@ -71,11 +62,9 @@ EXPECTED_VERIFICATION:
 
 SCOPE_FROZEN: YES
 
-AGENT_CONTRACT_PROTECTION_PROTOCOL.md v1.0.0 → v1.1.0. Section 11.2 clarified with CRITICAL note: layer-down is atomic batch (protocol + agent contract locks together, never separate). Added cross-references to Section 4.2, AGENT_CONTRACT.template.md, and LOCKED_SECTION_CHANGE_REQUEST_TEMPLATE.md. Version history updated. GOVERNANCE_ARTIFACT_INVENTORY.md updated with protocol entry and last modified date.
-
-**CORRECTIVE ACTION APPLIED**: After CS2 detection of catastrophic handover failure (warnings tolerated), all validations re-executed. Fixed yamllint warnings in own contract (line-length issues). Fixed .yamllint config (document-start: true for YAML frontmatter). Scope declaration updated with all modified files. Incident documented in governance/memory/INCIDENT_2026-01-26_PR_1009_INCOMPLETE_HANDOVER.md. ALL gates now exit code 0 with ZERO warnings.
+**Summary**: Post-PR #1009 incident response. Added explicit zero-warning enforcement to EXECUTION_BOOTSTRAP_PROTOCOL.md v1.1.0 (new Step 5.1, Section 11.3 agent contract propagation wait, enhanced prohibitions). Added LOCKED section to governance-repo-administrator.agent.md v4.2.0 establishing absolute prohibition on handover with warnings. Created CS2 proposal for parallel CodexAdvisor update. Updated GOVERNANCE_ARTIFACT_INVENTORY.md. Authority: INCIDENT_2026-01-26_PR_1009_INCOMPLETE_HANDOVER.md, STOP_AND_FIX_DOCTRINE.md, BUILD_PHILOSOPHY.md.
 
 ---
 
-**Authority**: `governance/canon/SCOPE_TO_DIFF_RULE.md`, `governance/canon/AGENT_CONTRACT_PROTECTION_PROTOCOL.md` v1.1.0
-**Issue**: Update: AGENT_CONTRACT_PROTECTION_PROTOCOL.md Section 11.2 – CRITICAL Canon Layer-Down Compliance
+**Authority**: `governance/canon/SCOPE_TO_DIFF_RULE.md`, `EXECUTION_BOOTSTRAP_PROTOCOL.md` v1.1.0, `STOP_AND_FIX_DOCTRINE.md`
+**Issue**: Strengthen Governance: Enforce Zero-Warning Handover in Pre-Handover Validation (Post-PR #1009 Incident)

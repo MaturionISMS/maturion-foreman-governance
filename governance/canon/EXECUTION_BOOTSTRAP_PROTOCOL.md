@@ -255,6 +255,77 @@ All applicable gates: GREEN
 
 ---
 
+### Step 5.1: Zero-Warning Enforcement (MANDATORY)
+
+**NEW - Post-PR #1009 Incident Enhancement**
+
+**Action**: Verify that ALL validation commands produce ZERO warnings and exit code 0. Any warning or non-zero exit code MUST trigger immediate HALT and remediation.
+
+**🔒 Zero-Warning Rule (Authority: BUILD_PHILOSOPHY.md, STOP_AND_FIX_DOCTRINE.md)**:
+
+**CRITICAL PROHIBITIONS**:
+- ❌ **PROHIBITED**: Handing over with ANY warning in validation output
+- ❌ **PROHIBITED**: Handing over with any gate showing "skipped" due to uncommitted changes
+- ❌ **PROHIBITED**: Documenting warnings and proceeding ("will fix later")
+- ❌ **PROHIBITED**: Stating "will validate in CI" to defer local validation
+- ❌ **PROHIBITED**: Exit codes != 0 for any validation command
+- ❌ **PROHIBITED**: Treating "pre-existing issues" as exemption from remediation
+
+**REQUIRED ACTIONS**:
+- ✅ **REQUIRED**: ALL validation commands must exit 0 with NO warnings
+- ✅ **REQUIRED**: If ANY warning: HALT, fix completely, re-run ALL gates, only proceed when 100% clean
+- ✅ **REQUIRED**: Local validation is MANDATORY (CI is confirmatory, not diagnostic)
+- ✅ **REQUIRED**: Commit all changes BEFORE running validation (especially scope-to-diff)
+- ✅ **REQUIRED**: Fix ALL issues discovered during validation (per STOP_AND_FIX_DOCTRINE.md)
+- ✅ **REQUIRED**: Document exit 0 with zero warnings in PREHANDOVER_PROOF
+
+**Zero-Warning Validation Workflow**:
+```bash
+# 1. Commit all changes FIRST (review changes before staging)
+git status  # Review what will be committed
+git add <specific-files>  # Or 'git add .' after review
+git commit -m "Changes ready for validation"
+
+# 2. Run each gate validation
+yamllint .github/agents/*.md
+EXIT_CODE_1=$?
+
+.github/scripts/validate-scope-to-diff.sh main
+EXIT_CODE_2=$?
+
+python .github/scripts/check_locked_sections.py --mode=detect-modifications --base-ref=main --head-ref=HEAD
+EXIT_CODE_3=$?
+
+# 3. Check for ANY non-zero exit code
+if [ $EXIT_CODE_1 -ne 0 ] || [ $EXIT_CODE_2 -ne 0 ] || [ $EXIT_CODE_3 -ne 0 ]; then
+  echo "❌ VALIDATION FAILED - HALTING"
+  echo "Exit codes: yamllint=$EXIT_CODE_1, scope-to-diff=$EXIT_CODE_2, locked-sections=$EXIT_CODE_3"
+  echo "MUST FIX ALL ISSUES BEFORE PROCEEDING"
+  exit 1
+fi
+
+# 4. Verify zero warnings in output (manual review)
+echo "✅ All validation commands: exit 0, zero warnings"
+```
+
+**If Validation Produces Warnings or Errors**:
+1. **HALT immediately** - Do NOT proceed with handover
+2. **Fix ALL issues** - Apply STOP_AND_FIX_DOCTRINE.md completely
+3. **Re-run ALL gates** - Not just the failed one
+4. **Verify 100% clean** - Zero warnings, all exit 0
+5. **Document remediation** - Include in PREHANDOVER_PROOF
+6. **ONLY THEN proceed** - No partial handovers permitted
+
+**Rationale**: PR #1009 was handed over with scope-to-diff warnings ("no files detected") and yamllint failures, violating BUILD_PHILOSOPHY.md and CI_CONFIRMATORY_NOT_DIAGNOSTIC.md. This enhancement prevents recurrence.
+
+**Authority**:
+- BUILD_PHILOSOPHY.md - "Warnings = Errors" principle
+- STOP_AND_FIX_DOCTRINE.md - "Zero tolerance for technical debt"
+- CI_CONFIRMATORY_NOT_DIAGNOSTIC.md - "CI confirms preflight success"
+- Incident: `governance/memory/INCIDENT_2026-01-26_PR_1009_INCOMPLETE_HANDOVER.md`
+
+---
+
 ### Step 6: Attach PREHANDOVER_PROOF
 
 **Action**: Include PREHANDOVER_PROOF section in PR description with all captured evidence.
@@ -721,6 +792,10 @@ This protocol integrates with and operationalizes:
 - ❌ Attach placeholder prehandover proof ("will validate later")
 - ❌ Declare "I created the evidence file" without creating actual artifacts
 - ❌ Bypass prehandover proof requirement for "low-risk" changes
+- ❌ **Hand over with ANY validation warnings or non-zero exit codes** (NEW - Post-PR #1009)
+- ❌ **State "will validate in CI" to defer local validation** (NEW - Post-PR #1009)
+- ❌ **Proceed with warnings documented but not fixed** (NEW - Post-PR #1009)
+- ❌ **Treat "pre-existing issues" as exemption from STOP-AND-FIX** (NEW - Post-PR #1009)
 
 **Reviewers MUST NEVER**:
 - ❌ Approve PRs without prehandover proof (if execution verification required)
@@ -743,6 +818,41 @@ If an agent encounters:
 - ✅ Do NOT attempt to work around or bypass
 
 **Escalation is success, not failure.**
+
+### 11.3 Agent Contract Propagation Wait
+
+**When agent contracts are updated in main branch:**
+
+Agents rely on contract files in `.github/agents/*.agent.md` for their operational instructions. When these contracts are updated and merged to main, there may be a propagation delay before agents load the updated version.
+
+**Required Actions**:
+- ✅ Wait 5-10 minutes after merging agent contract changes before creating issues that require the updated contract
+- ✅ Verify agent contract version in self-governance check (check version number or last-updated timestamp)
+- ✅ If agent loads stale contract (wrong version), HALT and wait for propagation
+- ✅ Document propagation wait in issue description if creating immediately after contract merge
+
+**Rationale**: Agents may cache or load contracts at session start. Immediate issue creation after contract merge may result in agent operating under old contract, leading to governance violations.
+
+**Verification Method**:
+```bash
+# Check contract version/timestamp before starting work
+# Example for governance-repo-administrator:
+grep "version:" .github/agents/governance-repo-administrator.agent.md
+grep "Last Updated:" .github/agents/governance-repo-administrator.agent.md
+
+# Or check all agent contracts:
+grep "version:" .github/agents/*.agent.md
+
+# Compare with expected version from recent PR
+# If mismatch, wait 5-10 minutes and re-check
+```
+
+**If Stale Contract Detected**:
+1. HALT work immediately
+2. Wait 5-10 minutes for propagation
+3. Re-check contract version
+4. If still stale after 15 minutes, escalate to CS2
+5. Do NOT proceed with stale contract
 
 ---
 
@@ -769,6 +879,16 @@ No execution path may:
 
 ## 13. Version History
 
+### v1.1.0 (2026-01-26)
+- **CRITICAL ENHANCEMENT**: Added Step 5.1 "Zero-Warning Enforcement" (Post-PR #1009 Incident)
+- Prohibits handover with ANY validation warnings or non-zero exit codes
+- Prohibits "will validate in CI" deferral statements
+- Requires HALT and complete remediation for any warning
+- Adds zero-warning validation workflow with exit code checks
+- Added Section 11.3 "Agent Contract Propagation Wait" for contract update timing
+- Updated Section 11.1 prohibitions to include zero-warning violations
+- Authority: BUILD_PHILOSOPHY.md, STOP_AND_FIX_DOCTRINE.md, INCIDENT_2026-01-26_PR_1009_INCOMPLETE_HANDOVER.md
+
 ### v1.0.0 (2026-01-11)
 - Initial protocol definition
 - Establishes 7-step execution bootstrap process
@@ -785,8 +905,10 @@ No execution path may:
 - `governance/canon/CI_CONFIRMATORY_NOT_DIAGNOSTIC.md` — Preflight obligation foundation
 - `governance/canon/FPC_REPOSITORY_LAYERDOWN_GUIDE.md` — Primary integration point
 - `governance/canon/PR_GATE_PRECONDITION_RULE.md` — No green gate, no handover
+- `governance/canon/STOP_AND_FIX_DOCTRINE.md` — Zero tolerance for warnings and errors
 - `governance/templates/PREHANDOVER_PROOF_TEMPLATE.md` — Template for agents
 - `governance/incidents/INCIDENT-2026-01-08-PR895-CATASTROPHIC-HANDOVER-FAILURE.md` — Root incident
+- `governance/memory/INCIDENT_2026-01-26_PR_1009_INCOMPLETE_HANDOVER.md` — Zero-warning enforcement trigger
 - `.github/agents/governance-repo-administrator.agent.md` — Enforcement authority
 
 ---
@@ -795,7 +917,7 @@ No execution path may:
 **Owner**: Governance Administrator  
 **Approval Authority**: Johan Ras  
 **Effective**: Immediate upon merge  
-**Last Updated**: 2026-01-11
+**Last Updated**: 2026-01-26
 
 ---
 
