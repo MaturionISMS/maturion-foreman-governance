@@ -16,4 +16,4 @@ rules:
     max-spaces-after: 1
   
   document-start:
-    present: false
+    present: true  # Required for YAML frontmatter in markdown files
