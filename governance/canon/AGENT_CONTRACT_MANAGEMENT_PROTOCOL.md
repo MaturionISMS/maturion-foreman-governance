@@ -3,8 +3,8 @@
 ## Status
 **Type**: Constitutional Governance Rule  
 **Authority**: Supreme - Canonical  
-**Version**: 3.0.0  
-**Effective Date**: 2026-01-21  
+**Version**: 3.1.0  
+**Effective Date**: 2026-01-26  
 **Owner**: CS2 (Johan Ras in bootstrap mode, Maturion in production)  
 **Precedence**: Subordinate to GOVERNANCE_PURPOSE_AND_SCOPE.md  
 **Part of**: Agent Contract Authority Infrastructure
@@ -47,6 +47,7 @@ This protocol derives authority from and extends:
 - **.agent.schema.md** — Agent contract schema and validity requirements
 - **GOVERNANCE_RIPPLE_MODEL.md** — Bidirectional governance evolution
 - **CROSS_REPOSITORY_LAYER_DOWN_PROTOCOL.md** — Cross-repo governance propagation
+- **AGENT_CONTRACT_PROTECTION_PROTOCOL.md** v1.1.0 — Locked section protection and atomic layer-down requirements (Section 11.2)
 
 This protocol v3.0.0 supersedes v2.0.0 (CS2 exclusive authority) and implements the granular authority delegation model defined in CS2_AGENT_FILE_AUTHORITY_MODEL.md v2.0.0.
 
@@ -496,6 +497,8 @@ When governance canon changes trigger contract updates (ripple):
 
 **FM authority**: Can modify builder contracts in same repo.
 
+**⚠️ CRITICAL — Atomic Layer-Down Compliance**: When ripple involves protocol layer-down (e.g., AGENT_CONTRACT_PROTECTION_PROTOCOL.md), **agent contract updates and protocol layer-down MUST occur atomically in one batch**. See **AGENT_CONTRACT_PROTECTION_PROTOCOL.md Section 11.2** for locked section requirements. Consumer repos MUST NOT layer down protocol files without simultaneously applying all mandated agent file updates (e.g., LOCKED sections). **NO separation** is permitted between canon layer-down and agent file compliance.
+
 ### 11.3 Updates Required
 
 This protocol triggers updates to:
@@ -549,17 +552,28 @@ These enhancements are **parked** pending future authorization and resource allo
 
 **Non-Negotiable**: Self-modification prohibited. CS2-direct contracts protected. Authority boundaries enforced.
 
+**⚠️ Downstream Compliance**: Consumer repos MUST apply ALL mandatory agent contract rules from canonical governance precisely as layered down. When protocols layer down with agent file requirements (e.g., AGENT_CONTRACT_PROTECTION_PROTOCOL.md Section 11.2 LOCKED sections), **agent contracts and protocol MUST be updated atomically in one batch**. **NO separation** between canon layer-down and agent file updates is permitted. Consumer agents inherit full compliance obligations without dilution or deferral.
+
 ---
 
 ## 14. Version and Authority
 
-**Version**: 3.0.0  
+**Version**: 3.1.0  
 **Authority**: CS2 (Johan Ras in bootstrap mode, Maturion in production)  
-**Effective Date**: 2026-01-21  
+**Effective Date**: 2026-01-26  
 **Previous Versions**: 
+- v3.0.0 (2026-01-21) - Introduced granular 5-level authority hierarchy
 - v2.0.0 (2026-01-20) - CS2 exclusive authority, no agent delegation
 - v1.0.0 (2026-01-13) - Agent Contract Administrator intermediary model  
 **Next Review**: Upon transition to Maturion as CS2
+
+**Major Changes from v3.0.0**:
+- Added atomic layer-down compliance requirement in Section 11.2 (Ripple Propagation)
+- Cross-referenced AGENT_CONTRACT_PROTECTION_PROTOCOL.md Section 11.2 for locked section requirements
+- Added downstream compliance clarification in Summary (Section 13)
+- Established NO separation principle between canon layer-down and agent file updates
+- Added AGENT_CONTRACT_PROTECTION_PROTOCOL.md v1.1.0 to Constitutional Authority (Section 2)
+- Authority: Issue requesting protocol layer-down compliance chain clarification
 
 **Major Changes from v2.0.0**:
 - Introduced granular 5-level authority hierarchy
@@ -580,7 +594,7 @@ These enhancements are **parked** pending future authorization and resource allo
 **Canonical Precedence**:
 - If this protocol conflicts with GOVERNANCE_PURPOSE_AND_SCOPE.md, that document prevails
 - If this protocol conflicts with CONSTITUTION.md (if exists), that document prevails
-- This protocol v3.0.0 supersedes v2.0.0 and all previous contract authority models
+- This protocol v3.1.0 supersedes v3.0.0 and all previous contract authority models
 - CS2_AGENT_FILE_AUTHORITY_MODEL.md v2.0.0 provides detailed authority definitions
 
 ---

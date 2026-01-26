@@ -43,6 +43,7 @@ Canon files define constitutional governance rules, models, and protocols.
 | `.agent.schema.md` | Schema definition for agent contracts | PR-gates |
 | `ACTIVATION_STATE_MODEL.md` | Defines agent/system activation lifecycle states | Readiness |
 | `AGENT_CANONICAL_CONTEXT_SYNCHRONISATION_PROTOCOL.md` | Protocol for keeping agent context synchronized with canon | Layer-down |
+| `AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md` | **UPDATED v3.1.0 (2026-01-26)** - Granular authority hierarchy for agent contracts with atomic layer-down compliance requirements for consumer repos | PR-gates, Layer-down, Readiness |
 | `AGENT_CONTRACT_PROTECTION_PROTOCOL.md` | **UPDATED v1.1.0 (2026-01-26)** - Protocol for agent contract protection with locked sections and atomic layer-down requirements | PR-gates, Layer-down, Readiness |
 | `AGENT_RECRUITMENT.md` | Defines rules for recruiting and activating agents | Readiness |
 | `AGENT_ROLE_GATE_APPLICABILITY.md` | Maps which PR gates apply to which agent roles | PR-gates |
