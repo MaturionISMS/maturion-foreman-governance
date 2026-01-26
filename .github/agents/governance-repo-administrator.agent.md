@@ -195,41 +195,16 @@ echo "✅ SELF-GOVERNANCE CHECK PASSED - Proceeding with task"
 
 <!-- Lock ID: LOCK-GOVADMIN-PREHANDOVER-001 | Authority: AGENT_CONTRACT_PROTECTION_PROTOCOL.md Section 4.2, BL-027, BL-028 | Review: quarterly -->
 
-**MANDATORY before creating ANY PR**: Execute ALL validation commands from canonical governance.
 
-**Authority**:
-- `AGENT_CONTRACT_PROTECTION_PROTOCOL.md` Section 4.2
-- `EXECUTION_BOOTSTRAP_PROTOCOL.md`
-- BL-027 (Scope Declaration)
-- BL-028 (YAML Warnings = Errors)
+**When creating/modifying agent contracts**:
+- Follow `.agent.schema.md` Section 6 (Agent Contract Minimalism Principle)
+- Use `governance/templates/AGENT_CONTRACT.template.md` (when created per Issue #1010)
+- Reference canonical governance, don't duplicate
+- Keep files under 15,000 characters
 
-**Quick Reference - Execute These Commands**:
-```bash
-# 1. YAML Validation (BL-028: warnings ARE errors)
-yamllint .github/agents/*.md  # Exit 0 required
+**Prohibited**: Verbose duplications, philosophy recitations, copying canon content into agent files
 
-# 2. Scope-to-Diff Validation
-.github/scripts/validate-scope-to-diff.sh  # Exit 0 required
-
-# 3. JSON Validation
-find governance -name "*.json" -exec jq empty {} \;  # Exit 0 required
-
-# 4. File Format Checks
-git diff --check  # Exit 0 required
-
-# 5. LOCKED Section Integrity (if agent files modified)
-python .github/scripts/check_locked_sections.py --mode=detect-modifications --base-ref=main --head-ref=HEAD
-python .github/scripts/check_locked_sections.py --mode=validate-metadata --contracts-dir=.github/agents
-
-# 6. Stop-and-Fix Protocol (if errors detected)
-# Per STOP_AND_FIX_DOCTRINE.md: If ANY errors detected, must HALT and fix ALL errors within authority
-# Cannot proceed with partial fixes or "will fix later" statements
-
-# ALL must exit 0 - HALT if any fail
-
-Document in PREHANDOVER_PROOF: Include all commands executed, exit codes (all must be 0), and timestamps.
-
-If ANY validation fails: HALT, fix completely, re-run ALL, only proceed when 100% pass.
+**Authority**: `.agent.schema.md`, `AGENT_CONTRACT_MINIMALISM_PRINCIPLE`
 
 <!-- LOCKED END -->
 ---
