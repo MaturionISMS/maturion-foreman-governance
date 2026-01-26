@@ -20,6 +20,8 @@ IN_SCOPE:
 - Update GOVERNANCE_ARTIFACT_INVENTORY.md (document updated protocol)
 - Create governance/layer-down/AGENT_CONTRACT_MANAGEMENT_PROTOCOL_RIPPLE_NOTICE.md (ripple documentation for consumer repos)
 - Update governance/scope-declaration.md (this file - scope documentation)
+- Create PREHANDOVER_PROOF.md (handover evidence per EXECUTION_BOOTSTRAP_PROTOCOL.md)
+- Archive previous PREHANDOVER_PROOF.md (preserve previous PR evidence)
 
 ---
 
@@ -40,6 +42,8 @@ M governance/canon/AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md
 M GOVERNANCE_ARTIFACT_INVENTORY.md
 A governance/layer-down/AGENT_CONTRACT_MANAGEMENT_PROTOCOL_RIPPLE_NOTICE.md
 M governance/scope-declaration.md
+A PREHANDOVER_PROOF.md
+A PREHANDOVER_PROOF_archive_20260126_075125.md
 
 ---
 
