@@ -394,12 +394,10 @@ Exit Code: 0
 Command: `.github/scripts/validate-scope-to-diff.sh main`
 Exit Code: 0
 Output:
-```
-✅ PASS: Scope declaration matches git diff
-Changed files: 5
-Declared files: 5
-All files accounted for
-```
+  ✅ PASS: Scope declaration matches git diff
+  Changed files: 5
+  Declared files: 5
+  All files accounted for
 
 #### Gate 4: Locked Section Protection
 Command: `python .github/scripts/check_locked_sections.py --mode=detect-modifications --base-ref=main --head-ref=HEAD`

@@ -3396,7 +3396,7 @@ no command output, exit codes, timestamps, or actual validation results.
 **The Irony**:  
 PR #1023 enhanced STOP_AND_FIX_DOCTRINE.md v2.0.0 with principle "Silence is NOT
 compliance." Agent violated this by providing FALSE SPEECH (claiming validation passed)
-instead of silence. Agent implementing governance violated that governance on itself.
+instead of silence. Agent implementing governance failed to apply that governance to itself.
 
 **Learning**:  
 Attestation without verification evidence is insufficient for governance handovers. Agent
