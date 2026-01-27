@@ -61,12 +61,20 @@ constraints:
   build_to_green_only: true
 
 metadata:
-  metadata:
   version: 4.3.0  # Added Validation Evidence Requirements (BL-030)
   canonical_home: APGI-cmy/maturion-foreman-governance
   canonical_path: .github/agents/governance-repo-administrator.agent.md
   this_copy: canonical
   last_updated: 2026-01-27  # Added BL-030 and validation evidence LOCKED section
+
+---
+
+## ⚠️ DEPRECATED
+
+**Status**: DISCONTINUED (2026-01-27)  
+**Authority**: CS2  
+**Reason**: Agent appointment authority consolidated to CS2/Maturion  
+**Retained**: Historical reference only
 
 ---
 
@@ -197,19 +205,19 @@ echo "✅ SELF-GOVERNANCE CHECK PASSED - Proceeding with task"
 
 <!-- LOCKED END -->
 
-## 🔒 Agent File Creation & Modification Protocol (LOCKED)
+---
 
-<!-- Lock ID: LOCK-CODEXADVISOR-AGENTFILE-001 | Authority: .agent.schema.md, AGENT_CONTRACT_MINIMALISM_PRINCIPLE | Review: quarterly -->
+## 🔒 Own Contract Modification (LOCKED)
 
-**When creating/modifying agent contracts**:
-- Follow `.agent.schema.md` Section 6 (Agent Contract Minimalism Principle)
-- Use `governance/templates/AGENT_CONTRACT.template.md` (when created per Issue #1010)
-- Reference canonical governance, don't duplicate
-- Keep files under 15,000 characters
+<!-- Lock ID: LOCK-GOVADMIN-SELF-MOD-001 | Authority: CS2_AGENT_FILE_AUTHORITY_MODEL.md | Review: Never -->
 
-**Prohibited**: Verbose duplications, philosophy recitations, copying canon content into agent files
+**Rule**: Can modify own contract via formal change process (Issue → CS2 Approval → Implementation).
 
-**Authority**: `.agent.schema.md`, `AGENT_CONTRACT_MINIMALISM_PRINCIPLE`
+**Exception**: Format fixes only (whitespace, YAML indentation).
+
+**Prohibition**: Cannot modify LOCKED sections without CS2 approval.
+
+**If needed**: Escalate to CS2, HALT work.
 
 <!-- LOCKED END -->
 
@@ -217,20 +225,18 @@ echo "✅ SELF-GOVERNANCE CHECK PASSED - Proceeding with task"
 
 ## 🔒 Pre-Handover Validation (LOCKED)
 
-<!-- Lock ID: LOCK-GOVADMIN-PREHANDOVER-001 | Authority: AGENT_CONTRACT_PROTECTION_PROTOCOL.md Section 4.2, BL-027, BL-028 | Review: quarterly -->
+<!-- Lock ID: LOCK-GOVADMIN-PREHANDOVER-001 | Authority: EXECUTION_BOOTSTRAP_PROTOCOL.md v1.1.0, BL-030 | Review: quarterly -->
 
+**MANDATORY**: Execute ALL validation gates (see "Merge Gates" section above) before handover.
 
-**When creating/modifying agent contracts**:
-- Follow `.agent.schema.md` Section 6 (Agent Contract Minimalism Principle)
-- Use `governance/templates/AGENT_CONTRACT.template.md` (when created per Issue #1010)
-- Reference canonical governance, don't duplicate
-- Keep files under 15,000 characters
+**Evidence Required**: Document commands, exit codes, timestamps in PREHANDOVER_PROOF.
 
-**Prohibited**: Verbose duplications, philosophy recitations, copying canon content into agent files
+**If ANY gate fails**: Apply STOP_AND_FIX_DOCTRINE.md, re-validate, only proceed when 100% clean.
 
-**Authority**: `.agent.schema.md`, `AGENT_CONTRACT_MINIMALISM_PRINCIPLE`
+**Authority**: EXECUTION_BOOTSTRAP_PROTOCOL.md v1.1.0 Section 5.1, BL-030
 
 <!-- LOCKED END -->
+
 ---
 
 ## 🔒 Merge Gates (LOCKED)
