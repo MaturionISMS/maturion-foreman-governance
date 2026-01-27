@@ -38,7 +38,9 @@ This doctrine derives supreme authority from and integrates with:
 - **FM_ROLE_CANON.md** - FM authority to halt execution on quality violations
 - **QA_POLICY_MASTER.md** - QA validation requirements, test failure handling
 
-**Integration Principle**: Stop-and-Fix is NOT a new governance layer—it is a **behavioral mandate** that enforces existing quality and governance requirements through immediate action.
+**Integration Principle**: Stop-and-Fix is NOT a new governance layer—it is a
+**behavioral mandate** that enforces existing quality and governance requirements through
+immediate action.
 
 ---
 
@@ -98,7 +100,10 @@ This doctrine derives supreme authority from and integrates with:
 - ❌ "Blocked by dependencies" (escalate the blocker, don't ignore)
 - ❌ "Reviewer said don't bother" (unless explicitly granted exception, see Section 3.5)
 
-**Limited Exception**: If fixing requires domain expertise you lack OR would require changing code/architecture outside your authority, you may escalate to CS2 (see Section 5). If reviewer explicitly grants "non-blocking (optional)" with clear justification, document in PREHANDOVER_PROOF (see Section 3.5).
+**Limited Exception**: If fixing requires domain expertise you lack OR would require
+changing code/architecture outside your authority, you may escalate to CS2 (see Section 5).
+If reviewer explicitly grants "non-blocking (optional)" with clear justification, document
+in PREHANDOVER_PROOF (see Section 3.5).
 
 ### 3.3 Immediate Remediation
 
@@ -125,7 +130,8 @@ This doctrine derives supreme authority from and integrates with:
 - ❌ No "temporary workarounds" (fix root cause)
 - ❌ No "good enough for now" (100% GREEN or bust)
 
-**Time Investment**: Remediation time is NEVER "wasted"—it prevents cascading failures, eliminates debt, and improves system quality for all future work.
+**Time Investment**: Remediation time is NEVER "wasted"—it prevents cascading failures,
+eliminates debt, and improves system quality for all future work.
 
 ### 3.4 No Partial Handovers
 
@@ -155,9 +161,14 @@ This doctrine derives supreme authority from and integrates with:
 
 ### 3.5 Ban on Excuse-Based Test Dodging
 
-**Principle**: All forms of excuse language that minimize, deflect, defer, or discharge responsibility for fixing discovered issues are STRICTLY PROHIBITED as governance anti-patterns.
+**Principle**: All forms of excuse language that minimize, deflect, defer, or discharge
+responsibility for fixing discovered issues are STRICTLY PROHIBITED as governance
+anti-patterns.
 
-**Context**: This doctrine enforces true 100% STOP-AND-FIX compliance by eliminating subjective excuse patterns that undermine quality discipline. The use of any recognized anti-pattern (see below) in code, review comments, escalation notes, PREHANDOVER_PROOF, or documentation is itself a governance violation subject to escalation and enforcement.
+**Context**: This doctrine enforces true 100% STOP-AND-FIX compliance by eliminating
+subjective excuse patterns that undermine quality discipline. The use of any recognized
+anti-pattern (see below) in code, review comments, escalation notes, PREHANDOVER_PROOF,
+or documentation is itself a governance violation subject to escalation and enforcement.
 
 **Recognized Excuse Patterns** (ALL PROHIBITED):
 
@@ -250,7 +261,10 @@ This doctrine derives supreme authority from and integrates with:
 - Excuse language in PREHANDOVER_PROOF → Reject PR, require remediation
 - Excuse language in code comments → Require removal and fix
 
-**Rationale**: Excuse-based test dodging undermines the entire quality discipline. Allowing subjective minimization creates loopholes that compound into systemic technical debt. This ban closes those loopholes by making ALL discovered issues actionable (fix or escalate, no third option).
+**Rationale**: Excuse-based test dodging undermines the entire quality discipline. Allowing
+subjective minimization creates loopholes that compound into systemic technical debt. This
+ban closes those loopholes by making ALL discovered issues actionable (fix or escalate, no
+third option).
 
 ### 3.6 Escalation Obligation for Cross-Boundary Issues
 
@@ -273,7 +287,9 @@ This doctrine derives supreme authority from and integrates with:
 5. **Ensure safe state** (no broken builds, no data loss risk)
 6. **Wait for CS2 guidance** before proceeding
 
-**Critical Rule**: Discovering an issue outside your authority does NOT exempt you from Stop-and-Fix—you are obligated to escalate. Ignoring an issue because "I can't fix it" is a governance violation.
+**Critical Rule**: Discovering an issue outside your authority does NOT exempt you from
+Stop-and-Fix—you are obligated to escalate. Ignoring an issue because "I can't fix it" is
+a governance violation.
 
 **Examples**:
 - ✅ "Discovered SQL injection in legacy module, outside my database expertise → ESCALATED to CS2"
@@ -282,7 +298,9 @@ This doctrine derives supreme authority from and integrates with:
 - ❌ "Found issue in protected file, can't edit it, moving on" (WRONG—must escalate)
 - ❌ "Issue is in another repo, not my problem" (WRONG—must escalate)
 
-**Rationale**: Escalation obligation ensures no issue falls through cracks due to authority boundaries. Every agent acts as a quality sensor, escalating anything they cannot directly fix.
+**Rationale**: Escalation obligation ensures no issue falls through cracks due to authority
+boundaries. Every agent acts as a quality sensor, escalating anything they cannot directly
+fix.
 
 ---
 
@@ -664,7 +682,8 @@ Stop-and-Fix is inspired by workplace safety practices:
 - **Healthcare**: Universal precautions (everyone responsible for safety)
 - **Nuclear**: Defense-in-depth (multiple quality layers, no pass-through)
 
-**Key Insight**: In safety-critical systems, EVERYONE is responsible for safety—not just the person who created the hazard. Same applies to code quality.
+**Key Insight**: In safety-critical systems, EVERYONE is responsible for safety—not just
+the person who created the hazard. Same applies to code quality.
 
 ### 10.2 "Broken Windows" Theory
 
@@ -688,16 +707,20 @@ Stop-and-Fix embodies the Boy Scout Rule:
 ## 11. FAQ
 
 **Q: What if fixing the issue takes longer than my original task?**
-A: Fix it anyway. Preventing technical debt is ALWAYS more valuable than new features. If time is a concern, escalate to CS2 for prioritization guidance.
+A: Fix it anyway. Preventing technical debt is ALWAYS more valuable than new features. If
+time is a concern, escalate to CS2 for prioritization guidance.
 
 **Q: What if I don't understand the failing code?**
 A: Investigate and learn. If truly beyond your expertise, document thoroughly and escalate. But first, make a genuine attempt to understand and fix.
 
 **Q: What if the baseline was already broken when I started?**
-A: Fix it. Stop-and-Fix applies to ALL issues you encounter, regardless of origin. Establish 100% GREEN baseline before starting your work.
+A: Fix it. Stop-and-Fix applies to ALL issues you encounter, regardless of origin.
+Establish 100% GREEN baseline before starting your work.
 
 **Q: What if there are 100+ failing tests?**
-A: This is a systemic failure requiring escalation. Document the situation, ensure the system is in a safe state, and escalate to CS2 for guidance. Do NOT attempt to fix all 100 yourself if it will take days.
+A: This is a systemic failure requiring escalation. Document the situation, ensure the
+system is in a safe state, and escalate to CS2 for guidance. Do NOT attempt to fix all 100
+yourself if it will take days.
 
 **Q: What if the fix requires changing architecture?**
 A: Escalate. Architecture changes require FM/CS2 approval. Document the issue, explain why architecture change is needed, and wait for guidance.
@@ -709,28 +732,45 @@ A: Stop-and-Fix still applies. If you discover issues during investigation, fix 
 A: No. Priority is irrelevant—if you see it, fix it. The whole point is to prevent prioritization debates that allow debt to accumulate.
 
 **Q: What if CI is broken and I can't run tests locally?**
-A: This is a blocker. CI must work. Escalate CI issues immediately—broken CI prevents all Stop-and-Fix validation.
+A: This is a blocker. CI must work. Escalate CI issues immediately—broken CI prevents
+all Stop-and-Fix validation.
 
 ---
 
 ## 12. Summary
 
 **Stop-and-Fix in One Sentence:**
-When you encounter ANY error, failure, debt, or violation during work, STOP immediately, FIX it completely, VERIFY 100% GREEN, DOCUMENT the remediation, and ONLY THEN continue.
+When you encounter ANY error, failure, debt, or violation during work, STOP immediately,
+FIX it completely, VERIFY 100% GREEN, DOCUMENT the remediation, and ONLY THEN continue.
 
 **The Golden Rule:**
-Every handover must be in a GOOD STATE (100% GREEN, zero debt, all gates passing) or escalated to CS2 with full context. No partial handovers, no deferred fixes, no exceptions.
+Every handover must be in a GOOD STATE (100% GREEN, zero debt, all gates passing) or
+escalated to CS2 with full context. No partial handovers, no deferred fixes, no exceptions.
 
 **The Responsibility Principle:**
-Quality is everyone's responsibility. "If you see it, you own it." No "not my job," no "file a bug," no "will fix later."
+Quality is everyone's responsibility. "If you see it, you own it." No "not my job," no
+"file a bug," no "will fix later."
 
 ---
 
 ## Version History
 
-**v2.0.0** (2026-01-27): Major enhancement banning excuse-based test dodging. Added Section 3.5 "Ban on Excuse-Based Test Dodging" enumerating 9 categories of prohibited excuse patterns (minimization, scope deflection, responsibility discharge, deferral, dismissal, sufficiency claims, evasion, blocker claims without escalation, authority appeals). Added Section 3.6 "Escalation Obligation for Cross-Boundary Issues" mandating escalation for issues outside agent authority. Enhanced Section 3.2 "Universal Responsibility" with comprehensive banned response patterns. Added Examples 5-6 demonstrating excuse-based test dodging violations and correct escalation obligations. Enforces "if you see it, you own it OR escalate it—silence is NOT compliance" principle. Authority: Issue #[TBD], BUILD_PHILOSOPHY.md, BYG_DOCTRINE.md.
+**v2.0.0** (2026-01-27): Major enhancement banning excuse-based test dodging. Added
+Section 3.5 "Ban on Excuse-Based Test Dodging" enumerating 9 categories of prohibited
+excuse patterns (minimization, scope deflection, responsibility discharge, deferral,
+dismissal, sufficiency claims, evasion, blocker claims without escalation, authority
+appeals). Added Section 3.6 "Escalation Obligation for Cross-Boundary Issues" mandating
+escalation for issues outside agent authority. Enhanced Section 3.2 "Universal
+Responsibility" with comprehensive banned response patterns. Added Examples 5-6
+demonstrating excuse-based test dodging violations and correct escalation obligations.
+Enforces "if you see it, you own it OR escalate it—silence is NOT compliance" principle.
+Authority: Issue #[TBD], BUILD_PHILOSOPHY.md, BYG_DOCTRINE.md.
 
-**v1.0.0** (2026-01-23): Initial canonization as Tier-0 constitutional doctrine. Establishes zero tolerance for technical debt, universal responsibility for quality, immediate remediation requirement, and no partial handover principle. Integrates with BUILD_PHILOSOPHY.md, BYG_DOCTRINE.md, DEFECT_RESOLUTION_MAINTENANCE_CANON.md, ESCALATION_POLICY.md. Applies to all agents, all builders, all work, all repositories.
+**v1.0.0** (2026-01-23): Initial canonization as Tier-0 constitutional doctrine.
+Establishes zero tolerance for technical debt, universal responsibility for quality,
+immediate remediation requirement, and no partial handover principle. Integrates with
+BUILD_PHILOSOPHY.md, BYG_DOCTRINE.md, DEFECT_RESOLUTION_MAINTENANCE_CANON.md,
+ESCALATION_POLICY.md. Applies to all agents, all builders, all work, all repositories.
 
 ---
 
