@@ -51,7 +51,7 @@ Canon files define constitutional governance rules, models, and protocols.
 | `APP_STARTUP_REQUIREMENTS_DECLARATION.md` | Defines application commissioning and startup requirements | Readiness, Layer-down |
 | `ARCHITECTURE_COMPLETENESS_REQUIREMENTS.md` | Defines architecture artifact completeness criteria | Readiness, PR-gates |
 | `AUDIT_READINESS_MODEL.md` | Defines audit trail and evidence requirements | Readiness |
-| `BOOTSTRAP_EXECUTION_LEARNINGS.md` | **UPDATED (2026-01-27)** - Records structural learnings from bootstrap execution with new BL-029 documenting excuse-based test dodging patterns and ban enforcement | Feedback/learning |
+| `BOOTSTRAP_EXECUTION_LEARNINGS.md` | **UPDATED (2026-01-27)** - Records structural learnings from bootstrap execution with BL-029 documenting excuse-based test dodging patterns and ban enforcement, and **NEW BL-030** documenting FL/CI Loop false attestation pattern (PR #1023 incident) requiring validation evidence instead of attestation-only | Feedback/learning |
 | `BRANCH_PROTECTION_ENFORCEMENT.md` | Defines branch protection requirements | PR-gates |
 | `BUILDER_FIRST_PR_MERGE_MODEL.md` | Defines rules for first builder PR merge | PR-gates, Readiness |
 | `BUILD_EFFECTIVENESS_STANDARD.md` | Defines build effectiveness measurement criteria | Readiness |
@@ -173,7 +173,7 @@ Template files provide reusable structures for governance artifacts.
 | `AGENT_FILE_LOCKED_SECTIONS_TEMPLATE.md` | **NEW (2026-01-26)** - Canonical template with copy-paste LOCKED sections for FM, Builder, and Liaison agent contracts with complete metadata and layer-down guidance | PR-gates, Layer-down, Readiness |
 | `BUILDER_TASK_TEMPLATE.md` | Template for builder task definitions | Readiness |
 | `CANON_CREATION_AND_PROPAGATION_CHECKLIST.md` | Comprehensive workflow checklist for canon creation and propagation with mandatory inventory maintenance | Layer-down, Feedback/learning |
-| `PREHANDOVER_PROOF_TEMPLATE.md` | **UPDATED v2.1.0 (2026-01-26)** - Template for execution verification documentation with new Zero-Warning Validation section implementing EXECUTION_BOOTSTRAP_PROTOCOL.md v1.1.0 Section 5.1. Includes comprehensive attestation, STOP_AND_FIX_DOCTRINE.md application requirements, and complete validation evidence checklist | PR-gates, Readiness |
+| `PREHANDOVER_PROOF_TEMPLATE.md` | **UPDATED v2.2.0 (2026-01-27)** - Template for execution verification documentation with Zero-Warning Validation section and **NEW** validation evidence requirements per BL-030. Prohibits attestation without verification. Requires command output, exit codes, timestamps for all validations. Adds scope declaration freshness verification checklist | PR-gates, Readiness |
 | `PLATFORM_READINESS_CHECKLIST.template.md` | Template for platform readiness checklists | Readiness |
 | `PR_GATE_RELEASE_CHECKLISTS_README.md` | Documentation for PR gate release checklists | PR-gates |
 | `PR_GATE_RELEASE_CHECKLIST_BUILDER.md` | Builder-specific PR gate release checklist | PR-gates |

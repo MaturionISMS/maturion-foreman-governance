@@ -1,10 +1,12 @@
 # PREHANDOVER_PROOF Template
 
 **Purpose**: Standard template for documenting execution verification before PR handover.  
-**Version**: 2.1.0  
-**Authority**: `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md` (including Section 5.1 Zero-Warning Enforcement)  
+**Version**: 2.2.0  
+**Authority**: `governance/canon/EXECUTION_BOOTSTRAP_PROTOCOL.md` (including Section 5.1 Zero-Warning Enforcement), `BL-030` (Validation Evidence Requirements)  
 **Mandatory For**: All PRs requiring execution verification (workflows, gates, contracts, configurations)  
 **Optional For**: Documentation-only changes (recommended but not required)
+
+**Version 2.2.0 Changes** (2026-01-27): Added validation evidence requirements per BL-030. Prohibits attestation without verification. Requires command output, exit codes, timestamps for all validations. Adds scope declaration freshness verification checklist.
 
 ---
 
@@ -222,6 +224,12 @@ Copy this template into your PR description and fill in all sections:
 
 #### Zero-Warning Attestation
 
+**MANDATORY**: Provide EVIDENCE, not just attestation. All commands must include:
+- Exact command executed (copy-paste ready)
+- Exit code (MUST be 0)
+- Relevant output (especially if warnings/errors)
+- Execution timestamp
+
 **Validation Results**:
 - ✅ ALL validation commands executed
 - ✅ ALL exit codes = 0 (no errors)
@@ -230,6 +238,13 @@ Copy this template into your PR description and fill in all sections:
 - ✅ NO "will validate in CI" deferrals
 - ✅ Changes committed BEFORE validation
 - ✅ STOP_AND_FIX_DOCTRINE.md applied to all issues
+
+**Scope Declaration Freshness** (if applicable):
+- ✅ PR_ID matches current branch name: [verification]
+- ✅ DATE_UTC within last 24 hours: [verification]
+- ✅ RESPONSIBILITY_DOMAIN matches PR purpose: [verification]
+- ✅ FILES_CHANGED lists actual git diff files: [verification]
+- ✅ Scope-to-diff validation passed: [exit code 0]
 
 **Iterations** (if any issues encountered):
 ```
@@ -250,12 +265,18 @@ I attest that:
 4. Any issues discovered were immediately fixed per STOP_AND_FIX_DOCTRINE.md
 5. All gates were re-run after fixes until 100% clean
 6. CI will confirm success, not discover warnings or failures
+7. EVIDENCE (not just claims) provided above for all validations
+8. Scope declaration verified fresh and matching actual changes
 
 Timestamp: [YYYY-MM-DD HH:MM:SS UTC]
 Validator: [Agent name or your name]
 ```
 
-**Authority**: EXECUTION_BOOTSTRAP_PROTOCOL.md v1.1.0 Section 5.1, governance-repo-administrator.agent.md v4.2.0 (Zero-Warning Handover Enforcement LOCKED section)
+**Authority**: 
+- EXECUTION_BOOTSTRAP_PROTOCOL.md v1.1.0 Section 5.1
+- governance-repo-administrator.agent.md v4.3.0 (Validation Evidence Requirements LOCKED section)
+- BL-030 (False Attestation Pattern Prevention)
+- INCIDENT_2026-01-27_PR_1023_FALSE_ATTESTATION_RCA.md
 
 ---
 
