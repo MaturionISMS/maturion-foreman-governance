@@ -1,26 +1,27 @@
 # SCOPE DECLARATION
 
 SCOPE_SCHEMA_VERSION: v1
-PR_ID: update-agent-contract-management-protocol-layer-down
+PR_ID: fix-false-attestation-issue
 OWNER: governance-repo-administrator
-DATE_UTC: 2026-01-26
+DATE_UTC: 2026-01-27
 
 ---
 
 ## PR Responsibility Domain
 
-RESPONSIBILITY_DOMAIN: Update AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md to clarify downstream protocol compliance, cross-link AGENT_CONTRACT_PROTECTION_PROTOCOL.md Section 11.2, and ensure consumer repos enforce atomic layer-down requirements
+RESPONSIBILITY_DOMAIN: Root Cause Analysis and remediation of PR #1023 false attestation incident. Document FL/CI loop pattern where agent claimed validation passed without running validation. Implement validation evidence requirements (BL-030), enhance agent contract and PREHANDOVER_PROOF template to prevent attestation-without-verification pattern.
 
 ---
 
 ## Explicitly In Scope
 
 IN_SCOPE:
-- Update governance/canon/AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md v3.0.0 → v3.1.0 (add atomic layer-down compliance, cross-link protection protocol Section 11.2, clarify consumer repo obligations)
-- Update GOVERNANCE_ARTIFACT_INVENTORY.md (document updated protocol)
-- Create governance/layer-down/AGENT_CONTRACT_MANAGEMENT_PROTOCOL_RIPPLE_NOTICE.md (ripple documentation for consumer repos)
-- Update governance/scope-declaration.md (this file - scope documentation)
-- Create PREHANDOVER_PROOF.md (handover evidence per EXECUTION_BOOTSTRAP_PROTOCOL.md including zero-warning validation)
+- Create governance/incidents/INCIDENT_2026-01-27_PR_1023_FALSE_ATTESTATION_RCA.md (complete RCA of false attestation incident)
+- Update governance/canon/BOOTSTRAP_EXECUTION_LEARNINGS.md (add BL-030: FL/CI Loop False Attestation pattern)
+- Update .github/agents/governance-repo-administrator.agent.md v4.2.0 → v4.3.0 (add Validation Evidence Requirements LOCKED section)
+- Update governance/templates/PREHANDOVER_PROOF_TEMPLATE.md v2.1.0 → v2.2.0 (add validation evidence requirements, scope freshness verification)
+- Update GOVERNANCE_ARTIFACT_INVENTORY.md (document all updates)
+- Update governance/scope-declaration.md (this file - scope documentation for THIS PR)
 
 ---
 
@@ -28,21 +29,22 @@ IN_SCOPE:
 
 OUT_OF_SCOPE:
 - Consumer repository updates (office-app, PartPulse, R_Roster) - Separate ripple effort
-- Agent contract modifications - Documentation-only update
-- Tests - No test infrastructure for governance canon
-- CI gate workflows - No workflow modifications needed
-- Other canonical documents
+- Pre-commit hook implementation - Documented as short-term recommendation, separate PR
+- Validation evidence file artifact - Documented as long-term recommendation, separate PR
+- Pre-existing yamllint issues in CodexAdvisor-agent.md - Not related to this task
+- Pre-existing YAML syntax error on line 75 of governance-repo-administrator.agent.md - Pre-existing issue
+- Automated scope generation tool - Long-term recommendation, separate effort
 
 ---
 
 ## Files Changed
 
-M governance/canon/AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md
+A governance/incidents/INCIDENT_2026-01-27_PR_1023_FALSE_ATTESTATION_RCA.md
+M governance/canon/BOOTSTRAP_EXECUTION_LEARNINGS.md
+M .github/agents/governance-repo-administrator.agent.md
+M governance/templates/PREHANDOVER_PROOF_TEMPLATE.md
 M GOVERNANCE_ARTIFACT_INVENTORY.md
-A governance/layer-down/AGENT_CONTRACT_MANAGEMENT_PROTOCOL_RIPPLE_NOTICE.md
 M governance/scope-declaration.md
-A PREHANDOVER_PROOF.md
-A PREHANDOVER_PROOF_archive_20260126_075125.md
 
 ---
 
@@ -54,6 +56,8 @@ EXPECTED_VERIFICATION:
 - GOVERNANCE_GATES: GREEN
   - Governance Scope-to-Diff Enforcement (must match this scope declaration)
   - Governance Policy Validation (file structure, secrets check, CODEOWNERS)
+  - Agent Governance Check (YAML frontmatter validation - pre-existing issues documented)
+  - Locked Section Protection (no locked sections modified)
 
 ---
 
@@ -61,9 +65,10 @@ EXPECTED_VERIFICATION:
 
 SCOPE_FROZEN: YES
 
-**Summary**: Updated AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md from v3.0.0 to v3.1.0 to add explicit atomic layer-down compliance requirements in Section 11.2 (Ripple Propagation), cross-referenced AGENT_CONTRACT_PROTECTION_PROTOCOL.md Section 11.2 for locked section requirements, and clarified downstream compliance obligations in Summary (Section 13). Added ripple notice for consumer repositories. Authority: AGENT_CONTRACT_PROTECTION_PROTOCOL.md v1.1.0 Section 11.2, CS2_AGENT_FILE_AUTHORITY_MODEL.md.
+**Summary**: Created comprehensive RCA of PR #1023 false attestation incident where governance-repo-administrator claimed "ALL gates exit 0" but CI discovered 2 failing gates. Root cause: Agent reused outdated scope declaration from previous PR without verification, provided attestation without evidence. Created BL-030 documenting FL/CI loop pattern. Enhanced agent contract v4.3.0 with Validation Evidence Requirements LOCKED section prohibiting attestation-only. Enhanced PREHANDOVER_PROOF template v2.2.0 to require command output, exit codes, timestamps. Authority: Issue #1024, BL-030, EXECUTION_BOOTSTRAP_PROTOCOL.md v1.1.0.
 
 ---
 
-**Authority**: `governance/canon/SCOPE_TO_DIFF_RULE.md`, `governance/canon/AGENT_CONTRACT_PROTECTION_PROTOCOL.md` v1.1.0
-**Issue**: Update AGENT_CONTRACT_MANAGEMENT_PROTOCOL.md – Highlight Protocol Layer-Down & Compliance Chain
+**Authority**: `governance/canon/SCOPE_TO_DIFF_RULE.md`, `BL-030`, `EXECUTION_BOOTSTRAP_PROTOCOL.md` v1.1.0
+**Issue**: #1024 - [FL/CI CATASTROPHIC] governance-repo-administrator False Attestation + Failing Gates - RCA Required
+

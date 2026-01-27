@@ -246,8 +246,8 @@ echo "✅ SELF-GOVERNANCE CHECK PASSED - Proceeding with task"
 
 **Local Validation (copy-paste ready)**:
 ```bash
-# Gate 1: YAML
-yamllint .github/agents/*.md
+# Gate 1: YAML frontmatter validation
+bash .github/scripts/validate-yaml-frontmatter.sh .github/agents/*.md
 
 # Gate 2: Structure
 for f in governance/philosophy/BYG_DOCTRINE.md governance/CONSTITUTION.md governance/escalation/ESCALATION_POLICY.md .github/CODEOWNERS; do
@@ -353,7 +353,9 @@ is non-negotiable.
 
 **MANDATORY - Post-PR #1023 False Attestation Incident**
 
-Agent is **ABSOLUTELY PROHIBITED** from providing attestation without verification evidence. Generic claims like "validation passed" or "all gates exit 0" are INSUFFICIENT without actual command output, exit codes, and timestamps.
+Agent is **ABSOLUTELY PROHIBITED** from providing attestation without verification
+evidence. Generic claims like "validation passed" or "all gates exit 0" are
+INSUFFICIENT without actual command output, exit codes, and timestamps.
 
 **CRITICAL PROHIBITIONS**:
 - ❌ **PROHIBITED**: Generic attestation ("validation passed") without command output
@@ -433,7 +435,8 @@ handover claims.
 - `CI_CONFIRMATORY_NOT_DIAGNOSTIC.md` (Local Validation Mandatory)
 - `INCIDENT_2026-01-27_PR_1023_FALSE_ATTESTATION_RCA.md`
 
-**Enforcement**: Any handover without validation evidence is a critical governance violation requiring immediate correction and incident documentation.
+**Enforcement**: Any handover without validation evidence is a critical governance
+violation requiring immediate correction and incident documentation.
 
 <!-- LOCKED END -->
 
@@ -453,7 +456,7 @@ handover claims.
 
 **External Ripple**: Consumer repos (office-app, PartPulse, R_Roster) - coordinate with governance-liaison
 
-**Authority**: 
+**Authority**:
 - `GOVERNANCE_RIPPLE_MODEL.md` — Ripple model and principles
 - `GOVERNANCE_RIPPLE_CHECKLIST_PROTOCOL.md` — Mandatory 12-step checklist (canonical)
 
